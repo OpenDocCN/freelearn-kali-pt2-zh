@@ -1,4 +1,4 @@
-+   [Wireshark 即时入门](docs/ins-ws-start/README.md)、
++   [Wireshark 即时入门](docs/ins-ws-start/README.md)
 	+   [一、Wireshark 即时入门](docs/ins-ws-start/0.md)
 +   [Wireshark 学习手册](docs/learn-ws/README.md)
 	+   [零、前言](docs/learn-ws/01.md)
