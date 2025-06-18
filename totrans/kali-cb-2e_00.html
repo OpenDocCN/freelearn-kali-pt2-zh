@@ -1,0 +1,327 @@
+<html><head></head><body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Preface</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">Kali Linux, the most popular security testing platform available today, provides a means for individuals from all walks of life to become more experienced with penetration testing and information security. Kali is not only the cornerstone of many security penetration testing programs, but also has a tremendous community of users who share code, methods, and experiences to help even the most seasoned security practitioners become more effective. As a platform, Kali Linux is quite versatile. It can be run from bootable media, installed onto hardware platforms, or run in virtual environments. It can be enhanced with any number of tools available outside of the native distribution (and we will demonstrate this in the following chapters). It truly gives you the means to have a single platform to work from, in any format you like, without the need for expensive investments in hardware and software.</p>
+<p class="mce-root">With the rise of malicious actors and malware, and the increased focus on system and network security, being able to understand how the attacker operates allows you to become more effective at providing balanced and appropriate controls.</p>
+<p class="mce-root">In this book, we will explore how to use Kali Linux as well as additional tools such as Nexpose, Nessus, and OpenVAS to perform various types of penetration testing tasks. We will cover how to set up an effective lab for testing purposes and we will also cover many aspects of penetration testing, along with useful advice on how to go about being successful in using the Kali Linux platform.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">What this book covers</h1>
+                </header>
+            
+            <article>
+                
+<p><a href="7560c369-51ac-43f6-b94e-3889265b10bc.xhtml" target="_blank">Chapter 1</a>, <em>Installing Kali and the Lab Setup</em>, documents best practices for setting up a testing environment, where you can test the skills highlighted in this book.</p>
+<p><a href="48d70dd4-e446-4efa-9f68-eae64fddd3ac.xhtml" target="_blank">Chapter 2</a>, <em>Reconnaissance and Scanning</em>, enables you to learn the skills necessary to gather information about your target environment. We will gather domain names, IP subnets, hosts, routing information, as well as other useful information. You will also learn how to keep track of this data, so we can refer to it in the future as we progress through our penetration testing environment.</p>
+<p><a href="efecc8fd-4746-4428-9662-854d418bcba2.xhtml" target="_blank">Chapter 3</a>, <em>Vulnerability Analysis</em>, explains that once access to a network has been gained and the systems within that network have been identified, the next step is to establish a foothold and persistent access.</p>
+<p><a href="9f678d15-2115-4e29-a75d-03dba65d3398.xhtml" target="_blank">Chapter 4</a>, <em>Finding Exploits in the Target</em>, takes the host information that we have accumulated to determine the potential exploits to use against target machines and services.</p>
+<p><a href="f6db0321-3c3e-4511-927c-cf279ea1700a.xhtml" target="_blank">Chapter 5</a>, <em>Social Engineering</em>, speaks about social engineering that can be employed through electronic means and is also used in physical penetration testing and even data gathering. We bend well-known natural tendencies to help us accomplish or obtain what we want.</p>
+<p><a href="868da5dc-85d4-4ac2-9325-1274b75c8c7d.xhtml" target="_blank">Chapter 6</a>, <em>Password Cracking</em>, enables you to learn different techniques and tools to gain knowledge of password hashes gained during various attacks, as well as the means to reset these passwords if access is gained.</p>
+<p><a href="66009beb-61cd-46c3-9233-ec9b8edbf79c.xhtml" target="_blank">Chapter 7</a>, <em>Privilege Escalation</em>, helps you to learn how to use a small foothold to expand the scope of your breach, increase the admin level, and use lateral movement to compromise more machines. In most cases, the initial point of a breach is not the desired target, but just a means to get to the more valuable targets.</p>
+<p><a href="86184310-ec3f-4792-a238-a7719e071af2.xhtml" target="_blank">Chapter 8</a>, <em>Wireless Specific Recipes</em>, explains that due to the ever growing adoption of wireless networking, as well as the extended reach wireless signals can provide, we will focus on how to gain access to these networks through a variety of means.</p>
+<p><a href="f8114976-00fa-415d-94e7-254206a44dbb.xhtml" target="_blank">Chapter 9</a>, <em>Web and Database Specific Recipes</em>, explains that evaluating the security of web applications and databases requires a unique set of tools that can be leveraged against them. In the event that a web application is compromised, it is highly likely that it may then be used as a jumping off point for further network penetration.</p>
+<p class="mce-root"><a href="02e6452a-b223-4edb-954a-fef51f21215e.xhtml" target="_blank">Chapter 10</a>, <em>Maintaining Access</em>, explains that once access has been gained to the target environment, it is crucial to make sure that your access is maintained. Learn how to maintain access and pivot into other areas of your target environment.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">What you need for this book</h1>
+                </header>
+            
+            <article>
+                
+<p>This book assumes a medium level of expertise on Linux operating systems, strong knowledge of networking technologies, including both wired and wireless, moderate experience with OS platform configuration, and moderate experience with general information security concepts. This book will go through the process of setting up a basic testing lab, the installation of Kali Linux, and the tools needed to perform network reconnaissance, and exploitation. Because you will be running exercises against live hosts, it is important that this environment is isolated from other non-test environments.</p>
+<p>Kali Linux can be installed into a virtual environment such as VirtualBox or VMware, or can be installed onto a dedicated hardware. This book requires that you have enough compute resources for the Kali Linux installation as well as the target systems. In addition to the minimum requirements for your hypervisor, minimum hardware or virtual requirements are listed as follows:</p>
+<ul>
+<li>CPU: 10 cores</li>
+<li>Memory: 24 GB RAM</li>
+<li>Disk space: 260 GB</li>
+</ul>
+<p>In this book, you will need the following software list:</p>
+<ul>
+<li>Kali Linux 2017.x</li>
+<li>VirtualBox</li>
+<li>Windows XP</li>
+<li>Windows 7</li>
+<li>Windows 2008</li>
+</ul>
+<p>Internet connectivity is required to install the necessary additional packages that must be installed onto Kali Linux, depending on the recipe requirements.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Who this book is for</h1>
+                </header>
+            
+            <article>
+                
+<p>To make best use of the content of this book, knowledge in networking, device management, general information security concepts, and core operating systems is required. Foundational knowledge of Kali Linux is also expected. Since Kali Linux provides a tremendous number of tools for many different purposes, it is impossible to cover all possible combinations of the available tools and their use. For more details on all the tools available within Kali Linux, visit the official Kali Linux Tool page located at <a href="https://tools.kali.org/"><span>https://tools.kali.org/</span></a>. With that in mind, this book is intended to provide a more in-depth set of recipes to take advantage of these tools to sharpen your knowledge of security penetration testing and exploitation of insecure/undersecured environments.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Sections</h1>
+                </header>
+            
+            <article>
+                
+<p>In this book, you will find several headings that appear frequently (Getting ready, How to do it, How it works, There's more, and See also).</p>
+<p>To give clear instructions on how to complete a recipe, we use these sections as follows:</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>This section tells you what to expect in the recipe, and describes how to set up any software or any preliminary settings required for the recipe.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it…</h1>
+                </header>
+            
+            <article>
+                
+<p>This section contains the steps required to follow the recipe.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How it works…</h1>
+                </header>
+            
+            <article>
+                
+<p>This section usually consists of a detailed explanation of what happened in the previous section.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">There's more…</h1>
+                </header>
+            
+            <article>
+                
+<p>This section consists of additional information about the recipe in order to make the reader more knowledgeable about the recipe.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">See also</h1>
+                </header>
+            
+            <article>
+                
+<p>This section provides helpful links to other useful information for the recipe.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Conventions</h1>
+                </header>
+            
+            <article>
+                
+<p>In this book, you will find a number of styles of text that distinguish between different kinds of information. Here are some examples of these styles, and an explanation of their meaning.</p>
+<p>Code words in text, database table names, folder names, filenames, file extensions, pathnames, dummy URLs, user input, and Twitter handles are shown as follows: "<span>select </span><kbd>/root/Documents</kbd><span> and type in your customer name"</span>.</p>
+<p>Any command-line input or output is written as follows:</p>
+<pre style="padding-left: 60px"><strong> wafw00f scanme.nmap.org</strong> </pre>
+<p>New terms and important words are shown in bold. Words that you see on the screen, in menus or dialog boxes for example, appear in the text like this: "<span>click on </span><span class="packt_screen">Apply</span>."</p>
+<div class="packt_infobox">Warnings or important notes appear like this</div>
+<div class="packt_tip">Tips and tricks appear like this.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Readers feedback</h1>
+                </header>
+            
+            <article>
+                
+<p>Feedback from our readers is always welcome. Let us know what you think about this book-what you liked or disliked. Reader feedback is important for us as it helps us develop titles that you will really get the most out of.</p>
+<p>To send us general feedback, simply email <kbd>feedback@packtpub.com</kbd>, and mention the book's title in the subject of your message.</p>
+<p>If there is a topic that you have expertise in and you are interested in either writing or contributing to a book, see our author guide at <a href="http://www.packtpub.com/authors" target="_blank"><span>www.packtpub.com/authors</span></a>.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Customer support</h1>
+                </header>
+            
+            <article>
+                
+<p>Now that you are the proud owner of a Packt book, we have a number of things to help you to get the most from your purchase.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Downloading the color images of this book</h1>
+                </header>
+            
+            <article>
+                
+<p>We also provide you with a PDF file that has color images of the screenshots/diagrams used in this book. The color images will help you better understand the changes in the output. You can download this file from <a href="https://www.packtpub.com/sites/default/files/downloads/KaliLinuxCookbookSecondEdition_ColorImages.pdf"><span>https://www.packtpub.com/sites/default/files/downloads/KaliLinuxCookbookSecondEdition_ColorImages.pdf</span></a>.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Errata</h1>
+                </header>
+            
+            <article>
+                
+<p>Although we have taken every care to ensure the accuracy of our content, mistakes do happen. If you find a mistake in one of our books-maybe a mistake in the text or the code-we would be grateful if you could report this to us. By doing so, you can save other readers from frustration and help us improve subsequent versions of this book. If you find any errata, please report them by visiting <a href="http://www.packtpub.com/submit-errata" target="_blank"><span>http://www.packtpub.com/submit-errata</span></a>, selecting your book, clicking on the <span class="packt_screen">Errata Submission Form</span> link, and entering the details of your errata. Once your errata are verified, your submission will be accepted and the errata will be uploaded to our website or added to any list of existing errata under the Errata section of that title.</p>
+<p>To view the previously submitted errata, go to <a href="https://www.packtpub.com/books/content/support" target="_blank"><span>https://www.packtpub.com/books/content/support</span></a> and enter the name of the book in the search field. The required information will appear under the <span class="packt_screen">Errata</span> section.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Piracy</h1>
+                </header>
+            
+            <article>
+                
+<p>Piracy of copyrighted material on the Internet is an ongoing problem across all media. At Packt, we take the protection of our copyright and licenses very seriously. If you come across any illegal copies of our works in any form on the Internet, please provide us with the location address or website name immediately so that we can pursue a remedy.</p>
+<p>Please contact us at <kbd><span>copyright@packtpub.com</span></kbd> with a link to the suspected pirated material.</p>
+<p>We appreciate your help in protecting our authors and our ability to bring you valuable content.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Questions</h1>
+                </header>
+            
+            <article>
+                
+<p>If you have a problem with any aspect of this book, you can contact us at <kbd><span>questions@packtpub.com</span></kbd>, and we will do our best to address the problem.</p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

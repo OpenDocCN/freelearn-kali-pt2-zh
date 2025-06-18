@@ -1,0 +1,419 @@
+<html><head></head><body>
+        <section id="7K4G1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="7K4G3-b9b33aab03e0421eb686ac3fb53c3239">Preface</h1>
+            
+
+            <article>
+                
+<p class="calibre5">For better or for worse, we now live in a world where hacking is the norm. It's in our daily news stories, entertainment, governments, businesses, and homes. While it has become more and more prevalent, it has also become easier. A great deal of attacks take very little technical knowledge as scripts can be found and used by even a novice. For the technically savvy hacker, the stakes are very high as more and more systems can be compromised for financial or political gain.</p>
+<p class="calibre5">In a world where hacking has become so easy that a child could do it, it is absolutely essential that organizations verify their own level of protection by having their networks tested using the same tools that cybercriminals use against them. However, the basic usage of these tools is not sufficient knowledge to be an effective information-security professional. It is absolutely critical that information-security professionals understand the techniques that are being employed by these tools and why these techniques are able to exploit various vulnerabilities in a network or system. A knowledge of the basic underlying principles that explain how these common attack tools work enables one to effectively use them, but more importantly, it also contributes to one's ability to effectively identify such attacks and defend against them.</p>
+<p class="calibre5">The intention of this book is to enumerate and explain the use of common attack tools that are available on the Kali Linux platform, but more importantly, this book also aims to address the underlying principles that define why these tools work. In addition to addressing the highly functional tools integrated into Kali Linux, we will also create a large number of Python and Bash scripts that can be used to perform similar functions and/or to streamline existing tools.</p>
+<p class="calibre5">Ultimately, the intention of this book is to help forge stronger security professionals through a better understanding of their adversary.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="8IL21-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">What this book covers </h1>
+            
+
+            <article>
+                
+<p class="calibre5"><a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>, explains the configuration of a security lab and then the installation and configuration of Kali Linux and other security tools.</p>
+<p class="calibre5"><a href="part0076.html#28FAO1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 2</a>, <em class="calibre15">Reconnaissance</em>, explains how to collect information on your target using passive information-gathering techniques. Collecting subdomains, e-mail addresses, and DNS enumeration are covered in depth.</p>
+<p class="calibre5"><a href="part0103.html#3279U1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 3</a>, <em class="calibre15">Discovery</em>, explains gathering domain information on our target and identifying hosts on a given network segment.</p>
+<p class="calibre5"><a href="part0146.html#4B7I41-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 4</a>, <em class="calibre15">Port Scanning</em>, covers multiple tools and methods for finding open ports on one or more hosts.</p>
+<p class="calibre5"><a href="part0189.html#5K7QA1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 5</a>, <em class="calibre15">Fingerprinting</em>, explains identifying the services and versions associated with them once having identified open ports on our target(s).</p>
+<p class="calibre5"><a href="part0255.html#7J5VE1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 6</a>, <em class="calibre15">Vulnerability Scanning</em>, discusses ways to identify vulnerabilities based on the services and versions found in the previous chapter.</p>
+<p class="calibre5"><a href="part0285.html#8FPGA1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 7</a>, <em class="calibre15">Denial of Service</em>, covers how to execute several types of DoS attack.</p>
+<p class="calibre5"><a href="part0327.html#9NR7U1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 8</a>, <em class="calibre15">Working with Burp Suite</em>, covers Burp Suite and how to use the many tools it comes bundled with.</p>
+<p class="calibre5"><a href="part0381.html#BBB6A1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 9</a>, <em class="calibre15">Web Application Scanning</em>, covers a number of tools and techniques for testing web applications.</p>
+<p class="calibre5"><a href="part0419.html#CFIRM1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 10</a>, <em class="calibre15">Attacking the Browser with BeEF</em>, covers the Browser Exploitation Framework (BeEF), including configuration, hooking a browser, and a number of exploits.</p>
+<p class="calibre5"><a href="part0440.html#D3JNG1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 11</a>, <em class="calibre15">Working with Sparta</em>, looks at how to configure and modify Sparta. We also cover how to take full advantage of the tool to collect and organize your information gathering.</p>
+<p class="calibre5"><a href="part0465.html#DRELI1-cf89710d791c4a3bb78ec273d9322426" class="calibre6">Chapter 12</a>, <em class="calibre15">Automating Kali Tools</em>, demonstrates automating a number of Kali tools to both collect information and exploit targets.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9H5K1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">What you need for this book </h1>
+            
+
+            <article>
+                
+<p class="calibre5">In order to perform the examples provided in this book, you will need the following:</p>
+<ul class="calibre18">
+<li class="calibre19">Vmware Workstation Player 12 (or newer) or Vmware Fusion 8.5 (or newer) </li>
+<li class="calibre19">PuTTY 6.9 (for Windows users needing SSH)</li>
+<li class="calibre19">Nessus 5.2.6</li>
+<li class="calibre19">Kali Linux 2016.2</li>
+<li class="calibre19">Ubuntu 64-bit 16.x</li>
+<li class="calibre19">Metasploitable2</li>
+<li class="calibre19">Wndows XP SP2</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AFM61-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Who this book is for </h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>This book is for information-security professionals and casual security enthusiasts alike. It provides foundational principles if you're a novice but will also introduce scripting techniques and in-depth analysis if you're more advanced. Whether you are brand new to Kali Linux or a seasoned veteran, this book will help you both understand and ultimately master many of the most powerful and useful scanning techniques in the industry. It is assumed that you have some basic security-testing experience.</span></p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="BE6O1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Sections</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In this book, you will find several headings that appear frequently (<em class="calibre15">Getting ready</em>, <em class="calibre15">How to do it...</em>, <em class="calibre15">How it works...</em>, <em class="calibre15">There's more...</em>, and <em class="calibre15">See also</em>).</p>
+<p class="calibre5">To give clear instructions on how to complete a recipe, we use these sections as follows:</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CCNA1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">This section tells you what to expect in the recipe, and describes how to set up any software or any preliminary settings required for the recipe.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DB7S1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">This section contains the steps required to follow the recipe.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="E9OE1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">This section usually consists of a detailed explanation of what happened in the previous section.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="F8901-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">There's more…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">This section consists of additional information about the recipe in order to make the reader more knowledgeable about the recipe.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="G6PI1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">See also</h1>
+            
+
+            <article>
+                
+<p class="calibre5">This section provides helpful links to other useful information for the recipe.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="H5A41-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Conventions</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In this book, you will find a number of text styles that distinguish between different kinds of information. Here are some examples of these styles and an explanation of their meaning.</p>
+<p class="calibre5">Code words in text, database table names, folder names, filenames, file extensions, pathnames, dummy URLs, user input, and Twitter handles are shown as follows: "Enumerating DNS using the <kbd class="calibre16">host</kbd> command."</p>
+<p class="calibre5">A block of code is set as follows:</p>
+<pre class="calibre24">
+#!/bin/bash<br class="title-page-name"/> if [ ! $1 ]; then <br class="title-page-name"/> echo "Usage: #./dns-find-transfer.sh &lt;domain&gt;"; <br class="title-page-name"/> exit; <br class="title-page-name"/> fi<br class="title-page-name"/> for server in $(host -t ns $1 |cut -d" " -f4);do<br class="title-page-name"/> printf $server | sed 's/.$//'<br class="title-page-name"/> host -l $1 $server |grep "Address: " | cut -d: -f2 |<br class="title-page-name"/> sed 's/...$//'<br class="title-page-name"/> done
+</pre>
+<p class="calibre5">Any command-line input or output is written as follows:</p>
+<pre class="calibre24">
+<strong class="calibre1"> theharvester -d google.com -l 500 -b google</strong>
+</pre>
+<p class="calibre5"><strong class="calibre1">New terms</strong> and <strong class="calibre1">important words</strong> are shown in bold. Words that you see on the screen, for example, in menus or dialog boxes, appear in the text like this: "On this page, scroll down to the VMware Workstation Player link and click on <span>Download</span>."</p>
+<div class="packt_infobox">Warnings or important notes appear in a box like this.</div>
+<div class="packt_tip">Tips and tricks appear like this.</div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="I3QM1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Reader feedback</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Feedback from our readers is always welcome. Let us know what you think about this book-what you liked or disliked. Reader feedback is important for us as it helps us develop titles that you will really get the most out of.</p>
+<p class="calibre5">To send us general feedback, simply e-mail <kbd class="calibre16"><span>feedback@packtpub.com</span></kbd>, and mention the book's title in the subject of your message.</p>
+<p class="calibre5">If there is a topic that you have expertise in and you are interested in either writing or contributing to a book, see our author guide at <span><a href="http://www.packtpub.com/authors" target="_blank" class="calibre6">www.packtpub.com/authors</a></span> .</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="J2B81-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Customer support</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Now that you are the proud owner of a Packt book, we have a number of things to help you to get the most from your purchase.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="K0RQ1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Downloading the example code</h1>
+            
+
+            <article>
+                
+<p class="calibre5">You can download the example code files for this book from your account at <a href="http://www.packtpub.com" target="_blank" class="calibre6">http://www.packtpub.com</a>. If you purchased this book elsewhere, you can visit <a href="http://www.packtpub.com/support" target="_blank" class="calibre6">http://www.packtpub.com/support</a>  and register to have the files e-mailed directly to you.</p>
+<p class="calibre5">You can download the code files by following these steps:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">Log in or register to our website using your e-mail address and password.</li>
+<li value="2" class="calibre19">Hover the mouse pointer on the <span>SUPPORT</span> tab at the top.</li>
+<li value="3" class="calibre19">Click on <span>Code Downloads &amp; Errata</span>.</li>
+<li value="4" class="calibre19">Enter the name of the book in the <span>Search</span> box.</li>
+<li value="5" class="calibre19">Select the book for which you're looking to download the code files.</li>
+<li value="6" class="calibre19">Choose from the drop-down menu where you purchased this book from.</li>
+<li value="7" class="calibre19">Click on <span>Code Download</span>.</li>
+</ol>
+<p class="calibre5">You can also download the code files by clicking on the <span>Code Files</span> button on the book's webpage at the Packt Publishing website. This page can be accessed by entering the book's name in the <span>Search</span> box. Please note that you need to be logged in to your Packt account.</p>
+<p class="calibre5">Once the file is downloaded, please make sure that you unzip or extract the folder using the latest version of:</p>
+<ul class="calibre18">
+<li class="calibre19">WinRAR / 7-Zip for Windows</li>
+<li class="calibre19">Zipeg / iZip / UnRarX for Mac</li>
+<li class="calibre19">7-Zip / PeaZip for Linux</li>
+</ul>
+<p class="calibre5">The code bundle for the book is also hosted on GitHub at <a href="https://github.com/PacktPublishing/Kali-Linux-Network-Scanning-Cookbook-Second-Edition" target="_blank" class="calibre6">https://github.com/PacktPublishing/Kali-Linux-Network-Scanning-Cookbook-Second-Edition</a>. We also have other code bundles from our rich catalog of books and videos available at <strong class="calibre1"><span><a href="https://github.com/PacktPublishing/" target="_blank" class="calibre6">https://github.com/PacktPublishing/</a></span></strong>. Check them out!</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="KVCC1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Downloading the color images of this book </h1>
+            
+
+            <article>
+                
+<p class="calibre5">We also provide you with a PDF file that has color images of the screenshots/diagrams used in this book. The color images will help you better understand the changes in the output. You can download this file from <a href="https://www.packtpub.com/sites/default/files/downloads/KaliLinuxNetworkScanningCookbookSecondEdition_ColorImages.pdf" class="calibre6">https://www.packtpub.com/sites/default/files/downloads/KaliLinuxNetworkScanningCookbookSecondEdition_ColorImages.pdf</a>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="LTSU1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Errata</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Although we have taken every care to ensure the accuracy of our content, mistakes do happen. If you find a mistake in one of our books-maybe a mistake in the text or the code-we would be grateful if you could report this to us. By doing so, you can save other readers from frustration and help us improve subsequent versions of this book. If you find any errata, please report them by visiting <span><a href="http://www.packtpub.com/submit-errata" target="_blank" class="calibre6">http://www.packtpub.com/submit-errata</a></span>, selecting your book, clicking on the <span>Errata Submission Form</span> link, and entering the details of your errata. Once your errata are verified, your submission will be accepted and the errata will be uploaded to our website or added to any list of existing errata under the Errata section of that title.</p>
+<p class="calibre5">To view the previously submitted errata, go to <span><a href="https://www.packtpub.com/books/content/support" target="_blank" class="calibre6">https://www.packtpub.com/books/content/support</a> </span> and enter the name of the book in the search field. The required information will appear under the <span>Errata</span> section.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="MSDG1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Piracy</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Piracy of copyrighted material on the Internet is an ongoing problem across all media. At Packt, we take the protection of our copyright and licenses very seriously. If you come across any illegal copies of our works in any form on the Internet, please provide us with the location address or website name immediately so that we can pursue a remedy.</p>
+<p class="calibre5">Please contact us at <kbd class="calibre16"><span>copyright@packtpub.com</span></kbd> with a link to the suspected pirated material.</p>
+<p class="calibre5">We appreciate your help in protecting our authors and our ability to bring you valuable content.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="NQU21-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Questions</h1>
+            
+
+            <article>
+                
+<p class="calibre5">If you have a problem with any aspect of this book, you can contact us at <kbd class="calibre16"><span>questions@packtpub.com</span></kbd>, and we will do our best to address the problem.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    </body></html>

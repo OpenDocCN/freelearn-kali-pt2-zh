@@ -1,0 +1,661 @@
+<html><head></head><body>
+		<div id="_idContainer293">
+			<h1 id="_idParaDest-82" class="chapter-number"><a id="_idTextAnchor214"/>4</h1>
+			<h1 id="_idParaDest-83"><a id="_idTextAnchor215"/>Assessing Authentication Schemes</h1>
+			<p>This chapter covers some basic authentication penetration test cases. For background, <strong class="bold">authentication</strong> is the act <a id="_idIndexMarker279"/>of verifying whether a person’s or object’s claim of identity is true. Web penetration testers must make key assessments to determine the strength of a target application’s authentication mechanism. Such tests include username enumeration, guessable accounts, weak lockout mechanisms, authentication bypasses, browser-caching weaknesses, and account provisioning omissions, particularly <a id="_idIndexMarker280"/>related to <strong class="bold">Representational State Transfer</strong> (<strong class="bold">REST</strong>) API calls. You will learn how to use Burp Suite to perform <span class="No-Break">such tests.</span></p>
+			<p>In this chapter, we will cover the <span class="No-Break">following recipes:</span></p>
+			<ul>
+				<li>Testing for account enumeration and <span class="No-Break">guessable accounts</span></li>
+				<li>Testing for weak <span class="No-Break">lockout mechanisms</span></li>
+				<li>Testing for bypassing <span class="No-Break">authentication schemes</span></li>
+				<li>Testing for browser <span class="No-Break">cache weaknesses</span></li>
+				<li>Testing the account provisioning process via the <span class="No-Break">REST A<a id="_idTextAnchor216"/><a id="_idTextAnchor217"/>P<a id="_idTextAnchor218"/>I</span></li>
+			</ul>
+			<h1 id="_idParaDest-84"><a id="_idTextAnchor219"/>Technical requirements</h1>
+			<p>To complete the recipes in this chapter, you will need <span class="No-Break">the following:</span></p>
+			<ul>
+				<li>OWASP <strong class="bold">Broken Web Applications</strong> (<span class="No-Break"><strong class="bold">BWA</strong></span><span class="No-Break">) (VM)</span></li>
+				<li>An OWASP <a id="_idIndexMarker281"/><span class="No-Break">Mutillidae link</span></li>
+				<li>A <span class="No-Break">GetBoo</span><span class="No-Break"> link</span></li>
+				<li>Burp Suite Proxy Community or <span class="No-Break">Professional (</span><a href="B21173_04.xhtml#_idTextAnchor214"><span class="No-Break">https://portswigger.net/burp/</span></a><span class="No-Break">)</span></li>
+				<li>The Firefox browser configured to allow Burp Suite to proxy <span class="No-Break">traffic (</span><a href="B21173_04.xhtml#_idTextAnchor268"><span class="No-Break">https://www.mozilla.org/en-US/firefox/ne<span id="_idTextAnchor220"/>w<span id="_idTextAnchor221"/>/</span></a><span class="No-Break">)</span></li>
+			</ul>
+			<h1 id="_idParaDest-85"><a id="_idTextAnchor222"/>Testing for account enumeration and guessable accounts</h1>
+			<p>By interacting with an authentication mechanism and studying responses, a tester may be able <a id="_idIndexMarker282"/>to collect a set of valid usernames. Once valid accounts <a id="_idIndexMarker283"/>have been identified, testers can attempt to brute-force passwords. This recipe explains how Burp Suite Repeater can be used to collect a list of valid usernames via the username <span class="No-Break">enumeration at<a id="_idTextAnchor223"/>t<a id="_idTextAnchor224"/>ack.</span></p>
+			<h2 id="_idParaDest-86"><a id="_idTextAnchor225"/>Getting ready</h2>
+			<p>Using the <strong class="bold">OWASP GetBoo</strong> application <a id="_idIndexMarker284"/>and Burp, we will perform a username enumeration attack against <span class="No-Break">the t<a id="_idTextAnchor226"/>a<a id="_idTextAnchor227"/>rget.</span></p>
+			<h2 id="_idParaDest-87"><a id="_idTextAnchor228"/>How to do it...</h2>
+			<p>Ensure Burp Suite and the OWASP BWA VM are running, and that Burp Suite is configured in your Firefox browser so that you can view the OWASP <span class="No-Break">BWA applications:</span></p>
+			<ol>
+				<li>From the OWASP BWA landing page, click the link to the <span class="No-Break"><strong class="bold">GetBoo</strong></span><span class="No-Break"> application:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer229" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.01.jpg" alt="Figure 4.1 – OWASP BWA landing page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.1 – OWASP BWA landing page</p>
+			<ol>
+				<li value="2">Click the <strong class="bold">Log In</strong> button and, at the login screen, attempt to log in with an account username of <strong class="source-inline">demo</strong> and a password <span class="No-Break">of </span><span class="No-Break"><strong class="source-inline">aaaaaa</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer230" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.02.jpg" alt="Figure 4.2 – GetBoo login page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.2 – GetBoo login page</p>
+			<ol>
+				<li value="3">Note that <a id="_idIndexMarker285"/>a message stating <strong class="bold">The password is invalid</strong>. is returned. From this information, we now know the <strong class="source-inline">demo</strong> username <a id="_idIndexMarker286"/>has a valid account. Let’s use Burp Suite <strong class="bold">Repeater</strong> to find <span class="No-Break">more accounts:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer231" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.03.jpg" alt="Figure 4.3 – Overly verbose error message after a failed login attempt with a valid username and invalid password"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.3 – Overly verbose error message after a failed login attempt with a valid username and invalid password</p>
+			<ol>
+				<li value="4">In <a id="_idIndexMarker287"/>Burp’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab, find the failed <a id="_idIndexMarker288"/>login attempt message. View the <strong class="bold">Response</strong> | <strong class="bold">Raw</strong> tab to find the same overly verbose error message, <strong class="source-inline">The password </strong><span class="No-Break"><strong class="source-inline">is invalid</strong></span><span class="No-Break">.:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer232" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.04.jpg" alt="Figure 4.4 – Failed login attempt, as seen in Burp"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.4 – Failed login attempt, as seen in Burp</p>
+			<ol>
+				<li value="5">Flip back to the <strong class="bold">Request</strong> | <strong class="bold">Raw</strong> tab and right-click to send this request <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Repeater</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer233" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.05.jpg" alt="Figure 4.5 – Contextual menu to send request to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.5 – Contextual menu to send request to Repeater</p>
+			<ol>
+				<li value="6">Go to <a id="_idIndexMarker289"/>Burp’s <strong class="bold">Repeater</strong> tab where you sent the <a id="_idIndexMarker290"/>request. Click the <strong class="bold">Send</strong> button. Notice the message in the response – <strong class="source-inline">The security token </strong><span class="No-Break"><strong class="source-inline">is invalid</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer234" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.06.jpg" alt="Figure 4.6 – The Repeater tab with the failed login attempt"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.6 – The Repeater tab with the failed login attempt</p>
+			<ol>
+				<li value="7">The message <a id="_idIndexMarker291"/>about the invalid security token is <a id="_idIndexMarker292"/>due to the token that was sent with each request not being refreshed when we are inside Repeater sending the same request over and again. Because the target application expects the token value to change upon each POST request, we can craft our request inside Repeater to get past this message. Let’s learn how we can make Burp Suite change the token value for us! We can build a session handling rule with a macro to fix <span class="No-Break">this situation:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer235" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.07.jpg" alt="Figure 4.7 – The token value in each POST request must be unique"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.7 – The token value in each POST request must be unique</p>
+			<ol>
+				<li value="8">Our first <a id="_idIndexMarker293"/>step in building a session handling rule with <a id="_idIndexMarker294"/>a macro is to select the <strong class="bold">Settings</strong> gear icon at the top right-hand corner <span class="No-Break">of Burp:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer236" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.08.jpg" alt="Figure 4.8 – The Settings gear icon"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.8 – The Settings gear icon</p>
+			<ol>
+				<li value="9">In the pop-out window, make sure <strong class="bold">All</strong> configurations are selected and the <strong class="bold">Sessions</strong> area is highlighted, as shown in the <span class="No-Break">following screenshot:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer237" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.09.jpg" alt="Figure 4.9 – All | Sessions"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.9 – All | Sessions</p>
+			<ol>
+				<li value="10">After <a id="_idIndexMarker295"/>highlighting <strong class="bold">Sessions</strong>, go inside the <strong class="bold">Session handling rules</strong> area <a id="_idIndexMarker296"/>and click the <strong class="bold">Add</strong> button to add a <span class="No-Break">new rule:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer238" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.010.jpg" alt="Figure 4.10 – Creating a new session handling rule with a macro to handle refreshing the token"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.10 – Creating a new session handling rule with a macro to handle refreshing the token</p>
+			<ol>
+				<li value="11">When <a id="_idIndexMarker297"/>the <strong class="bold">Session handling rule editor</strong> area <a id="_idIndexMarker298"/>appears, type <strong class="source-inline">RefreshToken</strong> as the name of the new rule. For <strong class="bold">Rule actions</strong>, select <strong class="bold">Run </strong><span class="No-Break"><strong class="bold">a macro</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer239" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.011.jpg" alt="Figure 4.11 – Naming our session handling rule and defining the action"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.11 – Naming our session handling rule and defining the action</p>
+			<ol>
+				<li value="12">When the <strong class="bold">Session handling editor</strong> pop-out window opens, select the <strong class="bold">Update only the following parameters and headers</strong> radio button and type <strong class="source-inline">token</strong>. Please <em class="italic">do not</em> skip this step; otherwise, the rule will not <span class="No-Break">work properly:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer240" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.012.jpg" alt="Figure 4.12 – Update only the token parameter setting"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.12 – Update only the token parameter setting</p>
+			<p>In the <a id="_idIndexMarker299"/>same <strong class="bold">Session handling editor</strong> pop-out <a id="_idIndexMarker300"/>window, at the top, click the <strong class="bold">Add</strong> button under <span class="No-Break"><strong class="bold">Select macro</strong></span><span class="No-Break">:</span></p>
+			<div>
+				<div id="_idContainer241" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.013.jpg" alt="Figure 4.13 – Session handling action editor settings"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.13 – Session handling action editor settings</p>
+			<ol>
+				<li value="13">After clicking <strong class="bold">Add</strong> under <strong class="bold">Select macro</strong>, two new pop-out windows will appear. In the <strong class="bold">Macro Recorder</strong> table shown here, look for the POST <strong class="source-inline">/getboo/login.php</strong> request inside the history containing the <strong class="source-inline">demo</strong> username and the <strong class="source-inline">aaaaaa</strong> password. This is the same request you performed in the browser <a id="_idIndexMarker301"/>and the same one we looked at <a id="_idIndexMarker302"/>originally in <strong class="bold">Repeater</strong>. You must now find it in the <strong class="bold">Macro Recorder</strong> table to have the macro <em class="italic">replay</em> <span class="No-Break">the request:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer242" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.014.jpg" alt="Figure 4.14 – Macro Recorder"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.14 – Macro Recorder</p>
+			<p>Here is the request containing <strong class="source-inline">demo</strong> <span class="No-Break">and </span><span class="No-Break"><strong class="source-inline">aaaaaa</strong></span><span class="No-Break">:</span></p>
+			<div>
+				<div id="_idContainer243" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.015.jpg" alt="Figure 4.15 – Macro Recorder highlighting the POST request of the login"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.15 – Macro Recorder highlighting the POST request of the login</p>
+			<ol>
+				<li value="14">After finding the POST <strong class="source-inline">/getboo/login.php</strong> request inside the history, select the GET <strong class="source-inline">/getboo/login.php</strong> request that occurred <em class="italic">just before</em> the POST (two requests down, as shown in the <span class="No-Break">following screenshot):</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer244" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.016.jpg" alt="Figure 4.16 – Macro Recorder of the previous GET request"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.16 – Macro Recorder of the previous GET request</p>
+			<ol>
+				<li value="15">The reason <a id="_idIndexMarker303"/>this GET <strong class="source-inline">/getboo/login.php</strong> request is important is that the token value in the response is <a id="_idIndexMarker304"/>assigned to the token value of the POST two <span class="No-Break">requests later:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer245" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.017.jpg" alt="Figure 4.17 – The response of the previous GET assigns a hidden value for the token"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.17 – The response of the previous GET assigns a hidden value for the token</p>
+			<p>As evidence and for your understanding, look at the POST <strong class="source-inline">/getboo/login.php</strong> request again. Note that the value of the token matches <a id="_idIndexMarker305"/>the hidden value from the previous <a id="_idIndexMarker306"/>GET response (that <span class="No-Break">is, </span><span class="No-Break"><strong class="source-inline">ed881be5badd9b284239be84948a103a</strong></span><span class="No-Break">):</span></p>
+			<div>
+				<div id="_idContainer246" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.018.jpg" alt="Figure 4.18 – The token value is used in the subsequent POST request"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.18 – The token value is used in the subsequent POST request</p>
+			<ol>
+				<li value="16">Using this pattern, we will create a macro to grab the ever-changing token value from the GET response and have the unique value populate our token inside the POST request we have waiting for us in <strong class="bold">Repeater</strong>. Running this macro should fix the problem we are currently experiencing and get rid of the message stating <strong class="bold">The security token </strong><span class="No-Break"><strong class="bold">is invalid</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<p>Now, let’s build the macro! Select <em class="italic">only</em> the GET <strong class="source-inline">/getboo/login.php</strong> request from the <strong class="bold">Macro Recorder</strong> history table and <span class="No-Break">click </span><span class="No-Break"><strong class="bold">OK</strong></span><span class="No-Break">:</span></p>
+			<div>
+				<div id="_idContainer247" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.019.jpg" alt="Figure 4.19 – Macro Recorder search box"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.19 – Macro Recorder search box</p>
+			<ol>
+				<li value="17">After clicking <strong class="bold">OK</strong>, you will <a id="_idIndexMarker307"/>return to the <strong class="bold">Macro Editor</strong> area. Feel <a id="_idIndexMarker308"/>free to name your macro – for example, <strong class="source-inline">TokenFromResponseMacro</strong>. Ensure <em class="italic">only</em> the GET <strong class="source-inline">/getboo/login.php</strong> request is shown in the table. Click <span class="No-Break"><strong class="bold">Configure item</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer248" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.020.jpg" alt="Figure 4.20 – Macro Editor | Configure item"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.20 – Macro Editor | Configure item</p>
+			<ol>
+				<li value="18">A new pop-out <a id="_idIndexMarker309"/>window will appear entitled <strong class="bold">Configure Macro Item</strong>. We will <a id="_idIndexMarker310"/>select a custom parameter in the response. <span class="No-Break">Click </span><span class="No-Break"><strong class="bold">Add</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer249" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.021.jpg" alt="Figure 4.21 – The Configure Macro Item custom parameter from the response"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.21 – The Configure Macro Item custom parameter from the response</p>
+			<p>Yet another pop-out window will appear, where you can define the <span class="No-Break">custom parameter:</span></p>
+			<ol>
+				<li>For the parameter name, <span class="No-Break">type </span><span class="No-Break"><strong class="source-inline">token</strong></span><span class="No-Break">.</span></li>
+				<li>Type <strong class="source-inline">token</strong> into the search box at the bottom to find where the token is in <span class="No-Break">the response.</span></li>
+				<li>Once you <a id="_idIndexMarker311"/>find the token value, highlight <a id="_idIndexMarker312"/>the <em class="italic">value</em> from beginning to end. If you highlighted it correctly, you should see <strong class="bold">Start after expression</strong> and <strong class="bold">End at delimiter </strong>populated, as shown in the <span class="No-Break">following screenshot.</span></li>
+			</ol>
+			<p>Click <strong class="bold">OK</strong> to close the <strong class="bold">Define Custom </strong><span class="No-Break"><strong class="bold">Parameter</strong></span><span class="No-Break"> window:</span></p>
+			<div>
+				<div id="_idContainer250" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.022.jpg" alt="Figure 4.22 – Define Custom Parameter"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.22 – Define Custom Parameter</p>
+			<ol>
+				<li value="19">After clicking <strong class="bold">OK</strong> three times to close all the pop-out windows, you should return to <a id="_idIndexMarker313"/>the original <strong class="bold">Session handling rule editor</strong> dialog <a id="_idIndexMarker314"/>box. The view will default to <strong class="bold">Details</strong>, so you need to select the other <span class="No-Break">tab, </span><span class="No-Break"><strong class="bold">Scope</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<p>Under <strong class="bold">Tools scope</strong>, uncheck all tool boxes except the <strong class="bold">Repeater</strong> tool. Under <strong class="bold">URL scope</strong>, select <strong class="bold">Include all URLs</strong>. Click <strong class="bold">OK</strong> to close the <strong class="bold">Session handling rule editor</strong> <span class="No-Break">dialog box:</span></p>
+			<div>
+				<div id="_idContainer251" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.023.jpg" alt="Figure 4.23 – Only assigning scope to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.23 – Only assigning scope to Repeater</p>
+			<ol>
+				<li value="20">Make sure your new session handling rule is enabled by ensuring the checkbox <span class="No-Break">is filled:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer252" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.024.jpg" alt="Figure 4.24 – Enabling the new session handling rule"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.24 – Enabling the new session handling rule</p>
+			<ol>
+				<li value="21">Now, you are <a id="_idIndexMarker315"/>ready to return to <strong class="bold">Repeater</strong> and test <a id="_idIndexMarker316"/>out the new session handling rule with the macro. Re-send the POST <strong class="source-inline">/getboo/login.php</strong> request inside <strong class="bold">Repeater</strong> with <strong class="source-inline">demo</strong> as the username and <strong class="source-inline">aaaaaa</strong> as the password. Now, you will see that the message is <strong class="bold">The password is invalid</strong>. instead of <strong class="bold">The security token is invalid</strong>. If you don’t see the new message, retrace your steps to create the session handling rules <span class="No-Break">and macro:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer253" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.025.jpg" alt="Figure 4.25 – Retesting the POST request in Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.25 – Retesting the POST request in Repeater</p>
+			<ol>
+				<li value="22">We no longer <a id="_idIndexMarker317"/>receive the message stating <strong class="bold">The security token is invalid</strong> inside Repeater. Great! Now that our session is handled <a id="_idIndexMarker318"/>properly with our macro, let’s tweak the username in the POST request to see whether we can enumerate more user accounts. In the name field, place an invalid username, such as <strong class="source-inline">joey</strong>, and click the <strong class="bold">Send</strong> button. Notice the returned message of <strong class="bold">The user does </strong><span class="No-Break"><strong class="bold">not exist</strong></span><span class="No-Break">.:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer254" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.026.jpg" alt="Figure 4.26 – Trying different usernames to get verbose responses"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.26 – Trying different usernames to get verbose responses</p>
+			<ol>
+				<li value="23">Continue to try different users and observe the different verbose messages. For example, try <strong class="source-inline">admin</strong>. What message do you get? Interesting! Now, we know there is a valid <span class="No-Break">a<a id="_idTextAnchor229"/><a id="_idTextAnchor230"/>dmin account.</span></li>
+			</ol>
+			<h1 id="_idParaDest-88"><a id="_idTextAnchor231"/>Testing for weak lockout mechanisms</h1>
+			<p>Account lockout mechanisms should be present within an application to mitigate brute-force login <a id="_idIndexMarker319"/>attacks. Typically, applications set a threshold between three to five attempts. Many applications lock accounts for a period before a re-attempt <span class="No-Break">is allowed.</span></p>
+			<p>Penetration testers must test all aspects of login protections, including challenge questions and response<a id="_idTextAnchor232"/>s<a id="_idTextAnchor233"/>, <span class="No-Break">if present.</span></p>
+			<h2 id="_idParaDest-89"><a id="_idTextAnchor234"/>Getting ready</h2>
+			<p>Determine whether an application has proper lockout mechanisms in place. If they are not present, attempt to brute-force credentials against the login page to achieve unauthorized access to the application. Using the OWASP Mutillidae II application, attempt to log in five times with a valid username but an <span class="No-Break">in<a id="_idTextAnchor235"/>v<a id="_idTextAnchor236"/>alid password.</span></p>
+			<h2 id="_idParaDest-90"><a id="_idTextAnchor237"/>How to do it...</h2>
+			<p>Ensure Burp Suite and the OWASP BWA VM are running and that Burp Suite has been configured in your Firefox browser so that you can view the OWASP <span class="No-Break">BWA applications:</span></p>
+			<ol>
+				<li>From the OWASP BWA landing page, click the link to the OWASP Mutillidae <span class="No-Break">II application.</span></li>
+				<li>Open your Firefox browser and go to the login screen of OWASP Mutillidae II. From the top menu, <span class="No-Break">click </span><span class="No-Break"><strong class="bold">Login</strong></span><span class="No-Break">.</span></li>
+				<li>On the login screen, attempt to log in five times with the <strong class="source-inline">admin</strong> username and the wrong password of <strong class="source-inline">aaaaaa</strong>. Notice that the application does not react any differently during these five attempts. The application does not change the error message shown, and the <strong class="source-inline">admin</strong> account is not locked out. This means the login is probably <a id="_idIndexMarker320"/>susceptible to brute-force <span class="No-Break">password-guessing attacks:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer255" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.027.jpg" alt="Figure 4.27 – Brute-forcing login attempts"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.27 – Brute-forcing login attempts</p>
+			<p>Let’s continue our testing to brute-force the login page and gain unauthorized access to <span class="No-Break">the application.</span></p>
+			<ol>
+				<li value="4">Go to the <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and look for the failed login attempts. Once found, right-click and <strong class="bold">Send </strong><span class="No-Break"><strong class="bold">to Intruder</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer256" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.028.jpg" alt="Figure 4.28 – Failed login attempt in HTTP history and Send to Intruder"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.28 – Failed login attempt in HTTP history and Send to Intruder</p>
+			<ol>
+				<li value="5">Go to <a id="_idIndexMarker321"/>Burp’s <strong class="bold">Intruder</strong> | <strong class="bold">Positions</strong> tab. If suggested payload markers are present, click the <strong class="bold">Clear §</strong> button to remove them. If none are suggested, you may ignore <span class="No-Break">this step:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer257" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.029.jpg" alt="Figure 4.29 – The Intruder | Positions tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.29 – The Intruder | Positions tab</p>
+			<ol>
+				<li value="6">Then, highlight <a id="_idIndexMarker322"/>the password value of <strong class="source-inline">aaaaaa</strong> and click the <strong class="bold">Add §</strong> <span class="No-Break">button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer258" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.030.jpg" alt="Figure 4.30 – Setting a substitution marker in the Intruder | Positions tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.30 – Setting a substitution marker in the Intruder | Positions tab</p>
+			<ol>
+				<li value="7">Continue to the <strong class="bold">Intruder</strong> | <strong class="bold">Payloads</strong> tab. Many testers use word lists to brute-force commonly used passwords within the payload marker placeholder. For this recipe, we will type in some common passwords to create a unique list <span class="No-Break">of payloads.</span></li>
+				<li>In the <strong class="bold">Payload settings [Simple list]</strong> section, type the <strong class="source-inline">admin123</strong> string and <a id="_idIndexMarker323"/>click the <span class="No-Break"><strong class="bold">Add</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer259" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.031.jpg" alt="Figure 4.31 – Custom payload values"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.31 – Custom payload values</p>
+			<ol>
+				<li value="9">Add a few more strings, such as <strong class="source-inline">adminpass</strong>, <strong class="source-inline">welcome1</strong>, and, <strong class="source-inline">admin</strong>, to the <span class="No-Break">payload-listing box:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer260" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.032.jpg" alt="Figure 4.32 – Final list of custom payload values"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.32 – Final list of custom payload values</p>
+			<ol>
+				<li value="10">Go to <a id="_idIndexMarker324"/>the <strong class="bold">Intruder</strong> | <strong class="bold">Settings</strong> tab and scroll down to the <strong class="bold">Grep - </strong><span class="No-Break"><strong class="bold">Extract </strong></span><span class="No-Break">section:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer261" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.033.jpg" alt="Figure 4.33 – Grep ﻿- Extract for a particular string literal on responses"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.33 – Grep - Extract for a particular string literal on responses</p>
+			<ol>
+				<li value="11">Click the <strong class="bold">Extract the following items from responses</strong> checkbox and then click the <strong class="bold">Add</strong> button. A pop-up box will appear, displaying the response to the unsuccessful login attempt you made with the <span class="No-Break"><strong class="source-inline">admin</strong></span><span class="No-Break">/</span><span class="No-Break"><strong class="source-inline">aaaaaa</strong></span><span class="No-Break"> request.</span></li>
+				<li>In the search box at the bottom, search for <strong class="source-inline">Not Logged In</strong>. After finding the match, you must highlight <strong class="bold">Not Logged In</strong> to assign the grep <span class="No-Break">match correctly:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer262" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.034.jpg" alt="Figure 4.34 – Grep for string literal"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.34 – Grep for string literal</p>
+			<ol>
+				<li value="13">If you do <a id="_idIndexMarker325"/>not highlight the words properly, after you click <strong class="bold">OK</strong>, you will see <strong class="bold">[INVALID]</strong> inside the <strong class="bold">Grep - Extract</strong> box. If this happens, remove the entry by clicking the <strong class="bold">Remove</strong> button and try again by clicking the <strong class="bold">Add</strong> button, performing the search, and highlighting <span class="No-Break">the words.</span></li>
+				<li>If you do highlight the words properly, you should see the following in the <strong class="bold">Grep - </strong><span class="No-Break"><strong class="bold">Extract</strong></span><span class="No-Break"> box:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer263" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.035.jpg" alt="Figure 4.35 – Selecting a string literal to auto-populate the expression start and end boxes"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.35 – Selecting a string literal to auto-populate the expression start and end boxes</p>
+			<ol>
+				<li value="15">If you <a id="_idIndexMarker326"/>highlight the words correctly, after you click <strong class="bold">OK</strong> to close the <strong class="bold">Define extract grep item</strong> dialog box, you will see the following expression in the <strong class="bold">Grep - Extract</strong> <span class="No-Break">text area:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer264" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.036.jpg" alt="Figure 4.36 – Final grep rule setting"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.36 – Final grep rule setting</p>
+			<ol>
+				<li value="16">Now, click the <strong class="bold">Start attack</strong> button at the top right-hand side of the <strong class="bold">Settings</strong> page. If your attack does not start and you see a <strong class="bold">Resume</strong> button, click it to begin your attack. If you do not see the <strong class="bold">Resume</strong> button, you may disregard <span class="No-Break">this step.</span></li>
+				<li>A pop-up <a id="_idIndexMarker327"/>attack results table appears, displaying the request with the payloads you defined placed in the payload marker positions. Notice that the attack table that was produced shows an extra column entitled <strong class="bold">ReflectedXSSExecution</strong>. This column is a result of the <strong class="bold">Grep - Extract</strong> rule that we <span class="No-Break">set previously.</span></li>
+				<li>From this attack table, viewing the additional column we added from <strong class="bold">Grep - Extract</strong>, a tester can easily identify which requests successfully brute-forced the login screen. In this case, request <strong class="bold">2</strong> and <span class="No-Break">request </span><span class="No-Break"><strong class="bold">4</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer265" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.037.jpg" alt="Figure 4.37 – Attack table"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.37 – Attack table</p>
+			<ol>
+				<li value="19">Select request <strong class="bold">4</strong> within the attack table and view the <strong class="bold">Response</strong> | <strong class="bold">Render</strong> tab. You should see a message stating <strong class="bold">Logged In Admin: admin (g0t r00t?)</strong> at the top <span class="No-Break">right-hand side:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer266" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.038.jpg" alt="Figure 4.38 – Results of the attack logged in the session"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.38 – Results of the attack logged in the session</p>
+			<ol>
+				<li value="20">Close the <a id="_idIndexMarker328"/>attack table by clicking the <strong class="bold">X</strong> button in the top <span class="No-Break">right-hand corner.</span></li>
+			</ol>
+			<p>With that, you successfully brute-forced the password of a valid account on the system. Your attack was successful because the application has a weak <span class="No-Break">lockou<a id="_idTextAnchor238"/>t<a id="_idTextAnchor239"/> mechanism.</span></p>
+			<h1 id="_idParaDest-91"><a id="_idTextAnchor240"/>Testing for bypassing authentication schemes</h1>
+			<p>Applications <a id="_idIndexMarker329"/>may contain flaws, allowing unauthorized access by bypassing the authentication measures in place. Bypassing techniques include a <strong class="bold">direct page request</strong> (that is, forced browsing), <strong class="bold">parameter modification</strong>, <strong class="bold">session ID prediction</strong>, and <span class="No-Break"><strong class="bold">SQL </strong></span><span class="No-Break"><strong class="bold">i</strong></span><span class="No-Break"><strong class="bold">njection</strong></span><span class="No-Break">.</span></p>
+			<p>For this recipe, we will use <span class="No-Break">parameter m<a id="_idTextAnchor241"/>o<a id="_idTextAnchor242"/>dification.</span></p>
+			<h2 id="_idParaDest-92"><a id="_idTextAnchor243"/>Getting ready</h2>
+			<p>Edit the parameters of an authenticated request for a lower-privilege user to elevate up to an admin. We will use <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> during login and manipulate some cookie values to become a higher role. Once our privileges have been escalated, we can gain access to administrative functionality without knowing the <span class="No-Break">admin’s<a id="_idTextAnchor244"/> <a id="_idTextAnchor245"/>credentials.</span></p>
+			<h2 id="_idParaDest-93"><a id="_idTextAnchor246"/>How to do it...</h2>
+			<ol>
+				<li>Open your <a id="_idIndexMarker330"/>Firefox browser, or the Burp Suite browser, and go to the home page of OWASP Mutillidae II by using the <strong class="bold">Home</strong> button from the top menu on the left-hand side. Make sure you are <em class="italic">not logged in to</em> the application. If you are logged in, select <strong class="bold">Logout</strong> from <span class="No-Break">the menu:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer267" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.039.jpg" alt="Figure 4.39 – Confirm you are not logged in"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.39 – Confirm you are not logged in</p>
+			<ol>
+				<li value="2">Click the <strong class="bold">Login/Register</strong> link to navigate to the <span class="No-Break"><strong class="bold">Login</strong></span><span class="No-Break"> page:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer268" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.040.jpg" alt="Figure 4.40 – No logged-in session"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.40 – No logged-in session</p>
+			<ol>
+				<li value="3">Go to <a id="_idIndexMarker331"/>Burp Suite’s <strong class="bold">Proxy</strong> tab and click <strong class="bold">Intercept is on</strong> (toggle on). Type the username of <strong class="source-inline">user</strong> and the password of <strong class="source-inline">user</strong> into the <span class="No-Break">login form:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer269" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.041.jpg" alt="Figure 4.41 – Proxy | Intercept is on"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.41 – Proxy | Intercept is on</p>
+			<ol>
+				<li value="4">After entering your credentials, you should see that the request is held up in <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong>. <span class="No-Break">Click </span><span class="No-Break"><strong class="bold">Forward</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer270" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.042.jpg" alt="Figure 4.42 – Clicking the Forward button to send the request to the web server"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.42 – Clicking the Forward button to send the request to the web server</p>
+			<ol>
+				<li value="5">Continue <a id="_idIndexMarker332"/>to click <strong class="bold">Forward</strong> until you come to the GET <strong class="source-inline">/mutillidae/index.php</strong> request, as shown here. Note the two cookies that we will manipulate – <strong class="source-inline">username</strong> <span class="No-Break">and </span><span class="No-Break"><strong class="source-inline">uid</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer271" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.043.jpg" alt="Figure 4.43 – Notice the two cookie values, username and uid"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.43 – Notice the two cookie values, username and uid</p>
+			<ol>
+				<li value="6">Edit the <a id="_idIndexMarker333"/>two cookie values, changing <strong class="source-inline">username</strong> to <strong class="source-inline">admin</strong> and <strong class="source-inline">uid</strong> to <strong class="source-inline">1</strong>. Once you’ve done this, forward <span class="No-Break">the request:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer272" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.044.jpg" alt="Figure 4.44 – Manipulating the cookie values to elevate privileges"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.44 – Manipulating the cookie values to elevate privileges</p>
+			<ol>
+				<li value="7">After <a id="_idIndexMarker334"/>forwarding the request, choose <strong class="bold">Proxy</strong> | <strong class="bold">Intercept is off</strong> (<span class="No-Break">toggle off):</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer273" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.045.jpg" alt="Figure 4.45 – Proxy | Intercept is off"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.45 – Proxy | Intercept is off</p>
+			<ol>
+				<li value="8">Return to your browser; notice that you are now logged in as <strong class="bold">admin</strong>. You’ve elevated your standard user privileges to become <span class="No-Break">an administrator:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer274" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.046.jpg" alt="Figure 4.46 – Session now shows the adm﻿i﻿n session"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.46 – Session now shows the adm<a id="_idTextAnchor247"/>i<a id="_idTextAnchor248"/>n session</p>
+			<h2 id="_idParaDest-94"><a id="_idTextAnchor249"/>How it works…</h2>
+			<p>By manipulating <a id="_idIndexMarker335"/>cookie values that are easily guessable, we can elevate our authenticated session from a regular user to <span class="No-Break">an admi<a id="_idTextAnchor250"/>n<a id="_idTextAnchor251"/>istrator.</span></p>
+			<h1 id="_idParaDest-95"><a id="_idTextAnchor252"/>Testing for browser cache weaknesses</h1>
+			<p>Browser <a id="_idIndexMarker336"/>caching is provided for improved performance and a better end user experience. However, when sensitive data is typed into a browser by the user, such data can also be cached in the browser history. We can view this cached data by examining the browser’s cache or simply pressing the browser’s <a id="_idTextAnchor253"/><span class="No-Break"><em class="italic">b<a id="_idTextAnchor254"/>ack</em></span><span class="No-Break"> button.</span></p>
+			<h2 id="_idParaDest-96"><a id="_idTextAnchor255"/>Getting ready</h2>
+			<p>Using the browser’s back button, determine whether login credentials are cached, allowing for unauthorized access. Examine these steps in Burp to understand <span class="No-Break">the vu<a id="_idTextAnchor256"/>l<a id="_idTextAnchor257"/>nerability.</span></p>
+			<h2 id="_idParaDest-97"><a id="_idTextAnchor258"/>How to do it...</h2>
+			<ol>
+				<li>Log in to the Mutillidae application as <strong class="source-inline">admin</strong> with a password <span class="No-Break">of </span><span class="No-Break"><strong class="source-inline">admin</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer275" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.047.jpg" alt="Figure 4.47 – Logging in as admin"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.47 – Logging in as admin</p>
+			<ol>
+				<li value="2">Now, log out <a id="_idIndexMarker337"/>of the application by clicking the <strong class="bold">Logout</strong> button from the <span class="No-Break">top menu.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer276" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.048.jpg" alt="Figure 4.48 – Logout"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.48 – Logout</p>
+			<ol>
+				<li value="3">Verify you are logged out by noting the <strong class="bold">Not Logged </strong><span class="No-Break"><strong class="bold">In</strong></span><span class="No-Break"> message:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer277" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.049.jpg" alt="Figure 4.49 – Verifying that you’re not logged in"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.49 – Verifying that you’re not logged in</p>
+			<ol>
+				<li value="4">View these <a id="_idIndexMarker338"/>steps as messages in Burp’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> area as well. Note that the logout performs a <strong class="bold">302</strong> redirect to not cache cookies or credentials in <span class="No-Break">the browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer278" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.050.jpg" alt="Figure 4.50 – Finding the logout request under Proxy | HTTP history"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.50 – Finding the logout request under Proxy | HTTP history</p>
+			<ol>
+				<li value="5">From your <a id="_idIndexMarker339"/>Firefox browser, click the <span class="No-Break"><em class="italic">back</em></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer279" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.051.jpg" alt="Figure 4.51 – Using the browser’s back button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.51 – Using the browser’s back button</p>
+			<p>Notice that you are now logged in as <strong class="source-inline">admin</strong> even though you did not log in! This is possible because of cached credentials stored in the browser and the lack of any cache-control protections set in <span class="No-Break">the application:</span></p>
+			<div>
+				<div id="_idContainer280" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.052.jpg" alt="Figure 4.52 – The browser caches the session so that we are still logged in, even after clicking the Logout button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.52 – The browser caches the session so that we are still logged in, even after clicking the Logout button</p>
+			<ol>
+				<li value="6">Now, refresh/reload <a id="_idIndexMarker340"/>the page in your browser; you will see you are now <span class="No-Break">logged out.</span></li>
+			</ol>
+			<h2 id="_idParaDest-98"><a id="_idTextAnchor259"/>How it works…</h2>
+			<p>No request is captured in Burp Suite when you press the browser’s back button. This is because the back button action is isolated within the context of the browser. No message was sent through Burp Suite to the web server to perform this action. This is an important distinction to note. Due to a lack of caching protection, we found a vulnerability where the logout does not destroy the session on the <span class="No-Break">clie<a id="_idTextAnchor260"/>nt side.</span></p>
+			<h1 id="_idParaDest-99"><a id="_idTextAnchor261"/>Testing the account provisioning process via the REST API</h1>
+			<p>Account <a id="_idIndexMarker341"/>provisioning is the process <a id="_idIndexMarker342"/>of establishing and maintaining user accounts within an application. Provisioning capabilities are usually restricted to administrator accounts. Penetration testers must validate that account-provisioning functions are only available to users with proper identification and authorization. A common venue for account provisioning is through REST API calls. Many times, developers may not put the same authorization checks in place for API calls that are used in the UI portion of <span class="No-Break">an <a id="_idTextAnchor262"/>a<a id="_idTextAnchor263"/>pplication.</span></p>
+			<h2 id="_idParaDest-100"><a id="_idTextAnchor264"/>Getting ready</h2>
+			<p>Using REST API calls available in the OWASP Mutillidae II application, determine whether any unauthenticated API calls exist and whether such calls can provision or <span class="No-Break">m<a id="_idTextAnchor265"/>o<a id="_idTextAnchor266"/>dify users.</span></p>
+			<h2 id="_idParaDest-101"><a id="_idTextAnchor267"/>How to do it...</h2>
+			<p>Make <a id="_idIndexMarker343"/>sure you are not logged in to the <a id="_idIndexMarker344"/>application. If you are, click the <strong class="bold">Logout</strong> button from the top menu. Now, follow <span class="No-Break">these steps:</span></p>
+			<ol>
+				<li>Within Mutillidae, browse to the <strong class="bold">User Lookup (SQL)</strong> page and select <strong class="bold">OWASP 2013</strong> | <strong class="bold">A1 Injection (SQL)</strong> | <strong class="bold">SQLi – Extract Data</strong> | <strong class="bold">User </strong><span class="No-Break"><strong class="bold">Info (SQL)</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer281" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.053.jpg" alt="Figure 4.53 – User loo﻿kup page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.53 – User lookup page</p>
+			<ol>
+				<li value="2">Type <strong class="source-inline">user</strong> for <strong class="bold">Name</strong> and <strong class="source-inline">user</strong> for <strong class="bold">Password</strong>, and then click <strong class="bold">View Account Details</strong>. You should see the results shown in the following screenshot. This is the account we will test provisioning functions against using <span class="No-Break">API calls:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer282" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.054.jpg" alt="Figure 4.54 – Database results for the user account"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.54 – Database results for the user account</p>
+			<p>Through <a id="_idIndexMarker345"/>crawling, Burp Suite <a id="_idIndexMarker346"/>can find <strong class="source-inline">/api</strong> or <strong class="source-inline">/rest</strong> folders. Such folders are clues that an application is REST-API-enabled. A tester needs to determine which functions are available through these API calls and whether those calls <span class="No-Break">require authentication.</span></p>
+			<ol>
+				<li value="3">For Mutillidae, the <strong class="source-inline">/webservices/rest/</strong> folder structure offers account provisioning capabilities through API calls. Look for these folders via <strong class="bold">Target</strong> | <span class="No-Break"><strong class="bold">Site map</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer283" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.055.jpg" alt="Figure 4.55 – API directory structure"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.55 – API directory structure</p>
+			<ol>
+				<li value="4">To go <a id="_idIndexMarker347"/>directly to this functionality <a id="_idIndexMarker348"/>within Mutillidae, select <strong class="bold">Web Services</strong> | <strong class="bold">REST</strong> | <strong class="bold">SQL Injection</strong> | <strong class="bold">User </strong><span class="No-Break"><strong class="bold">Account Management</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer284" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.056.jpg" alt="Figure 4.56 – Navigating to the User Account Management documentation page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.56 – Navigating to the User Account Management documentation page</p>
+			<p>You will be presented with a screen describing the supported API calls and the parameters required for each call. We will refer to this page as the <em class="italic">User Account Management</em> page. The URL of this page of the web root <span class="No-Break">is </span><span class="No-Break"><strong class="source-inline">/webservices/rest/ws-user-account.php</strong></span><span class="No-Break">:</span></p>
+			<div>
+				<div id="_idContainer285" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.057.jpg" alt="Figure 4.57 – User Account Management API documentation page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.57 – User Account Management API documentation page</p>
+			<ol>
+				<li value="5">Within <a id="_idIndexMarker349"/>this <em class="italic">User Account Management</em> API <a id="_idIndexMarker350"/>documentation page, note the GET call section. This page is similar to Swagger or other self-explanatory API pages and provides instructions on the required format to display account information for a single user or <span class="No-Break">all users:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer286" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.058.jpg" alt="Figure 4.58 – API instructions to get account information"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.58 – API instructions to get account information</p>
+			<ol>
+				<li value="6">Using <a id="_idIndexMarker351"/>the instructions from <a id="_idIndexMarker352"/>the <em class="italic">User Account Management</em> API documentation page, let’s invoke the GET API to view user accounts. To begin, find the call to the User Account Management page under <strong class="bold">Proxy</strong> | <span class="No-Break"><strong class="bold">HTTP history</strong></span><span class="No-Break">.</span></li>
+				<li>Go to the <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> table and select the latest request you made to navigate to the User Account Management page. Look for the <strong class="source-inline">/mutillidae/webservices/rest/ws-user-account.php</strong> call in the history. Once found, right-click and send this request <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Repeater</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer287" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.059.jpg" alt="Figure 4.59 – Sending the call to the User Account Management page to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.59 – Sending the call to the User Account Management page to Repeater</p>
+			<ol>
+				<li value="8">In Burp’s <strong class="bold">Repeater</strong>, add <strong class="source-inline">?</strong>, followed <a id="_idIndexMarker353"/>by a parameter <a id="_idIndexMarker354"/>name/value pair of <strong class="source-inline">username=user</strong>, to the URL. The new URL should <span class="No-Break">be </span><span class="No-Break"><strong class="source-inline">/mutillidae/webservices/rest/ws-user-account.php?username=user</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer288" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.060.jpg" alt="Figure 4.60 – Adding a username parameter"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.60 – Adding a username parameter</p>
+			<ol>
+				<li value="9">Click <a id="_idIndexMarker355"/>the <strong class="bold">Send</strong> button – notice that <a id="_idIndexMarker356"/>we can retrieve our <span class="No-Break">account data:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer289" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.061.jpg" alt="Figure 4.61 – Viewing the results of the request"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.61 – Viewing the results of the request</p>
+			<ol>
+				<li value="10">Now, to determine whether we can see this data as an unauthenticated user, remove the value of the <strong class="source-inline">PHPSESSIONID</strong> cookie and resend the request. Amazing! No authentication token is required to perform such actions! We just found an unauthenticated API call! This is a <span class="No-Break">huge finding:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer290" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.062.jpg" alt="Figure 4.62 – Removing the authentication token; note that the results are still returned"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.62 – Removing the authentication token; note that the results are still returned</p>
+			<ol>
+				<li value="11">Let’s see <a id="_idIndexMarker357"/>what else we can do <a id="_idIndexMarker358"/>against this unauthenticated API endpoint. Using the SQL injection string given on the User Account Management page, let’s attempt to dump the entire <span class="No-Break">user table.</span></li>
+				<li>Append the following value <span class="No-Break">after </span><span class="No-Break"><strong class="source-inline">username=</strong></span><span class="No-Break">:</span><pre class="source-code">
+user'+union+select+concat('The+password+for+',username,
+'+is+',+password),mysignature+from+accounts+--+</pre></li>			</ol>
+			<p>The new URL should be <span class="No-Break">as follows:</span></p>
+			<pre class="source-code">
+/mutillidae/webservices/rest/ws-user-account.php?username=user'
++union+select+concat('The+password+for+',username,'+is+',
++password),mysignature+from+accounts+--+</pre>			<ol>
+				<li value="13">Click the <strong class="bold">Send</strong> button after making the change to the <strong class="source-inline">username</strong> parameter. Your request should look <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer291" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.063.jpg" alt="Figure 4.63 – Using a SQL injection attack in the username parameter"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.63 – Using a SQL injection attack in the username parameter</p>
+			<ol>
+				<li value="14">Notice that <a id="_idIndexMarker359"/>we dumped <a id="_idIndexMarker360"/>all the accounts in the database that are displaying all usernames, passwords, and signatures! We also dumped this data without any <span class="No-Break">authentication token:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer292" class="IMG---Figure">
+					<img src="image/B21173_Figure_4.064.jpg" alt="Figure 4.64 – Entire dump of the user table"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.64 – Entire dump of the user table</p>
+			<h2 id="_idParaDest-102"><a id="_idTextAnchor268"/>How it works…</h2>
+			<p>Finding <a id="_idIndexMarker361"/>unauthenticated API endpoints is <a id="_idIndexMarker362"/>an important testing task that must be performed. This is a common issue due to the ubiquity of API usage across applications and mobile apps. In <a href="B21173_10.xhtml#_idTextAnchor588"><span class="No-Break"><em class="italic">Chapter 10</em></span></a>, we will look at a Burp Suite extension that can help us find unauthenticated API endpoints a <span class="No-Break">bit easier.</span></p>
+		</div>
+	</body></html>

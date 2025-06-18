@@ -1,0 +1,1356 @@
+<html><head></head><body>
+        <section id="9NR7U1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Working with Burp Suite</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In this chapter, we will explore the following recipes:</p>
+<ul class="calibre18">
+<li class="calibre19">Configuring Burp Suite on Kali Linux</li>
+<li class="calibre19">Defining a web application target with Burp Suite</li>
+<li class="calibre19">Using Burp Suite Spider</li>
+<li class="calibre19">Using Burp Suite Proxy</li>
+<li class="calibre19">Using Burp Suite engagement tools</li>
+<li class="calibre19">Using the Burp Suite web application scanner</li>
+<li class="calibre19">Using Burp Suite Intruder</li>
+<li class="calibre19">Using Burp Suite Comparer</li>
+<li class="calibre19">Using Burp Suite Repeater</li>
+<li class="calibre19">Using Burp Suite Decoder</li>
+<li class="calibre19">Using Burp Suite Sequencer</li>
+<li class="calibre19">Using Burp Suite Extender</li>
+<li class="calibre19">Using Burp Suite Clickbandit</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9OPOG1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Introduction</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite is a collection of seamlessly integrated tools for testing web applications. While the majority of the tools are available in the free version, some automation and scanning features require the professional edition, which is well worth the cost of the upgrade. Personally, I consider it an indispensable tool for testing web applications.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9PO921-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Configuring Burp Suite on Kali Linux</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Proxy is one of the most powerful web application auditing tools available. However, it is not a tool that can be started easily with a single click. Configurations in both the Burp Suite application and in the associated web browser must be modified to ensure that each communicates with the other properly.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9QMPK1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Nothing needs to be done to execute Burp Suite in Kali Linux for the first time. The free version is an integrated tool, and it is already installed. Alternatively, if you choose to use the professional version, a license can be purchased at <a href="https://pro.portswigger.net/buy/" class="calibre6">https://pro.portswigger.net/buy/</a>.</p>
+<p class="calibre5">The license is relatively inexpensive and well worth the additional features. However, the free version is still highly useful and provides most of the core functionality at no cost to the user.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9RLA61-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Let's configure <span>Burp Suite on Kali Linux with the help of following steps:</span></p>
+<ol class="calibre20">
+<li class="calibre19" value="1">Burp Suite is a GUI tool and requires access to the graphical desktop in order to be run. As such, it cannot be used over SSH. There are two ways to start Burp Suite in Kali Linux. You can browse to it in the <span>Applications</span> menu by navigating to <span>Applications</span> | <span>Kali Linux</span> | <span>Top 10 Security Tools</span> | <span>burpsuite</span>. Alternatively, you can execute it by passing it to the Java interpreter in a bash Terminal, as follows:</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        root@kali:~# java -jar /usr/bin/burpsuite</strong>
+</pre>
+<ol start="2" class="calibre20">
+<li class="calibre19" value="2">When you start Burp Suite, you will be asked whether you want to use a <span>Temporary project</span>, <span>New project on disk</span>, or <span>Open existing project</span>. For our purposes now, let's use the default choice of a <span>Temporary project</span>:</li>
+</ol>
+<div class="p"><img class="image-border131" src="../images/00119.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li class="calibre19" value="3">When asked to select the configuration, choose <span>Use Burp defaults</span>:</li>
+</ol>
+<div class="p"><img class="image-border132" src="../images/00193.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li class="calibre19" value="4">Once Burp Suite is loaded, ensure that the proxy listener is active and running on the desired port. In the example provided, TCP port <kbd class="calibre16">8080</kbd> is used. These configurations can be verified by selecting the <span>Proxy</span> tab and then selecting the <span>Options</span> tab below it, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="image-border133" src="../images/00266.jpeg"/></div>
+<p class="calibre27">Here, you will see a list of all proxy listeners. If none exist, add one. To use it with the Mozilla Firefox web browser in Kali Linux, configure the listener to listen on a dedicated port on the <kbd class="calibre16">127.0.0.1</kbd> address. Also, ensure that the <span>Running</span> checkbox is activated. After configuring the listener in Burp Suite, you will also need to modify the Mozilla Firefox browser configurations to route traffic through the proxy.</p>
+<ol start="5" class="calibre20">
+<li class="calibre19" value="5">To do this, open up Mozilla Firefox<span> </span>by clicking on the Firefox icon at the top of the sidebar. Once it's open, expand the drop-down menu and click on <span>Preferences</span> to get the following screenshot:</li>
+</ol>
+<div class="p"><img class="image-border134" src="../images/00342.jpeg"/></div>
+<p class="calibre27">In the Mozilla Firefox<span> </span>preferences menu, click on the <span>Advanced</span> options button at the bottom of the menu and then select the <span>Network</span> tab.</p>
+<ol start="6" class="calibre20">
+<li class="calibre19" value="6">Then, click on the <span>Settings</span> button under the <span>Connection</span> header. This will bring up the <span>Connection Settings</span> configuration menu, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="image-border135" src="../images/00623.jpeg"/></div>
+<p class="calibre27">By default, the proxy radio button is set to <span>Use system proxy settings</span>. This needs to be changed to <span>Manual proxy configuration</span>. The manual proxy configurations should be the same as the Burp Suite Proxy listener configurations. In the example provided, the HTTP proxy address is set to <kbd class="calibre16">127.0.0.1</kbd> and the port value is set to TCP <kbd class="calibre16">8080</kbd>. To capture other traffic, such as HTTPS, click on the <span>Use this proxy server for all protocols</span> checkbox.</p>
+<ol start="7" class="calibre20">
+<li class="calibre19" value="7">To verify that everything is working correctly, attempt to browse to a website using Firefox, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="image-border136" src="../images/00508.jpeg"/></div>
+<ol start="8" class="calibre20">
+<li class="calibre19" value="8">If your configurations are correct, you should see the browser attempting to connect, but nothing will be rendered in the browser. This is because the request sent from the browser was intercepted by the proxy. The proxy intercept is the default configuration used in Burp Suite. To confirm that the request was captured successfully, return to the Burp Suite Proxy interface, as shown here:</li>
+</ol>
+<div class="p"><img class="image-border137" src="../images/00638.jpeg"/></div>
+<ol start="9" class="calibre20">
+<li class="calibre19" value="9">Here, you should see the captured request. To continue using your browser for other purposes, you can change the proxy configurations to passively listen by clicking on the <span>Intercept is on</span> button to disable it, or you can change your proxy settings in your browser back to the <span>Use system proxy settings</span> option and only use the manual proxy settings when using Burp.</li>
+</ol>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9SJQO1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The initial configuration performed in Burp Suite creates a listening port on TCP <kbd class="calibre16">8080</kbd>. This port is used by Burp Suite to intercept all web traffic and also to receive the incoming traffic returned in response. By configuring the IceWeasel web browser proxy configuration to point to this port, we indicate that all traffic generated in the browser should be routed through Burp Suite Proxy. Thanks to the capabilities provided by Burp, we can now modify the en-route traffic at will.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9TIBA1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Defining a web application target with Burp Suite</h1>
+            
+
+            <article>
+                
+<p class="calibre5">When performing a penetration test, it is important to be sure that your attacks are only targeting intended systems. Attacks performed against unintended targets can result in legal liability. To minimize this risk, it is important to define your scope within Burp Suite. In this recipe, we will discuss how to define in-scope targets using the Burp Suite proxy.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9UGRS1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to pass web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="9VFCE1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The following steps will guide you to perform web application analysis using the <span>Burp Suite:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">The leftmost tab in the Burp Suite interface is <span>Target</span>. There are two tabs underneath this tab, called <span>Site map</span> and <span>Scope</span>. The <span>Site map</span> tab will be automatically populated as content is accessed via the proxied web browser. The <span>Scope</span> tab allows the user to configure sites and site content to be either included or excluded from the scope.</li>
+</ol>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">To add a new site to the scope of the assessment, click on the <span>Add</span> button under the <span>Include in scope</span> table. Have a look at the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone252" src="../images/00634.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Adding in-scope content can be as general as a range of IP addresses or as specific as an individual file. The <span>Protocol</span> option has a drop-down menu that includes values of <span>ANY</span>, <span>HTTP</span>, or <span>HTTPS</span>. The <span>Host or IP range</span> field can include a single hostname, single IP, or range of IP addresses. Additionally, text fields exist for both <span>Port</span> and <span>File</span>. Fields can be left blank to limit the specificity of the scope. Fields should be populated using regular expressions.</li>
+<li value="4" class="calibre19">In the example provided, the caret opens each of the regular expressions, the dollar sign closes them, and the backslashes are used to escape the special meaning of the periods in the IP address. It is not within the scope of this book to address the use of regular expressions, but many resources are openly available on the Internet to explain their use. One good web primer you can use to familiarize yourself with regular expressions is <a href="http://www.regular-expressions.info/" class="calibre6">http://www.regular-expressions.info/</a>.</li>
+</ol>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A0DT01-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Regular expressions logically define the conditions whereby a given host, port, or file may be considered in scope. Defining the scope of an assessment in Burp Suite affects the way it operates when interacting with web content. The Burp Suite configurations will define what actions can and cannot be performed on objects that are in or out of the defined scope.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A1CDI1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Spider</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To effectively attack a web application, it is important to be aware of all hosted web content on the server. Multiple techniques can be used to discover the full attack surface of the web application. One tool that can quickly identify linked content that is referenced in the web pages of the target is the Spider tool. In this recipe, we will discuss how to spider the Web to identify in-scope content using Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A2AU41-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A39EM1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Let's use the <span>Burp Suite Spider to perform the web application attack:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To begin automatically spidering the web content from your previously defined scope, click on the <span>Spider</span> tab at the top of the screen. Underneath, there are two additional tabs that include <span>Control</span> and <span>Options</span>.</li>
+<li value="2" class="calibre19">The <span>Options</span> tab allows the user to define the configurations for how spidering is performed. This includes detailed settings, depth, throttling, form submissions, and so on. It is important to consider the configurations of an automatic spider, as it will be sending requests to all in-scope web content. This could potentially be disruptive or even damaging to some web content.</li>
+</ol>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Once configured, the <span>Control</span> tab can be selected to begin automatic spidering. By default, the <span>Spider</span> tab is paused. By clicking on the button that indicates such, the spider can be started. The <span>Site map</span> tab under the <span>Target</span> tab will be automatically updated as the spider progresses. Have a look at the following screenshot:</li>
+</ol>
+<div class="p"><img class="image-border138" src="../images/00002.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">Depending on the configurations defined, Burp Suite will likely request your interaction with any forms that it encounters while spidering. Enter parameters for any forms identified, or skip the forms by selecting the <span>Ignore form</span> button, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone253" src="../images/00306.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">Alternatively, you can spider from any particular location by right-clicking on it in the <span>Site map</span> tab and then clicking on <span>Spider this branch</span>. This will recursively spider the object selected and any files or directories contained within. Have a look at the following screenshot:</li>
+</ol>
+<div class="p"><img class="image-border139" src="../images/00058.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A47V81-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The Burp Suite Spider tool works by parsing through all known HTML content and extracting links to other content on the Web. The linked content is then analyzed for additional linked content that is discovered within it. This process will continue indefinitely and is only limited by the amount of available linked content, the layers of depth specified, and the number of concurrent threads processing additional requests.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A56FQ1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Proxy</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Despite all of its available tools, Burp Suite's primary function is to serve as an intercepting proxy. This means that Burp Suite is capable of capturing requests and responses and then manipulating them prior to forwarding them on to their destination. In this recipe, we will discuss how to intercept and/or log requests using Burp Suite Proxy.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A650C1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A73GU1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The following steps will guide you to <span>intercept the log requests using Burp Suite Proxy:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">The Burp Suite Proxy function can be used in passive or intercept mode. If intercept is disabled, all requests and responses will simply be logged in the <span>HTTP history</span> tab. These can be navigated through, and the details of any request and/or response can be seen by selecting it from the list, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone254" src="../images/00213.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Alternatively, the <span>Intercept</span> button can be clicked on to capture traffic en route to its destination server. These requests can be manipulated in the <span>Proxy</span> tab and then either forwarded to the destination or dropped.</li>
+</ol>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">By selecting the <span>Options</span> tab, the intercepting proxy can be reconfigured to define the types of requests intercepted, or to even enable the interception of responses prior to them being rendered in the browser, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone255" src="../images/00283.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A821G1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Proxy works to intercept or passively log traffic going to and coming from an attached browser because it is logically configured to sit between the browser and any remote devices. The browser is configured to send all the requests to Burp Proxy, and then Proxy forwards them on to any external hosts. Because of this configuration, Burp can both capture requests and responses en route, or it can log all communications going to and coming from the client browser.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A90I21-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite engagement tools</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite also has a number of tools that can be used for basic information gathering and target profiling. These tools are called <strong class="calibre1">engagement tools</strong>. In this recipe, we will discuss how to use the supplemental engagement tools in Burp Suite to gather or organize information on a target.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="A9V2K1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AATJ61-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Let's gather or organize information on a target using the supplemental engagement tools in Burp Suite:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">Engagement tools can be accessed by right-clicking on any object in the <span>Site map</span> tab and then scrolling down to the expansion menu and selecting the desired tool. By default, the selected engagement tool will recursively target the object selected, to include all files and directories within. Consider the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone256" src="../images/00362.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">We will address each of the engagement tools in the order in which they are presented in this menu. For organization purposes, I think it is best to introduce them in the following bullet points:
+<ul class="calibre30">
+<li class="calibre19"><span>Search</span>: This tool can be used to search for terms, phrases, or regular expressions. It will return any HTTP requests or responses that include the queried term. For each entry returned, the queried term will be highlighted in either the request or response.</li>
+<li class="calibre19"><span>Find comments</span>: This tool searches through all JavaScript, HTML, and other sources of code throughout the specified web content and locates all comments. These comments can also be exported for later review. This can be particularly helpful at times, as some developers will often leave sensitive information in the comments of code that they have written.</li>
+<li class="calibre19"><span>Find scripts</span>: This tool will identify all client- and server-side scripts within the  web content.</li>
+<li class="calibre19"><span>Find references</span>: This tool will parse through all HTML content and identify other referenced content.</li>
+<li class="calibre19"><span>Analyze target</span>: This tool will identify all dynamic content, static content, and parameters within the specified web content. This can be particularly useful to organize testing of web applications that have a lot of parameters and/or dynamic content.</li>
+<li class="calibre19"><span>Discover content</span>: This tool can be used to brute-force directories and filenames by cycling through a word list and defined list of file extensions.</li>
+<li class="calibre19"><span>Schedule task</span>: This tool allows the user to define time and dates to start and stop various tasks within Burp Suite.</li>
+<li class="calibre19"><span>Simulate manual testing</span>: This tool presents an excellent way to appear as though you are performing a manual analysis on a web application when you've actually stepped away for coffee and donuts. There is absolutely no practical function for this tool, beyond just bamboozling the boss.</li>
+</ul>
+</li>
+</ol>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="ABS3O1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite engagement tools work in a variety of ways, depending on the tool being used. Many of the engagement tools perform searches and examine the already received responses for a particular type of content. The <span>Discover content</span> tool provides the functionality of discovering new web content by brute-forcing file and directory names by cycling through defined word lists.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="ACQKA1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using the Burp Suite web application scanner</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite can also service as an effective web application vulnerability scanner. This feature can be used to perform both passive analysis and active scanning. In this recipe, we will discuss how to perform both passive and active vulnerability scanning using the Burp Suite scanner.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="ADP4S1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+<p class="calibre5">Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AENLE1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>Performing both passive and active vulnerability scanning using the Burp Suite scanner:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">By default, Burp Suite will passively scan all in-scope web content that is accessed via the browser when connected to the proxy. The term <strong class="calibre1">passive scanning</strong> is used to refer to Burp Suite passively observing requests and responses to and from the server and examining that content for any evidence of vulnerabilities.</li>
+</ol>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Passive scanning does not involve the injection of any probes or other attempts to confirm suspected vulnerabilities. Have a look at the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone257" src="../images/00456.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Active scanning can be performed by right-clicking on any object in the <span>Site map</span> tab or any request in the <span>HTTP history</span> tab under the <span>Proxy</span> tab and by then selecting <span>Actively scan this branch</span> or <span>Do an active scan</span>, respectively, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone258" src="../images/00524.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">Upon selecting <span>Actively scan this branch</span>, you will be presented with options of what to scan. Select your preferences, click on <span>Next</span>, and you will be presented with a list of what will be scanned:</li>
+</ol>
+<div class="p"><img class="alignnone259" src="../images/00591.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">The results for all active scanning can be reviewed by selecting the <span>Scan queue</span> tab under <span>Scanner</span>. By double-clicking on any particular scan entry, you can review the particular findings as they pertain to that scan, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone260" src="../images/00645.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">Active scanning configurations can be manipulated by selecting the <span>Options</span> tab. Here, you can define the types of tests performed, the speed at which they are performed, and the thoroughness of those tests. One should take note of the types of test the scanner will be conducting: </li>
+</ol>
+<div class="p"><img class="alignnone261" src="../images/00020.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AFM601-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite's passive scanner works by merely evaluating traffic that passes between the browser and any remote server with which it is communicating. This can be useful for identifying some easily noticeable vulnerabilities, but is not sufficient to validate many of the more critical vulnerabilities that exist on web servers these days. The active scanner works by sending a series of probes to parameters that are identified in the request. These probes can be used to identify many common web application vulnerabilities, such as directory traversal, cross-site scripting, and SQL injection.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AGKMI1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Intruder</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Another highly useful tool in Burp Suite is the Intruder feature. This feature allows fast-paced attacks to be performed by submitting large numbers of requests while manipulating predefined payload positions within the request. In this recipe, we will discuss how to automate manipulation of request content using Burp Suite Intruder.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AHJ741-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AIHNM1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>The following steps will guide you to automate manipulation of requested content using the Burp Suite Intruder:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To use Burp Suite Intruder, a request needs to be sent to it from either an en-route capture via an intercept or from the proxy history. With either of these, right-click on the request and then select <span>Send to Intruder</span>, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone262" src="../images/00072.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">In the example provided, a username and password were entered into the login portal of DVWA's Brute Force application. After being sent to Intruder, the payloads can be set with the <span>Positions</span> tab. To attempt to brute-force the admin account, the only payload position that will need to be set is the value of the password parameter, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone263" src="../images/00152.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Once the payload position has been defined, the payloads that will be injected can be configured with the <span>Payloads</span> tab. To perform a dictionary attack, one could use a custom dictionary list or a built-in list. In the example provided, the built-in <span>Passwords</span> list is employed to perform the attack, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone264" src="../images/00231.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">Once the attack has been fully configured, you can click on the <span>Start Attack</span> button at the top of the screen. This will quickly submit a series of requests by substituting each value in the list into the payload position. A successful attempt can often be identified by a variation in response.</li>
+</ol>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">To determine whether there is any request that generates a distinctly different response, one can sort the results by length. This can be done by clicking on the <span>Length</span> table header. By sorting the table by length in descending order, we can identify that one response in particular is longer than the others.</li>
+<li value="6" class="calibre19">This is the response that is associated with the correct password (which happens to be <kbd class="calibre16">password</kbd>). This is shown in the following screenshot. This successful login attempt is further confirmed in the next recipe, which discusses the use of Comparer:</li>
+</ol>
+<div class="p"><img class="alignnone265" src="../images/00301.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AJG881-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Intruder works by automating payload manipulation. It allows a user to specify one or more payload positions within a request and then provides a large number of options that can be used to configure how the values that will be supplied to those payload positions will change from one iteration to the next.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AKEOQ1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Comparer</h1>
+            
+
+            <article>
+                
+<p class="calibre5">When performing a web application assessment, it is often important to be able to easily identify variations in HTTP requests or responses. The Comparer feature simplifies this process by providing a graphical overview of variation. In this recipe, we will discuss how to identify and evaluate varied server responses using Burp Suite Comparer.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="ALD9C1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AMBPU1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The following steps will guide you to <span>identify and evaluate varied server responses using the Burp Suite Comparer:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">Any anomalous exception to an otherwise consistent response is often worth investigating. Variation in response can often be a solid indication that a payload has produced some desirable result.</li>
+<li value="2" class="calibre19">In the previous demonstration of using Burp Suite Intruder to brute-force the login for DVWA, one payload in particular generated a longer response than all the others.</li>
+</ol>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">To evaluate the variation in response, right-click on the event and then click on <span>Send to Comparer (response)</span>, as shown in the following screenshot. The same thing should be done for one of the control examples:</li>
+</ol>
+<div class="p"><img class="alignnone266" src="../images/00386.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">After sending each event to Comparer, you can evaluate them by selecting the <span>Comparer</span> tab at the top of the screen. Ensure that one of the previous responses is selected for <span>item 1</span> and the other is selected for <span>item 2</span>, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone267" src="../images/00654.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">In the bottom-right corner of the screen, there is an option to choose compare words or compare bytes. In this particular case, select the <span>Words</span> option. By doing this, we can see that some of the content modified in the response reveals that the login was successful. Any content that has been modified, deleted, or added is highlighted from one response to the next and makes it very easy to visually compare the two, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="image-border47" src="../images/00482.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="ANAAG1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Comparer works by analyzing any two sources of content for differences. These differences are identified as content that has been modified, deleted, or added. Quickly isolating variations in content can be effective in determining the distinct effects that particular actions have upon the behavior of a web application.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AO8R21-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Repeater</h1>
+            
+
+            <article>
+                
+<p class="calibre5">When performing a web application assessment, there will often be times that manual testing is required to exploit a given vulnerability. Capturing every response in the proxy, manipulating it, and then forwarding it can become very time consuming. Burp Suite's Repeater feature simplifies this by allowing consistent manipulation and submission of a single request without having to regenerate the traffic in the browser each time. In this recipe, we will discuss how to perform manual text-based audits using Burp Suite Repeater.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AP7BK1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AQ5S61-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>With the help of following steps we will be performing manual text-based audits using the Burp Suite Repeater:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To use Burp Suite Repeater, a request needs to be sent to it from either an en-route capture via an intercept or from the proxy history. With either one of these, right-click on the request and then select <span>Send to Repeater</span>, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone268" src="../images/00605.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">In the example provided, a request is made of the user to provide a name, and the server returns the provided input in the HTML response. To test for the possibility of cross-site scripting, we should first inject a series of commonly used characters in such an attack, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone269" src="../images/00499.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">After sending in the series of characters, we can see that all of the characters were returned in the HTML content and none were escaped. This is a very strong indication that the function is vulnerable to cross-site scripting. To test the exploitability of this vulnerability, we can enter the standard token request of <kbd class="calibre16">&lt;script&gt;alert('xss')&lt;/script&gt;</kbd>, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone270" src="../images/00036.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">By reviewing the returned HTML content, we can see that the opening script that is tagged has been stripped from the response. This is likely an indication of blacklisting that prohibits the use of the <kbd class="calibre16">&lt;script&gt;</kbd> tag in the input. The problem with blacklisting is that it can often be circumvented by slightly modifying the input. In this case, we can attempt to circumvent the blacklisting by modifying the case of several characters in the opening tag, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone271" src="../images/00348.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">By using the opening <kbd class="calibre16">&lt;ScRiPt&gt;</kbd> tag, we can see that the imposed restriction has been bypassed and both the opening and closing tags have been included in the response. This can be confirmed by issuing the request in a browser, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone272" src="../images/00029.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">To evaluate the response in the client browser, right-click on the request and then select <span>Request in browser</span>. This will generate a URL that can be used to reissue the request in a browser that is actively connected to Burp Proxy, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone273" src="../images/00350.jpeg"/></div>
+<ol start="7" class="calibre20">
+<li value="7" class="calibre19">We can copy the URL provided manually or by clicking on the <span>Copy</span> button. This URL can then be pasted into the browser, and the request will be issued in the browser. Assuming the cross-site scripting attack was successful, the client-side JavaScript code will be rendered in the browser, and an alert will appear on the screen, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone274" src="../images/00096.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AR4CO1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Repeater simply works by providing a text-based interface to the Web. The Repeater can allow a user to interact with remote web services by directly manipulating requests rather than interacting with a web browser. This can be useful when testing cases for which the actual HTML output is more critical than the way it is rendered in the browser.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AS2TA1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Decoder</h1>
+            
+
+            <article>
+                
+<p class="calibre5">When working with web application traffic, you will frequently notice content that is encoded for obfuscation or functionality reasons. Burp Suite Decoder allows request and response content to be decoded or encoded as needed. In this recipe, we will discuss how to encode and decode content using Burp Suite Decoder.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AT1DS1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="ATVUE1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>Let's encode and decode content using Burp Suite Decoder:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To pass a given value to Burp Suite Decoder, highlight the desired string, right-click on it, and then select <span>Send to Decoder</span>. In the example provided, the value of the <kbd class="calibre16">Cookie</kbd> parameter is sent to the decoder, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone275" src="../images/00355.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">By clicking on the <span>Smart decode</span> button, Burp Suite automatically identifies the encoding as URL encoding and decodes it in the field below where the encoded text was originally entered, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone276" src="../images/00161.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">If Burp Suite is unable to determine the type of encoding used, manual decoding can be performed for multiple different types of encoding to include URL, HTML, Base64, ASCII hex, and so on. A decoder can also be used to encode strings that are entered using the <span>Encode as...</span> function.</li>
+</ol>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AUUF01-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Decoder provides a platform for both encoding and decoding content when interacting with a web application. This tool is extremely useful because various types of encoding are frequently used across the Web for handling and obfuscation reasons. Additionally, the <span>Smart decode</span> tool examines any given input for known patterns or signatures in order to determine the type of encoding that has been applied to the content and then decodes it.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="AVSVI1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Sequencer</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Web application sessions are often maintained by session ID tokens that consist of random or pseudorandom values. Because of this, randomness is absolutely critical to the security of these applications. In this recipe, we will discuss how to collect generated values and test them for randomness using Burp Suite Sequencer.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B0RG41-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B1Q0M1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>Let's test randomness on the generated values using the Burp Suite Sequencer:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To use Burp Suite Sequencer, a response containing the <kbd class="calibre16">Set-Cookie</kbd> header value or other pseudorandom number value to be tested needs to be sent to it. This can be sent either from the <span>HTTP history</span> tab under the <span>Proxy</span> tab or from a response intercepted prior to being received by the browser, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone277" src="../images/00358.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Burp will automatically populate the <span>Cookie</span> drop-down menu with all the cookie values set in the response. Alternatively, you can use the <span>Custom location</span> field and then the <span>Configure</span> button to designate any location in the response for testing, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone278" src="../images/00005.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">After defining the value to be tested, click on the <span>Start live</span> <span>capture</span> button. This will start submitting a large number of requests to acquire additional values for the defined parameter. In the example provided, Burp will issue a large number of requests with the <kbd class="calibre16">PHPSESSID</kbd> value stripped from the request.</li>
+<li value="4" class="calibre19">This will cause the server to generate a new session token for each request. By doing this, we can acquire a sample of values that can be subjected to FIPS testing. This will consist of a series of tests that will evaluate the entropy associated with the generated pseudorandom numbers. All of these tests can be represented in a graphical format that is easy to understand, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone279" src="../images/00360.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">For a highly accurate and thorough FIPS test, a total of 20,000 values are needed, but an analysis can be performed with as few as 100 values. In addition to performing a live capture, the <span>Manual load</span> tab can be used to upload or paste a list of values for testing.</li>
+</ol>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B2OH81-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Sequencer performs a number of different mathematical evaluations against a sample of pseudorandom numbers in an attempt to determine the quality of the sources of entropy from when they were generated. Live capture can be used to generate sample values by issuing crafted requests that will result in new values being assigned. This is often done by removing an existing cookie value from a request so that the response provides a new session token in the form of a new <kbd class="calibre16">Set-Cookie</kbd> response header.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B3N1Q1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Extender</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite offers a way to extend the capability of its tools through Burp Suite Extender. You can do this by writing your own extensions in Java, Python, and Ruby, or by installing existing extensions already available for use. This section will show you how to install and use the latter.</p>
+<div class="packt_infobox">If you are interested in building your own extensions, refer to the documentation at <a href="https://portswigger.net/burp/extender/" class="calibre26">https://portswigger.net/burp/extender/</a>.</div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B4LIC1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B5K2U1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The following steps will help you to perform web application analysis using the <span>Metasploitable2:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To install a Burp Suite extension, we will first navigate to the <span>Extender</span> tab and click on <span>BApp Store</span>. Here, there are a number of extensions available ready to be installed and used:</li>
+</ol>
+<div class="p"><img class="alignnone280" src="../images/00311.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">We are going to take a look at the <span>Logger++</span> extension. If we select it, we can see a description of the additional capabilities it adds to Burp. In this case, the extension can be used to log the requests and responses made by all of Burp Suite's tools, and it also provides a way to export them. To use this extension, we first click on the <span>Install</span> button:</li>
+</ol>
+<div class="p"><img class="alignnone281" src="../images/00364.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">After installing it, you will notice we have a new tab in our Burp interface called <span>Logger++</span>. If we click on it and go to <span>Options</span>, we can specify whether to only log in-scope items and what tools that we want it to capture. Select <span>In scope items only</span>:</li>
+</ol>
+<div class="p"><img class="alignnone282" src="../images/00427.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">To demonstrate the <span>Logger++</span> ability, we will click back over to the <span>Target</span> tab and spider the <kbd class="calibre16">dvwa</kbd> directory:</li>
+</ol>
+<div class="p"><img class="alignnone283" src="../images/00367.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">Now, if we click back over to the <span>Logger++</span> tab and click on <span>View Logs</span>, we can see our requests. Additionally, if we want to save these requests as a <kbd class="calibre16">.csv</kbd> file, we can do so from the <span>Options</span> screen:</li>
+</ol>
+<div class="p"><img class="alignnone282" src="../images/00480.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B6IJG1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Extender allows us to add additional functionality and testing to Burp Suite via prebuilt extensions or by building our own utilizing the Burp Extender API.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B7H421-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Burp Suite Clickbandit</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite Clickbandit provides a tool to help identify clickjacking attempts. Clickjacking is where an attacking web page uses transparent layers. When a user clicks somewhere on the page thinking they are interacting with what they see, they may actually be clicking on these transparent layers without realizing it. Burp offers a great tool for helping to find this type of vulnerability.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B8FKK1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To use Burp Suite to perform web application analysis against a target, you will need to have a remote system that is running one or more web applications. In the examples provided, an instance of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled vulnerable web applications running on the TCP port <kbd class="calibre16">80</kbd>. For more information on setting up Metasploitable2, refer to the <em class="calibre15">Installing Metasploitable2</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, your web browser will need to be configured to proxy web traffic through a local instance of Burp Suite.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="B9E561-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The following steps will guide you to <span>uncover clickjacking using the Burp Suite Clickbandit:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To uncover clickjacking requests, we will first want to look at Burp Suite Scanner as it identifies pages potentially vulnerable to clickjacking. These pages are identified with an issue type of <span>Frameable response (potential Clickjacking)</span>. In this case, the following page may be vulnerable (<kbd class="calibre16">http://172.16.69.128/mutillidae/framing.php</kbd>): </li>
+</ol>
+<div class="p"><img class="alignnone284" src="../images/00371.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">After selecting the issue in question, we go up to the <span>Burp</span> menu and select <span>Burp Clickbandit</span>, as depicted in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone285" src="../images/00546.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Burp will present us with a screen describing what to do and a button, <span>Copy Clickbandit to clipboard</span>. Click on it:</li>
+</ol>
+<div class="p"><img class="alignnone286" src="../images/00374.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">Next, we go to our browser and navigate to the potentially vulnerable page (<kbd class="calibre16">http://172.16.69.128/mutillidae/framing.php</kbd>):</li>
+</ol>
+<div class="p"><img class="alignnone287" src="../images/00083.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">From the browser, we need to open the developer console from the menu and select the web console:</li>
+</ol>
+<div class="p"><img class="alignnone288" src="../images/00378.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">At the bottom of the page, we then paste in our Clickbandit code we copied before and hit the <em class="calibre15">Enter</em> key:</li>
+</ol>
+<div class="p"><img class="alignnone289" src="../images/00662.jpeg"/></div>
+<ol start="7" class="calibre20">
+<li value="7" class="calibre19">Clickbandit frames our potentially vulnerable page. After clicking inside the page, we can see that it is in fact performing a clickjacking attack:</li>
+</ol>
+<div class="p"><img class="alignnone290" src="../images/00380.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="BACLO1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Burp Suite provides a tool that frames the web page in question and uncovers clickjacking requests.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    </body></html>

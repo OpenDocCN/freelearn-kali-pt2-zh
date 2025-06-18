@@ -1,0 +1,275 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer356">
+<h1 class="chapter-number" id="_idParaDest-162"><a id="_idTextAnchor225"/>12</h1>
+<h1 id="_idParaDest-163"><a id="_idTextAnchor226"/>Autopsy Forensic Browser</h1>
+<p><strong class="bold">Autopsy</strong> and <strong class="bold">The Sleuth Kit</strong> go hand in hand. Both were created by Brian Carrier. The Sleuth Kit is a powerful suite of <strong class="bold">Command-Line Interface</strong> (<strong class="bold">CLI</strong>) forensic tools, whereas Autopsy is the <strong class="bold">Graphical User Interface</strong> (<strong class="bold">GUI</strong>; pronounced <em class="italic">gooey</em>) that sits on top of The Sleuth Kit and is accessed through a web browser. The Sleuth Kit supports disk image file types, including Raw <strong class="bold">Data Dump (DD)</strong>, <strong class="bold">EnCase (.01)</strong>, and <strong class="bold">Advanced Forensic </strong><span class="No-Break"><strong class="bold">Format</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">AFF</strong></span><span class="No-Break">).</span></p>
+<p>The Sleuth Kit uses CLI tools to perform the <span class="No-Break">following tasks:</span></p>
+<ul>
+<li>Find and list allocated and unallocated (deleted) files, and even files hidden <span class="No-Break">by rootkits</span></li>
+<li>Reveal NTFS <strong class="bold">Alternate Data Streams</strong> (<strong class="bold">ADS</strong>) where files can be concealed within <span class="No-Break">other files</span></li>
+<li>List files <span class="No-Break">by type</span></li>
+<li>Display <span class="No-Break">metadata information</span></li>
+<li>Create <span class="No-Break">a timeline</span></li>
+</ul>
+<p>Autopsy can be run from a live <strong class="bold">Compact Disk</strong> (<strong class="bold">CD</strong>)/<strong class="bold">Universal Serial Bus</strong> (<strong class="bold">USB</strong>) in forensic mode as part of a live analysis in live mode, or it can be used on a dedicated Kali Linux machine to investigate analysis in <span class="No-Break">dead mode.</span></p>
+<p>The topics we will cover in this chapter include <span class="No-Break">the following:</span></p>
+<ul>
+<li>Introduction to The Sleuth Kit and the Autopsy <span class="No-Break">forensic browser</span></li>
+<li>Downloading sample files for use and creating a case in the <span class="No-Break">Autopsy browser</span></li>
+<li>Evidence analysis using the Autopsy <span class="No-Break">forensic browser</span></li>
+</ul>
+<h1 id="_idParaDest-164"><a id="_idTextAnchor227"/>Introduction to Autopsy – The Sleuth Kit</h1>
+<p>In this chapter, we <a id="_idIndexMarker1004"/>will focus<a id="_idIndexMarker1005"/> on the Autopsy browser, which is based on data recovery and disk analysis tools found within The Sleuth Kit. Tools in The Sleuth Kit are all command line-based and the Autopsy browser allows us to access the tools and their functionality via a GUI for easy disk and file carving, recovery, analysis, <span class="No-Break">and reporting.</span></p>
+<p>Autopsy offers GUI access to a variety of investigative command-line tools from The Sleuth Kit, including file analysis, image and file hashing, deleted file recovery, and case management, among other capabilities. Autopsy can be a bit tricky to install but, fortunately for us, it comes built into Kali Linux, and is also very easy to set up <span class="No-Break">and use.</span></p>
+<p>Although the Autopsy browser is based on The Sleuth Kit, the features of Autopsy differ when using the Windows version as compared to the Linux version. We will cover the Windows version of Autopsy using Wine in <a href="B19441_13.xhtml#_idTextAnchor234"><span class="No-Break"><em class="italic">Chapter 13</em></span></a><em class="italic">, Performing a Full DFIR Analysis with the Autopsy 4 GUI</em>. Some of the official features offered by The Sleuth Kit and Autopsy 2.4 in Kali Linux include <span class="No-Break">the following:</span></p>
+<ul>
+<li><strong class="bold">Image analysis</strong>: Analyzing<a id="_idIndexMarker1006"/> directories and files, including sorting files, recovering deleted files, and <span class="No-Break">previewing files</span></li>
+<li><strong class="bold">File activity timelines</strong>: Creating timelines based on timestamps of when files were written, accessed, <span class="No-Break">and created</span></li>
+<li><strong class="bold">Image integrity</strong>: Creating MD5 hashes of the image file used, as well as <span class="No-Break">individual files</span></li>
+<li><strong class="bold">Hash databases</strong>: Matching digital hashes or fingerprints of unknown files (such as suspected malicious <strong class="source-inline">.exe</strong> files) against<a id="_idIndexMarker1007"/> those in the NIST <strong class="bold">National Software Reference </strong><span class="No-Break"><strong class="bold">Library</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">NSRL</strong></span><span class="No-Break">)</span></li>
+<li><strong class="bold">Events sequencer</strong>: Displaying events sorted by date <span class="No-Break">and time</span></li>
+<li><strong class="bold">File analysis</strong>: Analyzing the entire image file to display directory and file information <span class="No-Break">and contents</span></li>
+<li><strong class="bold">Keyword search</strong>: Allows searching using keyword lists and predefined <span class="No-Break">expression lists</span></li>
+<li><strong class="bold">Metadata analysis</strong>: Allows<a id="_idIndexMarker1008"/> viewing metadata details and the structure of files that are essential for <span class="No-Break">data recovery</span></li>
+</ul>
+<p>Now that we are familiar with some of the uses of Autopsy, let’s first download our sample files<a id="_idIndexMarker1009"/> for<a id="_idIndexMarker1010"/> analysis before we begin using <span class="No-Break">the tool.</span></p>
+<h1 id="_idParaDest-165"><a id="_idTextAnchor228"/>Downloading sample files for use and creating a case in the Autopsy browser</h1>
+<p>In this<a id="_idIndexMarker1011"/> section, we will find the links<a id="_idIndexMarker1012"/> to download the required sample files that we will be analyzing using the <span class="No-Break">Autopsy browser.</span></p>
+<p class="callout-heading">Download the image file</p>
+<p class="callout">The image file used for analysis is publicly available for download <span class="No-Break">at </span><a href="http://downloads.digitalcorpora.org/corpora/scenarios/2009-m57-patents/usb/"><span class="No-Break">http://downloads.digitalcorpora.org/corpora/scenarios/2009-m57-patents/usb/</span></a><span class="No-Break">.</span></p>
+<p class="callout">Be sure to note the location of the downloaded sample file, as this will be required <span class="No-Break">later on.</span></p>
+<p>The file we will be working with is <strong class="source-inline">terry-work-usb-2009-12-11.E01</strong>, as shown in the <span class="No-Break">following screenshot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer333">
+<img alt="Figure 12.1 – Sample evidence files at digitalcorpora.org" height="264" src="image/Figure_12.01_B19441.jpg" width="850"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.1 – Sample evidence files at digitalcorpora.org</p>
+<p class="callout-heading">Please note</p>
+<p class="callout">When investigating hard drives and devices, be sure to always follow proper acquisition procedures and use a write-blocker to avoid tampering with <span class="No-Break">original evidence.</span></p>
+<p>Now that we have our sample image file downloaded (or perhaps even a forensically acquired image<a id="_idIndexMarker1013"/> of <a id="_idIndexMarker1014"/>our own), let’s proceed with the analysis using the Autopsy browser by first getting acquainted with the different ways to <span class="No-Break">start Autopsy.</span></p>
+<h2 id="_idParaDest-166"><a id="_idTextAnchor229"/>Starting Autopsy</h2>
+<p>Autopsy <a id="_idIndexMarker1015"/>can be started in <span class="No-Break">two ways:</span></p>
+<ul>
+<li>For the first method, we use the <strong class="bold">Applications</strong> menu by clicking on <strong class="bold">Applications</strong> | <strong class="bold">11 - Forensics</strong> | <span class="No-Break"><strong class="bold">autopsy (root)</strong></span><span class="No-Break">:</span></li>
+</ul>
+<div>
+<div class="IMG---Figure" id="_idContainer334">
+<img alt="Figure 12.2 – autopsy (root) in the Kali Linux Forensics menu" height="667" src="image/Figure_12.02_B19441.jpg" width="519"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.2 – autopsy (root) in the Kali Linux Forensics menu</p>
+<ul>
+<li>Alternatively, we<a id="_idIndexMarker1016"/> can click on the search bar at the top left of the Kali Linux screen and type the word <strong class="source-inline">autopsy</strong> into it, and then click on the <strong class="bold">autopsy (</strong><span class="No-Break"><strong class="bold">root)</strong></span><span class="No-Break"> icon:</span></li>
+</ul>
+<div>
+<div class="IMG---Figure" id="_idContainer335">
+<img alt="Figure 12.3 – Searching for the autopsy (root) application" height="126" src="image/Figure_12.03_B19441.jpg" width="264"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.3 – Searching for the autopsy (root) application</p>
+<p>Once the Autopsy icon is clicked, a new terminal is opened showing the program information along with connection details for opening the Autopsy <span class="No-Break">forensic browser.</span></p>
+<p class="callout-heading">Note</p>
+<p class="callout">The Autopsy forensic browser has not been updated for the past few years; however; we will be using the updated GUI version in the <span class="No-Break">next chapter.</span></p>
+<p>In the<a id="_idIndexMarker1017"/> following screenshot, we can see that the version number is listed as <strong class="source-inline">2.24</strong> with the path to the <strong class="source-inline">Evidence Locker</strong> folder <span class="No-Break">as </span><span class="No-Break"><strong class="source-inline">/var/lib/autopsy</strong></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer336">
+<img alt="Figure 12.4 – Process to start the Autopsy forensic browser" height="382" src="image/Figure_12.04_B19441.jpg" width="539"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.4 – Process to start the Autopsy forensic browser</p>
+<ul>
+<li>Alternatively, instead <a id="_idIndexMarker1018"/>of clicking on the link shown in <span class="No-Break"><em class="italic">Figure 12</em></span><em class="italic">.4</em>, you can copy and paste the following link into the <span class="No-Break">browser: </span><span class="No-Break"><strong class="source-inline">http://localhost:9999/autopsy</strong></span><span class="No-Break">.</span></li>
+</ul>
+<div>
+<div class="IMG---Figure" id="_idContainer337">
+<img alt="Figure 12.5 – Opening Autopsy from the terminal" height="130" src="image/Figure_12.05_B19441.jpg" width="403"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.5 – Opening Autopsy from the terminal</p>
+<p>Once the link is opened using either method, you will be greeted with the following web interface screen to the Autopsy <span class="No-Break">forensic browser.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer338">
+<img alt="Figure 12.6 – The Autopsy forensic browser web interface" height="503" src="image/Figure_12.06_B19441.jpg" width="915"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.6 – The Autopsy forensic browser web interface</p>
+<h2 id="_idParaDest-167"><a id="_idTextAnchor230"/>Creating a new case in the Autopsy forensic browser</h2>
+<p>To create a <a id="_idIndexMarker1019"/>new case, follow the <span class="No-Break">given steps:</span></p>
+<ol>
+<li>When the Autopsy forensic browser opens, investigators are presented with three options: <strong class="bold">OPEN CASE</strong>, <strong class="bold">NEW CASE</strong>, <span class="No-Break">and </span><span class="No-Break"><strong class="bold">HELP</strong></span><span class="No-Break">.</span></li>
+</ol>
+<p>Click on <span class="No-Break"><strong class="bold">NEW CASE</strong></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer339">
+<img alt="Figure 12.7 – NEW CASE option" height="179" src="image/Figure_12.07_B19441.jpg" width="653"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.7 – NEW CASE option</p>
+<ol>
+<li value="2">Enter details for <strong class="bold">Case Name</strong>, <strong class="bold">Description</strong>, and <strong class="bold">Investigator Names</strong>. For <strong class="bold">Case Name</strong>, I’ve entered <strong class="source-inline">Terry_USB</strong>, as it closely matches the image name (<strong class="source-inline">terry-work-usb</strong>) that we will be using for this investigation. Once all the information is entered, click <span class="No-Break"><strong class="bold">NEW CASE</strong></span><span class="No-Break">:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer340">
+<img alt="Figure 12.8 – New case details" height="424" src="image/Figure_12.08_B19441.jpg" width="474"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.8 – New case details</p>
+<ol>
+<li value="3">The locations<a id="_idIndexMarker1020"/> of the case directory and configuration file are displayed and shown as in <span class="No-Break"><em class="italic">Figure 12</em></span><em class="italic">.9</em>. It’s important to take note of the case directory location, as seen in the screenshot: <strong class="bold">Case directory (/var/lib/autopsy/Terry_USB/) created</strong>. Click <strong class="bold">ADD HOST</strong> <span class="No-Break">to continue:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer341">
+<img alt="Figure 12.9 – Case location and directory details" height="190" src="image/Figure_12.09_B19441.jpg" width="448"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.9 – Case location and directory details</p>
+<p class="callout-heading">Note</p>
+<p class="callout">Several investigator name fields are available, as there may be instances where several investigators may be <span class="No-Break">working together.</span></p>
+<ol>
+<li value="4">Enter the<a id="_idIndexMarker1021"/> details for the hostname (name of the computer being investigated) and the description of <span class="No-Break">the host.</span></li>
+<li>Here are some <span class="No-Break">optional settings:</span><ul><li><strong class="bold">Time zone</strong>: Defaults to local settings if <span class="No-Break">not specified</span></li><li><strong class="bold">Timeskew Adjustment</strong>: Adds a value in seconds to compensate for <span class="No-Break">time differences</span></li><li><strong class="bold">Path of Alert Hash Database</strong>: Specifies the path of a created database of known <span class="No-Break">bad hashes</span></li><li><strong class="bold">Path of Ignore Hash Database</strong>: Specifies the path of a created database of known good hashes similar to the <span class="No-Break">NIST NSRL:</span></li></ul></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer342">
+<img alt="Figure 12.10 – Case details information" height="518" src="image/Figure_12.10_B19441.jpg" width="452"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.10 – Case details information</p>
+<ol>
+<li value="6">Click on <a id="_idIndexMarker1022"/>the <strong class="bold">ADD HOST</strong> button <span class="No-Break">to continue.</span></li>
+<li>Once the host is added and directories are created, we add the forensic image we want to analyze by clicking the <strong class="bold">ADD </strong><span class="No-Break"><strong class="bold">IMAGE</strong></span><span class="No-Break"> button:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer343">
+<img alt="Figure 12.11 – Host details" height="249" src="image/Figure_12.11_B19441.jpg" width="740"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.11 – Host details</p>
+<ol>
+<li value="8">Click<a id="_idIndexMarker1023"/> on the <strong class="bold">ADD IMAGE FILE</strong> button to add the <span class="No-Break">image file:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer344">
+<img alt="Figure 12.12 – Adding the forensic image file" height="286" src="image/Figure_12.12_B19441.jpg" width="795"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.12 – Adding the forensic image file</p>
+<ol>
+<li value="9">To import the image for analysis, the full path must be specified. On my machine, I’ve saved the image file to the default <strong class="source-inline">Downloads</strong> folder. As such, the location of the file would be <strong class="source-inline">/Downloads/terry-work-usb-2009-12-11.E01</strong>, as seen in <span class="No-Break"><em class="italic">Figure 12</em></span><span class="No-Break"><em class="italic">.13</em></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer345">
+<img alt="Figure 12.13 – Location and Import Method details" height="542" src="image/Figure_12.13_B19441.jpg" width="644"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.13 – Location and Import Method details</p>
+<p class="callout-heading">Note</p>
+<p class="callout">For <strong class="bold">Import Method</strong>, we choose <strong class="bold">Symlink</strong>. This way, the image file can be imported from its current location (<strong class="source-inline">Downloads</strong>) to the <strong class="source-inline">Evidence Locker</strong> directory without the risks associated with moving or copying the <span class="No-Break">image file.</span></p>
+<ol>
+<li value="10">Upon <a id="_idIndexMarker1024"/>clicking <strong class="bold">Next</strong>, the image file details are displayed. Click on the <strong class="bold">ADD</strong> button to continue and then click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">OK</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer346">
+<img alt="Figure 12.14 – Image File Details" height="429" src="image/Figure_12.14_B19441.jpg" width="573"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.14 – Image File Details</p>
+<ol>
+<li value="11">At this point, we’re <a id="_idIndexMarker1025"/>just about ready to analyze the image file. Be sure to select the <strong class="bold">C:/</strong> option and then click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Analyze</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer347">
+<img alt="Figure 12.15 – Volume selection" height="268" src="image/Figure_12.15_B19441.jpg" width="522"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.15 – Volume selection</p>
+<p>Now that we have<a id="_idIndexMarker1026"/> added our downloaded sample evidence file and configured all case and directory details, we can move on to the analysis of the sample <span class="No-Break">evidence file.</span></p>
+<h1 id="_idParaDest-168"><a id="_idTextAnchor231"/>Evidence analysis using the Autopsy forensic browser</h1>
+<p>Now that we’ve<a id="_idIndexMarker1027"/> created our case, added host information with appropriate directories, and added our sample evidence file, we come to the analysis stage, which involves the following steps for file and drive analysis, file carving, <span class="No-Break">and recovery:</span></p>
+<ol>
+<li value="1">After clicking on the <strong class="bold">ANALYZE</strong> button (see <span class="No-Break"><em class="italic">Figure 12</em></span><em class="italic">.15</em>), we’re presented with several options in the form of tabs with which to begin <span class="No-Break">our investigation:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer348">
+<img alt="Figure 12.16 – Analysis tab options" height="46" src="image/Figure_12.16_B19441.jpg" width="817"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.16 – Analysis tab options</p>
+<ol>
+<li value="2">Let’s look at the details of the image by clicking on the <strong class="bold">IMAGE DETAILS</strong> tab. In the following screenshot, we can see the volume serial number and the operating <a id="_idIndexMarker1028"/>system (<strong class="bold">OEM Name</strong>) listed as <span class="No-Break"><strong class="bold">BSD 4.4</strong></span><span class="No-Break">:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer349">
+<img alt="Figure 12.17 – IMAGE DETAILS tab" height="560" src="image/Figure_12.17_B19441.jpg" width="493"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.17 – IMAGE DETAILS tab</p>
+<ol>
+<li value="3">Next, we click on the <strong class="bold">FILE ANALYSIS</strong> tab. This tab opens into <strong class="bold">file browsing mode</strong>, which <a id="_idIndexMarker1029"/>allows the examination of directories and files within the image. Directories within the image are listed by default in the main <span class="No-Break">view area:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer350">
+<img alt="Figure 12.18 – FILE ANALYSIS tab" height="350" src="image/Figure_12.18_B19441.jpg" width="815"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.18 – FILE ANALYSIS tab</p>
+<p>As seen in the <a id="_idIndexMarker1030"/>preceding screenshot, for each directory and file, there are fields showing when the item was written, accessed, changed, and created, along with its size <span class="No-Break">and metadata:</span></p>
+<ul>
+<li><strong class="bold">WRITTEN</strong>: The date and time the file was last <span class="No-Break">written to</span></li>
+<li><strong class="bold">ACCESSED</strong>: The date and time the file was last accessed (only the date <span class="No-Break">is accurate)</span></li>
+<li><strong class="bold">CHANGED</strong>: The date and <a id="_idTextAnchor232"/>time the descriptive data of the file <span class="No-Break">was changed</span></li>
+<li><strong class="bold">CREATED</strong>: The data and time the file <span class="No-Break">was created</span></li>
+<li><strong class="bold">META</strong>: Metadata describing the file and information about <span class="No-Break">the file</span></li>
+</ul>
+<p class="callout-heading">Note</p>
+<p class="callout">If we scroll down a bit, we can see carved items listed in red, which are deleted files, as seen in <span class="No-Break"><em class="italic">Figure 12</em></span><span class="No-Break"><em class="italic">.19</em></span><span class="No-Break">.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer351">
+<img alt="Figure 12.19 – Carved files" height="325" src="image/Figure_12.19_B19441.jpg" width="796"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.19 – Carved files</p>
+<ol>
+<li value="4">If we scroll <a id="_idIndexMarker1031"/>even further, we can see that there is an installer (<strong class="source-inline">vnc-4_1_3-x86_win32.exe</strong>) file for VNC, which was possibly downloaded to use on another machine as this operating system is <span class="No-Break">not Windows.</span></li>
+</ol>
+<p>There is also a keylogger installation file (<strong class="source-inline">xpadvancedkeylogger.exe</strong>) listed in red, meaning it <span class="No-Break">was deleted.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer352">
+<img alt="Figure 12.20 – Deleted keylogger software discovered" height="139" src="image/Figure_12.20_B19441.jpg" width="763"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.20 – Deleted keylogger software discovered</p>
+<ol>
+<li value="5">The left pane of the Autopsy browser window also contains four main features that can assist in our DFIR investigation <span class="No-Break">and analysis:</span><ul><li><strong class="bold">Directory Seek</strong>: Allows the searching <span class="No-Break">of directories</span></li><li><strong class="bold">File Name Search</strong>: Allows the searching of files by Perl expressions <span class="No-Break">or filenames</span></li><li><strong class="bold">ALL DELETED FILES</strong>: Searches the image for <span class="No-Break">deleted files</span></li><li><strong class="bold">EXPAND DIRECTORIES</strong>: Expands <a id="_idIndexMarker1032"/>all directories for easier viewing <span class="No-Break">of contents</span></li></ul></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer353">
+<img alt="Figure 12.21 – Additional analysis menus" height="611" src="image/Figure_12.21_B19441.jpg" width="195"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.21 – Additional analysis menus</p>
+<ol>
+<li value="6">Click on the <strong class="bold">EXPAND DIRECTORIES</strong> button to easily view and access all contents within the left pane and main window. The <strong class="bold">+</strong> icon next to a directory indicates that it can be further expanded to view subdirectories (<strong class="bold">++</strong>) and <span class="No-Break">their contents:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer354">
+<img alt="Figure 12.22 – Expanded directories within the left pane" height="351" src="image/Figure_12.22_B19441.jpg" width="223"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.22 – Expanded directories within the left pane</p>
+<ol>
+<li value="7">To view deleted <a id="_idIndexMarker1033"/>files, we click on the <strong class="bold">ALL DELETED FILES</strong> button in the left pane. Deleted files are marked in red and also adhere to the same format of <strong class="bold">WRITTEN</strong>, <strong class="bold">ACCESSED</strong>, <strong class="bold">CHANGED</strong>, and <strong class="bold">CREATED</strong> times. In the following screenshot, we can see that the image contains several <span class="No-Break">deleted files:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer355">
+<img alt="Figure 12.23 – Viewing all deleted files" height="414" src="image/Figure_12.23_B19441.jpg" width="813"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 12.23 – Viewing all deleted files</p>
+<p>This brings us to <a id="_idIndexMarker1034"/>the end of our analysis using the Autopsy forensic browser. However, we will continue with another version known<a id="_idIndexMarker1035"/> as the <strong class="bold">Autopsy GUI v4</strong> in the <span class="No-Break">next chapter.</span></p>
+<h1 id="_idParaDest-169"><a id="_idTextAnchor233"/>Summary</h1>
+<p>In this chapter, we looked at automated DFIR investigation and analysis using the Autopsy forensic browser and The Sleuth Kit. Compared to individual tools, Autopsy has case management features and supports various types of file analysis, searching, and sorting of allocated, unallocated, and hidden files. Autopsy can also perform hashing on the file and directory levels to maintain <span class="No-Break">evidence integrity.</span></p>
+<p>In the next chapter, we will be using the updated and much more powerful stand-alone version of the Autopsy GUI, version 4, to analyze the same file used in this chapter <span class="No-Break">for comparison.</span></p>
+</div>
+</div></body></html>

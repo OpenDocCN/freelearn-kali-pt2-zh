@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="en" lang="en">
+<head>
+<title>The Ultimate Kali Linux Book - Third Edition</title>
+<link rel="stylesheet" type="text/css" href="../styles/stylesheet1.css"/>
+<link rel="stylesheet" type="text/css" href="../styles/stylesheet2.css"/>
+</head>
+<body>
+<div id="book-content">
+<div id="sbo-rt-content"><section id="building-a-penetration-testing-lab" class="level1 pkt" data-number="3">
+<h1 data-number="3">2 Building a Penetration Testing Lab</h1>
+<section id="join-our-book-community-on-discord-1" class="level2" data-number="3.1">
+<h2 data-number="3.1">Join our book community on Discord</h2>
+<p><a href="https://packt.link/SecNet">https://packt.link/SecNet</a><img src="../media/file6.png" alt="Qr code Description automatically generated" width="150" height="150"/>As an aspiring ethical hacker and penetration tester, it’s important it is quite important when testing exploits, payloads, or practicing your hacking skills that you do not disrupt or cause any sort of harm or damage to another person's systems or network infrastructure, such as that of your organization. While there are many online tutorials, videos, and training materials you can read and view to gain knowledge, working in the field of penetration testing means to continuously enhancing your offensive security skills. Many people can speak about hacking and explain the methodology quite clearly but don't know how to perform an attack. When learning about penetration testing, it's very important to understand the theory and how to use your skills to apply them to a simulating real-world cyber-attack.During this chapter, you will learn how to design and build a virtualized penetration testing lab environment on your personal computer and leverage virtualization technologies to reduce the cost and need of acquiring multiple physical systems and devices. In addition, you’ll learn how to setup virtually isolated networks to ensure you do not accidentally target systems you do not own. Furthermore, you will setup Kali Linux as the attacker machine and vulnerable systems as your targets. It’s important to always remember, when practicing offensive security skills such as ethical hacking and penetration testing, it should always be performed on systems and networks you own, as these security testing are usually intrusive and has the potential to cause damages to systems. To put simply, hacking systems you do not own is illegal.In this chapter, we will cover the following topics:</p>
+<ul>
+<li>Understanding the lab overview and technologies</li>
+<li>Setting up a hypervisor and virtual networks</li>
+<li>Setting up and working with Kali Linux</li>
+<li>Setting up vulnerable web application</li>
+<li>Deploying Metasploitable 2 as a vulnerable machine</li>
+<li>Building and deploying Metasploitable 3</li>
+</ul>
+<p>Let’s dive in!</p>
+</section>
+<section id="technical-requirements" class="level2" data-number="3.2">
+<h2 data-number="3.2">Technical requirements</h2>
+<p>To follow along with the exercises in this chapter, please ensure that you have met the following hardware and software requirements:</p>
+<ul>
+<li>Oracle VM VirtualBox - <a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a></li>
+<li>Oracle VM VirtualBox Extension Pack - <a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a></li>
+<li>Kali Linux - <a href="https://www.kali.org/get-kali/">https://www.kali.org/get-kali/</a></li>
+<li>Vagrant - <a href="https://www.vagrantup.com/">https://www.vagrantup.com/</a></li>
+<li>OWASP Juice Shop - <a href="https://owasp.org/www-project-juice-shop/">https://owasp.org/www-project-juice-shop/</a></li>
+<li>Metasploitable 2 - <a href="https://sourceforge.net/projects/metasploitable/files/Metasploitable2/">https://sourceforge.net/projects/metasploitable/files/Metasploitable2/</a></li>
+<li>Metasploitable 3 - <a href="https://app.vagrantup.com/rapid7">https://app.vagrantup.com/rapid7</a></li>
+</ul>
+</section>
+<section id="understanding-the-lab-overview-and-technologies" class="level2" data-number="3.3">
+<h2 data-number="3.3">Understanding the lab overview and technologies</h2>
+<p>Building a penetration testing lab enables you create an environment that’s safe for you to practice and enhance your offensive security skills, scale the environment to add new vulnerable systems and remove older legacy systems that you may no longer needed, and even create additional virtual networks to pivot you attacks from one network to another.The concept of creating your very own virtualized penetration testing lab allows you to maximize the computing resources on your existing computer, without the need to purchase online lab time from various service providers or even buy additional computers and devices. Overall, you'll be saving a lot of money as opposed to buying physical computers and networking equipment such as routers and switches.As a cybersecurity lecturer and professional, I have noticed that many people who are starting their journeys in the field of information technology (IT) usually think that a physical lab infrastructure is needed based on their field of study. To some extent, this is true, but as technology advances, many downsides are associated with building a physical lab to practice your skills. The following are some of the disadvantages of a physical lab:</p>
+<ul>
+<li>Physical space is required to store the servers and networking appliances that are needed.</li>
+<li>The power consumption per device will result in an overall high rate of financial expenditure.</li>
+<li>The cost of building/purchasing each physical device is high, whether it's a network appliance or a server.</li>
+</ul>
+<p>These are just some of the concerns many students and aspiring IT professionals have. In many cases, a beginner usually has a single computer such as a desktop or a laptop computer. Being able to use the virtualization technologies that have emerged as a response to these downsides has opened a multitude of doors in the field of IT. This has enabled many people and organizations to optimize and manage their hardware resources more efficiently.In the world of virtualization, a hypervisor is a special application that allows a user to virtualize operating systems that utilizes the hardware resources on their system so that these hardware resources can be shared with another virtualized operating system or an application. This allows you to install more than one operating system on top of your existing computer’s operating system. Imagine that you are running Microsoft Windows 11 as your main operating system, this is commonly referred to as the <em>host operating system</em>, but you wish to run a Linux-based operating system at the same time on the same computer. You can achieve this by using a hypervisor. Hence, we are going to use virtualization to ensure we can build a cost-effective penetration testing lab environment.When designing a penetration testing lab environment, we’ll need the following components:</p>
+<ul>
+<li><strong>Hypervisor</strong> – The hypervisor is an application which enables us to virtualize operating systems and allow them to run on any hardware. We can use a hypervisor to create multiple virtual machines which can running simultaneously on our computer. There are many hypervisor applications, we’ll be using <strong>Oracle VM VirtualBox</strong> as our preferred application because it’s free and easy to use.</li>
+<li><strong>Attacker machine</strong> – The attacker machine will be used to create and launch various types of cyber-attacks and threats to identify and exploit security vulnerabilities on targeted systems. For the attacker machine, we’ll be using Kali Linux.</li>
+<li><strong>Vulnerable machines</strong> – Without any vulnerable systems, our lab environment will not be complete. We’ll setup vulnerable systems such as Metasploitable 2 which is a Linux-based operating system with hosted web applications, and Metasploitable 3 with its Windows- and Linux-based server versions.</li>
+<li><strong>Vulnerable web application</strong> – This will help you better understand how threat actors are able to discover and exploit security weaknesses within web applications. We’ll setup the <strong>Open Web Application Security Project</strong> (<strong>OWASP</strong>) <strong>Juice Shop</strong> web application on Kali Linux.</li>
+<li><strong>Internet access</strong> – Internet connectivity will be setup on the Kali Linux virtual machine. This will be a convenience for easily downloading additional applications, tools and software packages.</li>
+</ul>
+<p>The following diagram shows the network topology for our virtualize penetration testing lab environment:</p>
+<img src="../media/file7.png" width="880" height="585"/>
+<p>As shown in the preceding diagram, there are 4 network zones, these are:</p>
+<ul>
+<li>The internet for accessing online resources and is directly connected to the Kali Linux virtual machine.</li>
+<li><strong>PentestNet</strong> environment which contains 2 vulnerable machines that’s on the <code>172.30.1.0/24</code> network and it’s also directly connected to Kali Linux.</li>
+<li><strong>RedTeamLab</strong> environment that contains an <strong>Active Directory</strong> (<strong>AD</strong>) infrastructure with a Windows Server and 2 clients that’s on the <code>192.168.42.0/24</code> network, and it’s directly connected to Kali Linux.</li>
+<li><strong>HiddenNet</strong> environment which contains a single vulnerable host that’s on the <code>10.11.12.0/24</code> network and it’s reachable via the <em>PentestNet</em> network only. Therefore, we’ll need to compromise a host on the <em>PentestNet</em> environment and determine whether there’s a way to pivot our attacks.</li>
+</ul>
+<p>The following diagram provides more technical details to gain a better understanding on where specific IP networks are assigned on our lab environment:</p>
+<img src="../media/file8.png" width="865" height="428"/>
+<p>As shown in the preceding diagram, the Kali Linux virtual machine will be assigned 3 network adapters, these are commonly referred to as <strong>virtual Network Interface Cards</strong> (<strong>vNICs</strong>) on hypervisors. These vNICs enables us to access the internet using a bridged connection, the <em>PentestNet</em> environment on <code>172.30.1.0/24</code> and the <em>RedTeamLab</em> environment on <code>192.168.42.0/24</code>. This lab design is perfect for learning how to perform <em>lateral movement</em> between systems, pivoting from one network to another, and compromising an AD environment.Now that you have an idea of the virtual lab environment, as well as the systems and technologies which we are going to be working with throughout this book, let’s get started with setting up the hypervisor and virtual networks up next.</p>
+</section>
+<section id="setting-up-a-hypervisor-and-virtual-networks" class="level2" data-number="3.4">
+<h2 data-number="3.4">Setting up a hypervisor and virtual networks</h2>
+<p>There are many hypervisors from various vendors in the information technology industry, however, Oracle VM VirtualBox is a free and simple-to-use hypervisor that has all the essential features as commercial (paid) products. In this section, you will learn how to setup Oracle VM VirtualBox and create virtual networks on your computer.Before getting started, the following are important factors and requirements:</p>
+<ul>
+<li>Ensure the computer’s processor supports virtualization features such as <strong>VT-x</strong>/<strong>AMD-V</strong>.</li>
+<li>Ensure the virtualization feature is enabled on your processor via the BIOS/UEFI.</li>
+</ul>
+<blockquote>
+<p>If you’re unsure how to access the BIOS/UEFI on your computer, please check the manual of device or the vendor’s website on specific instructions.</p>
+</blockquote>
+<p>Let’s get started!</p>
+<section id="part-1-setting-up-the-hypervisor" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1">Part 1 – Setting up the hypervisor</h3>
+<p>As previously mentioned, there are many hypervisors in the industry, and we’ll be using Oracle VM VirtualBox throughout this book. However, if you wish to use another hypervisor, ensure you configure it using the systems and network designs.To get started with this exercise, please use the following instructions:</p>
+<ol>
+<li>Firstly, on your host computer, go to <a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a> and choose the <strong>Oracle VirtualBox Platform Package</strong> that is suitable for your host operating system as shown below:</li>
+</ol>
+<img src="../media/file9.png" width="969" height="603"/>
+<ol>
+<li>Next, you’ll need to download the <strong>Oracle VM VirtualBox Extension Pack</strong> application. This enables additional functionality on the <strong>VirtualBox Manager</strong> application, such as creating the virtually isolated networks on the host computer. On the same download page, scroll-down a bit to find the download link as shown below:</li>
+</ol>
+<img src="../media/file10.png" width="774" height="199"/>
+<ol>
+<li>Next, install the <strong>Oracle VirtualBox Platform Package</strong> that was downloaded during step 1. During the installation, use the default configurations. Once the application is installed on your host computer, the <strong>VirtualBox Manager</strong> interface will appear as shown below:</li>
+</ol>
+<img src="../media/file11.png" width="1100" height="461"/>
+<ol>
+<li>Next, close the <strong>Oracle VM VirtualBox Manager</strong> application as it’s not needed at this time.</li>
+<li>Next, to install the <strong>Oracle VM VirtualBox Extension Pack</strong>, simply right-click on the software package and choose <strong>Open with</strong> &gt; <strong>VirtualBox Manager</strong> as shown below:</li>
+</ol>
+<img src="../media/file12.png" width="1000" height="373"/>
+<ol>
+<li>The <strong>VirtualBox License</strong> window will appear, ensure you read and click on <strong>I Agree</strong> to accept the agreement to proceed with its installation as shown below:</li>
+</ol>
+<img src="../media/file13.png" width="618" height="505"/>
+<p>Once the installation is completed, you can close the <strong>VirtualBox Manager</strong> application until it’s needed later.</p>
+</section>
+<section id="part-2-creating-virtually-isolated-networks" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2">Part 2 – Creating virtually isolated networks</h3>
+<p>When creating a penetration testing lab environment, you must not accidentally scan or unleash a malicious payload on systems and networks that you own, such as those on the internet.To get started setting up the virtually isolated networks, please use the following instructions:</p>
+<ol>
+<li>Firstly, on your Windows host computer, open the <strong>Command Prompt</strong>.</li>
+<li>Next, use the following commands to change the present working directory to <code>C:\Program Files\Oracle\VirtualBox</code> :</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\Glen&gt; cd C:\Program Files\Oracle\VirtualBox</code></pre>
+</div>
+<ol>
+<li>Next, using the <strong>vboxmanage</strong> application, create a virtual <strong>Dynamic Host Configuration Protocol</strong> (<strong>DHCP</strong>) server for the virtual <em>PentestNet</em> network using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Program Files\Oracle\VirtualBox&gt; vboxmanage dhcpserver add --network=PentestNet --server-ip=172.30.1.1 --lower-ip=172.30.1.20 --upper-ip=172.30.1.50 --netmask=255.255.255.0 --enable</code></pre>
+</div>
+<p>The following snippet shows the preceding commands executed on the <strong>Command Prompt</strong>:</p>
+<img src="../media/file14.png" width="1067" height="213"/>
+<p>Upon executing the preceding commands, the <strong>vboxmanage</strong> application creates a DHCP server that will automatically assign IP address within the range from <code>172.30.1.1</code> – <code>172.30.1.254</code> to any systems that are connected to the <em>PentestNet</em> network on the hypervisor.</p>
+<blockquote>
+<p>You can use the <code>vboxmanage list dhcpservers</code> command to view all DHCP servers and their configurations that are enabled on your host computer via VirtualBox.</p>
+</blockquote>
+<ol>
+<li>Next, use the following commands to create a new DHCP server for the <em>HiddenNet</em> network:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Program Files\Oracle\VirtualBox&gt; vboxmanage dhcpserver add --network=HiddenNet --server-ip=10.11.12.1 --lower-ip=10.11.12.20 --upper-ip=10.11.12.50 --netmask=255.255.255.0 --enable</code></pre>
+</div>
+<p>The following snippet shows the execution of the preceding commands:</p>
+<img src="../media/file15.png" width="993" height="136"/>
+<p>When the preceding commands are executed, it will create another virtual DHCP server that will automatically assigned IP addresses within the range from <code>10.11.12.1</code> – <code>10.11.12.20</code> to any virtual machines that are connected to the <em>HiddenNet</em> network.</p>
+<ol>
+<li>Next, create another DHCP server and virtual network that will be assigned to the <em>RedTeamLab</em> network by using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Program Files\Oracle\VirtualBox&gt; vboxmanage dhcpserver add --network=RedTeamLab --server-ip=192.168.42.1 --lower-ip=192.168.42.20 --upper-ip=192.168.42.50 --netmask=255.255.255.0 --set-opt 6 192.168.42.40 --enable</code></pre>
+</div>
+<p>The following snippet shows the execution of the preceding commands to create another virtual DHCP server:</p>
+<img src="../media/file16.png" width="1020" height="137"/>
+<p>Unlike the previous steps, the commands used to create the <em>RedTeamLab</em> network was modified to specific a <strong>Domain Name System</strong> (<strong>DNS</strong>) server address to virtual machines that are connecting to this virtual network. The DNS server address will be useful when setting up the AD lab environment.At this point, both the hypervisor and virtual networks are configured. Next, you will learn how to deploy and setup Kali Linux as a virtual machine within our lab environment.</p>
+</section>
+</section>
+<section id="setting-up-and-working-with-kali-linux" class="level2" data-number="3.5">
+<h2 data-number="3.5">Setting up and working with Kali Linux</h2>
+<p>Kali Linux is one of the most popular Linux distributions within the cybersecurity industry as it contains over 300 pre-installed software packages that are designed for mostly offensive security assessments. Ethical hackers and penetration testers commonly used Kali Linux to perform reconnaissance, scanning, enumeration, exploitation and even post-exploitation techniques on targeted systems and networks. While many folks usually think Kali Linux is designed only for offensive security professionals such as penetration testers, it’s commonly used by system administrators and even network security professionals within the technology industry to test their security controls and systems for security vulnerabilities.However, Kali Linux is built on the Debian flavor of Linux and being a free operating system, it has gained a lot of attention over the years by cybersecurity professionals in the industry. Kali Linux has a lot of features and tools that make a penetration tester's or security engineer's job a bit easier when they're working. There are many tools, scripts, and frameworks for accomplishing various tasks, such as gathering information on targets, performing network scanning, vulnerability discovery, and even exploitation, to name just a few.In this section, you will learn how to set up Kali Linux as a virtual machine, establish network connectivity to the internet and to our virtually isolated networks, and learn the basics of Kali Linux.Let's get started!</p>
+<section id="part-1-deploying-kali-linux-as-a-virtual-machine" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1">Part 1 – Deploying Kali Linux as a virtual machine</h3>
+<p>There are many types of deployment models for Kali Linux, from performing a bare-metal installation directly on hardware to installing it on Android devices. To keep our lab setup process simple and easy to follow, you will learn how to set up Kali Linux as a virtual machine within the Oracle VM VirtualBox application. This method ensures you can be up and running very quickly. To get started with this exercise, please use the following instructions:</p>
+<ol>
+<li>Firstly, go to the official Kali Linux website at <a href="https://www.kali.org/get-kali/">https://www.kali.org/get-kali/</a> and click on <strong>Virtual Machines</strong> as shown below:</li>
+</ol>
+<img src="../media/file17.png" width="933" height="497"/>
+<ol>
+<li>Next, click on <strong>VirtualBox 64</strong> to download the VirtualBox image of Kali Linux 2023.2 as shown below:</li>
+</ol>
+<img src="../media/file18.png" width="979" height="421"/>
+<p>The download file a compressed folder with the .7z extension.</p>
+<ol>
+<li>Next, to extract the contents from the compressed folder, you will to download and install the <strong>7-Zip</strong> application from <a href="https://www.7-zip.org/download.html">https://www.7-zip.org/download.html</a>.</li>
+<li>Next, open the <strong>7-Zip File Manager</strong> application, navigate to the directory with the Kali Linux compressed folder, select the file and click on <strong>Extract</strong> as shown below:</li>
+</ol>
+<img src="../media/file19.png" width="914" height="373"/>
+<ol>
+<li>Next, the file extraction window will appear, click on <strong>OK</strong> to proceed as shown below:</li>
+</ol>
+<img src="../media/file20.png" width="581" height="337"/>
+<p>The extraction process will begin and takes a few seconds or minutes to complete. After the extraction is completed, you will see a new folder within the <strong>7-Zip File Manager</strong> application. This means the contents was successfully extracted and you can now close the application.</p>
+<ol>
+<li>Next, open <strong>Windows Explorer</strong> and go to the directory that has the extracted contents. There you will see 2 files, right-click on the <strong>VirtualBox Machine Definition</strong> file and select <strong>Open with</strong> &gt; <strong>VirtualBox Manager</strong> as shown below:</li>
+</ol>
+<img src="../media/file21.png" width="736" height="316"/>
+<p>The <strong>Oracle VM VirtualBox Manager</strong> application will automatically open, import the Kali Linux virtual machine as shown below:</p>
+<img src="../media/file22.png" width="1100" height="480"/>
+<p>Before powering-on the Kali Linux virtual machine, there’s a few customization that needs to be done on the virtual machine settings up next.</p>
+</section>
+<section id="part-2-customizing-kali-linux-and-its-network-adapters" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2">Part 2 – Customizing Kali Linux and its network adapters</h3>
+<p>The following instructions will guide you to customizing the Kali Linux virtual machine environment and ensure it’s aligned to our virtualize penetration testing lab topology. In addition, you will learn how to attach each vNIC (network adapter) to the internet, <em>PentestNet</em> and <em>RedTeamLab</em> virtual networks.To get started customizing the Kali Linux virtual environment, please use the following instructions:</p>
+<ol>
+<li>Firstly, ensure the <strong>Nested VT-x/AMD-V</strong> virtualization feature is accessible between the virtual machine and the processor on your computer, we will need to execute the following commands within the Windows <strong>Command Prompt</strong>:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\Glen&gt; cd C:\Program Files\Oracle\VirtualBox
+C:\Program Files\Oracle\VirtualBox&gt; VBoxManage.exe list vms</code></pre>
+</div>
+<blockquote>
+<p>Important Note</p>
+<blockquote>
+<p>The <code>VBoxManage.exe list vms</code> command enables us to view a list of all the virtual machines, their names and IDs within Oracle VM VirtualBox Manager.</p>
+</blockquote>
+</blockquote>
+<ol>
+<li>Next, using the name of the newly imported Kali Linux virtual machine, use the following commands to enable the <strong>Nested VT-x/AMD-V</strong> feature on the virtual machine:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Program Files\Oracle\VirtualBox&gt; VBoxManage.exe modifyvm "kali-linux-2023.2-virtualbox-amd64" --nested-hw-virt on</code></pre>
+</div>
+<p>Ensure you substitute the of your Kali Linux virtual machine (shown in <em>step 1</em>) with the name displayed within the quotation marks, as shown here:</p>
+<img src="../media/file23.png" width="912" height="268"/>
+<ol>
+<li>Next, on Oracle <strong>VM VirtualBox Manager</strong>, select the <strong>Kali Linux virtual machine</strong> and click on <strong>Settings</strong> as shown below:</li>
+</ol>
+<img src="../media/file24.png" width="882" height="364"/>
+<ol>
+<li>To adjust the amount of memory (RAM) allocated to this virtual machine, go to <strong>System</strong> &gt; <strong>Motherboard</strong> &gt; <strong>Base Memory</strong>, as shown here:</li>
+</ol>
+<img src="../media/file25.png" width="683" height="285"/>
+<blockquote>
+<p>It’s recommended to never assign memory within the yellow and red zones of the Base Memory scale. Kali Linux can run efficiently on 2 GB of memory; however, if your system has more than 8GB available, then consider allocating 4 GB to the Kali Linux virtual machine.</p>
+</blockquote>
+<p>Additionally, within the <strong>System</strong> &gt; <strong>Processor</strong> tab, you can modify the number of virtual CPU cores that are allocated to this virtual machine. Using between 1 – 2 cores is sufficient; however, you can assign more depending on the available hardware resources on your computer.</p>
+<ol>
+<li>Next, let’s connect the <strong>Kali Linux virtual machine</strong> to your physical network to access the internet. Within the <strong>Settings</strong> menu of Kali Linux, select the <strong>Network</strong> category &gt; <strong>Adapter 1</strong> and use the following configurations:
+<ul>
+<li>Enable the network adapter</li>
+<li>Attached to: <strong>Bridged Adapter</strong></li>
+<li>Name: Use the drop-down menu to select your physical network adapter that’s connected to your physical network with internet access.</li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the preceding configurations applied to Adapter 1 (vNIC 1):</p>
+<img src="../media/file26.png" width="683" height="363"/>
+<ol>
+<li>Next, let’s assign <strong>Adapter 2</strong> (vNIC 2) to the <em>PentestNet</em> network. Select the <strong>Adapter 2</strong> tab and use the following configurations:
+<ul>
+<li>Enable the network adapter</li>
+<li>Attached to: <strong>Internal Network</strong></li>
+<li>Name: Manually enter <code>PentesNet</code> within the field</li>
+<li>Promiscuous Mode: <strong>Allow All</strong></li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the preceding configurations applied to Adapter 2 (vNIC 2):</p>
+<img src="../media/file27.png" width="683" height="361"/>
+<ol>
+<li>Lastly, let’s assign <strong>Adapter 3</strong> (vNIC 3) to the <em>RedTeamLab</em> network. Select the <strong>Adapter 3</strong> tab and use the following configurations:
+<ul>
+<li>Enable the network adapter</li>
+<li>Attached to: <strong>Internal Network</strong></li>
+<li>Name: Manually enter <code>RedTeamLab</code> within the field</li>
+<li>Promiscuous Mode: <strong>Allow All</strong></li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the preceding configurations applied to Adapter 3 (vNIC 3):</p>
+<img src="../media/file28.png" width="719" height="361"/>
+<p>After configuring the network settings on <strong>Adapter 3</strong>, click on <strong>OK</strong> to save the settings of the Kali Linux virtual machine.At this point, we have configured all 3 virtual network adapters on the Kali Linux virtual machine. One adapter is provides connectivity to the internet via the physical adapter on your host computer, and the other 2 virtual adapters are connected to the virtual networks (<em>PentestNet</em> and <em>RedTeamLab</em>).</p>
+</section>
+<section id="part-3-getting-started-with-kali-linux" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3">Part 3 – Getting started with Kali Linux</h3>
+<p>Many first-time users are always excited to log-in to their first attacker machine, especially a machine that’s designed to help ethical hackers and penetration testers to discover and exploited security vulnerabilities on targeted systems and networks. The following instructions will help you get started with Kali Linux:</p>
+<ol>
+<li>Firstly, open <strong>Oracle VM VirtualBox Manager</strong>, select the <strong>Kali Linux virtual machine</strong> and click on <strong>Start</strong> to power-on.</li>
+<li>Next, a log-in prompt will appear, use the detail user credentials, username: <code>kali</code> and password: <code>kali</code> to login to the desktop:</li>
+</ol>
+<img src="../media/file29.png" width="818" height="692"/>
+<blockquote>
+<p>If your Kali Linux desktop view does not scale to match the resolution of your monitor, simply toggle with the view option at the top of the <strong>VirtualBox menu bar</strong> &gt; <strong>View</strong> &gt; <strong>Auto-resize Guest Display</strong>.</p>
+</blockquote>
+<ol>
+<li>Once you’ve logged-in to the Kali Linux operating system, to view a list of available tools, click on the Kali Linux icon on the top-left corner on the desktop, as shown here:</li>
+</ol>
+<img src="../media/file30.png" width="623" height="724"/>
+<p>As shown in the preceding screenshot, the pre-installed tools are all categorized based on the sequential order of performing ethical hacking and penetration testing exercises. For instance, all the tools that are commonly used for reconnaissance can be easily found within the <strong>01 – Information Gathering</strong> category, while wireless penetration testing tools are found within the <strong>06 – Wireless Attacks</strong> category. Throughout this book, you will mostly be working with the Linux Terminal and learning many commands along the way. Don’t worry if this is your first time working Linux and commands, it will be new learning experience and fun working with new technologies and developing your offensive security skills to simulate real-world cyber-attacks.</p>
+<ol>
+<li>Next, to disable IPv6 on Kali Linux, click on the Kali Linux icon on the top-left corner and select the <strong>Settings Manager</strong> icon, as shown below:</li>
+</ol>
+<img src="../media/file31.png" width="621" height="722"/>
+<ol>
+<li>The <strong>Settings</strong> windows will appear, click on <strong>Advanced Network Configuration</strong>, as shown in the following screenshot:</li>
+</ol>
+<img src="../media/file32.png" width="846" height="460"/>
+<ol>
+<li>Next, the <strong>Network Connections</strong> window will appear, select <strong>Wired connection 1</strong> (vNIC 1) and click on the <strong>gear</strong> icon, as shown in the following screenshot:</li>
+</ol>
+<img src="../media/file33.png" width="626" height="305"/>
+<ol>
+<li>Next, the <strong>Editing Wired connection 1</strong> window appears, select the <strong>IPv6 Settings</strong> tab, and change <strong>Method</strong> to <strong>Disabled</strong>, and click on <strong>Save</strong>, as shown in the following screenshot:</li>
+</ol>
+<img src="../media/file34.png" width="717" height="567"/>
+<p>You can close the <strong>Network Connections</strong> window and the <strong>Settings</strong> menu.</p>
+<ol>
+<li>Next, let’s determine whether our Kali Linux virtual machine is receiving an IP address on each of its network adapters that are connected to the internet, <em>PentestNet</em> and <em>RedTeamLab</em> networks.</li>
+</ol>
+<p>To open the <strong>Linux Terminal</strong>, click on the Kali Linux icon on the top-left corner and select <strong>Terminal Emulator</strong>, then execute <code>ip address</code> command as shown below:</p>
+<img src="../media/file35.png" width="1526" height="756"/>
+<p>As shown in the preceding screenshot, there are 4 network adapters on the Kali Linux virtual machine:</p>
+<ul>
+<li><strong>lo</strong> – This is the loopback network adapter which enables the operating system to communication with self-hosted applications and vice-versa.</li>
+<li><strong>eth0</strong> – This network adapter is vNIC 1 based on our lab topology diagram and its network adapter 1 on the virtual machine settings that’s connected to the internet via the physical network. The <strong>inet</strong> address is the IP address that’s allocated to the interface.</li>
+<li><strong>eth1</strong> – This is vNIC 2 according to the lab topology diagram and it is network adapter 2 on the virtual machine setting that’s connected to the <em>PentestNet</em> network (<code>172.30.1.0/24</code>) environment.</li>
+<li><strong>eth3</strong> – This is vNIC 3 according to the lab topology diagram and it is network 3 on the virtual machine settings that’s connected to the <em>RedTeamLab</em> network (<code>192.168.42.0/24</code>) environment.</li>
+</ul>
+<ol>
+<li>Next, let’s internet connectivity and determine whether DNS resolution is working properly on our Kali Linux virtual machine. On the <strong>Terminal</strong>, use the following commands to send 4 <strong>Internet Control Message Protocol</strong> (<strong>ICMP</strong>) messages to <code>www.google.com</code>:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ ping www.google.com -c 4</code></pre>
+</div>
+<p>The following screenshot shows the Kali Linux operating system was able to resolve the hostname to an IP address and successfully reach Google’s web server on the internet:</p>
+<img src="../media/file36.png" width="1364" height="343"/>
+<ol>
+<li>Lastly, to change the default password for the username: <code>kali</code>, use the <code>passwd</code> command as shown in the following screenshot:</li>
+</ol>
+<img src="../media/file37.png" width="599" height="228"/>
+<blockquote>
+<p>While entering passwords on the Linux terminal, they are invisible for security reasons.</p>
+</blockquote>
+</section>
+<section id="part-4-updating-repository-sources-and-packages" class="level3" data-number="3.5.4">
+<h3 data-number="3.5.4">Part 4 – Updating repository sources and packages</h3>
+<p>At times, a tool may not be working as expected, or even crash unexpectedly on us during a penetration test or security audit. Developers often release updates for their applications and software packages. These updates are intended to fix bugs and add new features to the user experience. Let's learn how to update sources and packages by following these steps:</p>
+<ol>
+<li>To update the local package repository list on Kali Linux, use the <code>sudo apt update</code> command as shown here:</li>
+</ol>
+<img src="../media/file38.png" width="1452" height="465"/>
+<p>By updating the package repository list on your Kali Linux machine, when you use the <code>sudo apt install &lt;package-name&gt;</code> command to install a new software package, Kali Linux will retrieve the latest version of the application and update from the official sources.</p>
+<blockquote>
+<p>The <code>source.list</code> file does not always update properly. To ensure you have the right settings on your Kali Linux machine, please see the official documentation on Kali Linux repositories at: <a href="https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/">https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/</a>.</p>
+</blockquote>
+<ol>
+<li>(Optional) To upgrade all the existing software packages on your Kali Linux machine to their latest versions, use the <code>sudo apt upgrade</code> command, as shown here:</li>
+</ol>
+<img src="../media/file39.png" width="1426" height="372"/>
+<p>If, during the upgrade process, you receive an error about Kali Linux being unable to perform the upgrade, use the <code>sudo apt update --fix-missing </code>command followed by <code>sudo apt upgrade</code> once more.</p>
+<ol>
+<li>Next, the PimpMyKali script from Dewalt enables us to both fix and install very useful utilities and tools on our Kali Linux virtual machine. Please use the following commands by Dewalt:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ git clone https://github.com/Dewalt-arch/pimpmykali
+kali@kali:~$ cd pimpmykali
+kali@kali:~/pimpmykali$ sudo ./pimpmykali.sh</code></pre>
+</div>
+<p>Next, the PimpMyKali command-line menu will appear with many options, enter <code>N</code> since we are running this script on a new virtual machine, as shown here:</p>
+<img src="../media/file40.png" width="1297" height="885"/>
+<p>During the setup process, the script will ask whether you want to re-enable to ability to login with the <em>root</em> account on Kali Linux, this is a personal preference. I entered <code>N</code> (no) and hit enter to continue the process. Keep in mind, this setup process a few minutes to complete.</p>
+<ol>
+<li>Lastly, after the setup process is completed, you will need to reboot the Kali Linux virtual machine to ensure all the configurations takes effect. You will find the power options at the top-right corner of the Kali Linux desktop interface.</li>
+</ol>
+<blockquote>
+<p>To learn more about Dewalt’s PimpMyKali script, please see the official GitHub repository at: <a href="https://github.com/Dewalt-arch/pimpmykali">https://github.com/Dewalt-arch/pimpmykali</a>.</p>
+</blockquote>
+<p>Having completed this section, you have learned how to set up Kali Linux as a virtual machine, enable internet and other network connections for the virtual machine, and update the package repository source list. Next, you will learn how to setup a vulnerable web application to explore web application penetration testing in later sections of this book.</p>
+</section>
+</section>
+<section id="setting-up-vulnerable-web-application" class="level2" data-number="3.6">
+<h2 data-number="3.6">Setting up vulnerable web application</h2>
+<p>Learning how to simulate real-world cyberattacks using Kali Linux would not be complete without understanding how to discover and exploit vulnerabilities within web applications. The <strong>Open Web Application Security Project</strong> (<strong>OWASP</strong>) is an organization that focuses on improving security through software, including web applications. OWASP is known for its OWASP Top 10 list of most critical security risks within web applications.</p>
+<blockquote>
+<p>At the time of writing this book, the latest version of OWASP Top 10 is 2021. More information can be found at: <a href="https://owasp.org/www-project-top-ten/">https://owasp.org/www-project-top-ten/</a>.</p>
+</blockquote>
+<p>As an aspiring ethical hacker and penetration tester, it's important to understand how to identify and perform security testing on each category within the OWASP Top 10 list. OWASP created a few projects that allow learners to safely use their offensive security skills and techniques in a safe environment to discover web application vulnerabilities and exploit them. In this section, we'll be deploying the OWASP Juice Shop vulnerable web application on Kali Linux.To get started with setting up OWASP Juice Shop web application, please use the following instructions:</p>
+<ol>
+<li>Firstly, power-on your <strong>Kali Linux virtual machine</strong> and log-in.</li>
+<li>Next, open the <strong>Terminal</strong> and use the following commands to update the package repository list:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo apt update </code></pre>
+</div>
+<ol>
+<li>Next, install the Docker repository source on Kali Linux with the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ printf '%s\n' "deb https://download.docker.com/ linux/debian bullseye stable" | sudo tee /etc/apt/sources.list.d/docker-ce.list</code></pre>
+</div>
+<p>The following screenshot shows the successful execution of the preceding commands:</p>
+<img src="../media/file41.png" width="1145" height="450"/>
+<ol>
+<li>Next, download and setup the <strong>GNU Privacy Guard</strong> (<strong>GPG</strong>) keys for Docker by using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-cearchive-keyring.gpg</code></pre>
+</div>
+<p>The following screenshot shows the successful execution of the preceding commands:</p>
+<img src="../media/file42.png" width="1170" height="114"/>
+<blockquote>
+<p>To learn more on setting up Docker on Kali Linux, please see the official documentation at: <a href="https://www.kali.org/docs/containers/installing-docker-on-kali/">https://www.kali.org/docs/containers/installing-docker-on-kali/</a>.</p>
+</blockquote>
+<ol>
+<li>Next, update the package repository list again and install Docker by using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo apt update 
+kali@kali:~$ sudo apt install -y docker.io
+kali@kali:~$ sudo systemctl enable docker –now
+kali@kali:~$ sudo usermod -aG docker $USER</code></pre>
+</div>
+<blockquote>
+<p>Use the <code>docker version</code> command to test whether Docker is installed correctly on Kali Linux.</p>
+</blockquote>
+<ol>
+<li>Next, use the installed Docker application to pull-down the <strong>OWASP Juice Shop</strong> container from the online Docker Hub repository:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo docker pull bkimminich/juice-shop </code></pre>
+</div>
+<p>The following screenshot shows the download and setup process of the OWASP Juice Shop docker container:</p>
+<img src="../media/file43.png" width="1225" height="424"/>
+<ol>
+<li>Next, use the following commands to run the OWASP Juice Shop Docker container on port 3000:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>kali@kali:~$ sudo docker run --rm -p 3000:3000 bkimminich/juice-shop</code></pre>
+</div>
+<p>The following snippet shows the execution of the preceding command:</p>
+<img src="../media/file44.png" width="1116" height="600"/>
+<blockquote>
+<p>To stop the Docker container from running, use the <code>CTRL + C</code> key combination.</p>
+</blockquote>
+<ol>
+<li>Lastly, open the Firefox web browser on Kali Linux and go to <code>http://127.0.0.1:3000</code> to access and interact with OWASP Juice Shop web application, as shown in the following screenshot:</li>
+</ol>
+<img src="../media/file45.png" width="1295" height="609"/>
+<blockquote>
+<p>To learn more about OWASP Juice Shop vulnerable web application, please see the official documentation at: <a href="https://owasp.org/www-project-juice-shop/">https://owasp.org/www-project-juice-shop/</a>.</p>
+</blockquote>
+<p>Having completed this exercise, you have learned how to set up Docker and OWASP Juice Shop on Kali Linux. Next, you will learn how to set up Metasploitable 2, a vulnerable Linux-based system in our lab environment.</p>
+</section>
+<section id="deploying-metasploitable-2-as-a-vulnerable-machine" class="level2" data-number="3.7">
+<h2 data-number="3.7">Deploying Metasploitable 2 as a vulnerable machine</h2>
+<p>When building a penetration testing lab, it's important to include vulnerable systems that will act as our targets. These systems contain intentional vulnerable services and applications enabling us to practice and build our skills to better understand how to discover and exploit vulnerabilities. A very popular vulnerable machine is known as Metasploitable 2. This vulnerable machine contains a lot of security vulnerabilities that can be exploited and is good for learning about ethical hacking and penetration testing.To get started setting up Metasploitable 2 within our lab environment, please use the following instructions:</p>
+<section id="part-1-deploying-metasploitable-2" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1">Part 1 – Deploying Metasploitable 2</h3>
+<p>The following steps will guide you to acquiring the Metasploitable 2 virtual machine and deploying it within Oracle VM VirtualBox Manager:</p>
+<ol>
+<li>Firstly, on your host computer, go to <a href="https://sourceforge.net/projects/metasploitable/files/Metasploitable2/">https://sourceforge.net/projects/metasploitable/files/Metasploitable2/</a> to download the <strong>metasploitable-linux-2.0.0.zip</strong> file onto your device.</li>
+<li>Once the ZIP file has been downloaded, extract (unzip) its contents. The extracted files are the virtual hard disk and settings configuration files for the Metasploitable 2 virtual machine.</li>
+<li>Next, let's create a virtual machine for Metasploitable 2, open <strong>Oracle VM VirtualBox Manager</strong> and click on <strong>New</strong>.</li>
+<li>When the <strong>Create Virtual Machine</strong> window appears, click on <strong>Expert Mode</strong> to change the configuration view.</li>
+<li>Next, use the following configurations for the virtual machine:
+<ul>
+<li>Name: Metasploitable 2</li>
+<li>Type: Linux</li>
+<li>Version: Other Linux (64-bit)</li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the preceding settings on the <strong>Create Virtual Machine</strong> window:</p>
+<img src="../media/file46.png" width="861" height="496"/>
+<ol>
+<li>Next, expand the <strong>Hard Disk</strong> category on <strong>Create Virtual Machine</strong> window, select <strong>Use an Existing Virtual Hard Disk File</strong> option, and then click on the folder icon on the right-side as shown below:</li>
+</ol>
+<img src="../media/file47.png" width="758" height="685"/>
+<ol>
+<li>Next, the <strong>Hard Disk Selector</strong> and click on <strong>Add</strong> as shown below:</li>
+</ol>
+<img src="../media/file48.png" width="618" height="283"/>
+<ol>
+<li>Next, a pop-up window will appear, use it navigate to the <strong>Metasploitable 2</strong> extracted folder and its contents, select the <strong>Metasploitable</strong> VMDK file and click on <strong>Open</strong> as shown below:</li>
+</ol>
+<img src="../media/file49.png" width="878" height="381"/>
+<ol>
+<li>Next, you will automatically return to the <strong>Hard Disk Selector</strong> window where the <strong>Metasploitable</strong> disk file will be available, select it and click on <strong>Choose</strong> as shown below:</li>
+</ol>
+<img src="../media/file50.png" width="510" height="356"/>
+<ol>
+<li>Next, you’ll automatically return to the <strong>Create Virtual Machine</strong> window where you’ll see the <strong>Metasploitable.vmdk</strong> file is loaded as the existing virtual disk file, click on <strong>Finish</strong> as shown below:</li>
+</ol>
+<img src="../media/file51.png" width="758" height="685"/>
+<p>At this point, the Metasploitable 2 virtual machine is created and loaded within the Oracle VM VirtualBox Manager. Next, we will connect the Metasploitable 2 virtual machine to the <em>PentestNet</em> virtual network.</p>
+</section>
+<section id="part-2-configuring-network-settings" class="level3" data-number="3.7.2">
+<h3 data-number="3.7.2">Part 2 – Configuring network settings</h3>
+<p>Since our penetration testing lab topology contains more than one virtual network, the following steps will help ensure Kali Linux has end-to-end network connectivity with the Metasploitable 2 virtual machine.</p>
+<ol>
+<li>To configure the networking settings, select the newly created <strong>Metasploitable 2</strong> virtual machine within <strong>Oracle VM VirtualBox Manager</strong> and click on <strong>Settings</strong>.</li>
+<li>Next, go to the <strong>Network</strong> section &gt; select <strong>Adapter 1</strong> and use the following configurations:
+<ul>
+<li>Enable the network adapter</li>
+<li>Attached to: Internal Network</li>
+<li>Name: PentestNet (manually type it in the field)</li>
+<li>Promiscuous Mode: Allow All</li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the preceding configurations on <strong>Adapter 1</strong>, click <strong>OK</strong> to save:</p>
+<img src="../media/file52.png" width="683" height="493"/>
+<ol>
+<li>Next, power on the <strong>Metasploitable 2</strong> virtual machine and login using username: <code>msfadmin</code> and password: <code>msfadmin</code>. Then use the <code>ip address</code> command to verify the virtual machine is receiving an IP address on the <code>172.30.1.0/24</code> network, as shown here:</li>
+</ol>
+<img src="../media/file53.png" width="738" height="492"/>
+<blockquote>
+<p>If your mouse cursor is stuck within a virtual machine, press the right CTRL key to detach the cursor.</p>
+</blockquote>
+<ol>
+<li>Lastly, use the <code>sudo halt</code> command to power-off the Metasploitable 2 virtual machine.</li>
+</ol>
+<p>Having completed this section, you have learnt how to setup Metasploitable 2 as a vulnerable machine within our penetration testing lab. Next, you will learn how to build and deploy Metasploitable 3 using Vagrant.</p>
+</section>
+</section>
+<section id="building-and-deploying-metasploitable-3" class="level2" data-number="3.8">
+<h2 data-number="3.8">Building and deploying Metasploitable 3</h2>
+<p>In this section, you will learn how to build and deploy Metasploitable 3, both the Windows server and Linux server versions. The Windows server version will be using a dual-homed network connection to both the <em>PentestNet</em> network (<code>172.30.1.0/24</code>) and <em>HiddenNet</em> network (<code>10.11.12.0/24</code>). This setup will enable us to perform pivoting and lateral movement between different networks. Lastly, the Linux server version will be connected to the <em>HiddenNet</em> network (<code>10.11.12.0/24</code>) only.The following diagram shows the logical connections between systems and networks:</p>
+<img src="../media/file54.png" width="996" height="524"/>
+<p>As shown in the preceding diagram, to access the Metasploitable 3 – Linux server, we will need to first compromise the Metasploitable 3 – Windows server via the <em>PentestNet</em> network, then pivot our attacks to the <em>HiddenNet</em> network.</p>
+<section id="part-1---building-the-windows-server-version" class="level3" data-number="3.8.1">
+<h3 data-number="3.8.1">Part 1 - Building the Windows Server version</h3>
+<p>To get started building and deploying Metasploitable 3 – Windows version, please use the following instructions:</p>
+<ol>
+<li>Firstly, you will need to download and install <strong>Vagrant</strong> on your host computer. Vagrant enables users to both build and maintain virtual machines and applications. On your host computer, go to <a href="https://www.vagrantup.com/">https://www.vagrantup.com/</a> and click on <strong>Download</strong> button on the web page.</li>
+<li>Next, select and download <strong>Vagrant AMD64 version 2.3.7</strong> as shown below:</li>
+</ol>
+<img src="../media/file55.png" width="638" height="421"/>
+<ol>
+<li>After downloading the Vagrant software package, double-click on the installer package to start the installation process. After the installation is completed, you’ll be prompted to reboot your host computer to ensure the changes are effective.</li>
+<li>After your host computer reboots, open the Windows <strong>Command Prompt</strong> and use the following commands to reload and install additional plugins for Vagrant:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\Glen&gt; vagrant plugin install vagrant-reload
+C:\Users\Glen&gt; vagrant plugin install vagrant-vbguest</code></pre>
+</div>
+<p>The following screenshots the execution of the preceding commands:</p>
+<img src="../media/file56.png" width="887" height="283"/>
+<ol>
+<li>Next, use the following commands to load the Metasploitable 3 – Windows server version to your system using Vagrant:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\Glen&gt; vagrant box add rapid7/metasploitable3-win2k8</code></pre>
+</div>
+<ol>
+<li>Next, select option <code>1</code> to use <strong>VirtualBox</strong> as the preferred hypervisor as shown below:</li>
+</ol>
+<img src="../media/file57.png" width="863" height="339"/>
+<p>Vagrant will begin to download the virtual machine files for the Metasploitable – Windows version as shown here:</p>
+<img src="../media/file58.png" width="1496" height="490"/>
+<ol>
+<li>Next, change the current working directory to <code>.vagrant.d\boxes</code>, rename the <code>rapid7-VAGRANTSLASH-metasploitable3-win2k8</code> folder and initialize the build configurations for the Metasploitable 3 – Windows virtual machine using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\Glen&gt; cd .vagrant.d\boxes
+C:\Users\Glen\.vagrant.d\boxes&gt; REN "rapid7-VAGRANTSLASH-metasploitable3-win2k8" "metasploitable3-win2k8"
+C:\Users\Glen\.vagrant.d\boxes&gt; vagrant init metasploitable3-win2k8</code></pre>
+</div>
+<p>The following screenshot shows the successful execution of the preceding commands:</p>
+<img src="../media/file59.png" width="1299" height="302"/>
+<ol>
+<li>Next, use the following commands to start the build process of this virtual machine:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\Glen\.vagrant.d\boxes&gt; vagrant up</code></pre>
+</div>
+<p>The following screenshot shows the execution of the preceding commands:</p>
+<img src="../media/file60.png" width="866" height="338"/>
+<p>This process usually take a few minutes to complete.</p>
+<blockquote>
+<p>If the <code>vagrant up</code> command give an error, execute it again.</p>
+</blockquote>
+<ol>
+<li>After the process is completed, open the <strong>Oracle VM VirtualBox Manager</strong>, you will find a newly created virtual machine named <strong>boxes_default_*</strong> is running. This is the Metasploitable 3 – Windows virtual machine, select it and click on <strong>Show</strong>:</li>
+</ol>
+<img src="../media/file61.png" width="968" height="479"/>
+<ol>
+<li>Once the virtual machine is detached, on the virtual machine menu bar, click on <strong>Input</strong> &gt; <strong>Keyboard</strong> &gt; <strong>Insert</strong> <strong>Ctrl-Alt-Del</strong>, as shown in the following screenshot:</li>
+</ol>
+<img src="../media/file62.png" width="556" height="244"/>
+<ol>
+<li>Select the <strong>Administrator</strong> account and use the default password: <code>vagrant</code> to login, as shown below:</li>
+</ol>
+<img src="../media/file63.png" width="1041" height="860"/>
+<p>Once you’re logged in, simply close all the windows that appear and do not activate the operating system.</p>
+<ol>
+<li>Click on the <strong>Start</strong> icon on the bottom-left corner and select the <strong>Shutdown</strong> button to shutdown/turn-off the operating system.</li>
+<li>Next, on the <strong>Oracle VM VirtualBox Manager</strong>, select the <strong>Metasploitable 3 – Windows</strong> virtual machine and click on <strong>Settings</strong>. Then, select the <strong>Network</strong> category and use the following configurations for <strong>Adapter 1</strong>:
+<ul>
+<li>Enable the network adapter</li>
+<li>Attached to: Internal Network</li>
+<li>Name: PentestNet (manually type it in the field)</li>
+<li>Promiscuous Mode: Allow All</li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the preceding configurations on <strong>Adapter 1</strong>:</p>
+<img src="../media/file64.png" width="700" height="510"/>
+<ol>
+<li>Next, select <strong>Adapter 2</strong> and use the following configurations:
+<ul>
+<li>Enable the network adapter</li>
+<li>Attached to: Internal Network</li>
+<li>Name: HiddenNet (manually type it in the field)</li>
+<li>Promiscuous Mode: Allow All</li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the preceding configurations on <strong>Adapter 2</strong>:</p>
+<img src="../media/file65.png" width="700" height="508"/>
+<blockquote>
+<p>To rename your virtual machine, <strong>Settings</strong> &gt; <strong>General</strong> &gt; <strong>Basic</strong> &gt; <strong>Name</strong> option.</p>
+</blockquote>
+<ol>
+<li>Lastly, ensure Kali Linux has end-to-end connectivity with the Metasploitable 3 – Windows virtual machine on the network.</li>
+</ol>
+<p>Next, you will deploy Metasploitable 3 – Linux virtual machine within the HiddenNet network.</p>
+</section>
+<section id="part-2---building-the-linux-server-version" class="level3" data-number="3.8.2">
+<h3 data-number="3.8.2">Part 2 - Building the Linux server version</h3>
+<p>To start setting up the Linux version of Metasploitable 3 within our lab environment, please use the following instructions:</p>
+<ol>
+<li>On the Windows <strong>Command Prompt</strong>, use the following commands to load the Linux version of Metasploitable 3 on your host device using Vagrant:</li>
+</ol>
+<div class="C1-CodePACKT">
+<pre><code>C:\Users\Glen\.vagrant.d\boxes&gt; vagrant box add rapid7/metasploitable3-ub1404</code></pre>
+</div>
+<ol>
+<li>Next, choose option <strong>1</strong> and hit Enter to download the virtual machine files for Metasploitable 3 – Linux version as shown below:</li>
+</ol>
+<img src="../media/file66.png" width="1177" height="443"/>
+<ol>
+<li>Next, delete the <strong>Vagrantfile</strong> file, rename the <strong>rapid7-VAGRANTSLASH-metasploitable3-ub1404</strong> folder and initialize the build configurations for the Metasploitable 3 – Linux virtual machine using the following commands:</li>
+</ol>
+<div class="C1-ConsolePACKT">
+<pre><code>C:\Users\Glen\.vagrant.d\boxes&gt; del Vagrantfile
+C:\Users\Glen\.vagrant.d\boxes&gt; REN "rapid7-VAGRANTSLASH-metasploitable3-ub1404" "metasploitable3-ub1404"
+C:\Users\Glen\.vagrant.d\boxes&gt; vagrant init metasploitable3-ub1404</code></pre>
+</div>
+<p>The following screenshot shows the execution of the preceding commands:</p>
+<img src="../media/file67.png" width="983" height="244"/>
+<blockquote>
+<p>You may need to open <strong>Oracle VM Virtual Manager</strong> before proceeding to the next step.</p>
+</blockquote>
+<ol>
+<li>Next, open <strong>Windows Explorer</strong> and go to <code>C:\Users\&lt;userrname&gt;\.vagrant.d\boxes\metasploitable3-ub1404\0.1.12-weekly\virtualbox</code> where you will find the complied virtual machine files. Right-click on the <strong>box</strong> file &gt; <strong>Open with</strong> &gt; <strong>VirtualBox Manager</strong> as shown below:</li>
+</ol>
+<img src="../media/file68.png" width="933" height="388"/>
+<ol>
+<li>Next, the <strong>Import Virtual Appliance</strong> window will appear, click on <strong>Finish</strong> as shown below:</li>
+</ol>
+<img src="../media/file69.png" width="705" height="514"/>
+<ol>
+<li>Next, the <strong>metasploitable3-ub1404</strong> virtual machine will be imported on <strong>Oracle VM VirtualBox Manager</strong>. Select it and click on <strong>Settings</strong> as shown below:</li>
+</ol>
+<img src="../media/file70.png" width="975" height="544"/>
+<ol>
+<li>Next, select <strong>Adapter 1</strong> and use the following configurations:
+<ul>
+<li>Enable the network adapter</li>
+<li>Attached to: Internal Network</li>
+<li>Name: HiddenNet (manually type it in the field)</li>
+<li>Promiscuous Mode: Allow All</li>
+</ul></li>
+</ol>
+<p>The following screenshot shows the preceding configurations on <strong>Adapter 1</strong>:</p>
+<img src="../media/file71.png" width="683" height="495"/>
+<ol>
+<li>Lastly, power-on the <strong>metasplotable3-ub1404</strong> virtual machine, login using username: vagrant and password: vagrant. Once you’re logded-in, use the ip address command to verify the virtual machine is receiving an IP address on the <code>10.11.12.0/24</code> network as shown below:</li>
+</ol>
+<img src="../media/file72.png" width="818" height="665"/>
+<blockquote>
+<p>Use the <code>sudo halt</code> command to power-off the this virtual machine.</p>
+</blockquote>
+<p>Having completed this section, you have learned how to set up both versions of Metasploitable 3 within your lab environment. Metasploitable 3 contains newer vulnerabilities than its predecessor and will be fun to exploit in later sections of this book.</p>
+</section>
+</section>
+<section id="summary-1" class="level2" data-number="3.9">
+<h2 data-number="3.9">Summary</h2>
+<p>Having completed this chapter, you learned about the importance of building your very own penetration testing lab on your computer. You learned how to use hypervisors to virtualize the hardware resources on a system, which can then be shared with multiple operating systems that are running at the same time on the same system. In addition, you have gained the skills on setting up and deploying Kali Linux, multiple vulnerable systems and web application within a virtualized environment.I trust that the knowledge presented in this chapter has provided you with valuable insights, supporting your path towards becoming an ethical hacker and penetration tester in the dynamic field of cybersecurity. May this newfound understanding empower you in your journey, allowing you to navigate the industry with confidence and make a significant impact. In the next chapter, <em>Setting up for advanced hacking techniques</em>, you will setup an Active Directory lab environment for performing red teaming techniques in later chapters.</p>
+</section>
+<section id="further-reading-1" class="level2" data-number="3.10">
+<h2 data-number="3.10">Further Reading</h2>
+<ul>
+<li>OWASP Top 10 - <a href="https://owasp.org/www-project-top-ten/">https://owasp.org/www-project-top-ten/</a></li>
+<li>Kali Linux Blog - <a href="https://www.kali.org/blog/">https://www.kali.org/blog/</a></li>
+</ul>
+</section>
+</section>
+</div>
+</div>
+</body>
+</html>

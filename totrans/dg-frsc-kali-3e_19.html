@@ -1,0 +1,215 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer400">
+<h1 class="chapter-number" id="_idParaDest-179"><a id="_idTextAnchor243"/>14</h1>
+<h1 id="_idParaDest-180"><a id="_idTextAnchor244"/>Network Discovery Tools</h1>
+<p>In this chapter, I’d like to go over some common tools that aid in the network discovery and network information gathering and reconnaissance processes and, overall, aid in network forensic analysis. Specific network forensic analysis tools such as Xplico and NetworkMiner will be covered in <a href="B19441_15.xhtml#_idTextAnchor251"><span class="No-Break"><em class="italic">Chapter 15</em></span></a>, <em class="italic">Packet Capture Analysis with Xplico</em>, and <a href="B19441_16.xhtml#_idTextAnchor262"><span class="No-Break"><em class="italic">Chapter 16</em></span></a>, <em class="italic">Network Forensic Analysis </em><span class="No-Break"><em class="italic">Tools</em></span><span class="No-Break">, respectively.</span></p>
+<p>In this chapter, we will first perform network host discovery by detailing specifics of the hosts themselves, such as <strong class="bold">operating systems</strong> (<strong class="bold">OSes</strong>) and open ports, and then use an online tool to discover external and publicly <span class="No-Break">identifiable hosts.</span></p>
+<p>In this chapter, we will learn about <span class="No-Break">the following:</span></p>
+<ul>
+<li>Using netdiscover in Kali Linux to identify devices on <span class="No-Break">a network</span></li>
+<li>Use <strong class="bold">Network Mapper </strong>(<strong class="bold">Nmap</strong>) in Kali Linux to identify devices on <span class="No-Break">a network</span></li>
+<li>Use Nmap to fingerprint host details (ports, <span class="No-Break">OSes, etc.)</span></li>
+<li>Use Shodan.io to find external IoT devices, including firewalls, CCTV systems, <span class="No-Break">and servers</span></li>
+</ul>
+<p>By the end of this chapter, you will be able to use these tools to assist in DFIR investigations that require you to collect information about locally and remotely connected devices, such as IP addresses, device types, OS details, open ports, <span class="No-Break">and more.</span></p>
+<h1 id="_idParaDest-181"><a id="_idTextAnchor245"/>Using netdiscover in Kali Linux to identify devices on a network</h1>
+<p>We’ll start off our network<a id="_idIndexMarker1108"/> host discovery by first<a id="_idIndexMarker1109"/> using a very simple tool known as <strong class="bold">netdiscover</strong>. The netdiscover tool comes<a id="_idIndexMarker1110"/> preinstalled in Kali Linux; however, you can install it on almost any version of Linux using the <span class="No-Break">following command:</span></p>
+<pre class="console">
+sudo apt install netdiscover</pre>
+<p>netdiscover, as the name suggests, is used to discover<a id="_idIndexMarker1111"/> online hosts on a wired or wireless network by broadcasting <strong class="bold">Address Resolution Protocol</strong> (<strong class="bold">ARP</strong>) requests. What makes netdiscover easy to use is that it allows users to automatically scan an entire range or subnet of IP addresses on a network to detect online hosts. Another<a id="_idIndexMarker1112"/> very useful feature of netdiscover is that it displays the <strong class="bold">Media Access Control</strong> (<strong class="bold">MAC</strong>) address along with the vendor of the device or <strong class="bold">Network Interface Card</strong> (<strong class="bold">NIC</strong>), which can make host discovery much simpler <a id="_idIndexMarker1113"/>when trying to differentiate between end user, server, and <span class="No-Break">networking devices.</span></p>
+<p>Before we start using netdiscover, we should take note of the network interfaces on our scanning device. This also tells us what our IP, subnet mask, and network <span class="No-Break">range are.</span></p>
+<p>To do so, type <span class="No-Break">the following:</span></p>
+<pre class="console">
+ifconfig</pre>
+<p>In the following output in <span class="No-Break"><em class="italic">Figure 14</em></span><em class="italic">.1</em>, we can see<a id="_idIndexMarker1114"/> that there are two<a id="_idIndexMarker1115"/> interfaces, namely the Ethernet (<strong class="source-inline">eth0</strong>) and loopback (<span class="No-Break"><strong class="source-inline">lo</strong></span><span class="No-Break">) interfaces:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer386">
+<img alt="Figure 14.1 – ifconfig command output" height="319" src="image/Figure_14.01_B19441.jpg" width="632"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.1 – ifconfig command output</p>
+<p>In the <strong class="source-inline">eth0</strong> interface details, we can see that my IP address is listed as <strong class="source-inline">10.10.170.105</strong>, with a subnet mask of <strong class="source-inline">255.255.0.0</strong>. We will use this interface with the <span class="No-Break"><strong class="source-inline">netdiscover</strong></span><span class="No-Break"> command.</span></p>
+<p>Now that we know<a id="_idIndexMarker1116"/> which interface and IP range<a id="_idIndexMarker1117"/> we will use, we can proceed to use netdiscover to identify <span class="No-Break">network hosts:</span></p>
+<ol>
+<li>We will first start netdiscover and use the help option to view all available options and switches in netdiscover. To do so, type <span class="No-Break">the following:</span><pre class="console">
+<strong class="bold">sudo netdiscover –h</strong></pre></li>
+</ol>
+<p>To use netdiscover to automatically scan for devices on our network, we will use the <strong class="source-inline">–r</strong> option to specify the subnet or range of <span class="No-Break">IP addresses.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer387">
+<img alt="Figure 14.2 – netdiscover options" height="335" src="image/Figure_14.02_B19441.jpg" width="712"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.2 – netdiscover options</p>
+<ol>
+<li value="2">I’ll now scan my entire <strong class="source-inline">10.10.0.0</strong> network range using the <span class="No-Break">following command:</span><pre class="console">
+<strong class="bold">netdiscover –i eth0 –r 10.10.0.0/16</strong></pre></li>
+</ol>
+<p class="callout-heading">Note</p>
+<p class="callout">Please ensure that you are using your own network range, as yours may be different <span class="No-Break">from mine.</span></p>
+<ol>
+<li value="3">Now, press <em class="italic">Enter</em>. After pressing <em class="italic">Enter</em>, netdiscover will<a id="_idIndexMarker1118"/> run. Allow it a minute to complete<a id="_idIndexMarker1119"/> and compile a list of IPs, MAC addresses, and vendor/hostnames, as shown in the <span class="No-Break">following screenshot:</span></li>
+</ol>
+<p class="callout-heading">Note</p>
+<p class="callout">For privacy purposes, I have blocked parts of the <span class="No-Break">MAC addresses.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer388">
+<img alt="Figure 14.3 – netdiscover output" height="565" src="image/Figure_14.03_B19441.jpg" width="756"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.3 – netdiscover output</p>
+<p>In the preceding output, we can see that netdiscover has captured <strong class="source-inline">468</strong> ARP packets and detected <strong class="source-inline">151</strong> live hosts, listed<a id="_idIndexMarker1120"/> with their IPs, MAC<a id="_idIndexMarker1121"/> addresses, <span class="No-Break">and vendor/hostnames.</span></p>
+<p>Let’s now look at using Nmap to also perform <span class="No-Break">host discovery.</span></p>
+<h1 id="_idParaDest-182"><a id="_idTextAnchor246"/>Using Nmap to find additional hosts and devices on a network</h1>
+<p>Created<a id="_idIndexMarker1122"/> by Gordon Lyon aka <em class="italic">Fyodor</em>, <strong class="bold">Nmap</strong> is one of the most common tools for network<a id="_idIndexMarker1123"/> scanning and enumeration<a id="_idIndexMarker1124"/> during vulnerability assessments and penetration tests. It is also quite useful for DFIR tasks and investigations when investigating network communications that require disclosure of host details on <span class="No-Break">a network.</span></p>
+<p>Nmap is also a bit of a celebrity and was used in popular movies such as <em class="italic">The Matrix Reloaded</em>, <em class="italic">The Bourne Ultimatum</em>, <em class="italic">Die Hard 4</em>, and <em class="italic">The Girl with the Dragon Tattoo</em>, and also the very popular TV series <span class="No-Break"><em class="italic">Mr. Robot</em></span><span class="No-Break">.</span></p>
+<p>Nmap is a <strong class="bold">Command-Line Interface</strong> (<strong class="bold">CLI</strong>) tool and comes pre-installed in<a id="_idIndexMarker1125"/> Kali Linux. There is also a <strong class="bold">Graphical User Interface</strong> (<strong class="bold">GUI</strong>) for Windows and Mac devices, but I personally<a id="_idIndexMarker1126"/> think you can access more options and features using <span class="No-Break">the CLI.</span></p>
+<p>Nmap has many<a id="_idIndexMarker1127"/> switches and requires prior knowledge of ports, <strong class="bold">Transmission Control Protocol/Internet Protocol</strong> (<strong class="bold">TCP/IP</strong>) protocols, and TCP flags, all of which you should read more about before proceeding if you are unfamiliar with those topics. Please visit this<a id="_idIndexMarker1128"/> link for more information on <span class="No-Break">TCP: </span><a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol"><span class="No-Break">https://en.wikipedia.org/wiki/Transmission_Control_Protocol</span></a><span class="No-Break">.</span></p>
+<p>Let’s follow these steps to use Nmap to find additional hosts and devices on <span class="No-Break">a network:</span></p>
+<ol>
+<li value="1">To start nmap and view the available switches and options, we can use the <span class="No-Break">following command:</span><pre class="console">
+<strong class="bold">sudo nmap –h</strong></pre></li>
+</ol>
+<p>As stated in the preceding output, the general format and usage of nmap is <strong class="source-inline">nmap [Scan Type(s)] [Options] {</strong><span class="No-Break"><strong class="source-inline">target specification}</strong></span><span class="No-Break">.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer389">
+<img alt="Figure 14.4 – A snippet of the nmap help option output" height="585" src="image/Figure_14.04_B19441.jpg" width="671"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.4 – A snippet of the nmap help option output</p>
+<ol>
+<li value="2">To start us off, I’ll try<a id="_idIndexMarker1129"/> a basic ping scan<a id="_idIndexMarker1130"/> using the <strong class="source-inline">–sn</strong> option to list hosts that can be further scanned, in the same way that netdiscover found online hosts on my network in the <span class="No-Break">previous section.</span></li>
+</ol>
+<p>To perform a basic ping scan, we can type <strong class="source-inline">sudo nmap –sn</strong> followed by the network range, which in my case is <strong class="source-inline">10.10.0.0/24</strong>. Yours may be different, so please make sure you use your own <span class="No-Break">network range.</span></p>
+<ol>
+<li value="3">We can also use the <strong class="source-inline">–v</strong> option to list output verbatim as it happens <span class="No-Break">in nmap:</span><pre class="console">
+<strong class="bold">sudo nmap –sn –v 10.10.0.0/24</strong></pre></li>
+</ol>
+<p>The following screenshot<a id="_idIndexMarker1131"/> shows the output of the specific preceding<a id="_idIndexMarker1132"/> <span class="No-Break">Nmap command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer390">
+<img alt="Figure 14.5 – nmap ping scan output" height="437" src="image/Figure_14.05_B19441.jpg" width="603"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.5 – nmap ping scan output</p>
+<p>If we scroll down through the nmap output, we can see listed hosts that were discovered online via our ping scan. Though not as well organized<a id="_idIndexMarker1133"/> as netdiscover, nmap still displays<a id="_idIndexMarker1134"/> the same results, as <span class="No-Break">shown here.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer391">
+<img alt="Figure 14.6 – nmap output showing discovered live hosts" height="792" src="image/Figure_14.06_B19441.jpg" width="534"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.6 – nmap output showing discovered live hosts</p>
+<p>In this section, we learned<a id="_idIndexMarker1135"/> the basics of Nmap, and we are now capable<a id="_idIndexMarker1136"/> of scanning internal networks using this <span class="No-Break">CLI tool.</span></p>
+<p>Let’s go a bit further with our Nmap scanning now and learn how to identify ports and services of <span class="No-Break">discovered devices.</span></p>
+<h1 id="_idParaDest-183"><a id="_idTextAnchor247"/>Using Nmap to fingerprint host details</h1>
+<p>Now that we’re familiar<a id="_idIndexMarker1137"/> with how to view nmap switches<a id="_idIndexMarker1138"/> and run a basic scan, let’s perform host enumeration by discovering running services, ports, and even the OSes of discovered hosts, which may be useful artifacts within our <span class="No-Break">DFIR investigation.</span></p>
+<p>As shown in the previous section, nmap is fairly simple to use once you are aware of the various switches that can be used. Feel free to again run the <strong class="source-inline">sudo nmap –h</strong> command to view the available switches <span class="No-Break">and options.</span></p>
+<p>For our purposes, an <strong class="source-inline">–A</strong> option in nmap can perform the following tasks when enumerating a host or an <span class="No-Break">entire network:</span></p>
+<ul>
+<li><span class="No-Break">OS detection</span></li>
+<li>Service <span class="No-Break">version detection</span></li>
+<li><span class="No-Break">Script scanning</span></li>
+<li><span class="No-Break">Traceroute</span></li>
+</ul>
+<p>The <strong class="source-inline">–A</strong> option can take a while to run on an entire network, so I’ll run it against a single host, which was shown as alive when I previously ran the ping scan on <span class="No-Break">my network.</span></p>
+<p>To run this service scan as it is called, I’ll run the <span class="No-Break">following command:</span></p>
+<pre class="console">
+sudo nmap –A –v 10.10.10.10</pre>
+<p>The following screenshot shows the output of the <strong class="source-inline">-A</strong> option <span class="No-Break">within Nmap.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer392">
+<img alt="Figure 14.7 – nmap service scan" height="181" src="image/Figure_14.07_B19441.jpg" width="530"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.7 – nmap service scan</p>
+<p>Scrolling through the service<a id="_idIndexMarker1139"/> scan output, nmap has also displayed a list<a id="_idIndexMarker1140"/> of open ports and has identified the running service and service versions, as <span class="No-Break">shown here.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer393">
+<img alt="Figure 14.8 – nmap output displaying open ports and running services" height="84" src="image/Figure_14.08_B19441.jpg" width="600"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.8 – nmap output displaying open ports and running services</p>
+<p>Scrolling a bit further down through the very same output, nmap displays details of the host, such as the host (target) name, domain, and computer name, as shown here. For privacy purposes, I’ve blurred some of <span class="No-Break">the output.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer394">
+<img alt="Figure 14.9 – nmap output displaying host information" height="220" src="image/Figure_14.09_B19441.jpg" width="658"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.9 – nmap output displaying host information</p>
+<p>Scrolling almost to the very bottom of the nmap output, I can also see the host OS details, as <span class="No-Break">shown here:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer395">
+<img alt="Figure 14.10 – nmap output showing the host OS details" height="208" src="image/Figure_14.10_B19441.jpg" width="821"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.10 – nmap output showing the host OS details</p>
+<p>In the preceding output, we can see that the host is a Dell device running Windows 10 (<strong class="source-inline">1507 - </strong><span class="No-Break"><strong class="source-inline">1607</strong></span><span class="No-Break">).</span></p>
+<p>We now know how to scan<a id="_idIndexMarker1141"/> internal networks and identify live systems<a id="_idIndexMarker1142"/> and details about those systems, such as their OS, MAC address, uptime, and even open ports, all using <span class="No-Break">just Nmap.</span></p>
+<p>Let’s now move outside the local network and learn how to locate and identify external and IoT devices <span class="No-Break">using Shodan.</span></p>
+<h1 id="_idParaDest-184"><a id="_idTextAnchor248"/>Using Shodan.io to find IoT devices including firewalls, CCTV, and servers</h1>
+<p>Quickly think of a website<a id="_idIndexMarker1143"/> that allows you to search for anything. Without<a id="_idIndexMarker1144"/> being a psychic, I’m guessing you thought of Google. Maybe I’ll stick to my day job. In the same way that Google crawls and scours the main parts of the internet and indexes websites and resources, Shodan takes a similar approach to scanning the internet and IP addresses and indexes useful information about devices that can be accessed across <span class="No-Break">the web.</span></p>
+<p><strong class="bold">IoT</strong> (short for <strong class="bold">Internet of Things</strong>) devices are those that can connect<a id="_idIndexMarker1145"/> to the internet but may not be traditional computers, such as laptops and desktops. IoT devices include smart devices, such as wearable fitness devices and trackers, smart microwaves and ovens, Amazon Echo, doorbell cameras, and even<a id="_idIndexMarker1146"/> smart cars. IoT devices also extend to industrial systems and are referred to as <strong class="bold">Industrial IoT</strong> (<strong class="bold">IioT</strong>) devices. Think of a large soft drink manufacturing company as an example. There need to be systems and devices in place to count bottles, caps, and labels, check temperatures, and facilitate communications<a id="_idIndexMarker1147"/> between sensors<a id="_idIndexMarker1148"/> that need<a id="_idIndexMarker1149"/> to be networked with each other via <strong class="bold">Programmable Logic Controllers</strong> (<strong class="bold">PLCs</strong>), <strong class="bold">Supervisory Control and Data Acquisition</strong> (<strong class="bold">SCADA</strong>), and <strong class="bold">Industrial Control Systems</strong> (<strong class="bold">ICS</strong>). This applies to every industrial sector, even nuclear power plants! It’s also not uncommon to combine this <strong class="bold">Operational Technology</strong> (<strong class="bold">OT</strong>) with IioT, known as <strong class="bold">OT-IIoT</strong>, as OT devices can be remotely <a id="_idIndexMarker1150"/>controlled via <span class="No-Break">IIoT</span><span class="No-Break"><a id="_idIndexMarker1151"/></span><span class="No-Break"> systems.</span></p>
+<p>The issue here lies in securing IoT and IIoT devices as well<a id="_idIndexMarker1152"/> as access, particularly remote access, to devices. As a penetration tester, I use <strong class="bold">Shodan.io</strong> frequently to find systems belonging to companies of different types, particularly larger organizations. This skill is also useful when conducting DFIR investigations, as information about external and IoT devices can easily be found <span class="No-Break">using Shodan.io.</span></p>
+<p>The team at Shodan claims that Shodan can find all devices that are connected to the internet and reveal important metadata about the devices. This can be beneficial because it allows companies to use Shodan to find out whether their devices can be publicly accessed, but it also shows attackers the same information. This is not to say that Shodan is a bad or malicious tool, as there are hundreds of other tools that can be used together to divulge the same information. Shodan just makes it <span class="No-Break">much easier.</span></p>
+<p>Shodan is a paid<a id="_idIndexMarker1153"/> subscription; however, you can use<a id="_idIndexMarker1154"/> it for free, which gives very limited results, or register a free account and gain access to two pages of results when performing IoT and IIoT searches. If you don’t want to purchase one of their subscription packages, you can wait around for their annual sale (usually around Black Friday and Thanksgiving), when a limited lifetime subscription for personal use is available for $5. For this exercise, I’ll be using the paid $5 subscription, but I encourage you to register with the site so that you at least have access to two pages of results at <span class="No-Break">a time.</span></p>
+<h2 id="_idParaDest-185"><a id="_idTextAnchor249"/>Using Shodan filters for IoT searches</h2>
+<p>Shodan searches aren’t as clear-cut as a <a id="_idIndexMarker1155"/>Google search, but it’s not difficult <a id="_idIndexMarker1156"/>to do a search for Shodan filters and try to search<a id="_idIndexMarker1157"/> for specific devices. You can view the Shodan Filter Reference <span class="No-Break">at </span><a href="https://beta.shodan.io/search/filters"><span class="No-Break">https://beta.shodan.io/search/filters</span></a><span class="No-Break">.</span></p>
+<p>Here are some basic search filters you <span class="No-Break">can use:</span></p>
+<ul>
+<li><strong class="source-inline">product</strong>: Search the name of the hardware manufacturer or <span class="No-Break">software developer</span></li>
+<li><strong class="source-inline">hostname</strong>: Find devices based on the <span class="No-Break">searched hostname</span></li>
+<li><strong class="source-inline">os</strong>: Search for devices <span class="No-Break">by OS</span></li>
+<li><strong class="source-inline">port</strong>: Find open ports <span class="No-Break">on devices</span></li>
+<li><strong class="source-inline">city</strong>: Find devices within a <span class="No-Break">specific city</span></li>
+<li><strong class="source-inline">country</strong>: Find devices within a <span class="No-Break">specific country</span></li>
+<li><strong class="source-inline">geo</strong>: Find devices by <span class="No-Break">GPS coordinates</span></li>
+</ul>
+<p>Let’s try a few searches of our own. I live on a small island in the Caribbean called Trinidad. If want to view a list of devices within Trinidad, I can use the <strong class="source-inline">country</strong> filter followed by the country code in the Shodan <span class="No-Break">search bar:</span></p>
+<pre class="console">
+country:"TT"</pre>
+<p>If unsure of your own<a id="_idIndexMarker1158"/> country code, a simple web search should help you figure it out. A site that I have found to be helpful <span class="No-Break">is </span><a href="https://www.countrycode.org/"><span class="No-Break">https://www.countrycode.org/</span></a><span class="No-Break">.</span></p>
+<p>In the following screenshot, we can see the results of the country filter where <strong class="source-inline">TT</strong> represents the country code for Trinidad and Tobago. To the left of the screen, we can see a total of <strong class="bold">124, 921</strong> results for IoT devices found, under which there is a list of <strong class="bold">TOP CITIES</strong>, with the number of devices listed for each city, followed by the top open ports, top organizations, and so on. To the middle and right of the screen, we can see actual IPs and information about <span class="No-Break">those devices.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer396">
+<img alt="Figure 14.11 – Shodan country filter results" height="925" src="image/Figure_14.11_B19441.jpg" width="1120"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.11 – Shodan country filter results</p>
+<p>Due to privacy and legal<a id="_idIndexMarker1159"/> concerns, I won’t be clicking on the results, as this will carry<a id="_idIndexMarker1160"/> us to another page, showing the company and host details and even disclosing open ports and the OSes of the devices. Be sure to do a web search and review the laws of your country and state before proceeding any further. If unsure, you may wish to first reach out to law enforcement or someone knowledgeable about your local laws <span class="No-Break">and legislation.</span></p>
+<p>Let’s try another search for <strong class="source-inline">Fortinet</strong> firewalls within Trinidad, using the <strong class="source-inline">country</strong> filter and a <strong class="source-inline">product</strong> filter by typing <span class="No-Break">the following:</span></p>
+<pre class="console">
+country:"TT" product:"Fortinet"</pre>
+<p>In the following search results, we can see that Shodan<a id="_idIndexMarker1161"/> returned 54 results for Fortinet firewalls in Trinidad. Again, for legal<a id="_idIndexMarker1162"/> and privacy purposes, I won’t be clicking on the IP address, as this will show even more details about the devices other than what is listed on the <span class="No-Break">main page.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer397">
+<img alt="Figure 14.12 – The product filter for Fortinet firewalls in Trinidad" height="852" src="image/Figure_14.12_B19441.jpg" width="1121"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.12 – The product filter for Fortinet firewalls in Trinidad</p>
+<p>We can also look for specific servers using Shodan. Let’s say that I want to search for Apache web servers that use version <strong class="source-inline">2.2.3</strong>. This can be achieved using the <strong class="source-inline">server</strong> filter followed by the server version by typing <span class="No-Break">the following:</span></p>
+<pre class="console">
+country:"TT" apache 2.2.3</pre>
+<p>Here, we see that Shodan<a id="_idIndexMarker1163"/> has displayed 11 results, mainly found in Port<a id="_idIndexMarker1164"/> of Spain and Chaguanas <span class="No-Break">in Trinidad.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer398">
+<img alt="Figure 14.13 – Finding web servers with Shodan" height="705" src="image/Figure_14.13_B19441.jpg" width="1115"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.13 – Finding web servers with Shodan</p>
+<p>For our last search, I’d like to search for CCTV IP cameras using Shodan. For this, we can again use the <strong class="source-inline">product</strong> filter. I’ll specify the <strong class="source-inline">Hikvision</strong> camera system, as this is a very common CCTV system, by typing <span class="No-Break">the following:</span></p>
+<pre class="console">
+country:"TT" product:"Hikvision IP Camera"</pre>
+<p>As seen in this final instance, Shodan has returned 7,689 instances of Hikvision cameras. This can also be very useful if your DFIR investigation requires CCTV camera footage by alerting you to where cameras may be located nearby, and it may give a company name that you may be able to contact and ask permission to view <span class="No-Break">their footage.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer399">
+<img alt="Figure 14.14 – CCTV camera discovery using Shodan" height="839" src="image/Figure_14.14_B19441.jpg" width="932"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 14.14 – CCTV camera discovery using Shodan</p>
+<p>Feel free to try out more<a id="_idIndexMarker1165"/> Shodan filters, but please check your local <a id="_idIndexMarker1166"/>legislation where applicable to ensure that these searches <span class="No-Break">are legal.</span></p>
+<h1 id="_idParaDest-186"><a id="_idTextAnchor250"/>Summary</h1>
+<p>In this chapter, we looked at the networking and enumeration tools netdiscover and nmap and learned how to scan networks for open hosts and view details such as IPs, MAC addresses, and hostnames and went a bit further with Nmap to further discover more host details, such as open ports, running services and their versions, computer names, and domains. We then moved on to finding IoT devices using Shodan.io and used various search filters to find firewalls, servers, and <span class="No-Break">CCTV cameras.</span></p>
+<p>These tools can be very useful to anyone gathering information on local and remote devices that may be part of a network <span class="No-Break">DFIR investigation.</span></p>
+<p>Next up, we’ll look at a <strong class="bold">Network Forensics Analysis Tool</strong> (<strong class="bold">NFAT</strong>) called <strong class="bold">Xplico</strong>. See you in the <span class="No-Break">next chapter.</span></p>
+</div>
+</div></body></html>

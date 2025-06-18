@@ -1,0 +1,159 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer005">
+<h1 id="_idParaDest-5"><a id="_idTextAnchor004"/>Preface</h1>
+<p>Why, hello there! Welcome to <em class="italic">Introduction to Kali Purple</em> – a fun-filled educational manual highlighting a unique flavor of the Kali Linux operating system that integrates defensive security tools and applications with the offensive security tools commonly utilized by penetration <span class="No-Break">testers/ethical hackers.</span></p>
+<p>Kali Purple is unique in that it is a suite of interoperable tools that can be used by either offensive or defensive cybersecurity personnel to develop proof-of-concept use cases for educational and training purposes. These tools are organized according to the pillars of the <strong class="bold">National Institute of Standards and Technology Cybersecurity Framework</strong> (<span class="No-Break"><strong class="bold">NIST CSF</strong></span><span class="No-Break">).</span></p>
+<p>While we’re providing an introductory manual with high-level overviews, we’ve also included some more advanced concepts and a plethora of bonus resources for those who love to fall down rabbit holes, are frequently unable to determine whether it’s presently dawn or dusk, and have a genuine appreciation for bad <span class="No-Break">dad jokes.</span></p>
+<p>For those who prefer to stay married, we’ve broken the content up into three progressive stages, each with its own group of chapters, so you can digest the material one bit at <span class="No-Break">a time:</span></p>
+<ul>
+<li>Installation of Kali Purple and tools used to acquire, store, and present information</li>
+<li>Analysis of acquired data for triage and incident response</li>
+<li>Digital forensics, offensive security, and automation</li>
+</ul>
+<p>We’ve provided a very brief history of cybersecurity concepts in parallel with cyberattacks, before helping you begin to stand up your own instance of Kali Purple and deploy a <strong class="bold">Security Information and Event Management</strong> (<span class="No-Break"><strong class="bold">SIEM</strong></span><span class="No-Break">) system.</span></p>
+<p>We then introduce you to packet and data analysis tools along with intrusion detection and prevention systems. After that, we will progress into what happens after the data is collected, enriched, indexed, stored, and analyzed should it reveal malicious activity – <span class="No-Break">incident response.</span></p>
+<p>We then progress into digital forensics, social engineering, and offensive security, highlighting some of the more popular and well-known tools used by ethical hackers and cybercriminals alike, before wrapping it all up with automation and the <span class="No-Break">NIST framework.</span></p>
+<h1 id="_idParaDest-6"><a id="_idTextAnchor005"/>Who this book is for</h1>
+<p>This book is for cybersecurity enthusiasts, students, and entry-level analysts with a focus on either offense or defense, or how to use offense against defense for <span class="No-Break">educational purposes.</span></p>
+<p>This content was developed with the following audience targets <span class="No-Break">in mind:</span></p>
+<ul>
+<li>SOC leadership looking for a tool to develop use-case scenarios to train junior analysts.</li>
+<li>Cybersecurity students looking to better understand defensive security tools and how offensive tools and techniques may be used against them.</li>
+<li>Junior cybersecurity analysts looking to expand their professional toolbox and gain a more robust understanding of their field as it relates to their present role. This content will point them in a variety of directions that they might find personally rewarding.</li>
+</ul>
+<h1 id="_idParaDest-7"><a id="_idTextAnchor006"/>What this book covers</h1>
+<p><a href="B21223_01.xhtml#_idTextAnchor013"><span class="No-Break"><em class="italic">Chapter 1</em></span></a>, <em class="italic">An Introduction to Cybersecurity</em>, delivers an introduction to cybersecurity through exploring the parallel histories of emergent technology and associated threats.  It talks about offensive security versus defensive security and how we got to be where we <span class="No-Break">are today.</span></p>
+<p><a href="B21223_02.xhtml#_idTextAnchor039"><span class="No-Break"><em class="italic">Chapter 2</em></span></a>, <em class="italic">Kali Linux and the ELK Stack</em>, explores the genealogy of Kali versus other flavors of Linux and introduces one of the operating system’s core defensive tools, a group of applications collectively known as the ELK stack. <strong class="bold">Elasticsearch, Logstash, and Kibana</strong> (<strong class="bold">ELK</strong>) are presented along with supporting data shipping components Beats <span class="No-Break">and X-Pack.</span></p>
+<p><a href="B21223_03.xhtml#_idTextAnchor052"><span class="No-Break"><em class="italic">Chapter 3</em></span></a>, <em class="italic">Installing the Kali Purple Linux Environment</em>, provides a comprehensive review of how to acquire, update, and run Kali Purple and its required dependencies regardless of the host operating system presently utilized by the reader. The chapter covers this need for compatibility through the exploration of virtual machines, focusing on the universally accepted and freely <span class="No-Break">available VirtualBox.</span></p>
+<p><a href="B21223_04.xhtml#_idTextAnchor076"><span class="No-Break"><em class="italic">Chapter 4</em></span></a>, <em class="italic">Configuring the ELK Stack</em>, converges the lessons learned from the previous two chapters to walk you through standing up the core components of the ELK stack along with the technology that supports it. The chapter begins by looking at the Elasticsearch database and indexing application and integrating it with the Kibana visual interface before adding Logstash for <span class="No-Break">data enrichment.</span></p>
+<p><a href="B21223_05.xhtml#_idTextAnchor085"><span class="No-Break"><em class="italic">Chapter 5</em></span></a>, <em class="italic">Sending Data to the ELK Stack</em>, continues to build upon the configuration of ELK by exploring how the SIEM solution gets its information through data shippers, along with setting them up to report to the SIEM. The chapter will explore the full picture of how the data flow—how information is enriched by Logstash, indexed and stored in Elasticsearch, and displayed to the SIEM users <span class="No-Break">through Kibana.</span></p>
+<p><a href="B21223_06.xhtml#_idTextAnchor098"><span class="No-Break"><em class="italic">Chapter 6</em></span></a>, <em class="italic">Traffic and Log Analysis</em>, digs a little deeper into the information that may ultimately end up running through the ELK stack or some other SIEM solution by examining a brief overview of packets, before introducing the Malcolm suite of data collection and analysis tools, highlighting Arkime – one of Malcolm’s more prominent data <span class="No-Break">analysis tools.</span></p>
+<p><a href="B21223_07.xhtml#_idTextAnchor108"><span class="No-Break"><em class="italic">Chapter 7</em></span></a>, <em class="italic">Intrusion Detection and Prevention Systems</em>, builds upon Malcolm’s suite of tools introduced in the previous chapter by providing an overview of intrusion detection and prevention systems. It starts by comparing and contrasting the two types of intrusion management styles before focusing on the Suricata IDS/IPS and the <span class="No-Break">Zeek IDS.</span></p>
+<p><a href="B21223_08.xhtml#_idTextAnchor134"><span class="No-Break"><em class="italic">Chapter 8</em></span></a>, <em class="italic">Security Incident and Response</em>, makes a robust effort to explain incident response through the introduction of a <strong class="bold">Security Orchestration and Automation Response</strong> (<strong class="bold">SOAR</strong>) setup using StrangeBee’s Cortex and TheHive. Additional integrations are explained with various intelligence and information threat feeds, such as the <strong class="bold">Malware Information Sharing Platform</strong> (<strong class="bold">MISP</strong>), the <strong class="bold">Structured Threat Information eXpression</strong> (<strong class="bold">STIX</strong>), and <strong class="bold">Trusted Automated Exchange of Indicator Information</strong> (<strong class="bold">TAXII</strong>). This chapter concludes by challenging you to begin independent research and <span class="No-Break">community contributions.</span></p>
+<p><a href="B21223_09.xhtml#_idTextAnchor147"><span class="No-Break"><em class="italic">Chapter 9</em></span></a>, <em class="italic">Digital Forensics</em>, takes a look at Kali Purple’s contribution to digital forensics through malware analysis, along with introductions to some tools that might otherwise be more offensive security-oriented but provide insight into user behavior <span class="No-Break">and mindset.</span></p>
+<p><a href="B21223_10.xhtml#_idTextAnchor161"><span class="No-Break"><em class="italic">Chapter 10</em></span></a>, <em class="italic">Integrating the Red Team and External Tools</em>, brings together the offensive security utilities previously associated with Kali Linux and penetration testing for you to deploy and use against the defensive utilities you’ve been exploring and setting up throughout the rest of the book. This chapter delves into offensive security with popular tools such as OWASP ZAP, Wireshark, Metasploit, Burp Suite, Nmap, sqlmap, Nikto Nessus, Hydra, Medusa, and John <span class="No-Break">the Ripper.</span></p>
+<p><a href="B21223_11.xhtml#_idTextAnchor183"><span class="No-Break"><em class="italic">Chapter 11</em></span></a>, <em class="italic">Autopilot, Python, and NIST Control</em>, wraps up the <em class="italic">Introduction to Kali Purple</em> book with advanced features such as autopilot automated scripting. Then, it provides a unique take on the Python scripting language, focusing not on learning how to develop code but instead on recognizing it for the purposes of analysis from a cyber defender’s perspective. Finally, the chapter covers the framework upon which Kali Purple was modeled, including a high-level overview of the recently added <span class="No-Break">Govern pillar.</span></p>
+<h1 id="_idParaDest-8"><a id="_idTextAnchor007"/>To get the most out of this book</h1>
+<p>You should have a basic understanding of security concepts and the Linux operating system – any variety but Kali is the most ideal – and general knowledge of information technology systems and <span class="No-Break">data flows.</span></p>
+<table class="No-Table-Style" id="table001">
+<colgroup>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><strong class="bold">General applications covered in </strong><span class="No-Break"><strong class="bold">this book</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="bold">Operating </strong><span class="No-Break"><strong class="bold">system requirements</strong></span></p>
+</td>
+</tr>
+</thead>
+<tbody>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">VirtualBox</span></p>
+</td>
+<td class="No-Table-Style">
+<p>Windows, macOS, <span class="No-Break">or Linux</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Kali Purple</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">Linux</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p>Elasticsearch, Logstash, Kibana, Beats, Elastic Agent (the <span class="No-Break">ELK stack)</span></p>
+</td>
+<td class="No-Table-Style">
+<p>Windows, macOS, <span class="No-Break">or Linux</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p>Malcolm suite, including Arkime, Suricata, <span class="No-Break">and Zeek</span></p>
+</td>
+<td class="No-Table-Style">
+<p>Windows, macOS, <span class="No-Break">or Linux</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p>StrangeBee suite, including Cortex <span class="No-Break">and TheHive</span></p>
+</td>
+<td class="No-Table-Style">
+<p>Windows, macOS, <span class="No-Break">or Linux</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p>Pentesting suite, including OWASP ZAP, Wireshark, Metasploit, Burp Suite, Nmap, sqlmap, Nikto Nessus, Hydra, Medusa, and John <span class="No-Break">the Ripper</span></p>
+</td>
+<td class="No-Table-Style">
+<p>Windows, macOS, <span class="No-Break">or Linux</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Kali Autopilot</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">Kali Linux</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<h1 id="_idParaDest-9"><a id="_idTextAnchor008"/>Conventions used</h1>
+<p>There are a number of text conventions used throughout <span class="No-Break">this book.</span></p>
+<p><strong class="source-inline">Code in text</strong>: Indicates code words in text, database table names, folder names, filenames, file extensions, pathnames, dummy URLs, user input, and Twitter handles. Here is an example: “Enter <strong class="source-inline">community-id</strong> as the search term. Set that value <span class="No-Break">to </span><span class="No-Break"><strong class="source-inline">true</strong></span><span class="No-Break">.”</span></p>
+<p>A block of code is set <span class="No-Break">as follows:</span></p>
+<pre class="source-code">
+awesomeSauce = "Sweet Baby Ray's"
+print("My favorite sauce is: " + awesomeSauce + "!")
+# Now it will print – My favorite sauce is: Sweet Baby Ray's!</pre> <p>When we wish to draw your attention to a particular part of a code block, the relevant lines or items are set <span class="No-Break">in bold:</span></p>
+<pre class="source-code">
+<strong class="bold">awesomeSauce = "Sweet Baby Ray's"</strong>
+print("My favorite sauce is: " + awesomeSauce + "!")
+# Now it will print – My favorite sauce is: Sweet Baby Ray's!</pre> <p>Any command-line input or output is written <span class="No-Break">as follows:</span></p>
+<pre class="console">
+sudo apt install apt-transport-https ca-certificates curl gnupg lsb-release</pre> <p><strong class="bold">Bold</strong>: Indicates a new term, an important word, or words that you see onscreen. For instance, words in menus or dialog boxes appear in <strong class="bold">bold</strong>. Here is an example: “Move your cursor down the left column and hover over <strong class="bold">08 – </strong><span class="No-Break"><strong class="bold">Exploitation Tools</strong></span><span class="No-Break">.”</span></p>
+<p class="callout-heading">Tips or important notes</p>
+<p class="callout">Appear like this.</p>
+<h1 id="_idParaDest-10"><a id="_idTextAnchor009"/>Get in touch</h1>
+<p>Feedback from our readers is <span class="No-Break">always welcome.</span></p>
+<p><strong class="bold">General feedback</strong>: If you have questions about any aspect of this book, email us at <a href="mailto:customercare@packtpub.com">customercare@packtpub.com</a> and mention the book title in the subject of <span class="No-Break">your message.</span></p>
+<p><strong class="bold">Errata</strong>: Although we have taken every care to ensure the accuracy of our content, mistakes do happen. If you have found a mistake in this book, we would be grateful if you would report this to us. Please visit <a href="http://www.packtpub.com/support/errata">www.packtpub.com/support/errata</a> and fill in <span class="No-Break">the form.</span></p>
+<p><strong class="bold">Piracy</strong>: If you come across any illegal copies of our works in any form on the internet, we would be grateful if you would provide us with the location address or website name. Please contact us at <a href="mailto:copyright@packt.com">copyright@packt.com</a> with a link to <span class="No-Break">the material.</span></p>
+<p><strong class="bold">If you are interested in becoming an author</strong>: If there is a topic that you have expertise in and you are interested in either writing or contributing to a book, please <span class="No-Break">visit </span><a href="http://authors.packtpub.com"><span class="No-Break">authors.packtpub.com</span></a></p>
+<h1 id="_idParaDest-11"><a id="_idTextAnchor010"/>Share Your Thoughts</h1>
+<p>Once you’ve read <em class="italic">Introduction to Kali Purple</em>, we’d love to hear your thoughts! Please <a href="https://packt.link/r/1835088988">click here to go straight to the Amazon review page</a> for this book and share <span class="No-Break">your feedback.</span></p>
+<p>Your review is important to us and the tech community and will help us make sure we’re delivering excellent <span class="No-Break">quality content.</span></p>
+<h1 id="_idParaDest-12"><a id="_idTextAnchor011"/>Download a free PDF copy of this book</h1>
+<p>Thanks for purchasing <span class="No-Break">this book!</span></p>
+<p>Do you like to read on the go but are unable to carry your print <span class="No-Break">books everywhere?</span></p>
+<p>Is your eBook purchase not compatible with the device of <span class="No-Break">your choice?</span></p>
+<p>Don’t worry, now with every Packt book you get a DRM-free PDF version of that book at <span class="No-Break">no cost.</span></p>
+<p>Read anywhere, any place, on any device. Search, copy, and paste code from your favorite technical books directly into <span class="No-Break">your application.</span></p>
+<p>The perks don’t stop there, you can get exclusive access to discounts, newsletters, and great free content in your <span class="No-Break">inbox daily</span></p>
+<p>Follow these simple steps to get <span class="No-Break">the benefits:</span></p>
+<ol>
+<li>Scan the QR code or visit the <span class="No-Break">link below</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer004">
+<img alt="Download a free PDF copy of this book " height="200" src="image/B21223_QR_Free_PDF.jpg" width="200"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US"><a href="https://packt.link/free-ebook/978-1-83508-898-2">https://packt.link/free-ebook/978-1-83508-898-2</a></p>
+<ol>
+<li value="2">Submit your proof <span class="No-Break">of purchase</span></li>
+<li>That’s it! We’ll send your free PDF and other benefits to your <span class="No-Break">email directly</span></li>
+</ol>
+</div>
+</div></body></html>

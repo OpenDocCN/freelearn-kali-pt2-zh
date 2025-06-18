@@ -1,0 +1,406 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div class="IMG---Figure" id="_idContainer328">
+<h1 class="chapter-number" id="_idParaDest-150"><a id="_idTextAnchor211"/>11</h1>
+<h1 id="_idParaDest-151"><a id="_idTextAnchor212"/>Artifact, Malware, and Ransomware Analysis</h1>
+<p>In this chapter, we’ll cover several different tools to uncover various digital artifacts, malware, and ransomware, some of which reside in RAM and the swap file, which, as we learned in the previous chapter, can be quite useful in our <span class="No-Break">DFIR investigations.</span></p>
+<p>To start things off, we will look into artifact analysis using tools such as p0f to identify devices and operating systems, use swap_digger for swap file analysis, and then use MimiPenguin for password dumping. Following this, we will dive into malware analysis using pdf-parser and PDFiD for PDF malware analysis, use Hybrid Analysis for malicious file analysis, and then end things off by using Volatility 3 for <span class="No-Break">ransomware analysis.</span></p>
+<p>The following topics will be covered in <span class="No-Break">this chapter:</span></p>
+<ul>
+<li>Identifying devices and operating systems <span class="No-Break">with p0f</span></li>
+<li>Looking at the swap_digger tool to explore <span class="No-Break">Linux artifacts</span></li>
+<li>Password dumping <span class="No-Break">with MimiPenguin</span></li>
+<li>PDF <span class="No-Break">malware analysis</span></li>
+<li>Using Hybrid Analysis for malicious <span class="No-Break">file analysis</span></li>
+<li>Ransomware analysis using <span class="No-Break">Volatility 3</span></li>
+</ul>
+<h1 id="_idParaDest-152"><a id="_idTextAnchor213"/>Identifying devices and operating systems with p0f</h1>
+<p>Let’s get started with <strong class="bold">p0f</strong>. p0f is a small tool that can be used to passively scan and detect operating systems within a network. This scanning tool is considered passive because it does not send data to<a id="_idIndexMarker939"/> other hosts apart from <strong class="bold">Synchronize</strong> (<strong class="bold">SYN</strong>) packets. This is very useful when trying to quietly <a id="_idIndexMarker940"/>collect information about other hosts on a network in <span class="No-Break">DFIR investigations.</span></p>
+<p>Let’s look at how to install and use p0f to detect other host operating systems on <span class="No-Break">the network:</span></p>
+<ol>
+<li>Depending on the version of Kali you are running (2019.3 – 2023.1), you can run the <strong class="source-inline">p0f –h</strong> command to determine whether it is preinstalled. If not, Kali will ask whether you would like to install it. Press <em class="italic">y</em> to accept and install it, as seen in the <span class="No-Break">following screenshot.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer293">
+<img alt="Figure 11.1 – Installing p0f in Kali" height="166" src="image/Figure_11.01_B19441.jpg" width="419"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.1 – Installing p0f in Kali</p>
+<ol>
+<li value="2">Run the <strong class="source-inline">p0f –h</strong> command again after installation. This displays the network interface options, operating mode, output settings, and <span class="No-Break">performance-related options.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer294">
+<img alt="Figure 11.2 – p0f usage options" height="221" src="image/Figure_11.02_B19441.jpg" width="506"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.2 – p0f usage options</p>
+<ol>
+<li value="3">Once the installation<a id="_idIndexMarker941"/> is verified, you may specify an interface if you know which one you would like to use. Check your <a id="_idIndexMarker942"/>network interfaces by typing <span class="No-Break">the following:</span><pre class="source-code">
+<strong class="bold">ifconfig</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the preceding <span class="No-Break"><strong class="source-inline">ifconfig</strong></span><span class="No-Break"> command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer295">
+<img alt="Figure 11.3 – ipconfig command output" height="283" src="image/Figure_11.03_B19441.jpg" width="603"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.3 – ipconfig command output</p>
+<p class="callout-heading">Note</p>
+<p class="callout">You may also use the <strong class="source-inline">p0f –L</strong> command to list all <span class="No-Break">the interfaces.</span></p>
+<ol>
+<li value="4">The output in <span class="No-Break"><em class="italic">Figure 11</em></span><em class="italic">.3</em> shows<a id="_idIndexMarker943"/> that I have two interfaces with <strong class="source-inline">eth0</strong> being my Ethernet/LAN interface with an IP of <strong class="source-inline">172.16.77.159</strong> and a default <strong class="source-inline">127.0.0.1</strong> loopback <a id="_idIndexMarker944"/>address. I’ll be using the <strong class="source-inline">eth0</strong> interface with <strong class="source-inline">p0f</strong> by typing <span class="No-Break">the following:</span><pre class="source-code">
+<strong class="bold">sudo p0f -i eth0</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer296">
+<img alt="Figure 11.4 – p0f eth0 output" height="183" src="image/Figure_11.04_B19441.jpg" width="473"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.4 – p0f eth0 output</p>
+<p>This may take a short while to run, but in the following screenshot, we can see that the output returns client details such as the IP address and <span class="No-Break">operating system.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer297">
+<img alt="Figure 11.5 – p0f result output" height="367" src="image/Figure_11.05_B19441.jpg" width="490"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.5 – p0f result output</p>
+<p>Let’s go a bit further by<a id="_idIndexMarker945"/> opening a browser to detect what other hosts we may be <span class="No-Break">communicating with.</span></p>
+<ol>
+<li value="5">Open the web browser<a id="_idIndexMarker946"/> in Kali and you’ll see the Terminal being populated with more IP information. By default, the Firefox web browser’s home page carries us to the Offensive Security site and so p0f shows information about the connections and network hops to the server and information about <span class="No-Break">the server.</span></li>
+<li>Try browsing a site. I’ve opened <a href="http://www.cfsi.co">www.cfsi.co</a> in the browser. <strong class="source-inline">p0f</strong> updates the information in the terminal in real time and the first entry displayed shows a SYN request from <strong class="source-inline">172.16.77.159</strong> (my Kali machine) to <strong class="source-inline">185.230.60.211</strong> via port <strong class="source-inline">80</strong>. I can also see information about my Kali machine, such as the operating system (<strong class="source-inline">Linux 2.2-3.x</strong>), as fingerprinted <span class="No-Break">by p0f:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer298">
+<img alt="Figure 11.6 – Updated p0f output after browsing" height="281" src="image/Figure_11.06_B19441.jpg" width="567"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.6 – Updated p0f output after browsing</p>
+<ol>
+<li value="7">Let’s get more<a id="_idIndexMarker947"/> information about the IP address <strong class="source-inline">185.230.60.211</strong>. In the terminal window, click on <strong class="bold">File</strong> | <strong class="bold">New Tab</strong>. In the new tab, type <span class="No-Break">the following:</span><pre class="source-code">
+<strong class="bold"> whois 185.230.60.211</strong></pre></li>
+</ol>
+<p>In the following <strong class="source-inline">whois</strong> output, we<a id="_idIndexMarker948"/> can see that the IP points to <strong class="source-inline">wix.com</strong>, which is the host for the <a href="http://www.cfsi.co"><span class="No-Break">www.cfsi.co</span></a><span class="No-Break"> website:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer299">
+<img alt="Figure 11.7 – whois output" height="360" src="image/Figure_11.07_B19441.jpg" width="395"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.7 – whois output</p>
+<ol>
+<li value="8">Scroll through the <strong class="source-inline">p0f</strong> output to <a id="_idIndexMarker949"/>see several other pieces <a id="_idIndexMarker950"/>of information, including the uptime of the server and other IP addresses and hops along <span class="No-Break">the way:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer300">
+<img alt="Figure 11.8 – Additional p0f output" height="280" src="image/Figure_11.08_B19441.jpg" width="565"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.8 – Additional p0f output</p>
+<p>Now that we’ve learned how<a id="_idIndexMarker951"/> to install and use p0f to detect other operating systems that our device is communicating with, let’s move <a id="_idIndexMarker952"/>on to another tool called <strong class="source-inline">swap_digger</strong> to explore <span class="No-Break">Linux artifacts.</span></p>
+<h1 id="_idParaDest-153"><a id="_idTextAnchor214"/>Looking at the swap_digger tool to explore Linux artifacts</h1>
+<p>The <strong class="source-inline">swap_digger</strong> tool performs an <a id="_idIndexMarker953"/>automated analysis of the Linux swap file and can retrieve artifacts such as system passwords, usernames, and <a id="_idIndexMarker954"/>form credentials, and even Wi-Fi information such as SSIDs and perhaps even passwords if stored in the <span class="No-Break">swap file.</span></p>
+<h2 id="_idParaDest-154"><a id="_idTextAnchor215"/>Installing and using swap_digger</h2>
+<p>Follow these<a id="_idIndexMarker955"/> steps to install and use <strong class="source-inline">swap_digger</strong> for <span class="No-Break">swap analysis:</span></p>
+<ol>
+<li value="1">Change directories to the desktop in the terminal and clone <strong class="source-inline">swap_digger</strong> to the desktop by typing <span class="No-Break">the following:</span><pre class="source-code">
+<strong class="bold">git clone </strong><strong class="bold">https://github.com/sevagas/swap_digger.git</strong></pre></li>
+</ol>
+<p>The following screenshot<a id="_idIndexMarker956"/> shows the output of the preceding command<a id="_idIndexMarker957"/> for <span class="No-Break">installing swap_digger.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer301">
+<img alt="Figure 11.9 – Installing swap_digger" height="147" src="image/Figure_11.09_B19441.jpg" width="548"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.9 – Installing swap_digger</p>
+<ol>
+<li value="2">Change to the <strong class="source-inline">swap_digger</strong> directory by typing <strong class="source-inline">cd swap_digger</strong> and type the following command to ensure swap_digger will have the required <span class="No-Break">access permissions:</span><pre class="source-code">
+<strong class="bold">chmod +x swap_digger.sh</strong></pre></li>
+<li>To view all <strong class="source-inline">swap_digger</strong> usage options, type <span class="No-Break">the following:</span><pre class="source-code">
+<strong class="bold">sudo ./swap_digger.sh -h</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer302">
+<img alt="Figure 11.10 – swap_digger usage options" height="515" src="image/Figure_11.10_B19441.jpg" width="794"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.10 – swap_digger usage options</p>
+<ol>
+<li value="4">To try searching <a id="_idIndexMarker958"/>for passwords in the swap file, enter the <span class="No-Break">following</span><span class="No-Break"><a id="_idIndexMarker959"/></span><span class="No-Break"> command:</span><pre class="source-code">
+<strong class="bold">sudo ./swap_digger.sh -p</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer303">
+<img alt="Figure 11.11 – Using swap_digger to find passwords" height="312" src="image/Figure_11.11_B19441.jpg" width="791"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.11 – Using swap_digger to find passwords</p>
+<ol>
+<li value="5">Feel free to<a id="_idIndexMarker960"/> try the other available options in <strong class="source-inline">swap_digger</strong> to discover other artifacts within the<a id="_idIndexMarker961"/> swap file of your <span class="No-Break">Linux system.</span></li>
+</ol>
+<p>Next, let’s look at password dumping using the <span class="No-Break"><strong class="source-inline">MimiPenguin</strong></span><span class="No-Break"> tool.</span></p>
+<h1 id="_idParaDest-155"><a id="_idTextAnchor216"/>Password dumping with MimiPenguin</h1>
+<p>The <strong class="source-inline">MimiPenguin</strong> tool is based on the very popular <a id="_idIndexMarker962"/>password-cracking<a id="_idIndexMarker963"/> tool called Mimikatz. Much like <strong class="source-inline">swap_digger</strong>, <strong class="source-inline">MimiPenguin</strong> can also retrieve artifacts running in memory by dumping <a id="_idIndexMarker964"/>memory processes that may contain unencrypted passwords in plaintext, as shown in the <span class="No-Break">following steps:</span></p>
+<ol>
+<li value="1">Let’s start by changing to the <strong class="source-inline">Desktop</strong> folder from our current location, and then clone <strong class="source-inline">MimiPenguin</strong> to the desktop by typing the following into a <span class="No-Break">new terminal:</span><pre class="source-code">
+<strong class="bold">git clone https://github.com/huntergregal/mimipenguin</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the preceding command when <span class="No-Break">installing MimiPenguin.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer304">
+<img alt="Figure 11.12 – Installing MimiPenguin" height="147" src="image/Figure_11.12_B19441.jpg" width="549"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.12 – Installing MimiPenguin</p>
+<ol>
+<li value="2">Change to the <strong class="source-inline">mimipenguin</strong> directory by typing <strong class="source-inline">cd mimipenguin</strong> and then show the files within by <span class="No-Break">typing </span><span class="No-Break"><strong class="source-inline">ls</strong></span><span class="No-Break">.</span></li>
+</ol>
+<p>The following<a id="_idIndexMarker965"/> screenshot shows the output of the preceding <span class="No-Break"><strong class="source-inline">ls</strong></span><span class="No-Break"> command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer305">
+<img alt="Figure 11.13 – Viewing contents of the mimipenguin folder" height="61" src="image/Figure_11.13_B19441.jpg" width="601"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.13 – Viewing contents of the mimipenguin folder</p>
+<ol>
+<li value="3">Run MimiPenguin by typing <span class="No-Break">the following:</span><pre class="source-code">
+<strong class="bold">sudo ./mimipenguin.sh</strong></pre></li>
+</ol>
+<p>It may take a while for the <a id="_idIndexMarker966"/>password to be found. I’ve changed my password to something very simple for the purpose of <span class="No-Break">saving time:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer306">
+<img alt="Figure 11.14 – MimiPenguin output displaying the password" height="37" src="image/Figure_11.14_B19441.jpg" width="209"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.14 – MimiPenguin output displaying the password</p>
+<p>Now that we’ve learned how to dump a password using MimiPenguin, let’s go even deeper and manually analyze PDF documents for <span class="No-Break">embedded malware.</span></p>
+<h1 id="_idParaDest-156"><a id="_idTextAnchor217"/>PDF malware analysis</h1>
+<p>In this section, we’ll have a look at PDF malware forensics and analysis. PDFs are possibly the most common form of document when sharing information as many people would rather open a PDF than an<a id="_idIndexMarker967"/> Office document, such as one in <strong class="source-inline">.docx</strong> or <strong class="source-inline">.xls</strong> format, as they are more likely to contain macros and even viruses. While PDFs are more trusted document types, it is still common to come across some that have been infected with malware or contain <span class="No-Break">hidden information.</span></p>
+<p>Although we won’t be analyzing malicious PDFs as it may result in your system becoming infected or experiencing some adverse effects, I will still introduce you to a tool called <strong class="source-inline">pdf-parser</strong>, which can be used to inspect elements of a PDF document and pinpoint malicious code and other <span class="No-Break">suspect elements.</span></p>
+<p>This may be considered an advanced tool as people with programming experience typically use it to identify shellcode, streams, and filters. However, even beginners will be able to analyze the output and identify embedded executable (<strong class="source-inline">.exe</strong>) files. There are several PDF malware samples roaming the web and on Twitter. However, I urge you to not attempt to download these unless you are a professional and are doing so in an isolated environment on a sandboxed machine that if infected will not cause harm to your data <span class="No-Break">or network.</span></p>
+<p>Let’s get started with learning how <a id="_idIndexMarker968"/>to analyze PDF documents <span class="No-Break">using pdf-parser:</span></p>
+<ol>
+<li value="1">Let’s first view the usage and available options of pdf-parser by typing <span class="No-Break">the following:</span><pre class="source-code">
+<strong class="bold">pdf-parser -h</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer307">
+<img alt="Figure 11.15 – pdf-parser usage options" height="474" src="image/Figure_11.15_B19441.jpg" width="622"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.15 – pdf-parser usage options</p>
+<ol>
+<li value="2">Now, let’s look at the <a id="_idIndexMarker969"/>associated statistics of a test file created by Didier Stevens (<a href="https://blog.didierstevens.com/about/">https://blog.didierstevens.com/about/</a>), which I’ve renamed <strong class="source-inline">testpdf.pdf</strong> and saved to my desktop. We can analyze this file to determine whether it contains any embedded code or hidden malware by typing the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">pdf-parser -a testpdf.pdf</strong></pre></li>
+</ol>
+<p>In the following screenshot, we can see that there is in fact an embedded file, which could also be a <span class="No-Break">JavaScript file.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer308">
+<img alt="Figure 11.16 – pdf-parser results" height="379" src="image/Figure_11.16_B19441.jpg" width="563"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.16 – pdf-parser results</p>
+<ol>
+<li value="3">Let’s apply filters using the <strong class="source-inline">-f</strong> option to dig a bit deeper and see whether <strong class="source-inline">pdf-parser</strong> can identify the <a id="_idIndexMarker970"/>embedded file using the <span class="No-Break">following options:</span><pre class="source-code">
+<strong class="bold">pdf-parser -f testpdf.pdf</strong></pre></li>
+</ol>
+<p>In the following screenshot, we have confirmation that it is an embedded file. This file is a Word document called <strong class="source-inline">eicar-dropper.doc</strong>, which was embedded within the <span class="No-Break">PDF file.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer309">
+<img alt="Figure 11.17 – Embedded file discovered by pdf-parser" height="500" src="image/Figure_11.17_B19441.jpg" width="583"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.17 – Embedded file discovered by pdf-parser</p>
+<ol>
+<li value="4">We can also confirm the <a id="_idIndexMarker971"/>presence of a JavaScript file by using the PDFiD tool, running the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">pdfid testpdf.pdf</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer310">
+<img alt="Figure 11.18 – Discovering embedded files using PDFiD" height="413" src="image/Figure_11.18_B19441.jpg" width="222"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.18 – Discovering embedded files using PDFiD</p>
+<p>Now that we have learned how<a id="_idIndexMarker972"/> to manually inspect and analyze a PDF file that may contain malware, let’s look at an online tool for automated <span class="No-Break">malware analysis.</span></p>
+<h1 id="_idParaDest-157"><a id="_idTextAnchor218"/>Using Hybrid Analysis for malicious file analysis</h1>
+<p>You can also use an <a id="_idIndexMarker973"/>online tool such as <strong class="bold">Hybrid Analysis</strong> (<a href="https://www.hybrid-analysis.com/">https://www.hybrid-analysis.com/</a>) to analyze <a id="_idIndexMarker974"/>suspicious files of all types. If you suspect that a link or URL may be suspicious within an email, you can also paste the link into this site <span class="No-Break">for analysis.</span></p>
+<p>As an example, I’ll use the very same <strong class="source-inline">testpdf.pdf</strong> file that I analyzed using <strong class="source-inline">pdf-parse</strong> and <strong class="source-inline">PDFiD</strong> in the previous section. I’ll first visit the <a href="https://www.hybrid-analysis.com">https://www.hybrid-analysis.com</a> website and drag the suspect file into the upload area and click on <strong class="bold">Analyze</strong>, as seen in the <span class="No-Break">following </span><span class="No-Break"><a id="_idIndexMarker975"/></span><span class="No-Break">screenshot.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer311">
+<img alt="Figure 11.19 – hybrid-analysis.com website" height="661" src="image/Figure_11.19_B19441.jpg" width="693"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.19 – hybrid-analysis.com website</p>
+<p>After submitting the PDF file, the results show the file to be possibly malicious, as seen in the <span class="No-Break">following screenshot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer312">
+<img alt="Figure 11.20 – hybrid-analysis.com file analysis and results" height="412" src="image/Figure_11.20_B19441.jpg" width="752"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.20 – hybrid-analysis.com file analysis and results</p>
+<p>The details on the file’s unusual <a id="_idIndexMarker976"/>characteristics and suspicious indicators are also provided, as displayed in the <span class="No-Break">following screenshot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer313">
+<img alt="Figure 11.21 – hybrid-analysis.com results page displaying a malicious indicator" height="687" src="image/Figure_11.21_B19441.jpg" width="843"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.21 – hybrid-analysis.com results page displaying a malicious indicator</p>
+<p>I hope you had fun learning<a id="_idIndexMarker977"/> about PDF and document malware forensics and analysis. For our last tool, we will revisit Volatility 3 to perform <span class="No-Break">ransomware analysis.</span></p>
+<h1 id="_idParaDest-158"><a id="_idTextAnchor219"/>Ransomware analysis using Volatility 3</h1>
+<p>For our last section, let’s revisit<a id="_idIndexMarker978"/> the very powerful RAM analysis tool<a id="_idIndexMarker979"/> called Volatility 3, which we covered in <a href="B19441_10.xhtml#_idTextAnchor191"><span class="No-Break"><em class="italic">Chapter 10</em></span></a>, <em class="italic">Memory Forensics and Analysis with Volatility 3</em>. Feel free to take a moment to review that chapter before <span class="No-Break">moving ahead.</span></p>
+<p>In this lab, we’ll be using a memory dump called <strong class="source-inline">wcry.raw</strong>, which contains information about a WannaCry ransomware infection on a Windows system. We will be analyzing it using a variety of <a id="_idIndexMarker980"/>Volatility <span class="No-Break">3 plugins.</span></p>
+<p>Let’s first download and <a id="_idIndexMarker981"/>extract our sample memory dump, which we will later move to our Volatility installation folder <span class="No-Break">for analysis:</span></p>
+<ol>
+<li value="1">The WannaCry memory dump file can be downloaded <span class="No-Break">from </span><a href="https://mega.nz/file/7Z1ySZBT#KX5ZJKYzQgDHSa72lPFwqKL6CsZS7oQGbyyQrMTH9XY"><span class="No-Break">https://mega.nz/file/7Z1ySZBT#KX5ZJKYzQgDHSa72lPFwqKL6CsZS7oQGbyyQrMTH9XY</span></a><span class="No-Break">.</span></li>
+</ol>
+<p>I’ve downloaded the WannaCry memory dump file to my <strong class="source-inline">Downloads</strong> folder, which is named <strong class="source-inline">wannacry </strong><span class="No-Break"><strong class="source-inline">pw- infected.7z</strong></span><span class="No-Break">.</span></p>
+<ol>
+<li value="2">To extract the file, right-click on the <strong class="source-inline">.7z</strong> file and click on <strong class="bold">Extract Here</strong> as you have done with previously <span class="No-Break">downloaded files.</span></li>
+<li>The file is password protected and you will have to type the word <strong class="source-inline">infected</strong> when prompted for the password. Once extracted, you should now have a folder within your <strong class="source-inline">Downloads</strong> folder called <strong class="source-inline">wannacry pw- infected</strong>. Double-click on the folder and you should see the <strong class="source-inline">wcry.raw</strong> memory <span class="No-Break">dump file.</span></li>
+<li>Before we begin the analysis of our downloaded <strong class="source-inline">wcry.raw</strong> sample memory dump file, let’s copy the file from its current <strong class="source-inline">wannacry pw- infected</strong> directory and paste it into the <strong class="source-inline">volatility3</strong> folder, which we used in <a href="B19441_05.xhtml#_idTextAnchor085"><span class="No-Break"><em class="italic">Chapter 5</em></span></a>, <em class="italic">Installing Wine in Kali Linux</em>, for analysis of the <strong class="source-inline">cridex.vmem</strong> memory dump. This again makes access to our memory dump file easier by not having to specify a lengthy path to the file each time we need to use a <span class="No-Break">different plugin.</span></li>
+<li>To ensure all our Volatility 3 files and <strong class="source-inline">wcry.raw</strong> files are in the correct folder, let’s open a new terminal and change directories to our <strong class="source-inline">volatility3</strong> folder, and then issue the <strong class="source-inline">ls</strong> command, as seen in the <span class="No-Break">following screenshot:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer314">
+<img alt="Figure 11.22 – Contents of the volatility3 directory" height="182" src="image/Figure_11.22_B19441.jpg" width="636"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.22 – Contents of the volatility3 directory</p>
+<p>Now for the exciting part. Let’s <a id="_idIndexMarker982"/>do some ransomware DFIR analysis using <a id="_idIndexMarker983"/>Volatility 3 and see what we <span class="No-Break">can find:</span></p>
+<ol>
+<li value="1">Let’s find out what operating system was running on the system by using the <span class="No-Break"><strong class="source-inline">info</strong></span><span class="No-Break"> plugin:</span><pre class="source-code">
+<strong class="bold">python3 vol.py -f wcry.raw windows.info</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer315">
+<img alt="Figure 11.23 – Volatility 3 info plugin output" height="154" src="image/Figure_11.23_B19441.jpg" width="750"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.23 – Volatility 3 info plugin output</p>
+<p>The output for the <strong class="source-inline">info</strong> plugin is lengthy; however, I’ve included a snippet of the output as follows, where we can see that this memory dump was taken from a Windows XP Service Pack <span class="No-Break">3 machine.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer316">
+<img alt="Figure 11.24 – info plugin snippet" height="298" src="image/Figure_11.24_B19441.jpg" width="445"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.24 – info plugin snippet</p>
+<p>As done in the previous chapter, let’s<a id="_idIndexMarker984"/> again do some process identification and <a id="_idIndexMarker985"/>analysis using the <strong class="source-inline">pslist</strong>, <strong class="source-inline">pstree</strong>, and <strong class="source-inline">psscan<a id="_idTextAnchor220"/><a id="_idTextAnchor221"/></strong> <span class="No-Break">plugins individually.</span></p>
+<h2 id="_idParaDest-159"><a id="_idTextAnchor222"/>The pslist plugin</h2>
+<p>Let’s get<a id="_idIndexMarker986"/> the list of all running <a id="_idIndexMarker987"/>processes, using the <span class="No-Break"><strong class="source-inline">pslist</strong></span><span class="No-Break"> plugin:</span></p>
+<pre class="console">
+python3 vol.py -f wcry.raw windows.pslist</pre>
+<p>In the following screenshot, we can see the <strong class="source-inline">System</strong>, <strong class="source-inline">smss</strong>, <strong class="source-inline">csrss</strong>, <strong class="source-inline">winlogon.exe</strong>, <strong class="source-inline">services.exe</strong>, <strong class="source-inline">lsass.exe</strong>, <strong class="source-inline">svchost.exe</strong>, and <strong class="source-inline">explorer.exe</strong> services were all started first and then followed by a <span class="No-Break">few others:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer317">
+<img alt="Figure 11.25 – plslist plugin output" height="516" src="image/Figure_11.25_B19441.jpg" width="1186"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.25 – plslist plugin output</p>
+<p>Immediately, just using the <strong class="source-inline">pslist</strong> plugin, we can see a suspicious entry (fourth from last) called <strong class="source-inline">@WanaDecryptor@</strong> with a<a id="_idIndexMarker988"/> PID of <strong class="source-inline">740</strong> and a PPID of <strong class="source-inline">1940</strong>. To make<a id="_idIndexMarker989"/> things easy, I’ve included a snippet of the entry <span class="No-Break">as follows:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer318">
+<img alt="Figure 11.26 – Snippet of the pslist plugin showing the @WanaDecryptor@ process" height="508" src="image/Figure_11.26_B19441.jpg" width="1188"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.26 – Snippet of the pslist plugin showing the @WanaDecryptor@ process</p>
+<p>Looking at the <strong class="source-inline">pslist</strong> output, we can see that the <strong class="source-inline">winlogon.exe</strong> process in <span class="No-Break"><em class="italic">Figure 11</em></span><em class="italic">.25</em> has a PID of <strong class="source-inline">620</strong> and a PPID of <strong class="source-inline">348</strong>. The PPIDs of the <strong class="source-inline">services.exe</strong> and <strong class="source-inline">lsass.exe</strong> processes (directly after the <strong class="source-inline">winlogon.exe</strong> process) are both <strong class="source-inline">620</strong>, indicating that <strong class="source-inline">winlogon.exe</strong> is in fact the PPID for both <strong class="source-inline">services.exe</strong> <span class="No-Break">and </span><span class="No-Break"><strong class="source-inline">lsass.exe</strong></span><span class="No-Break">.</span></p>
+<p>We can also tell that <strong class="source-inline">explorer.exe</strong> with a PID of <strong class="source-inline">1636</strong> is the PPID of <strong class="source-inline">tasksche.exe</strong> <span class="No-Break">and </span><span class="No-Break"><strong class="source-inline">ctfmon.exe</strong></span><span class="No-Break">.</span></p>
+<p>Further down, we see that <strong class="source-inline">tasksche.exe</strong> (Task Scheduler) with a PID of <strong class="source-inline">1940</strong> is the PPID <span class="No-Break">of </span><span class="No-Break"><strong class="source-inline">@WanaDecryptor@</strong></span><span class="No-Break">.</span></p>
+<p>Let’s view this a bit differently using the <span class="No-Break"><strong class="source-inline">pstree</strong></span><span class="No-Break"> plugin:</span></p>
+<pre class="console">
+python3 vol.py -f wcry.raw windows.pstree</pre>
+<p>In the following screenshot, it is easier to see that <strong class="source-inline">explorer.exe</strong> is the parent process of <strong class="source-inline">ctfmon</strong>, <strong class="source-inline">tasksche</strong>, <span class="No-Break">and </span><span class="No-Break"><strong class="source-inline">@WanaDecryptor@</strong></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer319">
+<img alt="Figure 11.27 – pstree plugin output" height="482" src="image/Figure_11.27_B19441.jpg" width="1047"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.27 – pstree plugin output</p>
+<p>Let’s now use the <strong class="source-inline">psscan</strong> plugin <a id="_idIndexMarker990"/>to display processes that can be used by<a id="_idIndexMarker991"/> malware, such as rootkits, and are well known for doing just that to evade discovery by users and <span class="No-Break">antivirus programs:</span></p>
+<pre class="console">
+volatility --profile=WinXPSP2x86 -f 0zapftis.vmem psscan</pre>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer320">
+<img alt="Figure 11.28 – psscan plugin output" height="564" src="image/Figure_11.28_B19441.jpg" width="1255"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.28 – psscan plugin output</p>
+<p>The output of both the <strong class="source-inline">pslist</strong> and <strong class="source-inline">psscan</strong> commands<a id="_idIndexMarker992"/> should be compared to <span class="No-Break">note similarities.</span></p>
+<p>Let’s run the <strong class="source-inline">cmdline</strong> plugin<a id="_idIndexMarker993"/> to map and view the paths to processes <span class="No-Break">and executables:</span></p>
+<pre class="console">
+python3 vol.py -f wcry.raw windows.cmdline</pre>
+<p>In the following screenshot, we can now be certain that there is an <strong class="source-inline">@WanaDecryptor@</strong> executable on the system that was executed at some point by <span class="No-Break">a user:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer321">
+<img alt="Figure 11.29 – cmdline plugin output" height="499" src="image/Figure_11.29_B19441.jpg" width="790"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.29 – cmdline plugin output</p>
+<p>Let’s <a id="_idIndexMarker994"/>attempt to find <a id="_idIndexMarker995"/>more information on <strong class="source-inline">@WanaDecryptor@.exe</strong> to map the infection to a user using the <span class="No-Break"><strong class="source-inline">envars</strong></span><span class="No-Break"> plugin:</span></p>
+<pre class="console">
+python3 vol.py -f wcry.raw windows.envars</pre>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer322">
+<img alt="Figure 11.30 – envars plugin output" height="267" src="image/Figure_11.30_B19441.jpg" width="690"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.30 – envars plugin output</p>
+<p>The <strong class="source-inline">envars</strong> plugin<a id="_idIndexMarker996"/> is lengthy, so I’ve scrolled down and taken a snippet of the <strong class="source-inline">@WanaDecryptor@</strong> processes in <a id="_idIndexMarker997"/>the <span class="No-Break">following screenshot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer323">
+<img alt="Figure 11.31 – Additional envars plugin output" height="498" src="image/Figure_11.31_B19441.jpg" width="925"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.31 – Additional envars plugin output</p>
+<p>In the <strong class="source-inline">envars</strong> output in <span class="No-Break"><em class="italic">Figure 11</em></span><em class="italic">.31</em>, we’ve found some very useful information. We can now tell that the user Donny’s files have been infected with <strong class="source-inline">WannaCry</strong>/ <strong class="source-inline">@WanaDecryptor@</strong>, and we know all <a id="_idIndexMarker998"/>paths <span class="No-Break">of infection.</span></p>
+<p>Let’s now use the <strong class="source-inline">getsids</strong> plugins to <a id="_idIndexMarker999"/>view the privileges of <span class="No-Break">the processes:</span></p>
+<pre class="console">
+python3 vol.py -f wcry.raw windows.getsids</pre>
+<p>The following screenshot shows the output of the <strong class="source-inline">getsids</strong> <span class="No-Break">plugin command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer324">
+<img alt="Figure 11.32 – getsids plugin output" height="442" src="image/Figure_11.32_B19441.jpg" width="549"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.32 – getsids plugin output</p>
+<p>If we scroll down a bit, we can see that the <strong class="source-inline">@WanaDecryptor@</strong> process with a PID of <strong class="source-inline">740</strong> has local and administrator <span class="No-Break">user privileges.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer325">
+<img alt="Figure 11.33 – getsids plugin output continued" height="175" src="image/Figure_11.33_B19441.jpg" width="766"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.33 – getsids plugin output continued</p>
+<p>Let’s verify this by<a id="_idIndexMarker1000"/> running the <strong class="source-inline">privileges</strong> plugin to <a id="_idIndexMarker1001"/>see what access <strong class="source-inline">@</strong><span class="No-Break"><strong class="source-inline">WanaDecryptor@</strong></span><span class="No-Break"> has:</span></p>
+<pre class="console">
+python3 vol.py -f wcry.raw windows.privileges</pre>
+<p>As seen previously, the <strong class="source-inline">@WanaDecryptor@</strong> process can perform several tasks and may also have <span class="No-Break">read/write access.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer326">
+<img alt="Figure 11.34 – Additional privileges plugin output" height="381" src="image/Figure_11.34_B19441.jpg" width="1057"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.34 – Additional privileges plugin output</p>
+<p>We can confirm this and also find specific instances of the <strong class="source-inline">@WanaDecryptor@</strong> malware using the <strong class="source-inline">malfind</strong> plugin, which will also pinpoint other processes, such as <strong class="source-inline">winlogon</strong>, that may <span class="No-Break">be compromised:</span></p>
+<pre class="console">
+python3 vol.py -f wcry.raw windows.malfind</pre>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer327">
+<img alt="Figure 11.35 – malfind plugin output" height="801" src="image/Figure_11.35_B19441.jpg" width="864"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.35 – malfind plugin output</p>
+<p>I hope you enjoyed<a id="_idIndexMarker1002"/> analyzing and finding the WannaCry ransomware<a id="_idIndexMarker1003"/> using Volatility. It involves a lot of work, but with a little practice, you can easily master this very important <span class="No-Break">DFIR tool.</span></p>
+<h1 id="_idParaDest-160"><a id="_idTextAnchor223"/>Summary</h1>
+<p>This was certainly an intense chapter! We learned how to detect running processes and connections using <strong class="source-inline">p0f</strong> and also did some investigation using <strong class="source-inline">swap_digger</strong>, which revealed useful artifacts such as passwords within the paging file of a live Linux system. We then also used <strong class="source-inline">MimiPenguin</strong> to try dumping the current password of <span class="No-Break">the system.</span></p>
+<p>We then moved on to the very exciting topic of malware analysis where we discovered embedded malicious files within a PDF using <strong class="source-inline">pdf-parser</strong> and <strong class="source-inline">PDFiD</strong>, and I also introduced you to an online tool at <a href="http://hybrid-analysis.com">hybrid-analysis.com</a>, which I frequently use to analyze suspicious files <span class="No-Break">and URLs.</span></p>
+<p>Finally, we carried out an exciting lab, performing ransomware analysis using the incredibly useful Volatility 3 tool, where we found processes belonging to the WannaCry ransomware and, upon further analysis, were able to pinpoint the infected user, paths, documents, and <span class="No-Break">other processes.</span></p>
+<p>Next up, we will delve a bit more into automated file analysis using the Autopsy browser within Kali Linux. See you in the <span class="No-Break">next chapter!</span></p>
+</div>
+</div></body></html>

@@ -1,0 +1,617 @@
+<html><head></head><body>
+        <section id="CFIRM1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Attacking the Browser with BeEF</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The Browser Exploitation Framework (a.k.a. BeEF) is a structured code base for attacking web browsers. BeEF can attack any browser, but the OS, browser type, settings, plugins, and version will all have an effect on what attacks it can execute. BeEF runs as a server; when we hook a browser, it connects back to the BeEF server. From there, we can execute commands against it. In this chapter, we will cover the following recipes:</p>
+<ul class="calibre18">
+<li class="calibre19">Hooking the browser with BeEF</li>
+<li class="calibre19">Collecting information with BeEF</li>
+<li class="calibre19">Creating a persistent connection with BeEF</li>
+<li class="calibre19">Integrating BeEF and Metasploit</li>
+<li class="calibre19">Using the BeEF autorule engine</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CGHC81-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Hooking the browser with BeEF</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In order to use BeEF, we need to start its services and be able to access its console. Additionally, in order to exploit a victim's browser, we need to find a way to hook their browser. There are a number of ways of exploiting a victim's browser; in this chapter, we will cover two ways:</p>
+<ul class="calibre18">
+<li class="calibre19">The first shows how we can deploy a script on a website that we are able to directly edit.</li>
+<li class="calibre19">In the second example, we will exploit a website vulnerable to XSS attacks. In this way, we can deploy our script on a site we have no administrative access to.</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CHFSQ1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">BeEF comes preinstalled on Kali Linux. In the examples provided, an instance of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more information on how to set up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, this section will require a script to be written to the filesystem using a text editor, such as Vim or GNU nano. For more information on how to write scripts, refer to the <em class="calibre15">Using text editors (Vim and GNU nano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CIEDC1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>Now let's get started and learn to hook the browser with BeEF:</span></p>
+<ol class="calibre20">
+<li value="1" class="calibre19">Go to <span>Applications</span> | <span>Exploitation Tools</span> | <span>b</span><span>eEF xss framework</span>:</li>
+</ol>
+<div class="p"><img class="alignnone326" src="../images/00584.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">A Terminal window will open and start the BeEF server. When it has completed, it will open a browser and take you to the BeEF console:</li>
+</ol>
+<div class="p"><img class="alignnone327" src="../images/00437.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">The default <span>Username</span> and <span>Password</span> is <kbd class="calibre16">beef/beef</kbd>. Once authenticated, we see the BeEF console:</li>
+</ol>
+<div class="p"><img class="alignnone328" src="../images/00641.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">Next, we need to hook the browser. There are many methods we could use. We will demonstrate two methods here:
+<ul class="calibre30">
+<li class="calibre19"><strong class="calibre1">Method 1</strong>: First, let's see how we could simply insert some JavaScript into a page we have control over: 
+<ol class="calibre22">
+<li value="1" class="calibre19">Notice in the Terminal that launched when we started BeEF the line that shows a sample hook:</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<div class="p"><img src="../images/00440.jpeg" class="calibre43"/></div>
+<div class="calibre44">
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">We see that we hook a browser by calling the <kbd class="calibre16">hook.js</kbd> file, so let's make a page that will do that. We navigate to our web root directory and create a file; we will call it <kbd class="calibre16">beef.html</kbd>:</li>
+</ol>
+</div>
+<div class="p"><img class="alignnone329" src="../images/00013.jpeg"/></div>
+<div start="2" class="calibre44">
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Now, we will create a simple web page and embed our script between the <kbd class="calibre16">&lt;head&gt;</kbd> and <kbd class="calibre16">&lt;/head&gt;</kbd> tags:</li>
+</ol>
+</div>
+<div class="p"><img class="alignnone330" src="../images/00442.jpeg"/></div>
+<div start="2" class="calibre44">
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">Now, when someone navigates to our web page, it will load the <kbd class="calibre16">hook.js</kbd> script and create a connection to our BeEF server. However, there will be no visual cues. If you navigate to our web page, you will see something like this:</li>
+</ol>
+</div>
+<div class="p"><img class="alignnone331" src="../images/00078.jpeg"/></div>
+<div start="2" class="calibre44">
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">Now let's go look at the BeEF console, and we will see that we have hooked the browser:</li>
+</ol>
+</div>
+<div class="p"><img class="alignnone332" src="../images/00109.jpeg"/></div>
+<ol start="2" class="calibre20"/>
+<ul class="calibre18">
+<li class="calibre19"><strong class="calibre1">Method 2: </strong>We can get a little trickier and do this on a site we don't own using XSS. We will use Mutillidae.  Specifically, we will exploit the <span>Add To Your Blog</span> function of Mutillidae that is vulnerable to XSS.
+<ol class="calibre22">
+<li value="1" class="calibre19">On this page, we will simply use the same script we used on our web page earlier. So, we navigate to the <kbd class="calibre16">add-t0-your-blog.php</kbd> page and enter our script:</li>
+</ol>
+</li>
+</ul>
+<div class="p"><img class="alignnone333" src="../images/00143.jpeg"/></div>
+<div start="2" class="calibre44">
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Now let's navigate to our blog post:</li>
+</ol>
+</div>
+<div class="p"><img class="alignnone334" src="../images/00449.jpeg"/></div>
+<div start="2" class="calibre44">
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">The <kbd class="calibre16">hook.js</kbd> script is loaded in the background, and it's persistent. Anyone now visiting this blog will be hooked. If we take a look at the BeEF console, we will now see the browser we have hooked:</li>
+</ol>
+</div>
+<div class="p"><img class="alignnone335" src="../images/00224.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CJCTU1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">BeEF runs as a server on Kali Linux. Once we have started BeEF and deployed its hook, it is only a matter of waiting for a browser to come across and load our <kbd class="calibre16">hook.js</kbd> file. This in turn will connect the exploited browser to our BeEF server.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CKBEG1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Collecting information with BeEF</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Once we have successfully hooked a browser, we are ready to use BeEF to exploit it. This recipe covers how we can use some basic BeEF commands to collect information and exploit a victim's browser.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CL9V21-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">BeEF comes preinstalled on Kali Linux. In the examples provided, an instance of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more information on how to set up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, this section will require a script to be written to the filesystem using a text editor, such as Vim or GNU nano. For more information on how to write scripts, refer to the <em class="calibre15">Using text editors (Vim and GNU nano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CM8FK1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Now let's get started and learn to collect information with BeEF:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">Returning to the previous recipe, let's take a look at the BeEF console. We once again see that we have a hooked browser. BeEF gives some information right away about our hooked browser. In the following example, it tells us using icons that the browser is Internet Explorer, the operating system is Microsoft Windows, and our hardware is a virtual machine. Additionally, it gives us the IP address of the hooked machine's browser:</li>
+</ol>
+<div class="p"><img class="alignnone336" src="../images/00452.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">We can get more information about the hooked browser by selecting it with our mouse. When we do this, a new tab pops up and reveals details about the hooked browser. We get the browser type, version, more details about the platform, and even the resolution of the browser. We also get information on the browser's plugins and components and information on the page that was used to hook the browser.</li>
+</ol>
+<p class="calibre39">Finally, we get some more details about the browser's host computer:</p>
+<div class="p"><img class="alignnone337" src="../images/00294.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">We can now run commands against our victim's browser, but before we do, let's examine the traffic light icons and see what each means:</li>
+</ol>
+<div class="p"><img class="alignnone338" src="../images/00454.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">You will notice when we expand the module tree under the <span>Commands</span> tab that each command will have a corresponding traffic-light icon. This gives us some idea as to what is available to us as well as whether or not the user may notice when we execute a command. For this example, let's expand the <kbd class="calibre16">Browser</kbd> folder in the module tree:</li>
+</ol>
+<div class="p"><img class="alignnone339" src="../images/00376.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">We can see a number of options, but let's try <span>Get Visited URLs</span>. If we click on that command, we get a brief description and a text box in which to enter the URL(s) that we would like to see whether the hooked browser has visited. Let's first try it with the default entry, <a href="http://beefproject.com/" target="_blank" class="calibre6">http://beefproject.com/</a>. When we click on <span>Execute</span>, we see that the command returns false:</li>
+</ol>
+<div class="p"><img class="alignnone340" src="../images/00459.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">To test whether this command works, we will modify the value of the URL(s) with a page we know the browser has visited and see what it returns. In this example, let's use the <kbd class="calibre16">http://172.16.69.135/beef.html</kbd> URL.  When we execute this, we see that the command now returns true:</li>
+</ol>
+<div class="p"><img class="alignnone341" src="../images/00257.jpeg"/></div>
+<ol start="7" class="calibre20">
+<li value="7" class="calibre19">Lets try another command. In this example, we will redirect the browser to a URL of our choosing. You will see that the traffic light next to this command is orange, as the user will obviously notice that they have be redirected once the command is executed:</li>
+</ol>
+<div class="p"><img class="alignnone342" src="../images/00258.jpeg"/></div>
+<ol start="8" class="calibre20">
+<li value="8" class="calibre19">For our example, I am just going to redirect them to the root of our website hosting the <kbd class="calibre16">beef.html</kbd> page.  So we will modify the redirect URL to <kbd class="calibre16">http://172.16.69.135/</kbd> and click on the <span>Execute <strong class="calibre1">button</strong> </span>. If we click on the command we just executed, the result shows that the redirect happened:</li>
+</ol>
+<div class="p"><img class="alignnone343" src="../images/00262.jpeg"/></div>
+<ol start="9" class="calibre20">
+<li value="9" class="calibre19">Going back to our Windows XP hooked browser, we can see that, indeed, the browser was redirected to <kbd class="calibre16">http://172.16.69.135/</kbd>:</li>
+</ol>
+<div class="p"><img class="alignnone344" src="../images/00265.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CN7061-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">BeEF runs as a server on Kali Linux. Once we have started BeEF and deployed its hook, it is a matter of waiting for a browser to come across and load our <kbd class="calibre16">hook.js</kbd> file. This in turn will connect the exploited browser to our BeEF server. Once connected, BeEF has a number of functions that will allow us to collect information about our exploited target.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CO5GO1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Creating a persistent connection with BeEF</h1>
+            
+
+            <article>
+                
+<p class="calibre5">When a browser gets hooked by BeEF, by default it only stays hooked as long as it is on the page that infected it. If the user navigates away from that page, it will no longer be hooked to our BeEF console. In this recipe, we show how can create persistence with BeEF even if a user navigates away from the infecting page.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CP41A1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">BeEF comes preinstalled on Kali Linux. In the examples provided, an instance of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more information on how to set up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, this section will require a script to be written to the filesystem using a text editor, such as Vim or GNU nano. For more information on how to write scripts, refer to the <em class="calibre15">Using text editors (Vim and GNU nano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CQ2HS1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Now let's learn to create a persistent connection with BeEF:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">Let's go to the BeEF console and verify that we still have the hooked browser from the previous recipe. If not, we can hook the browser again by going to the page <kbd class="calibre16">http://172.16.69.135/beef.html</kbd>:</li>
+</ol>
+<div class="p"><img class="alignnone345" src="../images/00268.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Having the browser hooked is great; however, once the user navigates away from the page that infected it, we no longer have the browser hooked. It goes from showing up in an <kbd class="calibre16">Online Browsers</kbd> folder and shows up in our <kbd class="calibre16">Offline Browsers</kbd> folder, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone346" src="../images/00248.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Obviously, this is not ideal from our perspective. Once we have hooked a browser, it would be ideal to have some persistence even if the user navigates away from our infecting page. To make this happen, we navigate to the <span>Commands</span> tab, and expand the <span>Persistence</span> folder.  </li>
+<li value="4" class="calibre19">Here, we can see several options available to us. For this example, we will use the <span>Create Pop Under</span> command. This command will create a new browser window and then hide it from the user. As long as this window remains open, we will have a persistent connection:</li>
+</ol>
+<div class="p"><img class="alignnone347" src="../images/00263.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">Once we click on the <span>Execute</span> button, we can go take a look at our infected browser. Here, you can see in the Windows XP taskbar at the bottom that we have two instances of Internet Explorer running now:</li>
+</ol>
+<div class="p"><img class="alignnone348" src="../images/00273.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">Now, if the user navigates away from our page, we will still have the pop-under window hooked and can maintain our persistence. Looking at the BeEF console, we can see that we have one online browser and one offline with the same IP address. The offline browser is the one that has navigated away from our infecting page, while the online one is the one we instantiated using the <span>Create Pop Under</span> command:</li>
+</ol>
+<div class="p"><img class="alignnone349" src="../images/00276.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CR12E1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In order to maintain persistence with BeEF, the browser needs to keep using the <kbd class="calibre16">hook.js</kbd> resource. When a user navigates away from our infecting page, it no longer is using <kbd class="calibre16">hook.js</kbd>, so we lose our connection. In order to maintain persistence, we can use an IFrame or another browser window to maintain our connection by loading our <kbd class="calibre16">hook.js</kbd> file in it.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CRVJ01-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Integrating BeEF and Metasploit</h1>
+            
+
+            <article>
+                
+<p class="calibre5">We know now that BeEF is a great framework for exploiting the browser and that Metasploit is a great framework for exploiting a host. In this recipe, we'll see how we can use BeEF and Metasploit together. After hooking a browser with BeEF, we redirect the victim's browser to an executable that creates a reverse shell.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CSU3I1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">BeEF comes preinstalled on Kali Linux. In the examples provided, an instance of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more information on how to set up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, this section will require a script to be written to the filesystem using a text editor, such as Vim or GNU nano. For more information on how to write scripts, refer to the <em class="calibre15">Using text editors (Vim and GNU nano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CTSK41-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Now let's learn how to integrate BeEF and Metaspoilt:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">We will begin by creating a reverse shell and packaging it into an executable. We know that our hooked browser is Microsoft Windows, so we will build an executable to match the victim's platform. We are using the payload <kbd class="calibre16">windows/shell/reverse_tcp</kbd>. We then enter <kbd class="calibre16">LHOST</kbd> as the IP address of our Kali host, and we will set <kbd class="calibre16">LPORT</kbd> as <kbd class="calibre16">4444</kbd>. We do some encoding and output our file in our web root so that we can redirect our victim to it when we are ready:</li>
+</ol>
+<div class="p"><img class="alignnone350" src="../images/00278.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Now that we have created our exploit, we need to set up our listener. We do this by opening the MSF console and typing <kbd class="calibre16">use exploit/multi/handler</kbd>. Then, we set the payload to the same one we used in <kbd class="calibre16">msfvenom</kbd>: <kbd class="calibre16">set payload windows/shell/reverse_tcp</kbd>. From here, we need to set <kbd class="calibre16">LHOST</kbd> to <kbd class="calibre16">172.16.69.133</kbd> and <kbd class="calibre16">LPORT</kbd> to <kbd class="calibre16">4444</kbd>. Once we have all our options set, type <kbd class="calibre16">exploit</kbd> and the listener will start:</li>
+</ol>
+<div class="p"><img class="alignnone351" src="../images/00281.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Now we go back to our BeEF console and decide how we want to direct the user to our <kbd class="calibre16">shell.exe</kbd> file. We could perform a redirect or open a new window, but for this example, we will use an IFrame. When we click on the command, we are presented with a textbox to enter our URL. Here, we enter the path to our <kbd class="calibre16">shell.exe</kbd> file we just created. In our example, it is <kbd class="calibre16">http://172.16.69.133</kbd>:</li>
+</ol>
+<div class="p"><img class="alignnone352" src="../images/00284.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">When we click on <span>Execute</span>, the victim's browser is going to receive a prompt and has to make a decision about whether or not to open or save it. Of course, the user does not have to open our file, and if they do not, there will be no reverse shell. This is meant purely as an example, but there is a lot we could do to encourage the user by making this look like something they want to install. When it comes to exploiting, this is where creativity comes into play. For now, let's suppose our victim does open our file:</li>
+</ol>
+<div class="p"><img class="alignnone353" src="../images/00287.jpeg"/></div>
+<p class="calibre39">Once opened, a reverse shell is created, and you can see that we get the Microsoft Windows Command Prompt. From here, we can do whatever the compromised user can do from the Terminal.  </p>
+<div class="p"><img class="alignnone187" src="../images/00288.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CUR4M1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">BeEF provides a framework that allows us to exploit the victim's browser. In this recipe, we take the exploited browser and have it download a reverse shell executable, linking it back to our Metasploit host.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="CVPL81-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using the BeEF autorule engine</h1>
+            
+
+            <article>
+                
+<p class="calibre5">We have now seen some of the power of BeEF. Wouldn't it be great if we could automate some of that power? With the BeEF autorule engine, we can do just that. As an example, it would be great to create a persistent connection automatically with our victim as soon as the browser is hooked. This recipe looks into this and some other ideas.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D0O5Q1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">BeEF comes preinstalled on Kali Linux. In the examples provided, an instance of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more information on how to set up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. Additionally, this section will require a script to be written to the filesystem using a text editor, such as Vim or GNU nano. For more information on how to write scripts, refer to the <em class="calibre15">Using text editors (Vim and GNU nano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D1MMC1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In order to automate BeEF, we will be using the BeEF <strong class="calibre1">Autorun Rule Engine</strong> (<strong class="calibre1">ARE</strong>). With ARE, we can automatically run commands on a browser when it is hooked, provided it meets the requirements we specify. As an example, we would only want to run Google Chrome commands if the browser that is hooked is Google Chrome:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">BeEF comes prepackaged with a number of ARE rules. On Kali, we can view them by navigating to the <kbd class="calibre16">/usr/share/beef-xss/arerules/</kbd> directory and viewing its contents, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone354" src="../images/00289.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Although BeEF comes prepackaged with ARE commands, these commands are continually being updated and added to. To view the latest comprehensive list of ARE commands, we can visit the BeEF projects arerules page at <a href="https://github.com/beefproject/beef/tree/master/arerules" class="calibre6">https://github.com/beefproject/beef/tree/master/arerules</a>.</li>
+<li value="3" class="calibre19">To get the latest rules, we will download the BeEF master archive. We switch to the <kbd class="calibre16">/tmp/</kbd> directory and download the latest BeEF archive from <a href="https://github.com/beefproject/beef/archive/master.zip" class="calibre6">https://github.com/beefproject/beef/archive/master.zip</a>. We can now unzip the contents using the <kbd class="calibre16">unzip</kbd> command: </li>
+</ol>
+<div class="p"><img class="alignnone355" src="../images/00293.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">Notice that we have downloaded the entire BeEF project, although all we need is to update the rules. So let's switch to the <kbd class="calibre16">autorule</kbd> directory, and we will run a command to look for autorule files and move them to the <kbd class="calibre16">/usr/share/beef-xss/arerules/</kbd> directory.  </li>
+<li value="5" class="calibre19">We can then switch back over to the <kbd class="calibre16">/usr/share/beef-xss/arerules/</kbd> directory and confirm whether the files were moved. We should also go back to the <kbd class="calibre16">/tmp/</kbd> directory and remove the files there as they are not needed. We can do this by executing the <kbd class="calibre16">rm -r /tmp/beef-master</kbd> and <kbd class="calibre16">rm master.zip</kbd> commands:</li>
+</ol>
+<div class="p"><img class="alignnone355" src="../images/00431.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">Now that we have the latest ARE rules, let's look specifically at the <kbd class="calibre16">man_in_the_browser.json</kbd> file. Man-in-the-browser attacks work by intercepting the request when a user clicks on a link. If the link is on the same domain, it simply will make an AJAX call to load the new page. To the user, it doesn't look any different from what they would normally experience; however they remain hooked. In the event that the link is to another domain, a new tab is launched to load the requested page. This may or may not tip off the user; however, it is not that uncommon for sites to open pages in new tabs. This is required because the same-origin policy won't allow us to make the request in the same way as if the link were to another page on our given domain.</li>
+</ol>
+<ol start="7" class="calibre20">
+<li value="7" class="calibre19">In order for us to automatically run our ARE rules, we must move them from the <kbd class="calibre16">/usr/share/beef-xss/arerules/</kbd> directory to the <kbd class="calibre16">/usr/share/beef-xss/arerules/enabled/</kbd> directory. </li>
+<li value="8" class="calibre19">After moving them, we need to restart BeEF in order for it to pick up the new configuration:</li>
+</ol>
+<div class="p"><img class="alignnone355" src="../images/00298.jpeg"/></div>
+<ol start="9" class="calibre20">
+<li value="9" class="calibre19">When we originally created our web page to hook our victims, we did not add any links to the page. Let's begin by editing our <kbd class="calibre16">beef.html</kbd> file with the <kbd class="calibre16">vi</kbd> editor:</li>
+</ol>
+<div class="p"><img class="alignnone354" src="../images/00299.jpeg"/></div>
+<ol start="10" class="calibre20">
+<li value="10" class="calibre19">Now, we can edit the page and add a link. In this example, we will add the following HTML to our page: </li>
+</ol>
+<pre class="calibre24">
+        &lt;p&gt;You should check out <br class="title-page-name"/>          &lt;a href="http://www.packtpub.com"&gt;PacktPub&lt;/a&gt;<br class="title-page-name"/>        &lt;/p&gt;
+</pre>
+<div class="p"><img class="alignnone354" src="../images/00476.jpeg"/></div>
+<ol start="11" class="calibre20">
+<li value="11" class="calibre19">Now we navigate to <kbd class="calibre16">172.16.69.133/beef.html</kbd> from our Windows XP machine. From our BeEF panel we can see that the browser is  hooked as expected:</li>
+</ol>
+<div class="p"><img class="alignnone356" src="../images/00304.jpeg"/></div>
+<ol start="12" class="calibre20">
+<li value="12" class="calibre19">When we navigate away from our page and to <kbd class="calibre16">www.packtpub.com</kbd>, our <kbd class="calibre16">man_in_the_browser.json</kbd> file goes to work, keeping our browser hooked. If we look in the logs, we can see that it was executed. Additionally, even though the user navigated away, we can see that our browser remains online:</li>
+</ol>
+<div class="p"><img class="alignnone357" src="../images/00307.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D2L6U1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The BeEF ARE allows us to choose specific commands to be executed automatically when a browser is hooked by BeEF. This allows us to collect information and create persistence, among a number of other functions.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    </body></html>

@@ -1,0 +1,299 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer116">
+<h1 class="chapter-number" id="_idParaDest-53"><a id="_idTextAnchor072"/>4</h1>
+<h1 id="_idParaDest-54"><a id="_idTextAnchor073"/>Additional Kali Installations and Post-Installation Tasks</h1>
+<p>In our last chapter, we learned how to install Kali Linux as a standalone operating system and how to install Kali in VirtualBox. This chapter continues by looking at two other Kali Linux installations that can be considered much simpler and faster installations, but I’ll let you be the judge of that. We will then perform some common post-installation tasks to ensure that we have a fully updated and functional version of Kali Linux for <a id="_idIndexMarker362"/>our <strong class="bold">Digital forensics and incident response</strong> (<strong class="bold">DFIR</strong>) investigations, regardless of the platform chosen for <span class="No-Break">the installation.</span></p>
+<p>The topics that we are going to cover in this chapter are <span class="No-Break">as follows:</span></p>
+<ul>
+<li>Installing a pre-configured version of Kali Linux <span class="No-Break">in VirtualBox</span></li>
+<li>Installing Kali Linux on Raspberry <span class="No-Break">Pi 4</span></li>
+<li>Updating <span class="No-Break">Kali Linux</span></li>
+<li>Enabling the root <span class="No-Break">user account</span></li>
+<li>Adding the Kali Linux forensics repository to <span class="No-Break">the installation</span></li>
+</ul>
+<h1 id="_idParaDest-55"><a id="_idTextAnchor074"/>Installing a pre-configured version of Kali Linux in VirtualBox</h1>
+<p>Kali can<a id="_idIndexMarker363"/> also be installed in VirtualBox <a id="_idIndexMarker364"/>using a much simpler<a id="_idIndexMarker365"/> method by using the pre-configured versions of Kali, built specifically <span class="No-Break">for VirtualBox:</span></p>
+<ol>
+<li>If you<a id="_idIndexMarker366"/> haven’t already <a id="_idIndexMarker367"/>downloaded <a id="_idIndexMarker368"/>the Kali VirtualBox image in <a href="B19441_03.xhtml#_idTextAnchor058"><span class="No-Break"><em class="italic">Chapter 3</em></span></a>, <em class="italic">Installing Kali Linux</em>, you can do so <span class="No-Break">at </span><a href="https://kali.download/virtual-images/kali-2022.3/kali-linux-2022.3-vmware-amd64.7z"><span class="No-Break">https://kali.download/virtual-images/kali-2022.3/kali-linux-2022.3-vmware-amd64.7z</span></a><span class="No-Break">.</span></li>
+<li>You must extract the image with 7Zip, which can be downloaded for Windows <span class="No-Break">at </span><a href="https://www.7-zip.org/a/7z2201-x64.exe"><span class="No-Break">https://www.7-zip.org/a/7z2201-x64.exe</span></a><span class="No-Break">.</span></li>
+</ol>
+<p>Once extracted, you should see the same files shown in the <span class="No-Break">following screenshot.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer090">
+<img alt="Figure 4.1 – The Downloads folder showing the pre-configured Kali images for VirtualBox" height="84" src="image/Figure_4.01_B19441.jpg" width="630"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.1 – The Downloads folder showing the pre-configured Kali images for VirtualBox</p>
+<ol>
+<li value="3">Double-click on the <strong class="source-inline">.vbox</strong> file, which is 3 KB in size, and it should immediately open <span class="No-Break">within VirtualBox.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer091">
+<img alt="Figure 4.2 – VirtualBox Manager" height="564" src="image/Figure_4.02_B19441.jpg" width="550"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.2 – VirtualBox Manager</p>
+<ol>
+<li value="4">Click <a id="_idIndexMarker369"/>on the <strong class="bold">Settings</strong> icon <a id="_idIndexMarker370"/>at the<a id="_idIndexMarker371"/> top of the <strong class="bold">VirtualBox </strong><span class="No-Break"><strong class="bold">Manager</strong></span><span class="No-Break"> window.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer092">
+<img alt="Figure 4.3 – The pre-configured settings for the Kali virtual machine" height="670" src="image/Figure_4.03_B19441.jpg" width="461"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.3 – The pre-configured settings for the Kali virtual machine</p>
+<ol>
+<li value="5">Click <a id="_idIndexMarker372"/>on <strong class="bold">System</strong> and <a id="_idIndexMarker373"/>use the slider to <a id="_idIndexMarker374"/>allocate the <strong class="bold">Base Memory</strong> size. When done, <span class="No-Break">click </span><span class="No-Break"><strong class="bold">OK</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer093">
+<img alt="Figure 4.4 – Memory assignment in VirtualBox" height="529" src="image/Figure_4.04_B19441.jpg" width="645"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.4 – Memory assignment in VirtualBox</p>
+<ol>
+<li value="6">To start the virtual machine, click on the green <strong class="bold">Start</strong> button at the top of the <span class="No-Break">Virtual Manager.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer094">
+<img alt="Figure 4.5 – The VirtualBox Start button" height="70" src="image/Figure_4.05_B19441.jpg" width="231"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.5 – The VirtualBox Start button</p>
+<ol>
+<li value="7">Use the<a id="_idIndexMarker375"/> following <a id="_idIndexMarker376"/>credentials to<a id="_idIndexMarker377"/> log in (all letters <span class="No-Break">are lowercase):</span><ul><li><span class="No-Break">Username: </span><span class="No-Break"><strong class="source-inline">kali</strong></span></li><li><span class="No-Break">Password: </span><span class="No-Break"><strong class="source-inline">kali</strong></span></li></ul></li>
+</ol>
+<p>We’ve now covered three methods for installing Kali Linux. I’m sure you found this one much easier than the others. Let’s move on to another installation type on a portable Raspbe<a id="_idTextAnchor075"/>rry <span class="No-Break">Pi 4.</span></p>
+<h1 id="_idParaDest-56"><a id="_idTextAnchor076"/>Installing Kali Linux on Raspberry Pi4</h1>
+<p>Raspberry Pi 4, also <a id="_idIndexMarker378"/>known as the Pi 4, is a low-powered, small, portable, and powerful device that can be used for personal, enterprise, and even <strong class="bold">Operational Technology</strong> (<strong class="bold">OT</strong>) purposes, as<a id="_idIndexMarker379"/> mentioned earlier in this chapter. Having Kali on a Pi 4 can be very useful, as it is very powerful and comes with USB 3.0 ports, an RJ-45 network port, dual mini-HDMI ports, Wi-Fi, Bluetooth, and up to 8 GB of RAM, and it can run Kali off a bootable microSD card in just a few steps. You can learn more about the Pi 4<a id="_idIndexMarker380"/> <span class="No-Break">at </span><a href="https://www.raspberrypi.com/products/raspberry-pi-4-model-b/"><span class="No-Break">https://www.raspberrypi.com/products/raspberry-pi-4-model-b/</span></a><span class="No-Break">.</span></p>
+<p>Follow these steps to install Kali on a Pi 4 (or even the older Pi 2, 3, <span class="No-Break">and 400):</span></p>
+<ol>
+<li>To<a id="_idIndexMarker381"/> install Kali on a Pi 4 (or even the older Pi 2, 3, and 400), we’ll <a id="_idIndexMarker382"/>need the Pi Imager software, which can<a id="_idIndexMarker383"/> be downloaded at <a href="https://www.raspberrypi.com/software/">https://www.raspberrypi.com/software/</a> and is available for Windows, Mac, and Ubuntu (x86) devices. Pi Imager will allow us to install the Kali Linux ARM version on a microSD card, which will run on our Pi 4. I also recommend using a 32 GB or larger capacity microSD card to ensure that you have enough space for upgrades and downloading additional tools <span class="No-Break">in Kali.</span></li>
+<li>Once you have downloaded Pi Imager, insert your microSD card into your laptop or desktop, either directly or via a card reader, and launch <span class="No-Break">Pi Imager.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer095">
+<img alt="Figure 4.6 – The Raspberry Pi Imager interface" height="413" src="image/Figure_4.06_B19441.jpg" width="678"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.6 – The Raspberry Pi Imager interface</p>
+<ol>
+<li value="3">Click on <strong class="bold">CHOOSE STORAGE</strong> and select your <span class="No-Break">microSD card.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer096">
+<img alt="Figure 4.7 – Pi Imager storage selection" height="338" src="image/Figure_4.07_B19441.jpg" width="650"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.7 – Pi Imager storage selection</p>
+<ol>
+<li value="4">Next, click <a id="_idIndexMarker384"/>the <strong class="bold">CHOOSE OS</strong> button and click <a id="_idIndexMarker385"/>on the <strong class="bold">Other specific-purpose </strong><span class="No-Break"><strong class="bold">OS</strong></span><span class="No-Break"> option.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer097">
+<img alt="Figure 4.7 – Operating system selection" height="768" src="image/Figure_4.08_B19441.jpg" width="1366"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.7 – Operating system selection</p>
+<ol>
+<li value="5">You <a id="_idIndexMarker386"/>should now see an option for <strong class="bold">Kali Linux</strong>, as<a id="_idIndexMarker387"/> shown in the <span class="No-Break">following screenshot.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer098">
+<img alt="Figure 4.8 – Selecting the Kali Linux option" height="366" src="image/Figure_4.09_B19441.jpg" width="606"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.8 – Selecting the Kali Linux option</p>
+<ol>
+<li value="6">You will <a id="_idIndexMarker388"/>now be presented with the versions of <a id="_idIndexMarker389"/>Kali available for different Raspberry Pi devices. You can select your version depending on the model you have <span class="No-Break">access to.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer099">
+<img alt="Figure 4.9 – The available Kali Linux versions" height="371" src="image/Figure_4.10_B19441.jpg" width="611"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.9 – The available Kali Linux versions</p>
+<ol>
+<li value="7">Once selected, you will be<a id="_idIndexMarker390"/> returned to the main interface. Click on the <strong class="bold">WRITE</strong> option to install Kali onto <a id="_idIndexMarker391"/>the <span class="No-Break">microSD card.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer100">
+<img alt="Figure 4.10 – The final Pi Imager configurations" height="382" src="image/Figure_4.11_B19441.jpg" width="676"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.10 – The final Pi Imager configurations</p>
+<ol>
+<li value="8"> You will <a id="_idIndexMarker392"/>then be prompted to continue. Click <strong class="bold">YES</strong> <span class="No-Break">to </span><span class="No-Break"><a id="_idIndexMarker393"/></span><span class="No-Break">proceed.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer101">
+<img alt="Figure 4.11 – Data erasure confirmation" height="203" src="image/Figure_4.12_B19441.jpg" width="547"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.11 – Data erasure confirmation</p>
+<p>The writing process will <span class="No-Break">now begin.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer102">
+<img alt="Figure 4.12 – Writing Kali to the SD card" height="292" src="image/Figure_4.13_B19441.jpg" width="673"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.12 – Writing Kali to the SD card</p>
+<ol>
+<li value="9">Once<a id="_idIndexMarker394"/> the process is completed, remove<a id="_idIndexMarker395"/> the microSD card from your computer or card reader and gently insert it into your Raspberry Pi device, which should be powered off to avoid any damage to the card. Power on your Pi, and Kali will boot. Again, the default username and password are both <strong class="source-inline">kali</strong> (<span class="No-Break">in lowercase).</span></li>
+</ol>
+<p>This concludes the various types of installations of Kali Linux on a variety of platforms. Before we use Kali, we should always update our tools, which I’ll demonstrate i<a id="_idTextAnchor077"/>n the <span class="No-Break">next section.</span></p>
+<h1 id="_idParaDest-57"><a id="_idTextAnchor078"/>Updating Kali</h1>
+<p>Now that we’ve <a id="_idIndexMarker396"/>looked at the many possible ways of installing Kali Linux on various platforms, let’s have a look at some important post-installation tasks once Kali Linux systems are up <span class="No-Break">and running:</span></p>
+<ol>
+<li>To view version installation details of our Kali systems, let’s run the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">cat /etc/os-release</strong></pre></li>
+</ol>
+<p>In the<a id="_idIndexMarker397"/> following screenshot, we can see the command output shows the names, versions, code name, and more details for <span class="No-Break">verification purposes.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer103">
+<img alt="Figure 4.13 – The cat command output" height="352" src="image/Figure_4.14_B19441.jpg" width="622"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.13 – The cat command output</p>
+<ol>
+<li value="2">We should also always update our Kali systems after installation to ensure that we have the current version of tools and <span class="No-Break">supporting software.</span></li>
+</ol>
+<p>To update Kali Linux, type and run the <span class="No-Break">following command:</span></p>
+<pre class="source-code">
+<strong class="bold">sudo apt update</strong></pre>
+<p>In the following screenshot, some updates were installed, and the last line states that there are 674 packages that can <span class="No-Break">be upgraded:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer104">
+<img alt="Figure 4.14 – Updating Kali Linux" height="305" src="image/Figure_4.15_B19441.jpg" width="638"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.14 – Updating Kali Linux</p>
+<ol>
+<li value="3">Type and<a id="_idIndexMarker398"/> run the following command to see the list <span class="No-Break">of upgrades:</span><pre class="source-code">
+<strong class="bold">apt list –upgradable</strong></pre></li>
+</ol>
+<p>In the following screenshot, we can see the command being executed. It may take some time to upgrade <span class="No-Break">all components.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer105">
+<img alt="Figure 4.15 – The apt list –upgradable command output" height="434" src="image/Figure_4.16_B19441.jpg" width="641"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.15 – The apt list –upgradable command output</p>
+<ol>
+<li value="4">Type and <a id="_idIndexMarker399"/>run the following command to allow Kali to upgrade all the preceding software and packages without prompting <span class="No-Break">for confirmation:</span><a id="_idTextAnchor079"/><pre class="source-code">
+<strong class="bold">sudo apt upgrade –y</strong></pre></li>
+</ol>
+<p>The following screenshot shows the execution and output of <span class="No-Break">the command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer106">
+<img alt="Figure 4.16 – Upgrading Kali Linux" height="383" src="image/Figure_4.17_B19441.jpg" width="642"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.16 – Upgrading Kali Linux</p>
+<p>Note that this upgrade process can take some time <span class="No-Break">to complete.</span></p>
+<ol>
+<li value="5">We can now reboot Kali to complete the entire process by typing the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">sudo reboot</strong></pre></li>
+</ol>
+<p>The following<a id="_idIndexMarker400"/> screenshot shows the execution and output of <span class="No-Break">the command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer107">
+<img alt="Figure 4.17 – Rebooting Kali Linux" height="56" src="image/Figure_4.18_B19441.jpg" width="197"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.17 – Rebooting Kali Linux</p>
+<p>After updating and upgrading your Kali Linux installations, we can now move on to other tasks. Next, we will learn how to enable the<a id="_idTextAnchor080"/> root <span class="No-Break">user account.</span></p>
+<h1 id="_idParaDest-58"><a id="_idTextAnchor081"/>Enabling the root user account in Kali</h1>
+<p>Now that all our<a id="_idIndexMarker401"/> updates and upgrades have been completed, let’s<a id="_idIndexMarker402"/> look at enabling the root user account in Kali Linux. You will have noticed by now that some versions of Kali, when installed, allow access with the default username and password of Kali. This was done as a security feature to not allow unintentional changes to configurations or tools. If we wish to execute commands or perform various tasks using root or administrator privileges instead, we must type <strong class="source-inline">sudo</strong> before the<a id="_idIndexMarker403"/> respective commands. </p>
+<p>Sudo is an abbreviation for <strong class="bold">superuser do</strong>, which allows us to run commands and tools as a superuser with the highest privileges, known as root privileges. It can sometimes be a bit of a nuisance to have to type this before commands, but it becomes routine after <span class="No-Break">a while.</span></p>
+<p>However, if you are new to Kali and Linux-based operating systems, I do recommend using the default profile and typing <strong class="source-inline">sudo</strong> when necessary, but the choice is <span class="No-Break">ultimately yours.</span></p>
+<p>Enabling the root account is fairly simple and can be done in just a couple <span class="No-Break">of steps:</span></p>
+<ol>
+<li>Firstly, boot your Kali machine if it is not running and log in using the username and password you have created, or using the default credentials provided – username: <strong class="source-inline">kali</strong>, and <span class="No-Break">password: </span><span class="No-Break"><strong class="source-inline">kali</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer108">
+<img alt="Figure 4.18 – The Kali Linux login screen" height="237" src="image/Figure_4.19_B19441.jpg" width="408"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.18 – The Kali Linux login screen</p>
+<ol>
+<li value="2">Click <a id="_idIndexMarker404"/>on the Terminal icon at the top to <a id="_idIndexMarker405"/>open a <span class="No-Break">new Terminal.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer109">
+<img alt="Figure 4.19 – The Kali Linux desktop with the Terminal shortcut circled" height="153" src="image/Figure_4.20_B19441.jpg" width="465"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.19 – The Kali Linux desktop with the Terminal shortcut circled</p>
+<ol>
+<li value="3">In the new Terminal, note that the prompt shows <strong class="source-inline">(kali@kali)</strong>. Type the following command to access the superuser account and press <em class="italic">Enter</em>. You will also have to type your password thereafter – <span class="No-Break"><strong class="source-inline">sudo su</strong></span><span class="No-Break">.</span></li>
+</ol>
+<p>The following screenshot shows the execution and output of <span class="No-Break">the command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer110">
+<img alt="Figure 4.20 – The sudo su output" height="168" src="image/Figure_4.21_B19441.jpg" width="246"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.20 – The sudo su output</p>
+<p class="callout-heading">Note</p>
+<p class="callout">Passwords are not displayed on screen when typed in <span class="No-Break">Kali Linux.</span></p>
+<p>In the <a id="_idIndexMarker406"/>preceding screenshot, note that the prompt has <a id="_idIndexMarker407"/>now changed to <strong class="bold">(root@Kali)</strong>. Let us now change the password for the root account by typing the <span class="No-Break">following command.</span></p>
+<ol>
+<li value="4">You will then be prompted to type and retype the new password – <span class="No-Break"><strong class="source-inline">passwd root</strong></span><span class="No-Break">.</span></li>
+</ol>
+<p> The following screenshot shows the execution and output of <span class="No-Break">the command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer111">
+<img alt="Figure 4.21 – Creating a password for the root account" height="145" src="image/Figure_4.22_B19441.jpg" width="351"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.21 – Creating a password for the root account</p>
+<ol>
+<li value="5">Success! We<a id="_idIndexMarker408"/> can now log out as the current <a id="_idIndexMarker409"/>user and log back in, or just switch to the root user by first clicking on the power button icon at the extreme top-right of the screen and then either choosing <strong class="bold">Log Out</strong> or <strong class="bold">Switch User</strong>, as <span class="No-Break">seen here.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer112">
+<img alt="Figure 4.22 – The Kali Linux power and user options" height="357" src="image/Figure_4.23_B19441.jpg" width="492"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.22 – The Kali Linux power and user options</p>
+<p>Log in with the username <strong class="source-inline">root</strong> and the password you just created for <span class="No-Break">the account.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer113">
+<img alt="Figure 4.23 – The Kali Linux login screen" height="301" src="image/Figure_4.24_B19441.jpg" width="503"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.23 – The Kali Linux login screen</p>
+<ol>
+<li value="6">Click on the<a id="_idIndexMarker410"/> Terminal account again, and you<a id="_idIndexMarker411"/> will notice that the prompt is now <strong class="bold">(root@kali)</strong>, as <span class="No-Break">seen here.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer114">
+<img alt="Figure 4.24 – The Terminal showing the root user account" height="213" src="image/Figure_4.25_B19441.jpg" width="497"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.24 – The Terminal showing the root user account</p>
+<p>Now that we have a root user account enabled on Kali, our last task in this chapter will be to add additional forensics tools using <a id="_idTextAnchor082"/>a <span class="No-Break">forensics metapackage.</span></p>
+<h1 id="_idParaDest-59"><a id="_idTextAnchor083"/>Adding the Kali Linux forensics metapackage</h1>
+<p>Kali metapackages are <a id="_idIndexMarker412"/>collections of tools that can be downloaded as a full package. Depending on the version of Kali you installed, it may not come with all the tools you may have <a id="_idIndexMarker413"/>expected or viewed on the tools listing page at <a href="https://www.kali.org/tools/all-tools/">https://www.kali.org/tools/all-tools/</a>, which lists all the tools available in Kali Linux. For our DFIR purposes, for <a id="_idIndexMarker414"/>example, a listing of all forensics tools can be viewed at <a href="https://www.kali.org/tools/kali-meta/#kali-tools-forensics">https://www.kali.org/tools/kali-meta/#kali-tools-forensics</a>, where you can click on the drop-down arrow in the <strong class="bold">Dependencies</strong> section to view a listing of <span class="No-Break">all tools.</span></p>
+<p>All of the <a id="_idIndexMarker415"/>preceding tools are contained in the <strong class="source-inline">kali-tools-forensics</strong> metapackage and can be installed by typing the <span class="No-Break">following command:</span></p>
+<pre class="console">
+sudo apt install kali-tools-forensics</pre>
+<p>The following screenshot shows the execution and output of <span class="No-Break">the command.</span></p>
+<p class="IMG---Figure"> </p>
+<div>
+<div class="IMG---Figure" id="_idContainer115">
+<img alt="Figure 4.25 – Installing the forensics metapackage" height="88" src="image/Figure_4.26_B19441.jpg" width="402"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 4.25 – Installing the forensics metapackage</p>
+<p class="callout-heading">Note</p>
+<p class="callout">You should update your Kali Linux before installing any metapackage as we previously did, using the <strong class="source-inline">sudo apt </strong><span class="No-Break"><strong class="source-inline">update</strong></span><span class="No-Break"> command.</span></p>
+<p>This will install all<a id="_idIndexMarker416"/> listed forensics tools in Kali Linux, as shown in the previous screenshot. You can view some of the forensics tools by clicking on <strong class="bold">Applications</strong> | <strong class="bold">11-Forensics</strong> on the main <span class="No-Break">Kali menu.</span></p>
+<h1 id="_idParaDest-60"><a id="_idTextAnchor084"/>Summary</h1>
+<p>In this chapter, we learned that we can also install Kali Linux in a much simpler and faster manner by using the pre-configured version of Kali, specifically designed for VirtualBox. Just a few clicks and tweaks and we were done. We also learned to install Kali on a Raspberry Pi device, which can be very useful where portability is concerned, by simply using the Pi Imager tool to install Kali onto a <span class="No-Break">microSD card.</span></p>
+<p>We then looked at some very important post-installation tasks that should be done after any installation. We learned how to find the version of Kali Linux and then update and even upgrade all software and packages in Kali. Finally, in this chapter, we looked at enabling the root account to avoid having to use the <strong class="source-inline">sudo</strong> command when performing actions that require superuser privileges. We also learned how to install all forensics tools by adding the <strong class="source-inline">kali-tools-forensics</strong> metapackage to <span class="No-Break">our installation.</span></p>
+<p>Now that we have installed our various versions of Kali and updated our systems, we will move on to a very useful tool called Wine, which allows us to run Windows tools on our Kali Linux system. Pretty cool stuff if you ask me. See you in the <span class="No-Break">next chapter!</span></p>
+</div>
+</div></body></html>

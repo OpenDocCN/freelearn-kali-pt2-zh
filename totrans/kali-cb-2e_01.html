@@ -1,0 +1,1713 @@
+<html><head></head><body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Installing Kali and the Lab Setup</h1>
+                </header>
+            
+            <article>
+                
+<p>In this chapter, we will cover the following topics:</p>
+<ul>
+<li>Lab architecture and considerations</li>
+<li>Installing VirtualBox</li>
+<li>Installing Kali on VirtualBox</li>
+<li>Using Kali Linux from bootable media</li>
+<li>Upgrading Kali Linux</li>
+<li>Understanding the advanced customization and optimization of Kali</li>
+<li>Installing Windows machines</li>
+<li>Installing Metasploitable</li>
+<li>Installing OWASP-BWA</li>
+<li>Understanding hack me and other online resources</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Introduction</h1>
+                </header>
+            
+            <article>
+                
+<p>In order to set the stage for the rest of this book <span>and to help you reproduce the recipes</span> and their output, I strongly recommend that you create a test environment where you can run various tools that are included with Kali Linux. In this chapter, we will be focusing on building our testing environment based on free or low-cost applications to minimize cost.</p>
+<p>Starting with installing the virtualization platform, VirtualBox, we will walk through a few common installation techniques for Kali Linux; you will also learn how to update and maintain your installation.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Lab architecture and considerations</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">In this section, we will discuss our lab design and provide some information that you can use to expand it in the future.</p>
+<p class="mce-root">As we begin to set up our lab, we want to take some time to discuss the lab setup and some of the considerations that we will take when using the lab. Some of these considerations are designed to make the lab more effective, while others are used for the protection of the networks our lab is connected to. We also want you to be in a position to easily expand or grow this network with other test machines as you master the Kali recipes that follow.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>In this section, we will be discussing general topics as opposed to specific recipes. </p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">The hypervisor selection</h1>
+                </header>
+            
+            <article>
+                
+<p>Today, there are many different hypervisors that will allow you to run multiple virtual machines on a single physical machine. For our specific purposes, we have chosen to show you how to setup the initial lab in VirtualBox due to several compelling factors. It's free to use, has multi-platform support, and it's able to run within your main operating system. However, as we progress past the first chapter, we will be switching to VMware ESXi. This will not affect recipes in any way between using VirtualBox and VMware ESXi. Our main reason for switching is the amount of compute resources that are available to us in our dedicated lab. We have the ability to run many virtual machines at once, and we will have the ability to insert firewalls and other security devices between our Kali instance and our testing hosts, as needed. We also have the flexibility to create more complex environments.</p>
+<p>If, for any reason, you are looking to build a larger test network or have a different hypervisor of choice that better suits your purposes, feel free to use it, as we will assume you will be able to translate our instructions between the different hypervisors.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">The hypervisor networking</h1>
+                </header>
+            
+            <article>
+                
+<p>In our lab, we are going to be using two networks within VirtualBox: a NAT network and a host-only network. Our Kali box will be connected to both the networks, so it can communicate with devices on the internet, download updates, and get software packages as needed. Our target machines will only be connected to the host-only network. The host-only network can only talk within the host and among other devices connected to the host-only network. It cannot communicate through your Ethernet or wireless networks. This setup is extremely critical to our testing environment, as we do not ever want to expose our testing hosts to the outside world, as they are very vulnerable and will be hacked rather quickly.</p>
+<p>To further protect the networks that your lab is connected to, we would actually suggest disconnecting the virtual adapter of the Kali virtual machine that connects to the NAT network, unless specifically required for the recipe operation. This way, your network is protected from accidental exposures to any attacks you may be sourcing from Kali.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Vulnerable workstations</h1>
+                </header>
+            
+            <article>
+                
+<p>One of the many questions frequently asked is why we soften machines or use machines that have vulnerabilities. The fact is that a properly patched, properly configured, and properly hardened machine is quite difficult to get into. Penetration testing is not trying to get through to hardened devices but looking specifically for those devices that have vulnerabilities. In a typical engagement, you may find only one or two machines that have vulnerabilities. You can then use these machines to gain a foothold into an environment to compromise other more hardened machines. If you start doing regular engagements as a penetration tester, you will be surprised by just how many machines you may be able to find that have vulnerabilities. This is especially true with the proliferation of low cost <strong>Internet of Things</strong> (<strong>IoT</strong>) devices such as internet connected cameras, thermostats, automation systems, and monitoring. These devices often run Linux-type embedded operating systems and are rarely patched and often overlooked. More importantly, they are often riddled with bugs and vulnerabilities that we can use for our purposes.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Installing VirtualBox</h1>
+                </header>
+            
+            <article>
+                
+<p>To set the foundation for our lab, we will be using VirtualBox as a virtual hardware platform to host our images. This recipe will outline the steps necessary to do so. In the event that you wish to use an alternate virtualization platform, the same general principles will apply.</p>
+<p>When it comes to learning a new set of skills or sharpening the ones you already have, the importance of a testing environment cannot be overstated. It is imperative that you have the means to test against systems in a known state so that you can validate the results of your tests.</p>
+<p>One method of saving resources, both physical hardware and computing resources, is to utilize a virtual environment where your testing devices reside. One very popular example of a virtualization platform is Oracle's VirtualBox—a purpose build virtualization environment designed for use with x86 platforms that can host many virtual machines on one physical computer. This allows for the sharing of resources such as disk, RAM, CPU, and so on. Additionally, because VirtualBox supports importing and exporting virtual appliances, resources can be easily moved, shared, and so on.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>To prepare for the use of VirtualBox for the remainder of this book, we will need to ensure that we have enough resources on our server to be able to run several of the virtual guests at the same time. The following chart highlights the amount of resources that each of our intended guest systems will require:</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p>Name</p>
+</td>
+<td>
+<p>Disk required</p>
+</td>
+<td>
+<p>Memory required</p>
+</td>
+<td>
+<p>CPU required</p>
+</td>
+<td>
+<p>Chapters used</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Kali Linux</p>
+</td>
+<td>
+<p>80 GB</p>
+</td>
+<td>
+<p>8 GB</p>
+</td>
+<td>
+<p>2</p>
+</td>
+<td>
+<p>1-10</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Metasploitable</p>
+</td>
+<td>
+<p>65 GB</p>
+</td>
+<td>
+<p>4 GB</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1,2,4-7,10</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Ubuntu 16.4 LTS</p>
+</td>
+<td>
+<p>15 GB</p>
+</td>
+<td>
+<p>2 Gb</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1,6,10</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Windows XP SP3</p>
+</td>
+<td>
+<p>10 GB</p>
+</td>
+<td>
+<p>1 GB</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1,2,4-7,10</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Windows 7 - host 1</p>
+</td>
+<td>
+<p>10 GB (thin)</p>
+</td>
+<td>
+<p>2 GB</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1-7</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Windows 7 - host 2</p>
+</td>
+<td>
+<p>10 GB (thin)</p>
+</td>
+<td>
+<p>2 GB</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1-7</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Windows 2008 Server</p>
+</td>
+<td>
+<p>25 GB (thin)</p>
+</td>
+<td>
+<p>2 GB</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1-7</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>OWASP-BWA</p>
+</td>
+<td>
+<p>10 GB</p>
+</td>
+<td>
+<p>1 GB</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1,9</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>VulnOS</p>
+</td>
+<td>
+<p>32 GB</p>
+</td>
+<td>
+<p>1 GB</p>
+</td>
+<td>
+<p>1</p>
+</td>
+<td>
+<p>1,7</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="CDPAlignLeft CDPAlign"/>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>In this section, we will build out an environment that will allow you to perform security testing without the need for physical hardware:</p>
+<ol>
+<li>Ensure that you have the following resources free on your host machine to support the system combinations mentioned in preceding list. In totality, you will need the following in addition to the resources needed by VirtualBox itself:
+<ul>
+<li>5 CPU</li>
+<li>1500+ GB free disk space</li>
+<li>16 GB free memory</li>
+</ul>
+</li>
+<li>Download the appropriate version of VirtualBox for your lab environment from <a href="https://www.virtualbox.org/">www.virtualbox.org</a>.</li>
+</ol>
+<div class="packt_tip">It would also be good to familiarize yourself with the detailed options available from the VirtualBox manual, which can be found at <a href="https://www.virtualbox.org/manual/ch01.html">https://www.virtualbox.org/manual/ch01.html.</a></div>
+<ol start="3">
+<li>Once you have downloaded the installer, locate it, and start the installation. As the application begins the installation, you will see the following dialog boxes. As of the time of writing this book, the version available was 5.1.8. When you are greeted with the dialog box seen in the following figure, select <span class="packt_screen">Next</span>:</li>
+</ol>
+<div style="color: black;font-size: 1em" class="CDPAlignCenter CDPAlign"><img height="241" width="309" class="alignnone size-full wp-image-837 image-border" src="assets/9ac09c4b-67f9-4685-bd9a-f1236e725842.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Initial installation screen</div>
+<ol start="4">
+<li>When given the option at the first <span class="packt_screen">Custom Setup</span> screen, as seen in the following figure, leave the default options in place, and select <span class="packt_screen">Next</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="335" width="430" class="alignnone size-full wp-image-838 image-border" src="assets/2184951a-a381-4d13-82dd-51383f531f06.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> First custom setup screen</div>
+<ol start="5">
+<li>At the second <span class="packt_screen">Custom Setup</span> screen, as seen in the following figure, review the options and determine which are appropriate to your preferences, and select <span class="packt_screen">Next</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="344" width="441" class="alignnone size-full wp-image-839 image-border" src="assets/123d80a2-f45a-4b58-885f-2a79a04425d2.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Second custom setup screen</div>
+<div class="packt_figref packt_tip">If you leave <span class="packt_screen">Register file associations</span>, this will configure your system to use VirtualBox, to open virtual disk images automatically.</div>
+<ol start="6">
+<li>After the basic configuration options have been decided, the setup will now begin to make changes to the host computer. One such step is the installation of the dedicated virtual network adapters that allow VirtualBox to provide different options in regard to how your systems use networking. During the installation of these drivers, you may experience a brief loss of connectivity; so when prompted, acknowledge this fact by selecting <span class="packt_screen">Yes.</span> </li>
+<li>Once ready to kick off the installation, select <span class="packt_screen">Install</span> from the next dialog box, and wait until the installation process is complete.</li>
+</ol>
+<div class="packt_infobox">During the installation process, you will be prompted to allow the installation of device drivers. These drivers are predominantly used for the virtual network devices. You may choose to trust device drivers signed by Oracle in the future, or leave that option unchecked.</div>
+<ol start="8">
+<li>Once the installation is complete, you will be given the option to finish, or finish and then start VirtualBox.</li>
+</ol>
+<div class="packt_tip">Depending on what other uses for this lab you may have in the future, this would be a good time to install the VirtualBox expansion set that includes support for the USB 2.0 and 3.0 USB controllers, host web camera, RDP services, and other features. It is recommended that you install these at this time before starting VirtualBox.</div>
+<ol start="9">
+<li>Once you start VirtualBox, you will need to confirm the settings for network connectivity. You are going to want to find the <span class="packt_screen">Preferences</span> item under the <span class="packt_screen">VirtualBox</span><strong> </strong>menu heading; now, select it. Then, select the network option along the top, and you will be presented with the following window:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="282" width="419" class="alignnone size-full wp-image-840 image-border" src="assets/084ea215-b58a-4c68-abf1-f7eb146be787.png"/></div>
+<div class="CDPAlignCenter CDPAlign packt_figref">VirtualBox preferences dialog - network</div>
+<ol start="10">
+<li>By default, <span class="packt_screen">NatNetwork</span> should already be created for you. However, if one is not displayed, click on the <span class="packt_screen">+</span> button on the top right to add one.</li>
+</ol>
+<div class="packt_tip">In the next section, we will be creating networks that exist only on your PC. Although these networks will only be seen on your PC, we strongly recommend that you use subnets that do not coincide with any of the existing networks that you may have access to.</div>
+<ol start="11">
+<li><span>Once added, review the setup of the network by clicking on the wrench icon, on the lower-right part, and you will be presented with the following dialog box. You can modify the IP subnet as needed. Ensure that <span class="packt_screen">Enable Network</span> is selected, and click on <span class="packt_screen">OK</span> to continue:</span></li>
+</ol>
+<div class="mce-root CDPAlignCenter CDPAlign"><img style="text-align: center;color: black;font-size: 1em" height="246" width="370" class="alignnone size-full wp-image-841 image-border" src="assets/bff62510-03e0-4890-a2ce-7a958904034f.png"/></div>
+<div class="packt_figref CDPAlignCenter">NatNetwork configuration dialog</div>
+<ol start="12">
+<li>Create our test network. Select <span class="packt_screen">Host-only Networks</span>. By default, no network is created, so click on the <span class="packt_screen">+</span> icon in the upper right-hand corner to create the <span class="packt_screen">vboxnet0</span> network:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="277" width="414" class="alignnone size-full wp-image-842 image-border" src="assets/52c1478a-9e6f-432b-a70f-0bbb76c149e6.png"/></div>
+<div class="CDPAlignCenter CDPAlign packt_figref"><span>Host-only networks dialog box</span></div>
+<ol start="13">
+<li class="mce-root">Ensure that the <span class="packt_screen">vboxnet0</span> interface is highlighted, and click on the wrench icon in the lower-right part of the screen. An IPv4 address will already be populated for you. If you are putting this into an existing lab network, or if this range is used in other places in your existing environment, feel free to designate a different network if necessary, as this will be your dirty network for testing purposes:</li>
+</ol>
+<div style="padding-left: 30px" class="mce-root CDPAlignCenter CDPAlign"><span> </span><img style="color: black;font-family: 'Times New Roman', times, serif;font-size: 10pt;text-align: center" height="251" width="419" class="alignnone size-full wp-image-843 image-border" src="assets/4d4bba63-ce58-4738-96b4-2c7037480812.png"/></div>
+<div style="padding-left: 30px" class="mce-root CDPAlignCenter CDPAlign packt_figref"><span>Host-only network adapter dialog</span></div>
+<ol start="14">
+<li>Let's review and modify the <span class="packt_screen">DHCP Server</span> section by selecting it. The defaults should be fine, but you can adjust them as you feel appropriate. </li>
+</ol>
+<div class="packt_figref packt_tip">Do not use the whole range for DHCP, as you may want to statically assign IP Addresses to servers on your dirty network.</div>
+<div style="color: black;font-size: 1em" class="CDPAlignCenter CDPAlign"><img height="236" width="396" class="alignnone size-full wp-image-844 image-border" src="assets/1c903e6f-d5dd-445b-89f4-2a34eb9f674e.png"/></div>
+<ol start="15">
+<li>Once these steps have been completed, your VirtualBox environment is ready for the next section.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How it works...</h1>
+                </header>
+            
+            <article>
+                
+<p>In this section, we will download and install the virtual compute environment, VirtualBox, to build the base of our test lab. We configured the basic network configurations and set up DHCP to help with dynamic host networking.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Installing Kali on VirtualBox</h1>
+                </header>
+            
+            <article>
+                
+<p>In this section, we will install Kali Linux into a virtual host in the VirtualBox environment, as we described in the previous section.</p>
+<p>Kali Linux (Kali) is based on the Debian operating system; and it is a self-contained environment that includes hundreds of tools that can be used for security auditing and testing purposes. It provides a platform, which you can use to build your penetration testing skills. It is one of the most widely used platforms for this purpose.</p>
+<p>Kali comes in a variety of different flavors – we will be using the full Kali install using the Gnome windows manager, inside an Oracle VirtualBox environment. However, Kali can be installed on any hypervisor; it can be non-destructively run from a USB or CD drive, on Raspberry Pi's, or other similar single board computers. It supports installation on both the Intel and Arm processors.</p>
+<p>When you first go to the Kali website and look at the downloads section (<a href="http://www.kali.org/downloads">www.kali.org/downloads</a>), it may be a bit overwhelming with all the options at first, so let's run through some of them, so you understand the differences.</p>
+<p>With reference to the following image, you will note that the top two entries, the Kali 64 bit and the Kali 32 bit, are the default full install of the operating system using the Gnome windows manager.</p>
+<p>The next two entries denoted by lightare a minimal install of Kali with the Gnome Windows manager for some space constrained systems. You can use this along with manually installing only the needed tools for your specific purposes.</p>
+<p>The next four entries denoted with e17, Mate, Xfce, and LXDE are full installs of the Kali operating system, each using a different graphical windows manager for its desktop interface. If you happen to have an older device, consider running Kali with the XFCE interface, as it requires less resources than Gnome. I would only suggest these if you are familiar with them, and opt not to use the default Gnome windows manager or have a specific purpose to do so such as resource constraints.</p>
+<p>The last two entries, armhf and armel, are for those two flavors of the arm architecture with armhf supporting the older ARMv4 instruction set, and the armel supporting the new version 7 instruction set.</p>
+<p>Please also note that the sha256 value is displayed. This allows you to validate that you have downloaded an unaltered version of the image:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="354" width="553" class="alignnone size-full wp-image-845 image-border" src="assets/3cc28e99-3d93-442e-bc8b-4c10bdd0f856.png"/></div>
+<div class="mce-root packt_figref CDPAlignCenter CDPAlign">Kali.org download page, image section, as of May 2017</div>
+<p class="mce-root">If you scroll down the page a bit more, you will see the section that allows you to download pre-prepared images that can automatically run without going through the setup process; in addition, it supports various hypervisors, or, in the case of ARM, has images and scripts for popular arm-based computers, such as Raspberry Pi's or other popular arm-based devices.</p>
+<div class="packt_figref packt_infobox">We will not be using these images as we want to walk you through a full installation and setup of Kali, so you have a better understanding of the process.</div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="169" width="460" class="alignnone size-full wp-image-846 image-border" src="assets/fbf8524e-de1d-49cd-9764-cc957303880f.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span> Kali.org download page, hypervisor and arm section, as of May 2017</span></div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p class="CDPAlignLeft CDPAlign">Before installing Kali Linux, we need to ensure the minimum requirements are met:</p>
+<ul>
+<li>Your computer is connected to the internet</li>
+<li>You have a minimum of 4 GB of RAM (8 GB is recommended)</li>
+<li>You have a minimum of 25 GB hard drive space available (80 GB is recommended for <a href="efecc8fd-4746-4428-9662-854d418bcba2.xhtml" target="_blank">Chapter 3</a>, <em>Vulnerability Analysis</em>)</li>
+<li>VirtualBox installation is complete and currently running</li>
+<li>Download the appropriate Kali disk image from <a href="https://www.kali.org/downloads/">https://www.kali.org/downloads/</a></li>
+</ul>
+<p>For our purposes, we will be using the Kali 64 bit version. Please refer to the recipe introduction for more details about these options.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's begin the process of installing Kali:</p>
+<ol>
+<li>Click on <span class="packt_screen">New</span> in the upper left-hand corner of the screen:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="89" width="588" class="alignnone size-full wp-image-847 image-border" src="assets/b641861c-65f8-48bc-a46b-407a345cb229.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Main VirtualBox screen</div>
+<ol start="2">
+<li>Name your virtual machine <kbd>Kali Linux</kbd>, select type as <span class="packt_screen">Linux</span>, and select the version as <span class="packt_screen">L</span><span class="packt_screen">inux 2.6 / 3.x / 4.x (64-bit)</span>. Press the <span class="packt_screen">Continue</span> button when complete:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="159" width="301" class="alignnone size-full wp-image-848 image-border" src="assets/c8cb7e7f-b089-4659-886c-e1c329a84ffb.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Name and operating system selection screen</div>
+<ol start="3">
+<li>Memory size: You will be presented with a slider for memory size, with the ability to manually enter a value: in the box type in <kbd>4096</kbd>. The 4 GB of memory will provide a smooth and responsive Kali install. Click on <span class="packt_screen">Continue</span><span class="packt_screen">.</span></li>
+<li>Hard disk: select <span class="packt_screen">Create a virtual hard disk now</span> and press on <span class="packt_screen">Create</span>.</li>
+</ol>
+<div class="packt_infobox">You will note that on this screen, it will refer to a recommended hard disk size of 8 GB. Please note that this is not sufficient for a full Kali install, and we will be allowed to change it in a future step.</div>
+<ol start="5">
+<li>Hard disk file type: take the default file type of <span class="packt_screen">VDI (VirtualBox Disk Image)</span>. Select <span class="packt_screen">Continue</span>.</li>
+</ol>
+<div class="packt_infobox">If you are interested in having easy compatibility with other hypervisors, you can select one of the other types available. <strong>Virtual Hard Disk</strong> (<strong>VHD</strong>) is widely used for Windows HyperV. <strong>Virtual Machine Disk</strong> (<strong>VMD</strong>) is widely used for VMware deployments.</div>
+<ol start="6">
+<li>Regarding the storage on physical hard disk, leave the default of <span class="packt_screen">Dynamically allocated</span> and click on <span class="packt_screen">Continue</span>.</li>
+</ol>
+<div class="packt_tip">If you are running an older spinning disk versus a solid state drive and have the available space on the disk, the recommendation would be to use <span class="packt_screen">Fixed size</span>.</div>
+<ol start="7">
+<li>File location and size: leave the name and location with the default, and either move the slider or enter <span><kbd>25.00</kbd> GB </span>directly into the box. Click on <span class="packt_screen">Create</span>.</li>
+</ol>
+<div class="mce-root packt_infobox">25 GB is a nice size for the install plus some extras. If you have limited space requirements please see our discussions of the various Kali image and installation options for more guidance in the introduction section of this recipe.</div>
+<ol start="8">
+<li>Click on <span class="packt_screen">Kali Linux</span> to highlight it; then click on <span class="packt_screen">Settings</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="441" width="590" class="alignnone size-full wp-image-849 image-border" src="assets/83aa10f1-e32d-49c9-b649-a060a7d7dec1.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">VirtualBox main screen - with Kali Linux VM shown</div>
+<ol start="9">
+<li>From here, we will select the <span class="packt_screen">Storage</span> option. Originally under <span class="packt_screen">Controller: IDE</span> it will say <span class="packt_screen">Empty</span>.<strong> </strong>Click to highlight <span class="packt_screen">Empty</span>. Click on the circular disk icon to the right of <span class="packt_screen">IDE Secondary Master</span>. An option dialog will be brought up, and select <span class="packt_screen">Choose Virtual Optical Disk File</span>. This will bring up a file manager dialog, which will allow you to find and select the Kali image you downloaded previously. Once completed, your screen should look similar to the following:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="436" width="585" class="alignnone size-full wp-image-850 image-border" src="assets/554f0dda-ef39-42d1-8224-cc7ec5a6df33.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Kali Linux VirtualBox settings storage option</div>
+<ol start="10">
+<li>Click on <span class="packt_screen">Network</span> and verify that <span class="packt_screen">Adapter 1</span> shows attached to <span class="packt_screen">NAT Network</span> with the name <span class="packt_screen">NatNetwork</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="253" width="508" class="alignnone size-full wp-image-1486 image-border" src="assets/d21b5489-9b6a-4649-a266-62b7b8126405.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali Linux - network adapter 1</div>
+<ol start="11">
+<li>Click on <span class="packt_screen">Adapter 2</span> and for <span class="packt_screen">Attached to</span> select <span class="packt_screen">Host-only Adapter</span> with the <span class="packt_screen">Name</span> as <span class="packt_screen">vboxnet0</span>, then click on <span class="packt_screen">OK</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="249" width="499" class="alignnone size-full wp-image-1485 image-border" src="assets/acd87e21-10e5-48b7-a0d3-3053961276e1.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"><span><span>Kali Linux - network adapter 2</span></span></div>
+<ol start="12">
+<li>We are brought back to the main manager screen. Let's click on <span class="packt_screen">Kali Linux</span> to highlight it, and then click on <span class="packt_screen">Start</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="433" width="580" class="alignnone size-full wp-image-852 image-border" src="assets/698e2b60-fe90-473f-9cc8-88991733b4d6.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">VirtualBox manager screen</div>
+<ol start="13">
+<li>We will now be brought to the main Kali installation screen. Let's click on <span class="packt_screen">Graphical install</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="407" width="546" class="alignnone size-full wp-image-853 image-border" src="assets/5cbc102b-ea86-48f7-ab77-11b10b224d3c.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Kali main installation screen</div>
+<ol start="14">
+<li>Select an appropriate language; for our use, we will select <span class="packt_screen">English</span> and click on <span class="packt_screen">Continue</span>:<span class="packt_screen"> </span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="458" width="567" class="alignnone size-full wp-image-854 image-border" src="assets/d1ba2cd1-ad87-44a9-8f00-2e7ddbb7e246.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Select a language screen</div>
+<div class="packt_tip">You may click on <span class="packt_screen">X</span> on the boxes at the top, if any, as they are only informational.</div>
+<ol start="15">
+<li>Select the proper keymap for your region. For our purposes, we will select <span class="packt_screen">American English</span>. Then, click on <span class="packt_screen">Continue</span>. The VM will then start by loading installer components. This should only take a moment or two based on the performance of your device. It will also detect and connect to your network automatically.</li>
+<li>You will be brought to a screen where you must enter the hostname. Let's simply call our install <kbd>Kali</kbd> and click on <span class="packt_screen">Continue</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="458" width="568" class="alignnone size-full wp-image-855 image-border" src="assets/7bbf35c1-6e68-4d5f-b420-94f3c95ce94a.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali configure network screen</div>
+<ol start="17">
+<li>The next screen will ask for your domain name. We will leave this blank, and simply click on <span class="packt_screen">Continue</span>.</li>
+<li>Our next screen will ask us to enter a root password. Select a strong password. Enter it for a second time to validate it, and click on <span class="packt_screen">Continue</span>. <span><span>The install will continue through some further steps. </span></span></li>
+<li>Once completed, you will be brought to a configure clock screen. Select the appropriate time zone; for our purposes, we will select <span class="packt_screen">Eastern</span>, <span>then click on</span> <span class="packt_screen">Continue</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="423" width="523" class="alignnone size-full wp-image-856 image-border" src="assets/8ad0872f-8e25-4076-80ff-b8c5db4064d6.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Configure clock screen</div>
+<ol start="20">
+<li>Partitioning disks: for simplicity, we will select <span class="packt_screen">Guided - use entire disk</span>,<strong> </strong>and click on <span class="packt_screen">Continue</span>: </li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="406" width="504" class="alignnone size-full wp-image-857 image-border" src="assets/c6d5cc88-1e47-4dd0-9afe-c97cf4b82fed.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Partition disks</div>
+<div class="packt_infobox">It's important to note that, for our example here, we want to just keep it straightforward. When actually setting this up for production testing, I have a dedicated laptop and use a fully encrypted LVM. This would be a recommendation when you move from working in a sandbox and go to actual engagements; as a pen tester, you need to protect your work as well as your client's information. Encryption, in that case, is paramount. </div>
+<div class="packt_infobox"><br/>
+<span>You may also want to keep in mind crossing borders with encrypted laptops and what the border security rights are. In the US, even for US citizens, they can ask for your passwords to get into the machines, remove them from your immediate control, and confiscate them. You may want to take situations like this into consideration; you can ship that encrypted laptop to and from the destination as needed, or complete your reports prior to leaving, and wipe the hard drive. Remember that deleting files is not securely wiping information - you can use a tool such as <strong>Darik's Boot and Nuke</strong> (<strong>DBAN</strong>) <a href="https://dban.org/">https://dban.org/</a></span><span> </span><span>and use <kbd>5220.22-m</kbd> wipe methods.</span></div>
+<ol start="21">
+<li>You will be brought to a partition disks screen for confirmation. Click on the disk to highlight it, and click on <span class="packt_screen">Continue</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="379" width="469" class="alignnone size-full wp-image-858 image-border" src="assets/11d54cd3-b8e3-4410-8d14-09050417c599.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Partition disks</div>
+<div class="packt_infobox">Please note that as you are inside a virtual machine when it references, your disk will be erased; it is only talking about the virtual partition and not your disk. If you have decided to load this on your PC as the native operating system, it will erase the entire drive.</div>
+<ol start="22">
+<li>Select <span class="packt_screen">All files in one partition (recommended for new users)</span> and click on <span class="packt_screen">Continue</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="420" width="523" class="alignnone size-full wp-image-859 image-border" src="assets/a8a2a720-9790-4d06-9614-db983dfce3c4.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Partition disks - screen 2</div>
+<ol start="23">
+<li>Select <span class="packt_screen">Finish partitioning and write changes to disk</span>. Click on <span class="packt_screen">Continue</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="417" width="517" class="alignnone size-full wp-image-860 image-border" src="assets/ce241e09-13b2-4b01-bd38-8a3eb0a9b7be.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Partition disks - screen 3</div>
+<ol start="24">
+<li>Click on <span class="packt_screen">Yes</span> to write changes to disk. Click on <span class="packt_screen">Continue</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="417" width="519" class="alignnone size-full wp-image-861 image-border" src="assets/29479adc-659e-422c-b26d-2a76763f08d7.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Partition disks - screen 4</div>
+<div class="packt_infobox">Your system will begin installing further. This process will take several minutes, so please be patient.</div>
+<ol start="25">
+<li>Upon the completion of the install, you will be asked whether you want to use a <span class="packt_screen">Network Mirror</span> for your package manager. Select <span class="packt_screen">Yes</span> and click on <span class="packt_screen">Continue</span>.</li>
+</ol>
+<ol start="26">
+<li>You will be asked to enter a proxy server if needed. Please enter any required information (for most installs, you will leave this blank). Click on <span class="packt_screen">Continue</span>. K<span>ali will continue to install packages.</span></li>
+<li>Select <strong><span class="packt_screen">Yes</span></strong> <span>to install the GRUB boot loader and click on</span> <span class="packt_screen">Continue</span>.</li>
+<li> Select the single drive listed to highlight it, and then click on <span class="packt_screen">Continue</span>.<strong> </strong><span>This will finish the installation:</span></li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="425" width="526" class="alignnone size-full wp-image-862 image-border" src="assets/c5aa3b6e-6ed2-48ac-9ecf-c40a251db320.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Install GRUB boot loader</div>
+<ol start="29">
+<li>After a short time, you will be brought back to the <span class="packt_screen">Finish the Installation</span> screen. This will ask to boot your computer to ensure that you have removed the installation media. Under most circumstances, VirtualBox or other hypervisors will honor the disk eject command issued when Kali finishes installation, but we need to be sure. At this point in time, do nothing:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="433" width="540" class="alignnone size-full wp-image-863 image-border" src="assets/d83d5620-51f9-4c98-b070-b19ad37b8a6e.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Kali Linux: finish the installation</div>
+<ol start="30">
+<li>Move the installation windows to the side to expose the main VirtualBox manager screen. Click on to highlight the <span class="packt_screen">Kali Linux</span> VM. Click on <span class="packt_screen">Settings</span>, and next click on <span class="packt_screen">Storage</span>.<strong> </strong>If under <span class="packt_screen">Controller: IDE</span>, you do not see <span class="packt_screen">Empty</span>, click on the install media shown to highlight it. Click on the icon at the far right that looks like a disk, and select <span class="packt_screen">Remove Disk from Virtual Drive.</span><strong> </strong>Click on <span class="packt_screen">OK</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="404" width="546" class="alignnone size-full wp-image-864 image-border" src="assets/f0b7db91-1337-4320-8c55-50f603bfd936.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> VirtualBox manager</div>
+<ol start="31">
+<li>Go back to the Kali Installation screen, and now click on <span class="packt_screen">Continue</span>. It will finish a couple items up, and reboot the virtual machine bringing you to the login screen:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="463" width="578" class="alignnone size-full wp-image-865 image-border" src="assets/d8db07ca-1054-43ce-b785-53bacd770cd4.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali Linux finish the installation</div>
+<div class="packt_figref packt_infobox">Remember that when logging into the system, your username is <kbd>root</kbd> and the password that you created during installation.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Using Kali Linux from bootable media</h1>
+                </header>
+            
+            <article>
+                
+<p>As you will see in the pages that follow, there are a tremendous number of uses for Kali Linux, and for these uses, it is not always practical to dedicate a device to one particular use case, as this would be a tremendous waste of resources. To address this, you can use the Kali Linux installation ISO downloaded in the previous section as a live CD as well; or you can maintain persistence with a live USB drive with persistence (with or without Linux Unified Key Setup encryption).</p>
+<p>We will show you how to create the Live USB (no persistence, no history maintained).</p>
+<p>Additional options such as live USB with persistence, live USB with encrypted persistence, and custom rolled Kali Linux ISO (which can be incorporated into the bootable USB options) can be found on the Kali Linux documentation wiki at <a href="http://docs.kali.org">http://docs.kali.org</a> under the section called <span class="packt_screen">02. Kali Linux Live</span>.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>In order to be able to complete this section successfully, you will need the following:</p>
+<ul>
+<li>USB Drive (8 GB or larger)</li>
+<li>USB disk imager (Win32DiskImager)</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's begin the process of creating a bootable Kali Linux USB device:</p>
+<ol>
+<li>Starting with the Kali Linux ISO file we downloaded in the earlier recipe, installing VirtualBox, we will use Win32DiskImager (<a href="https://sourceforge.net/projects/win32diskimager/">https://sourceforge.net/projects/win32diskimager/</a>) to create a bootable USB using the ISO. Download and install Win32DiskImager.</li>
+<li>Once installed, launch Win32DiskImager.</li>
+</ol>
+<div class="mce-root packt_tip">In order to format the USB drive and to write the raw image, Win32DiskImager needs admin permissions to run. You will need to give permission for it to run when the user access control dialog is presented.</div>
+<ol start="3">
+<li>Win32DiskImager will use IMG files, but we will tell it to use an ISO file as the source. From the application screen, click on the <span class="packt_screen">File Open</span> button, and when presented with the <span class="packt_screen">File Open</span> box, change the file filter to <span class="packt_screen">*.*</span> in the lower right, and navigate to the <span class="packt_screen">Kali Linux ISO</span> file.</li>
+<li>Select the drive letter of your USB device, and click on <span class="packt_screen">Write</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="175" width="340" class="alignnone size-full wp-image-866 image-border" src="assets/6d2cd64e-1e22-4fa2-898c-70f5c2644091.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">FW32 DiskImager example</div>
+<ol start="5">
+<li>Once the image has been written to the USB drive, you will be able to boot from this device on machines that support the USB bootable media. In this configuration, you now have a bootable USB drive that will from which the Kali Linux operating system will boot, as if it were installed onto the local disk. Across reboots, you will lose any documents you may have created. If you choose it, you can create an additional partition on the USB drive that will be persistent, and keep files and documents you may wish to keep. The step-by-step instructions on how to extend this functionality can be found on the Kali Linux documentation wiki at <a href="http://docs.kali.org">http://docs.kali.org</a> under <span class="packt_screen">02. Kali Linux Live</span>.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Upgrading Kali Linux</h1>
+                </header>
+            
+            <article>
+                
+<p>Now that we have a base install of Kali, let's run through any updates and upgrades required. This is something you want to do periodically with the system, to make sure you are using the most up-to-date information.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Before you start, ensure the following prerequisites:</p>
+<ul>
+<li style="font-weight: 400">Your computer is connected to the internet</li>
+<li style="font-weight: 400">Your installation of Kali is running</li>
+<li style="font-weight: 400">You are logged in as root</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>To bring an existing Kali Linux installation up to date, you will do the following:</p>
+<ol>
+<li>From the main Kali desktop, let's click on the terminal icon in the upper-left part of the screen:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img style="color: #333333;font-size: 1em;text-align: center" height="376" width="474" class="alignnone size-full wp-image-867 image-border" src="assets/6e9076dd-d3aa-44db-ab39-105b09766b48.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Kali Linux desktop</div>
+<div class="mce-root packt_infobox">Since we are already logged in as the root, we will not require any elevation of privileges using the <kbd>su</kbd> or <kbd>sudo</kbd> commands.</div>
+<ol start="2">
+<li>From the Command Prompt, type this:</li>
+</ol>
+<pre style="padding-left: 60px"><strong> apt-get update</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="153" width="448" class="alignnone size-full wp-image-1011 image-border" src="assets/9c15d565-e4d4-4d31-8cba-58a0b468f4c2.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Kali Linux Command Prompt</div>
+<div class="packt_infobox">After the initial installation, this process could take several minutes to complete.</div>
+<ol start="3">
+<li>Once complete, we will actually upgrade the system by entering the following at the Command Prompt:</li>
+</ol>
+<pre style="padding-left: 60px"><strong> apt-get upgrade</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="93" width="309" class="alignnone size-medium wp-image-233 image-border" src="assets/c8224362-5c6c-42e8-a852-da95884d0e49.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali Linux Command Prompt</div>
+<ol start="4">
+<li>After a minute or two, you will get a screen explaining what will be upgraded and what needs to be installed for the upgrades to occur. When ready to continue, type <kbd>Y</kbd> and press <em>Enter</em>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="45" width="400" class="alignnone size-full wp-image-1012 image-border" src="assets/13c8d7a7-e90c-4a14-b11e-c7e9635c9943.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali linux Command Prompt</div>
+<div class="packt_infobox">This process will take quite some time to complete, so please be patient as your system upgrades. </div>
+<ol start="5">
+<li>Once complete, we will reboot the system to ensure we have a fresh running environment. To continue, type this:</li>
+</ol>
+<pre style="padding-left: 60px"><strong> shutdown -r now</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="80" width="274" class="alignnone size-medium wp-image-237 image-border" src="assets/3bd375c8-7454-43bd-a0a5-29e17b54065b.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali Linux Command Prompt</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">There's more..</h1>
+                </header>
+            
+            <article>
+                
+<p>During the upgrade, you may get prompted for a couple of items such as following:</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">apt-listchanges: news section</h1>
+                </header>
+            
+            <article>
+                
+<p>You may get paused at an <span class="packt_screen">apt-listchanges: news section</span>, and you will be presented with a <span class="packt_screen">:</span> sign at the bottom; you can use your arrow keys to read the notice, and then just press <em>q</em> to quit and continue.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">The configuring macchanger</h1>
+                </header>
+            
+            <article>
+                
+<p>You can set up the system to change the mac automatically per boot. For our testing purposes, it's not required; however, if you are doing this in a live environment, you may want to configure it. Select <span class="packt_screen">No</span>:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="125" width="432" class="alignnone size-full wp-image-1013 image-border" src="assets/71c950ec-49e3-4876-856f-ab8283336383.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Configuring macchanger dialog box</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">The service restart</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">You maybe asked to restart services automatically to ease upgrades; select <span class="packt_screen">Yes</span>:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="177" width="423" class="alignnone size-full wp-image-1015 image-border" src="assets/be933699-5a3a-4405-810f-02b3df8d05ad.png"/></div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Understanding the advanced customization and optimization of Kali</h1>
+                </header>
+            
+            <article>
+                
+<p>Now that we have our Kali Linux virtual machine installed and updated, let's do a bit of customization.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Before you start, ensure the following prerequisites:</p>
+<ul>
+<li style="font-weight: 400">Your computer is connected to the internet</li>
+<li style="font-weight: 400">Your installation of Kali is running</li>
+<li style="font-weight: 400">You are logged in as root</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>There are several customization and advanced settings that we can perform.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Upgrading the Linux kernel</h1>
+                </header>
+            
+            <article>
+                
+<p>To update the Linux kernel, you will do the following:</p>
+<ol>
+<li>Open a terminal window by selecting its icon on the left tool bar, and enter the following:</li>
+</ol>
+<pre><strong>       apt-get dist-upgrade</strong></pre>
+<ol start="2">
+<li>Follow the prompts to complete the installation, and reboot the virtual machine when complete.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Removing unneeded packages</h1>
+                </header>
+            
+            <article>
+                
+<p>To remove unneeded packages, we will do the following:</p>
+<ol>
+<li>Open a terminal window by selecting its icon on the left tool bar, and enter the following:</li>
+</ol>
+<pre style="padding-left: 60px"><strong> apt autoremove </strong><br/><strong> exit</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Adjusting or disabling the screen lock</h1>
+                </header>
+            
+            <article>
+                
+<p>During the use of this book, you may find yourself leaving your system to run commands or in between sections. During this time, the screen may lock and force you to login in more frequently than you would prefer. To change this behavior, do the following:</p>
+<ol>
+<li>In the upper right-hand corner of the screen, click on the down arrow, which will provide various pieces of information about the current state of the computer. In the lower left-hand corner of that box, click on the settings icon:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="516" width="652" class="alignnone size-full wp-image-1016 image-border" src="assets/b8395902-219f-4ba0-83af-a0cd5a007a98.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">System status box</div>
+<ol start="2">
+<li>From the <span class="packt_screen">All Settings</span> screen, click on the purple privacy icon in the first row to display the privacy dialog box, then select the <span class="packt_screen">Screen Lock</span> entry:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="201" width="435" class="alignnone size-full wp-image-1017 image-border" src="assets/84984b0a-30c6-4422-9ad4-2a8cae9832c5.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> Privacy box</div>
+<ol start="3">
+<li>Adjust the settings as desired; in the following example I have set the timer to <span class="packt_screen">1 hour</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="179" width="301" class="alignnone size-medium wp-image-304 image-border" src="assets/0bca6781-f215-4e95-b041-39b8ae35cf77.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Screen Lock</div>
+<ol start="4">
+<li>Finish by clicking on the <span class="packt_screen">Xs</span> at the top until you are back at the main screen.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Correcting the Ethernet interface configuration</h1>
+                </header>
+            
+            <article>
+                
+<p>Since only one interface can be on at a time, we will set up networking as follows:</p>
+<ol>
+<li>In the upper right-hand corner of the screen, click on the down arrow, which will provide various pieces of information about the current state of the computer. In the lower left-hand corner of that box, click on the settings icon:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="487" width="616" class="alignnone size-full wp-image-1018 image-border" src="assets/7bd164cd-a409-482c-a4fd-484b4f55af70.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">System status box</div>
+<ol start="2">
+<li>Next to one of the interfaces, select the arrow icon, which will expose another level of menus. Click on <span class="packt_screen">Wired Settings</span>:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="259" width="163" class="alignnone size-medium wp-image-305 image-border" src="assets/6bca4193-b868-4bbf-9856-68632fffbf14.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">System status box</div>
+<ol start="3">
+<li>Select <span class="packt_screen">Add Profile</span> from the bottom:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="197" width="427" class="alignnone size-full wp-image-1020 image-border" src="assets/21693fc9-4cc0-4f69-845a-1813229f22b3.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Network window</div>
+<ol start="4">
+<li>From the <span class="packt_screen">New Profile</span> window, select <span class="packt_screen">Identity</span> on the left; and for <span class="packt_screen">Name</span>, enter <kbd>Host-Only Network</kbd>:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="243" width="301" class="alignnone size-full wp-image-1021 image-border" src="assets/342346cd-188b-49ce-8b18-41f27a0118cc.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">New Profile window</div>
+<ol start="5">
+<li>In the left column, click on <span class="packt_screen">IPv4</span> and scroll all the way to the bottom and put a check in the box labeled <span class="packt_screen">Use this connection only for resources on its network</span>, and then click on <span class="packt_screen">Add</span>:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="245" width="303" class="alignnone size-full wp-image-1022 image-border" src="assets/6e86fb2c-6037-47ce-9ac4-1762571f5628.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">New Profile window</div>
+<ol start="6">
+<li>Assign eth1 to the host-only network that we just created by clicking on eth1 to highlight it. Click on host-only network. Verify that eth0 is assigned to the wired connection network by clicking on eth1.<strong> </strong>You should now be able to have both interfaces enabled simultaneously:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="308" width="505" class="alignnone size-full wp-image-1023 image-border" src="assets/d735027f-70cf-494d-a945-56b93df948dd.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Network window</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Connecting and disconnecting Ethernet interfaces</h1>
+                </header>
+            
+            <article>
+                
+<p>Kali Linux makes it easy to manage network connections using network manager. This is how you will connect and disconnect network interfaces:</p>
+<ol>
+<li>In the upper right-hand corner of the screen, click on the down arrow, which will provide various pieces of information about the current state of the computer:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="450" width="569" class="alignnone size-full wp-image-1024 image-border" src="assets/b465ae64-6ca2-47b4-83d1-aa831eda8f3c.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">System status box</div>
+<ol start="2">
+<li>You will see entries for both your eth0 and eth1 interfaces. If you have followed our guide, the eth0 network is connected to the NAT network and allows access to the internet and networks outside of your virtual machine. The eth1 interface is the host-only network, which connects to your test machine. You can toggle these on and off as required.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Installing Windows machines</h1>
+                </header>
+            
+            <article>
+                
+<p>Creating a lab environment where we can safely perform security testing is key to being able to develop a repeatable set of skills. In this section, we will cover the installation and configuration of Windows desktop machines, as well as an active directory server.</p>
+<p>As the Microsoft Windows operating system is the most commonly employed operating system, we will be looking to test the windows platform with Kali Linux in our lab.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>To complete this section, you will need the following:</p>
+<ol>
+<li>Installation media for Windows 7 and Windows server 2008. Due to licensing restrictions, we are unable to provide installation media for Microsoft software products.</li>
+</ol>
+<div class="packt_infobox">These versions are preferable as they are old enough to have well-documented vulnerabilities and low resource requirements. Since Windows 7 for desktops and Windows server 2008 are most commonly seen as of the time of the writing of this book, we recommend these be used for your test lab, and will be used as examples in this book.</div>
+<ol start="2">
+<li>A virtual machine platform such as VirtualBox which we configured in previous steps.</li>
+</ol>
+<ol class="3" start="3">
+<li>Starting from your VirtualBox interface, select the <span class="packt_screen">New</span> button from the upper-left corner to create a new virtual host for Windows to be installed into. You will need to use a system template that matches the version of Windows you are going to be installing:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign packt_figref"><img height="300" width="263" class="alignnone size-full wp-image-872 image-border" src="assets/98c55077-4947-46c7-8ecf-375ed2786f19.png"/></div>
+<div class="CDPAlignCenter CDPAlign packt_figref">Create new virtual machine</div>
+<ol start="4">
+<li style="font-weight: 400">Since this machine will be for testing only, assign it 1 or 2 gigabytes of memory, and use the default values for all of the remaining options by clicking on <span class="packt_screen">Next</span> until you reach the end of the configuration section.</li>
+<li style="font-weight: 400">Once the initial virtual host has been configured, you will need to go back into the settings to tell the virtual host to boot from the installation media. Right-click on the virtual system that you just created and go to settings. Once in the settings dialog window, select <span class="packt_screen">Storage</span> from the menu on the left, highlight the topmost controller device, click on the <span class="packt_screen">Add Storage Attachment</span> button, and select <span class="packt_screen">Add Optical Drive</span>.</li>
+<li style="font-weight: 400">From the next dialog box, select <span class="packt_screen">Use Existing</span> when asked whether you would like to leave the storage option empty. When prompted, navigate to your Windows installation media, and click on <span class="packt_screen">Open</span>; then complete the configuration session by clicking on <span class="packt_screen">OK</span>.</li>
+<li style="font-weight: 400">Start your new virtual machine by clicking on the parentheses start button.</li>
+<li style="font-weight: 400">From this point, you will follow the default operating system installation process specific to the version of Windows you have selected. When given the option of installing additional services, use only the default options selected.</li>
+</ol>
+<ol start="9">
+<li style="font-weight: 400">During installation, we will name our systems something easy to remember. We will name the desktop clients <kbd>Windows Desktop 1</kbd> and <kbd>Windows Desktop 2</kbd>, and the server <kbd>AD Server</kbd>.</li>
+<li class="mce-root"><span>When prompted to configure the Windows update services, ensure that you do not enable the automatic installation of Windows updates:</span></li>
+</ol>
+<div style="padding-left: 30px" class="CDPAlign CDPAlignCenter packt_figref"><br/>
+<img height="365" width="440" class="alignnone size-full wp-image-871 image-border" src="assets/6a12a112-3238-4c09-a635-97bfec3fab34.png"/> </div>
+<div style="padding-left: 30px" class="CDPAlign CDPAlignCenter packt_figref">De-selection of automatic Windows updates</div>
+<div class="packt_tip packt_infobox">On certain platforms, you may select the option to download but not install updates if you so choose. This will allow you to evaluate the security of the system, both prior to and after the installation of Windows updates. You maybe asked to create a password for the administrative user. If this is the case, then create a user and password that will be easy to remember and refer to in future chapters.</div>
+<ol start="11">
+<li style="font-weight: 400">Once you have completed the installation of Windows 7, reboot the machine, and login when presented with the login screen.</li>
+<li style="font-weight: 400">Once logged in, change the machine name to <kbd>Win7_Desktop_1</kbd>, and reboot.</li>
+<li style="font-weight: 400">Go into the virtual host settings, and ensure that the network adapter is assigned to the host-only network that we created earlier in this section.</li>
+<li style="font-weight: 400">Now that the machine has been properly configured, we will clone it to create a second instance of Windows 7 desktop. </li>
+</ol>
+<div class="packt_tip">Cloning of machines makes it very easy to create a gold image and working copies from this image. It is different than snapshots, which create point-in-time references that can be rolled back to if need be.</div>
+<ol start="15">
+<li>To create a clone of the Windows desktop machine, you will need to power it up using the <span class="packt_screen">Start</span> option. Once started, do not log into the machine; but rather from the desktop view, from the top menu bar, select <span class="packt_screen">Machine</span> | <span class="packt_screen">Take Snapshot...</span> to start the snapshot creation process:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="158" width="243" class="alignnone size-full wp-image-870 image-border" src="assets/403e1fad-d041-477d-bc37-2a6a2cc7954e.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Create snapshot</div>
+<ol start="16">
+<li>In the next screen, you will be given the opportunity to name and provide details about the purpose of this snapshot. Since it is likely that we will be returning to this state frequently, name it <kbd>Initial Installation</kbd>, and in the description, indicate that this is a clean Windows build, and that the snapshot was taken before AD domain membership:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="262" width="240" class="alignnone size-full wp-image-869 image-border" src="assets/d4b8caac-ed55-4184-9edf-8cf262571410.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Creating a VirtualBox snapshot</div>
+<ol start="17">
+<li style="font-weight: 400">VirtualBox will now generate a snapshot. Depending on the system, this may take several minutes. Once complete, power down the system using the power buttons on the lower-right part of the login screen – do not login at this time.</li>
+<li>Now that the initial host has been set up, we will need to create the clone of this device. To do so, right-click on <span class="packt_screen">Windows 7 Desktop 1</span>, and select <span class="packt_screen">Clone...</span> from the dropdown menu:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="106" width="233" class="alignnone size-full wp-image-868 image-border" src="assets/770c1844-2828-4245-bfe7-f549a84f93b0.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Start cloning process</div>
+<ol start="19">
+<li style="font-weight: 400">When prompted, name this <kbd>Windows Desktop 2</kbd>, and select the option to reinitialize the MAC address of all available cards. Click on <span class="packt_screen">Next</span>.</li>
+<li style="font-weight: 400">When given the option to do so, select <span class="packt_screen">Full Clone</span> as the clone type, and click on <span class="packt_screen">Next</span>.</li>
+<li style="font-weight: 400">Since we will be creating a new snapshot of this system in a subsequent step, choose the option for <span class="packt_screen">Current Machine State</span> as the options for snapshots, and click on <span class="packt_screen">Next</span>. This will start the cloning process, which may take several minutes.</li>
+<li style="font-weight: 400">Once completed, we will start this host as well as we did with the first <span class="packt_screen">Windows 7 Desktop 1</span>, but this time, we will log in when prompted to do so.</li>
+<li style="font-weight: 400">Once logged in, you will need to change the name of the machine to <kbd>Win7_Desktop_2</kbd>. Allow the machine to reboot.</li>
+<li style="font-weight: 400">Once back at the login screen, create a snapshot as we described earlier.</li>
+<li style="font-weight: 400">We will now install the Windows 2008 server in the same manner we did the Windows 7 desktops, ensuring that the device is assigned to the host-only network that we created in a previous section.</li>
+<li style="font-weight: 400">With all the default options chosen, install Windows 2008, and log in for the first time. The first time you log in, you will be presented with the <span class="packt_screen">Initial Configuration Tasks</span> tool. From this tool, configure only the following:</li>
+</ol>
+<table style="width: 591px;height: 429px">
+<tbody>
+<tr>
+<td>
+<p>Set time zone</p>
+</td>
+<td>
+<p>Set to your timezone</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Configure networking</p>
+</td>
+<td>
+<p>Set the IP information as follows:<br/>
+IP Address: <kbd>192.168.56.10</kbd><br/>
+Subnet Mask: <kbd>255.255.255.0</kbd><br/>
+Gateway: <kbd>192.168.56.1</kbd><br/>
+DNS Server: <kbd>192.268.56.1</kbd></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Computer name and domain</p>
+</td>
+<td>
+<p>Computer name: <kbd>AD-Server</kbd><br/>
+Leave set to workgroup for now</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="packt_figref CDPAlignCenter CDPAlign">Initial Windows server configuration:</div>
+<ol start="27">
+<li>Reboot the server after these options are set, and log in. The <span class="packt_screen">Initial Configuration Tasks</span> wizard will open again. Scroll down to the section named <span class="packt_screen">Add Roles</span>; here we will add the DNS and DHCP roles to this server.</li>
+</ol>
+<p> </p>
+<ol start="28">
+<li style="font-weight: 400">Select all the default options, except the following:</li>
+</ol>
+<table>
+<tbody>
+<tr>
+<td>
+<p><strong>Page</strong></p>
+</td>
+<td>
+<p><strong>Option</strong></p>
+</td>
+<td>
+<p><strong>Setting</strong></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Specify IPv4 DNS Server Settings</p>
+</td>
+<td>
+<p>Parent Domain</p>
+</td>
+<td><kbd>kalicookbook.local</kbd></td>
+</tr>
+<tr>
+<td>
+<p>Add of Edit DHCP Scopes (click on <span class="packt_screen">ADD</span>)</p>
+</td>
+<td>
+<p>Scope Name</p>
+</td>
+<td>
+<p>Lab</p>
+</td>
+</tr>
+<tr>
+<td/>
+<td>
+<p>Starting IP Address</p>
+</td>
+<td><kbd>192.168.56.100</kbd></td>
+</tr>
+<tr>
+<td/>
+<td>
+<p>Ending IP Address</p>
+</td>
+<td><kbd>192.168.56.150</kbd></td>
+</tr>
+<tr>
+<td/>
+<td>
+<p>Default Gateway</p>
+</td>
+<td><kbd>192.168.56.1</kbd></td>
+</tr>
+<tr>
+<td>
+<p>Configure IPv8 Stateless Mode</p>
+</td>
+<td>
+<p>Select the DHCPv6 Stateless Mode...</p>
+</td>
+<td>
+<p>Disable DHCPv6 stateless mode for this server</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="CDPAlignCenter CDPAlign packt_figref"> Initial role configuration</div>
+<ol start="29">
+<li style="font-weight: 400">Once all the preceding has been completed, reboot the server, and log into each of the desktops to make sure that they get an IP address from the AD server and that you can ping each host by their IP addresses. We will configure DNS in a later step.</li>
+<li style="font-weight: 400">After you have confirmed that network connectivity between your hosts is working properly, close all open windows, and create a snapshot as we have done in the past.</li>
+<li style="font-weight: 400">With the desktop machines created and functioning, you will need to enable basic services on the AD server. After logging into the server, you will be presented with the <span class="packt_screen">Initial Configuration Tasks</span> wizard again. Once presented, scroll down to <span class="packt_screen">Customize this Server</span> section, and click on <span class="packt_screen">Add Role</span>.</li>
+<li style="font-weight: 400">In the section called <span class="packt_screen">Select Server Roles</span>, select and install the following:<br/>
+<ul>
+<li style="font-weight: 400">File services</li>
+<li style="font-weight: 400">Remote desktop services</li>
+<li>Web server (IIS)</li>
+</ul>
+</li>
+</ol>
+<div class="mce-root packt_infobox"><span>If you are prompted to include dependencies, accept, and continue.</span></div>
+<ol start="33">
+<li style="font-weight: 400">As you progress, you will need to select certain options for each of the roles added previously:
+<ol>
+<li style="font-weight: 400">Remote desktop services:
+<ul>
+<li style="font-weight: 400">Select only <span class="packt_screen">Remote Desktop Session Host</span> and click on <span class="packt_screen">Next</span></li>
+<li style="font-weight: 400">Select <span class="packt_screen">Do Note Require Network Level Authentication</span></li>
+<li style="font-weight: 400">Select <span class="packt_screen">Configure Later</span> to defer the licensing of the remote desktop until a later date (120 days max)</li>
+<li style="font-weight: 400">Permitted user groups: Leave administrators in place and continue</li>
+</ul>
+</li>
+<li style="font-weight: 400">Leave all the remaining options as the default and continue. Reboot when prompted to do so, and log in once more; you will automatically return to the <span class="packt_screen">Add Roles</span> wizard. Confirm that the installation was successful.</li>
+</ol>
+</li>
+<li style="font-weight: 400">Return to the <span class="packt_screen">Add Role</span> wizard, and select this time to install <span class="packt_screen">Active Directory Domain Services.</span> Click on <span class="packt_screen">Install AD DS Anyway (not recommended)</span> when presented with the dialog box confirming installation on a domain controller, and accept any dependencies that maybe required. Continue through the installation process with the remaining default options. When complete, select <span class="packt_screen">Close</span>.</li>
+<li style="font-weight: 400">In the left menu, select <span class="packt_screen">Active Directory Domain Services;</span> and in the right pane, select <span class="packt_screen">Run the Active Directory Domain Services Installation Wizard (dcpromo.exe)</span>. As you go through the wizard, select the default options, except for the following:
+<ul>
+<li style="font-weight: 400">Choose a deployment configuration: Create new domain in a new forest</li>
+<li style="font-weight: 400">FQDN of the forest root domain: <kbd>kalicookbook.local</kbd></li>
+<li style="font-weight: 400">Forest functional model: Windows server 2008 R2</li>
+<li style="font-weight: 400">Once prompted, reboot. Confirm there are no errors</li>
+</ul>
+</li>
+<li style="font-weight: 400">You will now need to log into each of the Windows 7 desktops and join them to the <kbd>kalicookbook.local</kbd> domain.</li>
+<li style="font-weight: 400">Log into each machine and ensure that Windows updates are disabled. Make sure the Windows firewall is also disabled.</li>
+<li style="font-weight: 400">Create snapshots of each to give us a foundation to work from as we progress through this book. Snapshots will allow us to go back to pre-determined points in time.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Installing Metasploitable</h1>
+                </header>
+            
+            <article>
+                
+<p>Metasploitable is a key component of our testing environment. It is based on the Ubuntu Linux operating system and is made specifically exploitable for penetration testing purposes. This VM should never be exposed directly to the internet, and, for our purposes, we will use the host-only network to bind to.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p><span>Before you start, ensure the following prerequisites:</span></p>
+<ul>
+<li>The VirtualBox hypervisor is running</li>
+<li>The Kali Linux VM is shut down</li>
+<li>You download the Metasploitable image from <a href="https://sourceforge.net/projects/metasploitable/files/Metasploitable2/">https://sourceforge.net/projects/metasploitable/files/Metasploitable2/</a></li>
+<li>Take note that the default username, and the password is <kbd>msfadmin</kbd> for both</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>The installation of Metasploitable is done in the following manner:</p>
+<ol>
+<li>Start by unzipping the Metasploitable ZIP (at the time of publication this was <kbd>metasploitable-linux-2.0.0.zip</kbd>) file that you previously downloaded.</li>
+<li>Change the directory name that was extracted to <kbd>metasploitable</kbd>.</li>
+<li>Find where your main VirtualBox storage is.</li>
+<li>Windows default: <kbd>c:\users\&lt;username&gt;\virtualBox VMs</kbd></li>
+<li>Mac default: <kbd>/users/&lt;username&gt;/VirtualBox VMs</kbd></li>
+</ol>
+<div class="packt_tip">You should see a directory under the main path for the Kali Linux VM you installed earlier.</div>
+<ol start="6">
+<li>In this directory, create a new folder called <kbd>Virtual Disks</kbd>. This will make the following path:</li>
+</ol>
+<p style="padding-left: 90px"><kbd>...\VirtualBox VMs\Virtual Disks.</kbd></p>
+<p> </p>
+<ol start="7">
+<li class="mce-root">Move the <kbd>metasploitable</kbd> directory that was created when you unzipped the file earlier under the <kbd>\Virtual Disks\</kbd> directory you created.</li>
+<li class="mce-root">Open the VirtualBox manager application, and select <span class="packt_screen">New</span> <span>from the top-left corner. To quicken the installation if we are not in expert mode, let's select it by clicking on <span class="packt_screen">Expert Mode</span> at the bottom.</span></li>
+</ol>
+<div class="packt_tip">You will know you are in <span class="packt_screen">Expert Mode</span> if you see an option for <span class="packt_screen">Guided Mode</span> at the bottom.</div>
+<div class="CDPAlignCenter CDPAlign"><img height="303" width="523" class="alignnone size-full wp-image-1025 image-border" src="assets/dd84d3cf-b01b-45fd-874c-5f2e93150854.png"/></div>
+<ol start="9">
+<li>Let's name our VM <kbd>Metasploitable</kbd>. Select <span class="packt_screen">Type</span> as <span class="packt_screen">Linux</span> and <span class="packt_screen">Version</span> as <span class="packt_screen">Linux 2.6 / 3.x / 4.x (64-bit)</span>, enter <kbd>2048</kbd> for the memory size.</li>
+<li>Select <span class="packt_screen">Use an existing virtual hard disk file</span>, <span>and click on the file icon on the right; and browse for the</span> <kbd>metasploitable.vmdk</kbd><span> file under the directory from the prior step; then click on</span> <span class="packt_screen">Create</span>.</li>
+<li>We will now be brought back to the main VM VirtualBox manager screen. Click on the <kbd>Metasploitable</kbd> <span>VM to highlight it, and then click on <span class="packt_screen">S</span></span><span class="packt_screen">ettings</span><span><span>.</span></span></li>
+</ol>
+<p> </p>
+<ol start="12">
+<li>Click on <span class="packt_screen">Network</span> <span>and, for</span> <span class="packt_screen">Adapter 1</span>, <span>select the</span> <span class="packt_screen">Host-only Adapter</span> <span>and the <span class="packt_screen">Name</span></span> as <span class="packt_screen">vboxnet0</span>; <span>lastly, click on</span> <span class="packt_screen">OK</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="201" width="402" class="alignnone size-full wp-image-1026 image-border" src="assets/4db944a8-91b0-40e8-a498-d233dbcf30d7.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Metasploitable - network dialog</div>
+<ol start="13">
+<li>You will now be brought back to the main VirtualBox manager screen. Click on <span class="packt_screen">Metasplotab</span><span class="packt_screen">le</span> to highlight it and click on <span class="packt_screen">Start</span>.</li>
+<li>Once the VM is started, you will be brought to the main login screen:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="279" width="452" class="alignnone size-full wp-image-1027 image-border" src="assets/69698116-c63f-41c1-a1c3-8d19b98b472f.png"/></div>
+<div class="CDPAlignCenter CDPAlign packt_figref"> Metasploitable main login screen</div>
+<div class="packt_tip">To shut down this VM, you have to log in and issue the command, <kbd>sudo shutdown -h now</kbd>. Although the VM itself shuts down, it will not end the VirtualBox session. You must select the <span class="packt_screen">Red X</span> at the top of the screen. This will provide a dialog box; select the radio button <span class="packt_screen">Power off the machine</span> and click on <span class="packt_screen">Ok</span>.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Installing OWASP-BWA</h1>
+                </header>
+            
+            <article>
+                
+<p>The <strong>Open Web Application Security Project</strong> (<strong>OWASP</strong>), is a global community that focuses on security awareness and the development of secure applications. While this may be thought of as a single application or platform, OWASP is actually a collection of projects that can focus on any number of aspects of applications security. For this recipe, we will focus on the OWASP <strong>Broken Web Application</strong> (<strong>BWA</strong>) project to provide us with a standardized platform for the testing of our tools in later chapters.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>To install the OWASP-BWA image, we will need to do the following:</p>
+<ul>
+<li>Download the latest version of OWASP-BWA in compressed form from <a href="https://sourceforge.net/projects/owaspbwa/">https://sourceforge.net/projects/owaspbwa/</a></li>
+<li>Have VirtualBox installed and configured</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>To install OWASP-BWA into our VirtualBox environment, we will do the following:</p>
+<ol>
+<li>Unzip the ZIP file containing the OWASP-BWA files into a location you will reference in the next few steps.</li>
+<li>From the console of VirtualBox, on the upper left, we will select the <span class="packt_screen">New</span> icon to begin the creation of a new virtual machine.</li>
+</ol>
+<p> </p>
+<ol start="3">
+<li>We will name our new virtual machine <kbd>OWASP-BWA</kbd>, and define it as a 64 bit Ubuntu Linux system:
+<div class="CDPAlignCenter CDPAlign"><img height="201" width="274" class="image-border" src="assets/a29a7d39-f16b-486d-92c6-9c5cd576d401.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Creating a virtual machine for OWASP-BWA</div>
+</li>
+<li>Leave the default memory allocation as 1024 MB, and click <span class="packt_screen">Next</span>.</li>
+<li>You will now select <span class="packt_screen">Use existing virtual hard disk</span> and navigate to the directory where you unpacked OWASP-BWA. From that directory, select the following and click <span class="packt_screen">Create</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="135" width="392" class="image-border" src="assets/b8d7ae07-6ca8-4cb6-ae7e-787a27ea98e8.png"/></div>
+<div class="CDPAlignCenter CDPAlign packt_figref">Selection of OWASP-BWA virtual disk</div>
+<ol start="6">
+<li>Once you have created the virtual machine, we will need to make sure that the correct network interface has been designated. Right-click on on our new host on the left, and select <span class="packt_screen">Settings</span>. Navigate to <span class="packt_screen">Network</span> and ensure that the <span class="packt_screen">Adapter 1</span> is attached to the <span class="packt_screen">Host-only Adapter</span>, and that the other adapters are not enabled:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="329" width="497" class="image-border" src="assets/159a7e0d-1f60-46e1-995b-aa2b730bb2fd.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Designating the network adapter for OWASP-BWA in VirtualBox</div>
+<ol start="7">
+<li>Once complete, start the new virtual machine and ensure that it boots properly.</li>
+</ol>
+<div class="packt_infobox">It is very likely that fsck will run when first started due to the length of time since last run. You can allow this to complete to ensure there is no observed disk corruption - it only takes a few minutes.</div>
+<ol start="8">
+<li>Once fully booted, login as <kbd>root</kbd> with the password <kbd>owaspbwa</kbd>.</li>
+<li>Ensure that you are receiving an IP address from DHCP by issuing <kbd>ifconfig eth0</kbd> from the command line.</li>
+</ol>
+<p> </p>
+<ol start="10">
+<li>Open a web browser, and navigate it to the IP address of the OWASP-BWA guest. Ensure that you are able to see the different projects within OWASP-BWA. If you are able to see the following web page, you have successfully configured OWASP-BWA:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="457" width="457" class="image-border" src="assets/66d8421f-ede6-4cd5-8f31-341e4f40b749.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Confirmation of services running on OWASP-BWA</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Understanding hack me and other online resources</h1>
+                </header>
+            
+            <article>
+                
+<p>There are several other resources that can be accessed either online or installed in VirtualBox that you can use to hone your penetration testing skills. The following list contains few resources you may want to explore as a supplement to the exercises in this book:</p>
+<table>
+<tbody>
+<tr>
+<td>
+<p>hack.me</p>
+</td>
+<td>
+<p>Easy to advanced challenges</p>
+</td>
+<td>
+<p><a href="https://hack.me/">https://hack.me/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Hack this site</p>
+</td>
+<td>
+<p>Easy to advanced challenges</p>
+</td>
+<td>
+<p><a href="https://www.hackthissite.org/">https://www.hackthissite.org/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Vulnerable by design</p>
+</td>
+<td>
+<p>Easy to advanced challenges</p>
+</td>
+<td>
+<p><a href="https://www.vulnhub.com/">https://www.vulnhub.com/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Bee-Box</p>
+</td>
+<td>
+<p>Vulnerable web sites</p>
+</td>
+<td>
+<p><a href="https://sourceforge.net/projects/bwapp/files/bee-box/">https://sourceforge.net/projects/bwapp/files/bee-box/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Moth</p>
+</td>
+<td>
+<p>Vulnerable web applications</p>
+</td>
+<td>
+<p><a href="http://www.bonsai-sec.com/en/research/moth.php">http://www.bonsai-sec.com/en/research/moth.php</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>RasPwn</p>
+</td>
+<td>
+<p>Vulnerable Raspberry Pi image</p>
+</td>
+<td>
+<p><a href="http://raspwn.org/">http://raspwn.org/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>OWASP-BWA</p>
+</td>
+<td>
+<p>OWASP broken web application</p>
+</td>
+<td>
+<p><a href="https://www.owasp.org/index.php/OWASP_Broken_Web_Applications_Project">https://www.owasp.org/index.php/OWASP_Broken_Web_Applications_Project</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Hackfest 2016 Sedna</p>
+</td>
+<td>
+<p>Medium difficulty - root access</p>
+</td>
+<td>
+<p><a href="https://www.vulnhub.com/entry/hackfest2016-sedna,181/">https://www.vulnhub.com/entry/hackfest2016-sedna,181/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Hackfest 2016 Quaoar</p>
+</td>
+<td>
+<p>Easy machine to own</p>
+</td>
+<td>
+<p><a href="https://www.vulnhub.com/entry/hackfest2016-quaoar,180/">https://www.vulnhub.com/entry/hackfest2016-quaoar,180/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Pentester Lab: XSS and MySQL File</p>
+</td>
+<td>
+<p>Easy SQL injection example</p>
+</td>
+<td>
+<p><a href="https://www.vulnhub.com/entry/pentester-lab-xss-and-mysql-file,66/">https://www.vulnhub.com/entry/pentester-lab-xss-and-mysql-file,66/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>SQLInjection to Shell</p>
+</td>
+<td>
+<p>Intermediate - SQL injection to shell</p>
+</td>
+<td>
+<p><a href="https://www.vulnhub.com/entry/pentester-lab-from-sql-injection-to-shell-ii,69/">https://www.vulnhub.com/entry/pentester-lab-from-sql-injection-to-shell-ii,69/</a></p>
+</td>
+</tr>
+<tr>
+<td>
+<p>Damn vulnerable web application</p>
+</td>
+<td>
+<p>Vulnerable - PHP/MySQL application</p>
+</td>
+<td><a href="https://github.com/Hackademic/hackademic">https://github.com/Hackademic/hackademic</a></td>
+</tr>
+<tr>
+<td>
+<p>Hackxor</p>
+</td>
+<td>
+<p>Webapp hacking game</p>
+</td>
+<td><a href="http://hackxor.sourceforge.net/cgi-bin/index.pl">http://hackxor.sourceforge.net/cgi-bin/index.pl</a></td>
+</tr>
+<tr>
+<td>
+<p>WebGoat</p>
+</td>
+<td>
+<p>Medium level challenge</p>
+</td>
+<td>
+<p><a href="https://www.owasp.org/index.php/Category:OWASP_WebGoat_Project">https://www.owasp.org/index.php/Category:OWASP_WebGoat_Project</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">There's more...</h1>
+                </header>
+            
+            <article>
+                
+<p>The preceding resources will be installed on a variety of different methods that are beyond the scope of this book. But I will quickly mention some of the deployment options:</p>
+<ul>
+<li>Virtual machines that, can be installed in VirtualBox</li>
+<li>Scripts that can be run on standard Linux machines to build applications and make them specifically vulnerable to attacks</li>
+<li>Resources that you may attack over the internet </li>
+<li>Complete self contained hacking environments</li>
+</ul>
+<div class="packt_tip">Please ensure that as you are working with these sites, you read carefully the terms of service and understand all requirements and limitations of the environment or tools you are working with. Also be careful if you are remotely hacking sites across the internet. Although there are some of these options available for testing and it may be perfectly legal to do so, your <strong>Internet Service Provider</strong> (<strong>ISP</strong>) may flag the activity as malicious and take action against you.</div>
+<p> </p>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

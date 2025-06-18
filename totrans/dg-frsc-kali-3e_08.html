@@ -1,0 +1,537 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer155">
+<h1 class="chapter-number" id="_idParaDest-69"><a id="_idTextAnchor093"/>6</h1>
+<h1 id="_idParaDest-70"><a id="_idTextAnchor094"/>Understanding File Systems and Storage</h1>
+<p>It takes a lot more than just technical know-how to be a digital forensic investigator. There’s a lot of research, processes, and analytics that also go into the case itself. Consider a scenario where you need to build a house. Sure, we need wood, nails, cement, metal, glass, and all other raw materials, but we also require skilled laborers and contractors to construct the structure and piece it together. Apart from the materials, tools, and resources, we will have also done our research to ensure that we understand what is needed for this to be a <span class="No-Break">successful project.</span></p>
+<p>For instance, we will have had to obtain permits to build, perform soil analysis, consider the weather, and then choose to specify types of materials based on the weather, location, soil type, and so on. It goes without saying that there must be an understanding of fundamental concepts in the field to efficiently carry out the task. In the same way, we need to understand the file systems, <strong class="bold">operating systems</strong> (<strong class="bold">OSs</strong>), data types, and locations, as well as a thorough understanding of methods and procedures for preserving data, storage media, and <span class="No-Break">general evidence.</span></p>
+<p>In this chapter, we will learn about the <span class="No-Break">following topics:</span></p>
+<ul>
+<li>The history of <span class="No-Break">storage media</span></li>
+<li>File systems and <span class="No-Break">operating systems</span></li>
+<li>Data types <span class="No-Break">and states</span></li>
+<li>Volatile and non-volatile data and the order <span class="No-Break">of volatility</span></li>
+<li>The importance of RAM, the paging file, and the cache <span class="No-Break">in DFIR</span></li>
+</ul>
+<h1 id="_idParaDest-71"><a id="_idTextAnchor095"/>History and types of storage media</h1>
+<p>The aim of any investigation is to prove whether something previously existed, currently exists, or took place. In laptops, desktops, mobile devices, and smart devices, data must be stored somewhere, even if it’s just temporarily. Most of us may be familiar with <strong class="bold">hard disk drives</strong> (<strong class="bold">HDDs</strong>) within<a id="_idIndexMarker449"/> laptops, desktops, mobile devices, and so on, but we also need to focus on removable and portable storage devices regardless of age, as they may still be used. These include DVDs, portable drives, thumb or<a id="_idIndexMarker450"/> flash drives, <strong class="bold">secure digital</strong> (<strong class="bold">SD</strong>) and microSD cards, older media such as CDs and floppies, and many other <span class="No-Break">media types.</span></p>
+<p>We should also consider that many portable storage devices, such as flash drives, come in many interesting shapes and sizes as novelty items and may not take the usual shape of the ordinary rectangular-shaped drive. Another issue to consider is that many of these storage media devices have changed in size over the years and may be smaller, usually because of <span class="No-Break">evolving technology.</span></p>
+<h2 id="_idParaDest-72"><a id="_idTextAnchor096"/>IBM and the history of storage media</h2>
+<p>There can never be a story, journal, book, or even discussion on the history of hard drives and storage media without mentioning three letters: IBM. We’re all familiar with this well-known tech giant, but we might not all be familiar with some of its <span class="No-Break">great achievements.</span></p>
+<p><strong class="bold">International Business Machines</strong> (<strong class="bold">IBM</strong>) has <a id="_idIndexMarker451"/>been around for quite some time. Known as the <strong class="bold">Computing-Tabulating-Recording</strong> (<strong class="bold">CTR</strong>) Company<a id="_idIndexMarker452"/> back in the early 1900s, IBM is better known for building the very first HDD, the first PC, along with its servers, desktops, <span class="No-Break">and laptops.</span></p>
+<p>Between 1956 and 1957, IBM <a id="_idIndexMarker453"/>made major <a id="_idIndexMarker454"/>inroads with the development and release of the 305 <strong class="bold">Random Access Method of Accounting and Control</strong> (<strong class="bold">RAMAC</strong>), which utilized the first disk storage technology. This revolutionary technology weighed in at approximately one ton and was roughly 16 square feet in size. The disk space capacity of this behemoth; however, was only 5 MB (megabytes, yes, I said megabytes) <span class="No-Break">in size.</span></p>
+<p>Although 5 MB by today’s standard is roughly the size of a high-definition photo taken with a mobile device, all things considered, this really was a monumental achievement for its time. Before IBM’s invention, data was stored on punch cards that could amount to as many as millions of cards just to hold a <span class="No-Break">few megabytes.</span></p>
+<p>A major issue faced back then with the introduction of this digital storage was the size of the device. Transportation by plane and truck may not have been an option for many; the space to store this would also have been <span class="No-Break">an issue.</span></p>
+<p>As technology progressed, IBM announced a much more portable computer in 1975, released as the IBM 5100 Portable Computer. In the 1980s, specifically 1981, we saw the birth of the IBM Personal Computer. Weighing in at much less than its predecessor, this portable computer also had a much more affordable price tag of between $8,000 <span class="No-Break">and $20,000.</span></p>
+<p>It wasn’t until 1981 when <a id="_idIndexMarker455"/>IBM released the first personal computer, that the portability of computers became an actual reality. With a price tag of $1,565, owners were afforded a keyboard and mouse, with options for a monitor, printer, and floppy drives. Apart from the floppy drives, this was the standard for today’s <span class="No-Break">personal computers.</span></p>
+<p>Along with this<a id="_idIndexMarker456"/> newer and more portable technology, there were also improvements in data storage media over the years, which saw advancements from magnetic tape storage to floppy disks and <a id="_idIndexMarker457"/>diskettes, CDs, DVDs, Blu-ray Discs, and, of course, mechanical and <strong class="bold">solid-state </strong><span class="No-Break"><strong class="bold">drives</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">SSDs</strong></span><span class="No-Break">).</span></p>
+<h2 id="_idParaDest-73"><a id="_idTextAnchor097"/>Removable storage media</h2>
+<p>Continuing with <a id="_idIndexMarker458"/>our topic of<a id="_idIndexMarker459"/> storage media, I’d first like to start by discussing removable storage media, as it played a role just as important as that of fixed storage media in <span class="No-Break">today’s world.</span></p>
+<h2 id="_idParaDest-74"><a id="_idTextAnchor098"/>Magnetic tape drives</h2>
+<p>Introduced by <a id="_idIndexMarker460"/>IBM in the 1950s, <strong class="bold">magnetic tape</strong> was an easy and very fast way to store<a id="_idIndexMarker461"/> data at a speed equal to its processing time. The IBM 726 magnetic tape reader and recorder was one of the first devices to offer this storage, with a capacity or tape density of 100 bits per linear inch of tape. An inch of tape should give an indicator of the size of the tape, which was wound on a large wheel, similar to an old film roll <span class="No-Break">movie tape.</span></p>
+<p>With magnetic tape media, data is written across the width of the magnetic-coated plastic strip in frames separated by gaps consisting of blocks. Magnetic tape is still very much used today, and like many other storage media types, it has significantly decreased in size while increasing capacity <span class="No-Break">and speed.</span></p>
+<p>To give an idea of how far <a id="_idIndexMarker462"/>magnetic tape storage has come as of <a id="_idIndexMarker463"/>2017, IBM has developed newer tape storage media with a tape density of 200 <strong class="bold">gigabits per second</strong> (<strong class="bold">Gps</strong>) per inch on a single cartridge, which can record up to 333 <strong class="bold">gigabytes</strong> (<strong class="bold">GB</strong>) of data. These cartridges (for older folks like myself) are the size of a cassette tape or (for the younger ones) not much smaller than the average smartphone, which fits in <span class="No-Break">your hand.</span></p>
+<h2 id="_idParaDest-75"><a id="_idTextAnchor099"/>Floppy disks</h2>
+<p>The floppy disk, introduced <a id="_idIndexMarker464"/>yet again by IBM, was first seen along with its floppy disk<a id="_idIndexMarker465"/> drive in 1971. Although mainframe computers back then already had hard drives and magnetic tape storage media, there was the need for a simple and cheaper means of saving and passing on software and instructions to the mainframes, previously done using the much slower <span class="No-Break">punch cards.</span></p>
+<p>At the core of the floppy disk was a small magnetic disk which, although far more portable than magnetic tape storage and HDDs at the time, stored much less than other media <span class="No-Break">we’ve mentioned.</span></p>
+<h3>The evolution of the ﬂoppy disk</h3>
+<p>This is how floppy disk <a id="_idIndexMarker466"/>evolved in size and capacity over <span class="No-Break">the years:</span></p>
+<ul>
+<li><span class="No-Break"><strong class="bold">Size: 8-inch</strong></span><span class="No-Break">:</span><ul><li>Year <span class="No-Break">introduced: 1971</span></li><li>Maximum capacity: 80 <span class="No-Break"><strong class="bold">kilobytes</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">KB</strong></span><span class="No-Break">)</span></li></ul></li>
+<li><span class="No-Break"><strong class="bold">Size: 5.25-inch</strong></span><span class="No-Break">:</span><ul><li>Year <span class="No-Break">introduced: 1976</span></li><li>Maximum capacity: <span class="No-Break">360 KB</span></li></ul></li>
+<li><span class="No-Break"><strong class="bold">Size: 3.5-inch</strong></span><span class="No-Break">:</span><ul><li>Year <span class="No-Break">introduced: 1984</span></li><li>Maximum<a id="_idIndexMarker467"/> capacity: 1.2 <span class="No-Break"><strong class="bold">megabytes</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">MB</strong></span><span class="No-Break">)</span></li></ul></li>
+</ul>
+<p class="callout-heading">Note</p>
+<p class="callout">In 1986, the capacity of the floppy was increased to 1.44 MB, which remained as such until it was discontinued by Sony (the last remaining manufacturer of the floppy) <span class="No-Break">in 2011.</span></p>
+<h2 id="_idParaDest-76"><a id="_idTextAnchor100"/>Optical storage media</h2>
+<p>Optical storage media <a id="_idIndexMarker468"/>is so called because of how data is written to the various media<a id="_idIndexMarker469"/> types involving the use of different types of lasers on the surface of the <span class="No-Break">disk itself.</span></p>
+<p>Although it may be somewhat difficult to distinguish various optical disks in the event that there are no default labels on them, they do have slightly varying differences in color and hue due to the size of lasers used in writing data <span class="No-Break">to them.</span></p>
+<h3>Compact disks</h3>
+<p><strong class="bold">Compact disks</strong> (<strong class="bold">CDs</strong>) are <a id="_idIndexMarker470"/>made of pits and land noticeable as bumps on the<a id="_idIndexMarker471"/> underside of the disk, coated with a thin layer of aluminum that results in a reflective surface. Data is written in concentric circles further split up into sectors of 512 bytes, each known as tracks on the CD from the inside to the outside (or edge) of <span class="No-Break">the disk:</span></p>
+<ul>
+<li>Diameter: 120 <span class="No-Break"><strong class="bold">millimeters</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">mm</strong></span><span class="No-Break">)</span></li>
+<li>Type of laser used to write data: 780 <strong class="bold">nanometers</strong> (<strong class="bold">nm</strong>) <span class="No-Break">infrared laser</span></li>
+<li>Maximum capacity of a CD: <span class="No-Break">650–700 MB</span></li>
+</ul>
+<p>There<a id="_idIndexMarker472"/> are two<a id="_idIndexMarker473"/> broad categories <span class="No-Break">of CDs:</span></p>
+<ul>
+<li><strong class="bold">Compact Disk – Read-Only Memory (CD-ROM)</strong>: This disk comes with data on it in the form of<a id="_idIndexMarker474"/> programs, games, music, and so on, and can only be read from a <strong class="bold">Compact Disk Recordable</strong> (<strong class="bold">CD-R</strong>). Data <a id="_idIndexMarker475"/>can be written to this disk, but <span class="No-Break">only once.</span></li>
+<li><strong class="bold">Compact Disk – ReWritable (CD-RW)</strong>: Data<a id="_idIndexMarker476"/> can be written to this disk <span class="No-Break">many times.</span></li>
+</ul>
+<h3>Digital versatile discs</h3>
+<p><strong class="bold">Digital versatile discs</strong> (<strong class="bold">DVDs</strong>), although <a id="_idIndexMarker477"/>the same size in diameter, can store much more <a id="_idIndexMarker478"/>data <span class="No-Break">than CDs:</span></p>
+<ul>
+<li><strong class="bold">Diameter</strong>: 120 mm (same as <span class="No-Break">a CD)</span></li>
+<li><strong class="bold">Type of laser used to write data</strong>: 650 nm <span class="No-Break">red laser</span></li>
+<li><strong class="bold">Maximum capacity of a DVD</strong>: 4.7 GB and 15.9 GB (<span class="No-Break">dual-layer DVD)</span></li>
+</ul>
+<p>The various types of DVDs are <span class="No-Break">as follows:</span></p>
+<ul>
+<li><strong class="bold">DVD – Read-Only Memory (DVD-ROM)</strong>: This DVD comes with data already written to it, much<a id="_idIndexMarker479"/> like <span class="No-Break">a CD-ROM.</span></li>
+<li><strong class="bold">DVD – Recordable (DVD-R)</strong>: Data <a id="_idIndexMarker480"/>can be written once to <span class="No-Break">the DVD.</span></li>
+<li><strong class="bold">DVD + Recordable (DVD+R)</strong>: Data can be written once to the DVD. DVD+Rs utilize more advanced error <a id="_idIndexMarker481"/>detection and <span class="No-Break">management technology.</span></li>
+<li><strong class="bold">DVD – ReWritable (DVD-RW)</strong>: Data <a id="_idIndexMarker482"/>can be written to the DVD <span class="No-Break">several times.</span></li>
+<li><strong class="bold">DVD – Recordable Dual Layer (DVD-R DL)</strong>: This type of DVD contains dual layers resulting in higher storage capacities<a id="_idIndexMarker483"/> between 7.95 GB on a DVD-9 disk and 15.9 GB on a <span class="No-Break">DVD-18 disk.</span></li>
+<li><strong class="bold">DVD – Recordable Dual Layer (DVD+R DL)</strong>: Same as the DVD- R DL, but has been argued to be the more efficient<a id="_idIndexMarker484"/> format, resulting in <span class="No-Break">fewer errors.</span></li>
+<li><strong class="bold">DVD – Random-Access Memory (DVD-RAM)</strong>: Mainly used in video recording equipment due to its <a id="_idIndexMarker485"/>resiliency (lasting up to two decades) and the ability to rewrite data onto it. This <a id="_idIndexMarker486"/>disk is more expensive than other DVD formats and is also not compatible with many common DVD drives <span class="No-Break">and players.</span></li>
+</ul>
+<h2 id="_idParaDest-77"><a id="_idTextAnchor101"/>Blu-ray Disc</h2>
+<p>The current standard for removable <a id="_idIndexMarker487"/>disk media, the Blu-ray Disc gets its name from the color of the laser used to read from and write to the disk. Due to the high-capacity storage of<a id="_idIndexMarker488"/> Blu-ray Discs, <strong class="bold">high-definition</strong> (<strong class="bold">HD</strong>) content<a id="_idIndexMarker489"/> can easily be stored on Blu-ray Discs without loss <span class="No-Break">of quality:</span></p>
+<ul>
+<li><strong class="bold">Diameter</strong>: 120 mm (same as a CD <span class="No-Break">and DVD)</span></li>
+<li><strong class="bold">Type of laser used to write data</strong>: 405 nm <span class="No-Break">blue laser</span></li>
+<li><strong class="bold">Maximum capacity of a DVD</strong>: 25 GB and 50 GB (<span class="No-Break">dual-layer Blu-ray)</span></li>
+<li><strong class="bold">Data Transfer</strong>: up to 72 <strong class="bold">megabits per </strong><span class="No-Break"><strong class="bold">second</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">Mbps</strong></span><span class="No-Break">)</span></li>
+</ul>
+<p>Both capacities of Blu-ray Discs also come in rewriteable and <span class="No-Break">recordable formats:</span></p>
+<ul>
+<li><strong class="bold">BD-RE</strong>: Blu-ray <a id="_idIndexMarker490"/><span class="No-Break">Disc Rewritable</span></li>
+<li><strong class="bold">BD-RE DL</strong>: Blu-ray<a id="_idIndexMarker491"/> Disc Rewritable Dual-layer (<span class="No-Break">50 GB)</span></li>
+<li><strong class="bold">BD-R</strong>: Blu-ray <span class="No-Break">Disc </span><span class="No-Break"><a id="_idIndexMarker492"/></span><span class="No-Break">Recordable</span></li>
+<li><strong class="bold">BD-R DL</strong>: Blu-ray Disc Recordable<a id="_idIndexMarker493"/> Dual-layer (<span class="No-Break">50 GB)</span></li>
+</ul>
+<h2 id="_idParaDest-78"><a id="_idTextAnchor102"/>Flash storage media</h2>
+<p>Flash memory <a id="_idIndexMarker494"/>is so named<a id="_idIndexMarker495"/> because the data is written to and erased using electrical charges. You may have perhaps heard someone say that they’ve had to flash their mobile device. This is quite similar to erasing flash storage media on smartphones and smart devices, except devices with OSs such as Android and iOS require a much more extensive procedure for flashing and reinstalling their OSs. However, the end result is very much the same in that the memory and storage areas are reset <span class="No-Break">or wiped.</span></p>
+<p>Flash storage chips come in two types, known<a id="_idIndexMarker496"/> as <strong class="bold">NOT AND</strong> (<strong class="bold">NAND</strong>) and NOR flash memory, and are responsible for high-speed and high-capacity storage of data on flash storage media. They are newer types of <strong class="bold">electrically erasable programmable read-only memory</strong> (<strong class="bold">EEPROM</strong>) chips that <a id="_idIndexMarker497"/>can wipe blocks of data or the entire drive, rather than just one byte at a time, as with the slower EEPROM. This type of flash memory chip is non-volatile, meaning that the data is still stored on the chip even after power to the chip is lost. Data is erased when specific instructions are sent to the chip in the form of electrical signals via a method known as in-circuit writing, which alters the <span class="No-Break">data accordingly.</span></p>
+<p>The following photo shows one of my old 1 GB (left) flash drives and a newer 32 GB flash drive with its NAND chips exposed (right). Notice that even though the chips are similar in size, the one on the right has 32 times the data capacity, as they were manufactured over a <span class="No-Break">decade apart:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer144">
+<img alt="Figure 6.1 – NAND chips on flash drive boards" height="368" src="image/Figure_6.01_B19441.jpg" width="806"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.1 – NAND chips on flash drive boards</p>
+<p>Flash media <a id="_idIndexMarker498"/>storage has so far become the ultimate in portability, with <a id="_idIndexMarker499"/>many types ranging from the size of your thumb to the size of the nail on your little finger. The lifespan of flash storage all depends on the usage, as they all have an average read-write usage, sometimes displayed on the packaging of the device. The read-write speeds are also some of the fastest at this point, which is why HDDs have moved away from the traditional mechanical disk mechanism to a solid-state one. SSDs will be discussed later in <span class="No-Break">this chapter.</span></p>
+<p class="callout-heading">Note</p>
+<p class="callout">With flash storage media capacities ranging from 2 GB to 1 <strong class="bold">terabyte</strong> (<strong class="bold">TB</strong>) and more particularly on SD, microSD, and flash drives, these can now act as very fast removable drives with OSs installed on them and can even be partitioned using various tools. So yes, indeed, Kali Linux most certainly can be installed onto a flash drive, SD, or microSD card (and be made bootable) with as little as 8 GB of <span class="No-Break">storage space.</span></p>
+<h2 id="_idParaDest-79"><a id="_idTextAnchor103"/>USB ﬂash drives</h2>
+<p>The <strong class="bold">Universal Serial Bus</strong> (<strong class="bold">USB</strong>) port<a id="_idIndexMarker500"/> or interface, released in 1995, has<a id="_idIndexMarker501"/> become the standard for all devices, replacing older devices that would have connected to specific parallel ports on a computer. It’s quite common to see almost any device or peripherals connected to a computer via a USB connection, including mice, keyboards, flash drives, printers, scanners, cameras, mobile devices, and just about every <span class="No-Break">other device.</span></p>
+<p>This table shows the evolution of <a id="_idIndexMarker502"/>the <span class="No-Break">USB port:</span></p>
+<table class="No-Table-Style _idGenTablePara-1" id="table001-1">
+<colgroup>
+<col/>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break"><strong class="bold">USB version</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break"><strong class="bold">Released year</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="bold">Data </strong><span class="No-Break"><strong class="bold">transfer speed</strong></span></p>
+</td>
+</tr>
+</thead>
+<tbody>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p>USB 1.0 <span class="No-Break">and 1.1</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">1995</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">12 Mbps</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">USB 2.0</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">2000</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">480 Mbps</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">USB 3.0</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">2008</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">5 Gbps</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">USB 3.1</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">2013</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">10 Gbps</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>USB flash drives<a id="_idIndexMarker503"/> come in all shapes and sizes today, from the standard rectangular <a id="_idIndexMarker504"/>shape to every shape imaginable. USB flash drives use NAND EEPROM chips to store their data, and today are available in various versions that define the read/write speeds of the <span class="No-Break">flash drive.</span></p>
+<p>The following picture shows various flash drives ranging from oldest to newest, left to right. The first three drives are all USB 2.1; however, the first two are 8 GB flash drives, and the third, which is significantly smaller, is a 32 GB flash drive. The fourth drive (Corsair) is a 64 GB USB <span class="No-Break">3.1 drive:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer145">
+<img alt="Figure 6.2 – Flash drive sizes" height="270" src="image/Figure_6.02_B19441.jpg" width="669"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.2 – Flash drive sizes</p>
+<p class="callout-heading">Important note</p>
+<p class="callout">I should give special mention to the elephant in the room here, the novelty flash drive, which can easily pass as a keychain or toy, and may actually pose a threat to organizations that do not allow employees to bring to work or leave with flash drives due to the sensitive nature of the data within <span class="No-Break">the organization.</span></p>
+<h2 id="_idParaDest-80"><a id="_idTextAnchor104"/>Flash memory cards</h2>
+<p>Like flash drives, flash memory <a id="_idIndexMarker505"/>cards (or memory cards, as they are fondly referred to) also use <a id="_idIndexMarker506"/>NAND flash memory, which, as we previously learned, is non-volatile, solid-state memory. However, unlike USB flash drives, these cards do not come with a USB interface and must be used with either an adapter or a memory <span class="No-Break">card reader.</span></p>
+<p>Over the years and decades even, we’ve had several formats of memory cards grace our desktops, laptops, mobiles, and other devices, including cameras, MP3 players, and even toys. Although I’ll only cover some of the more popular cards of today, it is important that you are at least familiar with memory cards and are also able to <span class="No-Break">identify them.</span></p>
+<p>The following are flash memory <span class="No-Break">card types:</span></p>
+<ul>
+<li><strong class="bold">Memory Stick PRO Duo</strong> (<strong class="bold">MSPD</strong>) (a proprietary card developed <span class="No-Break">by Sony)</span></li>
+<li><span class="No-Break">SD</span></li>
+<li><span class="No-Break">MicroSD</span></li>
+<li><strong class="bold">Compact </strong><span class="No-Break"><strong class="bold">Flash</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">CF</strong></span><span class="No-Break">)</span></li>
+<li><strong class="bold">MultiMedia </strong><span class="No-Break"><strong class="bold">Card</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">MMC</strong></span><span class="No-Break">)</span></li>
+<li><span class="No-Break"><strong class="bold">xD-Picture</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">xD</strong></span><span class="No-Break">)</span></li>
+<li><strong class="bold">Smart </strong><span class="No-Break"><strong class="bold">Media</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">SM</strong></span><span class="No-Break">)</span></li>
+</ul>
+<p>Of the aforementioned types, I’ve opted to show three from my collection in the following photo. The card at the top is a Samsung SD card. SD cards typically have a sliding lock to the side, used to prevent data from being overwritten. To the middle and bottom, I have two Sony Memory<a id="_idIndexMarker507"/> Stick PRO Duo cards, which may be rare at this point in time but are <span class="No-Break">fully functional:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer146">
+<img alt="Figure 6.3 – SD card and PRO Duo card comparison" height="703" src="image/Figure_6.03_B19441.jpg" width="1597"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.3 – SD card and PRO Duo card comparison</p>
+<p>I’d like to do<a id="_idIndexMarker508"/> a brief comparison of the PRO Duo cards, the SD card, and the microSD card shown in <span class="No-Break"><em class="italic">Figure 6</em></span><em class="italic">.4</em>. Developed at least a decade apart, the older PRO Duo cards are larger, with a capacity of 2 GB and 4 GB, respectively. Although not seen on the SD card in <span class="No-Break"><em class="italic">Figure 6</em></span><em class="italic">.3</em>, its capacity is 1 GB, again showing that with the evolution of technology, smaller chips are able to hold far more data than <span class="No-Break">their predecessors.</span></p>
+<p>To drive this<a id="_idIndexMarker509"/> point home, let’s look at the photo in <span class="No-Break"><em class="italic">Figure 6</em></span><em class="italic">.4</em> (although a bit blurry due to the zoom from my camera) to get a close-up of the two microSD cards. The microSD card to the left has a capacity of 64 GB and is specified as a Class 10 U1<a id="_idIndexMarker510"/> card. The Samsung microSD card to the right is a whopping 512 GB, Class 10, U3 card, which is as small as a fingernail! Still, microSD cards are being developed with even larger capacities of 1 TB <span class="No-Break">and larger:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer147">
+<img alt="Figure 6.4 – MicroSD card comparison" height="297" src="image/Figure_6.04_B19441.jpg" width="1090"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.4 – MicroSD card comparison</p>
+<p>The various classes of microSD cards identify their read/write speeds and suggested uses. I do suggest getting a Class 10 microSD card if purchasing one, as the C10 is much faster than the other classes (2, 4, and 6) and supports constant HD and even 4K <span class="No-Break">video recording.</span></p>
+<p>Let’s have a look at the four Class <span class="No-Break">speed ratings:</span></p>
+<table class="No-Table-Style _idGenTablePara-1" id="table002">
+<colgroup>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break"><strong class="bold">Class (C)</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="bold">Minimum Write </strong><span class="No-Break"><strong class="bold">Speed (MBps)</strong></span></p>
+</td>
+</tr>
+</thead>
+<tbody>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">C2</span></p>
+</td>
+<td class="No-Table-Style">
+<p>2</p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">C4</span></p>
+</td>
+<td class="No-Table-Style">
+<p>4</p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">C6</span></p>
+</td>
+<td class="No-Table-Style">
+<p>6</p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">C10</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">10</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>There is also <a id="_idIndexMarker511"/>an <strong class="bold">Ultra-High Speed</strong> (<strong class="bold">UHS</strong>) class, recognizable<a id="_idIndexMarker512"/> by the U symbol on <span class="No-Break">microSD cards.</span></p>
+<table class="No-Table-Style _idGenTablePara-1" id="table003">
+<colgroup>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><strong class="bold">UHS (</strong><span class="No-Break"><strong class="bold">U) Class</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="bold">Minimum Write </strong><span class="No-Break"><strong class="bold">Speed (MBps)</strong></span></p>
+</td>
+</tr>
+</thead>
+<tbody>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">U1</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">10</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">U3</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">30</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>To cater<a id="_idIndexMarker513"/> to large files, especially for 4K and 8K video footage, there is also a Video Speed <span class="No-Break">Class rating:</span></p>
+<table class="No-Table-Style _idGenTablePara-1" id="table004">
+<colgroup>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><strong class="bold">Video </strong><span class="No-Break"><strong class="bold">Speed Class</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="bold">Minimum Write </strong><span class="No-Break"><strong class="bold">Speed (MBps)</strong></span></p>
+</td>
+</tr>
+</thead>
+<tbody>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">V6</span></p>
+</td>
+<td class="No-Table-Style">
+<p>6</p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">V10</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">10</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">V30</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">30</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">V60</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">60</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">V90</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">90</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>As mentioned previously, flash memory cards require card readers, which connect to laptops, desktops, and other media players using USB ports. The photo in <span class="No-Break"><em class="italic">Figure 6</em></span><em class="italic">.5</em> shows one of my many card readers, which supports CF, Memory Stick PRO Duo, SD, and even the <a id="_idIndexMarker514"/>SM cards, and<a id="_idIndexMarker515"/> the newer card reader in <span class="No-Break"><em class="italic">Figure 6</em></span><em class="italic">.6</em> is an SD and microSD card reader with a USB and <span class="No-Break">Type-C slot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer148">
+<img alt="Figure 6.5 – SD card, CF, and PRO Duo card reader" height="529" src="image/Figure_6.06_B19441.jpg" width="1035"/>
+</div>
+</div>
+<p class="IMG---Figure"><a id="_idTextAnchor105"/></p>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.5 – SD card, CF, and PRO Duo card reader</p>
+<div>
+<div class="IMG---Figure" id="_idContainer149">
+<img alt="Figure 6.6 – USB 3.0 and Type C SD card and microSD card reader" height="211" src="image/Figure_6.05_B19441.jpg" width="456"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.6 – USB 3.0 and Type C SD card and microSD card reader</p>
+<h2 id="_idParaDest-81"><a id="_idTextAnchor106"/>Hard disk drives</h2>
+<p>Now that we’ve had a good look at <a id="_idIndexMarker516"/>non-volatile storage, including tape storage and flash <a id="_idIndexMarker517"/>storage, let’s go a bit deeper into the world of HDDs, which serve as fixed storage media. I’ll try to keep things simple and short by focusing mainly on the knowledge necessary for <span class="No-Break">forensics investigators.</span></p>
+<p>HDD technology has certainly come a long way from the monstrous storage devices first seen in IBM mainframes and is now more compact, faster, and more affordable, with capacities in <span class="No-Break">the terabytes.</span></p>
+<p>Although the newer solid-state drives use the same type of memory found in flash memory devices, they are still a bit costly when compared to mechanical drives. This perhaps may be one of the contributing factors when wondering why older mechanical drive technology is still being used. Mechanical drives consist of moving parts, including platters, an actuator arm, and a very powerful magnet. Although it is very common to still find these mechanical HDDs in today’s laptops and hard drives, they are much slower than the newer solid-state drives, which have no moving parts and look very similar to the chipset of a USB <span class="No-Break">flash drive.</span></p>
+<p>In your <a id="_idIndexMarker518"/>forensics investigations and adventures, you may come across or <a id="_idIndexMarker519"/>be presented with older HDDs that can have different interfaces and use different cable technologies to connect to motherboards. Let’s have a look, <span class="No-Break">shall we?</span></p>
+<h2 id="_idParaDest-82"><a id="_idTextAnchor107"/>Integrated Drive Electronics HDDs</h2>
+<p>Many of the first <a id="_idIndexMarker520"/>PCs in the <a id="_idIndexMarker521"/>mid-1980s were outfitted with hard<a id="_idIndexMarker522"/> drives that<a id="_idIndexMarker523"/> used <strong class="bold">Parallel Advanced Technology Attachment</strong> (<strong class="bold">PATA</strong>) and <strong class="bold">Integrated Drive Electronics</strong> (<strong class="bold">IDE</strong>) technology. As with all older devices back then, parallel transmission (sending multiple bits simultaneously but slowly) was the order of the day, allowing for very limited throughput. An easy way to identify older IDE drives is to simply have a look at the interface where the data and power cables connect to <span class="No-Break">the drive.</span></p>
+<p>These older drives, as seen in the following photo, have four pins for power, which connect to a Molex connector, separated by eight pins used to set the device as a master or slave device, and then 40 pins for the IDE data cable, which transmits the data to <span class="No-Break">the motherboard:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer150">
+<img alt="Figure 6.7 – 3.5-inch IDE hard drive" height="407" src="image/Figure_6.07_B19441.jpg" width="663"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.7 – 3.5-inch IDE hard drive</p>
+<p>In 1994, advancements in technology led to the release of <strong class="bold">Enhanced Integrated Drive Electronics</strong> (<strong class="bold">EIDE</strong>), which <a id="_idIndexMarker524"/>saw an increase in the number of pins for the data cable from 40 to 80, also increasing the transmission speeds from 4 Mbps to a possible <span class="No-Break">133 Mbps.</span></p>
+<p>IDE/EIDE was <a id="_idIndexMarker525"/>still, however, limited to a <a id="_idIndexMarker526"/>maximum of four IDE/EIDE drives per computer, as the jumper pins on the drive only allowed for two primary and two secondary drives, set in a master and slave configuration. Consideration also had to be given to the fact that CD-ROM and RW devices and DVD-ROM and RW devices were also using IDE/EIDE technology at <span class="No-Break">that time.</span></p>
+<h2 id="_idParaDest-83"><a id="_idTextAnchor108"/>Serial Advanced Technology Attachment HDDs</h2>
+<p>In 2002, Seagate<a id="_idIndexMarker527"/> released an HDD<a id="_idIndexMarker528"/> technology called <strong class="bold">Serial Advanced Technology Attachment</strong> (<strong class="bold">SATA</strong>), which used<a id="_idIndexMarker529"/> serial transmission instead of a slower parallel transmission. Whereas PATA drives speeds of 33/66/133 Mbps, SATA drives boasted speeds of 150/300/600 Mbps. This meant that the lowest SATA transmission speed of 150 Mbps was faster than the highest PATA speed of <span class="No-Break">133 Mbps.</span></p>
+<p>The connector interfaces of the SATA drives were also different, but it was common at the time to see SATA drives with connectors for both SATA and PATA power cables for <span class="No-Break">backward compatibility.</span></p>
+<p>SATA data cables are much thinner than PATA cables, as they only contain seven wires connecting to seven pins. SATA devices use one cable per drive, unlike PATA devices, which connect two drives on one IDE/EIDE cable connected in a <span class="No-Break">master/slave configuration.</span></p>
+<p>SATA continues to be<a id="_idIndexMarker530"/> standard today for drive technology for both desktops and laptops and has had several revisions, as listed here. Speeds listed <a id="_idIndexMarker531"/>are in MBps and <span class="No-Break">not Mbps:</span></p>
+<ul>
+<li><strong class="bold">SATA 1</strong>: <span class="No-Break">150 MBps</span></li>
+<li><strong class="bold">SATA 2</strong>: <span class="No-Break">300 MBps</span></li>
+<li><strong class="bold">SATA 3</strong>: <span class="No-Break">600 MBps</span></li>
+</ul>
+<p>The following photo shows two 2.5-inch laptop drives. The drive to the left is a much older IDE drive, and the one to the right is a modern <span class="No-Break">SATA drive:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer151">
+<img alt="Figure 6.8 – 2.5-inch IDE (left) and SATA" height="634" src="image/Figure_6.08_B19441.jpg" width="1088"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.8 – 2.5-inch IDE (left) and SATA</p>
+<p>The following photo shows two<a id="_idIndexMarker532"/> SATA laptop 2.5-inch drives. The<a id="_idIndexMarker533"/> one to the left is damaged and has been opened for us to see the circular platter in the middle with the actuator arm at the top, slightly positioned over the platter. At the end of the actuator arm is a read/write head, which reads and writes data to <span class="No-Break">the platter.</span></p>
+<p>The drive to the right in the photo is a hybrid drive or a <strong class="bold">Solid-State Hybrid Drive</strong> (<strong class="bold">SSHD</strong>). This is a<a id="_idIndexMarker534"/> mechanical drive like the one to the left, but it also has flash memory in it to allow for faster access to the data on <span class="No-Break">the platters:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer152">
+<img alt="Figure 6.9 – Platters and actuator arm, which are housed in mechanical hard drives" height="892" src="image/Figure_6.09_B19441.jpg" width="1650"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.9 – Platters and actuator arm, which are housed in mechanical hard drives</p>
+<h2 id="_idParaDest-84"><a id="_idTextAnchor109"/>Solid-state drives</h2>
+<p>As briefly mentioned, SSDs <a id="_idIndexMarker535"/>are non-volatile storage media and use NAND flash<a id="_idIndexMarker536"/> memory in an array to hold data. SSDs have been around for quite some time; however, mainstream use has been greatly hampered by the high cost of the drive. Samsung first released a 32 GB SSD with a PATA interface in 1996, followed by SanDisk’s 32 GB SSD, but with a <span class="No-Break">SATA interface.</span></p>
+<p>Although SSD drives use flash memory, the materials used are more high-end than that found in flash drives, which makes them highly preferable for use as a hard drive, but again, this contributes to the very <span class="No-Break">high cost.</span></p>
+<p>Some advantages come from the fact that there are no moving parts in an SSD. No moving parts make the SSD more durable in the event of a fall or swift foot to the PC tower, as there are no platters or actuator arms to be scratched or struck. Also, the faster read/write speeds and access times greatly reduce the time taken for the device to boot or start and even give an enhanced experience when using resource-intensive software <span class="No-Break">and games.</span></p>
+<p>As far as digital forensics go, SSDs are still a relatively new technology that will be constantly improved upon for some time to come. It’s important to remember that you are not dealing with a mechanical drive and to remember that data on an SSD, much like a flash drive or memory card, can be lost or wiped within minutes or even seconds. Although traditional tools can be used to image and recover data from SSDs, I strongly suggest researching any SSD drive before performing any forensic activities to get a better understanding of its workings and complexities, such as de-chipping and wear-leveling algorithms. De-chipping is a method of reading data from memory chips and wear-leveling involves techniques used to preserve or extend the lifespan of <span class="No-Break">an SSD.</span></p>
+<p>Here’s a photo <a id="_idIndexMarker537"/>of a <a id="_idIndexMarker538"/>250 <span class="No-Break">GB SSD:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer153">
+<img alt=" Figure 6.10 – SSD" height="441" src="image/Figure_6.10_B19441.jpg" width="1343"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US"> Figure 6.10 – SSD</p>
+<p>Take note of the pin layout interface for the SSD connector (left side), which connects to a <strong class="bold">Peripheral Component Interconnect Express</strong> (<strong class="bold">PCIe</strong>) interface<a id="_idIndexMarker539"/> on the board instead of the usual SATA connectors. This connector in the previous photo is an M.2 <strong class="bold">Non-Volatile Memory express</strong> (<strong class="bold">NVMe</strong>) SSD connector<a id="_idIndexMarker540"/> type, but there are other types as well. When performing forensic acquisitions on SSDs that may require the use of a USB adapter, be sure to know which connector you are <span class="No-Break">working with.</span></p>
+<p>Types of <a id="_idIndexMarker541"/>SSD interface <a id="_idIndexMarker542"/>types include <span class="No-Break">the following:</span></p>
+<ul>
+<li>M.2 NVMe (up to 32 <span class="No-Break">Gb/s bandwidth)</span></li>
+<li>M.2 SATA (up to 6 <span class="No-Break">Gb/s bandwidth)</span></li>
+<li>mSATA (up to 6 <span class="No-Break">Gb/s bandwidth)</span></li>
+</ul>
+<p>We’re now up to speed on different types of HDDs and their differences. Let’s move on to file systems and OSs that can be installed on the drive types we’ve just <span class="No-Break">read about.</span></p>
+<h1 id="_idParaDest-85"><a id="_idTextAnchor110"/>File systems and operating systems</h1>
+<p>Now that we’ve covered the physical aspects of drives, let’s get logical! Any and every type of storage media needs to be formatted with a particular file system. The file system chosen will also determine which OS can be installed on the medium, along with file and <span class="No-Break">partition sizes.</span></p>
+<p>A simple way to think of this is to imagine a blank sheet of paper as any type of new or wiped storage media. We can put several types of information on this piece of paper, but we’ll first want to organize or prepare the sheet of paper in a way that makes our data easy to understand, access, and even store. We can choose to write on it, from left to right, in sentences and paragraphs in English, or we can perhaps create tables using rows and columns. We can even use printed slides to display our data or use images, graphs, and flowcharts. Additionally, we can format your storage media to best suit the data that will be stored <span class="No-Break">and used.</span></p>
+<p>File systems<a id="_idIndexMarker543"/> ensure that the data is organized in such a way that it can be easily recognized and indexed. Consider the storage space within a filing cabinet with multiple compartments. Some may be used specifically for storing files in alphabetical order, others in chronological order, and some compartments for stationery supplies, miscellaneous, and even random items. Although all used for storing different items, they can all be labeled and easily recognized and organized in such a way that the contents of each compartment can be easily accessed or <span class="No-Break">even removed.</span></p>
+<p>To install any OS <a id="_idIndexMarker544"/>on a hard drive or removable storage media, the device must first be formatted and prepared for the OS by choosing the appropriate file system. Windows, macOS, Android, Kali, and so on, all have file systems that organize the storage medium so that the OS can be <span class="No-Break">successfully installed.</span></p>
+<p>Some of the more popular OSs and their file systems are included in the <span class="No-Break">following sections.</span></p>
+<h2 id="_idParaDest-86"><a id="_idTextAnchor111"/>Microsoft Windows</h2>
+<p>Here are<a id="_idIndexMarker545"/> some brief features<a id="_idIndexMarker546"/> of the Microsoft <span class="No-Break">Windows OS:</span></p>
+<ul>
+<li>File<a id="_idIndexMarker547"/> system: <strong class="bold">New Technology File </strong><span class="No-Break"><strong class="bold">System</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">NTFS</strong></span><span class="No-Break">)</span></li>
+<li>Supported versions: Windows 11, 8, 7, Vista, XP, 2000, NT, and Windows Server 2022, 2019, 2016, 2012, <span class="No-Break">and 2008</span></li>
+<li>Maximum volume size: 8 <strong class="bold">petabytes</strong> (<strong class="bold">PB</strong>) on newer versions of Microsoft Server (2019 and newer) and Windows 10 version 1709 and newer. Older versions support up to <span class="No-Break">256 TB</span></li>
+<li>Maximum supported file size: 256 TB (depending on <span class="No-Break">cluster size)</span></li>
+<li>NTFS<a id="_idIndexMarker548"/> features: Compression, <strong class="bold">Encrypted File System</strong> (<strong class="bold">EFS</strong>), <span class="No-Break">disk quotas</span></li>
+</ul>
+<p class="callout-heading">Info</p>
+<p class="callout">Older versions of Microsoft Windows<a id="_idIndexMarker549"/> supported the <strong class="bold">File Allocation Table</strong> (<strong class="bold">FAT</strong>) file system by default. Newer versions of Windows also support FAT and FAT32, but with drive size limitations (8 TB) and file size limitations (4 GB). <strong class="bold">Extensible File Allocation Table</strong> (<strong class="bold">exFAT</strong>) was<a id="_idIndexMarker550"/> created to remove the limitations of FAT32 but may not be as widely supported <span class="No-Break">as FAT32.</span></p>
+<h2 id="_idParaDest-87"><a id="_idTextAnchor112"/>Macintosh (macOS)</h2>
+<p>Here are <a id="_idIndexMarker551"/>some brief<a id="_idIndexMarker552"/> features of the <strong class="bold">Macintosh </strong><span class="No-Break"><strong class="bold">OS</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">macOS</strong></span><span class="No-Break">):</span></p>
+<ul>
+<li>File <a id="_idIndexMarker553"/>system: <strong class="bold">Hierarchical File </strong><span class="No-Break"><strong class="bold">System</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">HFS+</strong></span><span class="No-Break">)</span></li>
+<li>Supported versions: macOS up until <span class="No-Break">version 10</span></li>
+<li>Maximum volume size: <span class="No-Break">2 TB</span></li>
+<li>Maximum supported file size: <span class="No-Break">2 GB</span></li>
+</ul>
+<p>Apple has since advanced to a newer 64-bit files system called <strong class="bold">Apple File System</strong> (<strong class="bold">APFS</strong>), which<a id="_idIndexMarker554"/> replaces HFS+ and is optimized specifically for SSDs and <span class="No-Break">iOS devices.</span></p>
+<p>Here are some brief features<a id="_idIndexMarker555"/> of <span class="No-Break">the APFS:</span></p>
+<ul>
+<li>Supported versions: macOS 10.13 (and newer) and iOS 10.3 <span class="No-Break">and newer</span></li>
+<li>Maximum supported file size: 8 <span class="No-Break"><strong class="bold">exbibytes</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">EiB</strong></span><span class="No-Break">)</span></li>
+</ul>
+<h2 id="_idParaDest-88"><a id="_idTextAnchor113"/>Linux</h2>
+<p>Here are some brief <a id="_idIndexMarker556"/>features <a id="_idIndexMarker557"/>of the Linux <span class="No-Break">File System:</span></p>
+<ul>
+<li>File system: <strong class="bold">Fourth Extended File System</strong> (<strong class="bold">ext4</strong>). Several<a id="_idIndexMarker558"/> file systems are available for Linux, but I recommend this one if you are uncertain as to which should <span class="No-Break">be used.</span></li>
+<li>Supported versions: Red Hat, Kali, Ubuntu, and <span class="No-Break">so on.</span></li>
+<li>Maximum volume size: <span class="No-Break">1 EiB.</span></li>
+<li>Maximum supported file size: 16 <span class="No-Break"><strong class="bold">tebibytes</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">TiB</strong></span><span class="No-Break">).</span></li>
+</ul>
+<p class="callout-heading">Important note</p>
+<p class="callout">Many open source OS distros are based on Linux, including Kali Linux and Android, and so they use the ext2/ext3/ext4 filesystems. They are also able to use the FAT32 filesystem. FAT32 can be used across any platform, including older versions of Windows, Macintosh, and Linux, and is supported by almost any device with a <span class="No-Break">USB port.</span></p>
+<p>For the purpose <a id="_idIndexMarker559"/>of <strong class="bold">Digital Forensics and Incident Response</strong> (<strong class="bold">DFIR</strong>) it is important to know about the file systems and their differences that we read about. Once a file system is chosen (either by the drive manufacturer or user), data can then be stored on the media. Let’s now look at different data types and states in the <span class="No-Break">next section.</span></p>
+<h1 id="_idParaDest-89"><a id="_idTextAnchor114"/>Data types and states</h1>
+<p>Firstly, there’s <strong class="bold">data in transit</strong>, also called <strong class="bold">data in motion</strong>. These <a id="_idIndexMarker560"/>simply describe data on the <a id="_idIndexMarker561"/>move, perhaps traversing across the network between devices or even between storage media, actively moving <span class="No-Break">between locations.</span></p>
+<p>Then there’s <strong class="bold">data in use</strong>. Data in<a id="_idIndexMarker562"/> this state is currently being accessed by a user or processed by a CPU. When data is accessed or used, it’s pulled from the hard drive and temporarily stored in RAM, which is much faster than the hard drive (particularly mechanical drives), and stored there for as long as the user accesses it and there is power to <span class="No-Break">the device.</span></p>
+<p>When data is not in motion, transit, or in use, it is described <a id="_idIndexMarker563"/>as <strong class="bold">data at rest</strong>. In this state, the data rests or resides on non-volatile media, such as hard drives, optical media, flash drives, and <span class="No-Break">memory cards.</span></p>
+<p>Now that we know about the formal terms for describing data states, we will learn about metadata and slack <span class="No-Break">space next.</span></p>
+<h2 id="_idParaDest-90"><a id="_idTextAnchor115"/>Metadata</h2>
+<p>Metadata is simply <a id="_idIndexMarker564"/>data about data. Take an item such as a laptop stored in a warehouse, for example. Somewhere in the warehouse (and possibly in other locations such as the cloud), there may be several pieces of information that can be referred to as data about the laptop, or even laptop metadata, such as <span class="No-Break">the following:</span></p>
+<ul>
+<li>Location of the laptop within <span class="No-Break">the warehouse</span></li>
+<li>Laptop brand <span class="No-Break">and model</span></li>
+<li><span class="No-Break">Manufacture date</span></li>
+<li>Warranty dates <span class="No-Break">and information</span></li>
+<li>Hardware and <span class="No-Break">software specs</span></li>
+<li>Color <span class="No-Break">and size</span></li>
+</ul>
+<h2 id="_idParaDest-91"><a id="_idTextAnchor116"/>Slack space</h2>
+<p>Clusters are the smallest amount of <a id="_idIndexMarker565"/>disk space or allocation units on storage media that store data. When formatting drives, we need to define the size of these allocation units, or we can use the default cluster size of 4 KB. This is where slack space <span class="No-Break">comes in.</span></p>
+<p>Slack space is the empty and unused space within clusters that contain data but are not filled with data. To fully understand this, we first need to understand the default cluster sizes specified by OSs. A drive formatted using NTFS (for Windows) has a default cluster size of 4 KB. Let’s say that you’ve saved a text file to your disk with a file size of 3 KB. This means that you still have 1 KB of unused or slack space within <span class="No-Break">that cluster.</span></p>
+<p>Slack space is of particular interest to a forensic investigator as data can be easily hidden in slack space. Luckily, we have several tools available, such as the Sleuth Kit and Autopsy, within Kali Linux to help investigate slack space and find <span class="No-Break">hidden files.</span></p>
+<p>Be sure to familiarize yourself with the terms metadata<a id="_idIndexMarker566"/> and <a id="_idIndexMarker567"/>slack space, as they will constantly be referred to throughout your investigations. Feel free to also make notes on these and other terms as we progress throughout the chapter for easy reference. Let’s now move on to get an understanding of the volatile and non-volatile nature of different types of memory and also look at the order of volatility in <span class="No-Break">DFIR investigations.</span></p>
+<h1 id="_idParaDest-92"><a id="_idTextAnchor117"/>Volatile and non-volatile data and the order of volatility</h1>
+<p>In this section, we look at why data is lost when power to the volatile memory <span class="No-Break">is lost.</span></p>
+<p>Data can exist if the media it is stored on can store the data. Hard drives (mechanical and solid-state), flash drives, and memory cards are <a id="_idIndexMarker568"/>all <strong class="bold">non-volatile storage</strong> media. Although SSDs offer and continue to make drastic improvements in data access times, RAM (typically referred to only as memory) thus far remains the faster type of memory <span class="No-Break">inside devices.</span></p>
+<p>RAM, however, is <strong class="bold">volatile memory</strong>. Unlike<a id="_idIndexMarker569"/> non-volatile memory found in hard drives and flash drives, data stored in RAM is kept there temporarily, only for as long as there is an electrical current being provided to the chips. There are two types of RAM that <a id="_idIndexMarker570"/>we need to<a id="_idIndexMarker571"/> be aware of: <strong class="bold">Static RAM</strong> (<strong class="bold">SRAM</strong>) and <strong class="bold">Dynamic </strong><span class="No-Break"><strong class="bold">RAM </strong></span><span class="No-Break">(</span><span class="No-Break"><strong class="bold">DRAM</strong></span><span class="No-Break">).</span></p>
+<p>SRAM is superior to DRAM but is far costlier than DRAM because of the extensive materials used in building the chips. SRAM is also physically much larger than DRAM. SRAM can be found in the CPU cache (L1 or Level 1) and on some chips on the motherboard (L2/L3), although in very small sizes (KB) due to the cost and <span class="No-Break">physical size.</span></p>
+<p>Although DRAM is slower, it is much cheaper and remains one of the reasons for its use as the main memory in devices. What makes RAM volatile is its components, such as transistors and capacitors. Some of you may already be familiar with this topic from certification courses such as A+, but for the benefit of all of you, allow me to go into a bit <span class="No-Break">more detail.</span></p>
+<p>DRAM uses capacitors, which store electrical charges temporarily as part of a refresh circuit. The chips need to be constantly refreshed to hold the data while being accessed. However, between refreshes, a wait state is created, which makes DRAM slower when compared to SRAM as it uses transistors instead of capacitors, which do not have <span class="No-Break">wait states.</span></p>
+<p>Over the decades, there have been many types of DRAM or memory sticks in slightly varying sizes and increased pins with which to contact the motherboard. Some of the RAM types in order of age are <span class="No-Break">as follows:</span></p>
+<ul>
+<li><strong class="bold">Extended Data Output RAM (EDO RAM)</strong>: One <a id="_idIndexMarker572"/>of the earlier types <span class="No-Break">of DRAM.</span></li>
+<li><strong class="bold">Synchronous Dynamic RAM (SDRAM)</strong>: This was the first form of RAM to synchronize itself with the CPU clock speed. It has a maximum transfer <a id="_idIndexMarker573"/>rate of 133 <strong class="bold">megatransfers</strong> or <strong class="bold">millions of transfers per second</strong> (<strong class="bold">MT/s</strong>). It is labeled PC100, PC133, <span class="No-Break">and PC166.</span></li>
+<li><strong class="bold">DDR-SDRAM/DDR 1 (Double Data Rate - SDRAM)</strong>: Effectively doubled the transfer rate of SD RAM. Maximum<a id="_idIndexMarker574"/> transfer rate of <span class="No-Break">400 MT/s.</span></li>
+<li><strong class="bold">DDR2</strong>: Maximum<a id="_idIndexMarker575"/> transfer rate of <span class="No-Break">800 MT/s.</span></li>
+<li><strong class="bold">DDR3</strong>: Consumes<a id="_idIndexMarker576"/> up to a third less power than DDR2. Maximum transfer rate of <span class="No-Break">1600 MT/s.</span></li>
+<li><strong class="bold">DDR4</strong>: Maximum <a id="_idIndexMarker577"/>transfer rate of <a id="_idIndexMarker578"/>4400 <span class="No-Break">MT/s (</span><span class="No-Break"><strong class="bold">DDR4-4400</strong></span><span class="No-Break">).</span></li>
+</ul>
+<p>In today’s laptops and desktops, one might mainly come across DDR3 and DDR4, but it may not be uncommon to run into a legacy machine with DDR2 or (miraculously) DDR1. The following photo shows different <a id="_idIndexMarker579"/>RAM <strong class="bold">Dual Inline Memory Modules</strong> (<strong class="bold">DIMM</strong>) types from top to bottom, SDRAM (top), DDR1, DDR2, and <span class="No-Break">lastly DDR3:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer154">
+<img alt="Figure 6.11 – Types of RAM" height="522" src="image/Figure_6.11_B19441.jpg" width="1027"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.11 – Types of RAM</p>
+<p class="callout-heading">Important note</p>
+<p class="callout">Laptops also use DDR RAM but are available in a more compact<a id="_idIndexMarker580"/> size called <strong class="bold">Small Outline DIMM</strong> (<span class="No-Break"><strong class="bold">SODIMM</strong></span><span class="No-Break">) modules.</span></p>
+<p>Now that we’ve looked at the evolution of RAM and its various types of form factors, let’s look at the importance of RAM and learn about the uses of the paging file and RAM cache in the <span class="No-Break">next section.</span></p>
+<h1 id="_idParaDest-93"><a id="_idTextAnchor118"/>The importance of RAM, the paging file, and cache in DFIR</h1>
+<p>OSs can use a <a id="_idIndexMarker581"/>portion of the hard disk as an extension of RAM. This is referred to as virtual memory and is usually a good idea if a computer or laptop has limited RAM. Although the hard drive is much slower than the RAM, the swap file or paging file on the disk can store files and programs that are being accessed less, leaving the RAM available to store data that is frequently accessed. This process involves the OS swapping pages of data less frequently used and moving data to the dedicated paging file area on the <span class="No-Break">hard drive.</span></p>
+<p>In forensics <a id="_idIndexMarker582"/>investigations, the paging file is very important to us. Although not as volatile as RAM itself due to being stored on the hard disk, it is a hidden file in Windows called <strong class="source-inline">pagefile.sys</strong>, and should always be inspected using tools of your choice, as this file may reveal passwords for encrypted areas, information from sites visited, documents opened, logged-in users, printed items, and <span class="No-Break">so on.</span></p>
+<p>Data on <a id="_idIndexMarker583"/>mechanical drives is stored in a fragmented manner; however, the advantage of the paging or swap file is that the data can be stored in a contiguous manner, one piece after the next, allowing for faster <span class="No-Break">access times.</span></p>
+<p>It is recommended that the size of the paging file is set to 1.5 times the amount of memory and be stored on a separate drive if possible, not just a <span class="No-Break">separate partition.</span></p>
+<p class="callout-heading">Note on Pagefile.sys</p>
+<p class="callout"><strong class="source-inline">Pagefile.sys</strong> can be <a id="_idIndexMarker584"/>found in the <strong class="source-inline">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management</strong> Windows <span class="No-Break">registry path.</span></p>
+<p>I hope the importance of the paging file and cache was well received, as acquiring and analysis of the paging file in any DFIR investigation is crucial. Feel free to review the chapter and make notes on all the terms covered before proceeding to the <span class="No-Break">next chapter.</span></p>
+<h1 id="_idParaDest-94"><a id="_idTextAnchor119"/>Summary</h1>
+<p>In this chapter, we took the time to cover some of the basics of non-volatile storage media, which stores data even after there is no power supplied to the medium. Non-volatile media includes different types of HDDs, such as mechanical and solid-state PATA and SATA drives, flash drives, and <span class="No-Break">memory cards.</span></p>
+<p>Newer storage media devices, including SSDs, use a special type of flash memory called NAND flash to store data. This flash memory is far faster and more durable than traditional mechanical drives, as the devices contain no moving parts; however, they are still quite costly <span class="No-Break">for now.</span></p>
+<p>We also looked at various file systems associated with various OSs and saw that the smallest allocation of data is called a cluster, which can reside in slack space. Slack space is unused space within a cluster in which data can be hidden. Data itself has different states and can be at rest, in motion, or in use. Regardless of the state of the data, there always resides some information about the data itself, <span class="No-Break">called metadata.</span></p>
+<p>Any data accessed by the user or OS is temporarily stored in volatile memory or RAM. Although data can be stored for lengthy periods on non-volatile memory, it is lost when electrical charges to volatile memory (RAM) are also lost. An area of the hard disk called the paging file can act as virtual RAM, allowing the computer to think it has more RAM than <span class="No-Break">actually installed.</span></p>
+<p>I do encourage you to do more research and expand your knowledge on these topics, allowing you to gain more understanding of what <span class="No-Break">was covered.</span></p>
+<p>Let’s now move on to the next chapter, where we’ll learn about investigative procedures and best practices for incident response, such as acquiring volatile data and procedures for working with and analyzing <span class="No-Break">live machines.</span></p>
+</div>
+</div></body></html>

@@ -1,0 +1,514 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer214">
+<h1 class="chapter-number" id="_idParaDest-179"><a id="_idTextAnchor183"/>11</h1>
+<h1 id="_idParaDest-180"><a id="_idTextAnchor184"/>Autopilot, Python, and NIST Control</h1>
+<p>After a thorough examination of the Blue Team side of the Kali Purple family, we grabbed a taste of some of the Red Team aspects in the previous chapter. The reason these are put together in the Purple distribution is because the offensive tools are used to test the defensive tools and provide quality training as well as proof of concept to cybersecurity analysts through <span class="No-Break">penetration testing.</span></p>
+<p>In this chapter, we are going to look at the automation aspect of these penetration testing utilities through a Kali Linux-provided tool called <strong class="bold">Autopilot</strong>. Just as the name suggests, Autopilot is used to automate attacks, which helps to improve the efficiency of penetration testing teams. Through Autopilot, you gain some subtle references to scripting languages – in <span class="No-Break">particular, Python.</span></p>
+<p>We are going to take a peek at the Python scripting language, but not in the manner you might think. This isn’t a learn-to-code training manual and we’re not here to teach you that. However, if it is something of interest to you, we will provide links to an abundance of references. What we are going to do is look at the key components of what you might see within a block of Python code. We’re going to teach you how to recognize what is going on within the code. This will help you to understand what any piece of software, both good and bad, might be attempting to do and if it’s a case of software that you have the ability to edit, then you may even have enough knowledge to change certain items for the sake of testing and manipulating the code to <span class="No-Break">your liking.</span></p>
+<p>After that, we will take a look at the freshly updated <strong class="bold">NIST Cybersecurity Framework</strong> (<strong class="bold">CSF</strong>), which released version 2.0 in February of 2024, adding a new core function – <em class="italic">Govern</em> – directed at high-level cybersecurity managers that helps to regulate the other five <span class="No-Break">core functions.</span></p>
+<p>In this chapter, you can expect to cover <span class="No-Break">the following:</span></p>
+<ul>
+<li><span class="No-Break">Kali Autopilot</span></li>
+<li><span class="No-Break">Python</span></li>
+<li><span class="No-Break">NIST Control</span></li>
+</ul>
+<h1 id="_idParaDest-181"><a id="_idTextAnchor185"/>Technical requirements</h1>
+<p>The requirements for this chapter are <span class="No-Break">as follows:</span></p>
+<ul>
+<li><strong class="bold">Minimum requirements</strong>: A computing device with either the <em class="italic">amd64 (x86_64/64-bit)</em> or <em class="italic">i386 (x86/32-bit)</em> architecture. It should contain at least <em class="italic">4 GB</em> <span class="No-Break">of RAM.</span></li>
+<li><strong class="bold">Recommended requirements</strong>: Based on feedback from cybersecurity field practitioners, aim for the <em class="italic">amd64 (x86_64/64-bit)</em> architecture with <em class="italic">8 GB</em> <span class="No-Break">of RAM.</span></li>
+</ul>
+<h1 id="_idParaDest-182"><a id="_idTextAnchor186"/>Autopilot</h1>
+<p><strong class="bold">Kali Autopilot</strong> is a<a id="_idIndexMarker927"/> cybersecurity framework and application created with Red and Purple team exercises in mind. It is aimed at enhancing offensive and defensive security operations in unison. Autopilot focuses on automation and streamlining various tasks within cybersecurity operations for the purpose of improving both the efficiency and effectiveness of <span class="No-Break">the exercises.</span></p>
+<p>Key features of Kali Autopilot include <span class="No-Break">the following:</span></p>
+<ul>
+<li><strong class="bold">Automation capabilities</strong>: Kali Autopilot offers robust automation capabilities for executing predefined <a id="_idIndexMarker928"/>attack scenarios, security assessments, penetration testing tasks, and defensive measures in red team and purple team exercises. This automation streamlines complex processes and saves time for <span class="No-Break">cybersecurity professionals.</span></li>
+<li><strong class="bold">Scenario creation and execution</strong>: The framework allows users to create and execute customized attack scenarios, simulation exercises, and cybersecurity assessments to test and improve the organization’s security posture. This includes emulating real-world threats and tactics to identify vulnerabilities <span class="No-Break">and weaknesses.</span></li>
+<li><strong class="bold">Red team operations</strong>: Kali Autopilot facilitates red team operations by providing tools and functionalities for reconnaissance, exploitation, privilege escalation, lateral movement, and post-exploitation activities. It enables red teams to simulate sophisticated cyber-attacks and assess the effectiveness of <span class="No-Break">defensive measures.</span></li>
+<li><strong class="bold">Purple team collaboration</strong>: The framework supports purple teaming initiatives by fostering collaboration between red and blue teams. Kali Autopilot enables joint exercises<a id="_idIndexMarker929"/> where offensive and defensive security teams work together to simulate attacks, detect threats, respond to incidents, and enhance overall <span class="No-Break">security resilience.</span></li>
+<li><strong class="bold">Reporting and documentation</strong>: Kali Autopilot includes features for generating detailed reports, documenting findings, and tracking the progress of red team and purple team activities. These reports can be utilized for compliance purposes, risk assessment, incident response planning, and security <span class="No-Break">improvement initiatives.</span></li>
+<li><strong class="bold">Tool integration</strong>: The framework integrates a wide range of security tools, scripts, and frameworks commonly used in red team and purple team engagements. This seamless integration enhances the toolkit available to cybersecurity professionals and ensures comprehensive coverage of security <span class="No-Break">assessment tasks.</span></li>
+<li><strong class="bold">Customization and flexibility</strong>: Users can customize and fine-tune the behavior, parameters, and configuration settings of Kali Autopilot to align with specific red teaming and purple teaming objectives. This flexibility allows for tailored approaches to cybersecurity assessments <span class="No-Break">and exercises.</span></li>
+<li><strong class="bold">Training and skill development</strong>: Kali Autopilot serves as a valuable platform for cybersecurity professionals to enhance their skills, knowledge, and expertise in offensive and defensive security practices. It offers hands-on experience in simulated environments to improve proficiency in handling cyber threats <span class="No-Break">and vulnerabilities.</span></li>
+<li><strong class="bold">Scalability and enterprise deployment</strong>: The framework is designed to be scalable and adaptable to different organizational sizes, security environments, and operational requirements. Kali Autopilot supports enterprise-level deployment for managing<a id="_idIndexMarker930"/> and coordinating red teaming and purple teaming activities <span class="No-Break">at scale.</span></li>
+<li><strong class="bold">Community support and updates</strong>: Kali Autopilot benefits from a vibrant community of cybersecurity professionals, red teamers, and purple teamers who contribute to its development, enhancement, and support. Users can leverage community-driven resources, updates, and collaboration opportunities to maximize the <span class="No-Break">framework’s effectiveness.</span></li>
+</ul>
+<p>There is no additional downloading, installing, or activating for Kali Autopilot. If you installed Kali Purple, it should be already set up and raring <span class="No-Break">to go!</span></p>
+<p>To launch Kali Autopilot, take<a id="_idIndexMarker931"/> <span class="No-Break">these steps:</span></p>
+<ol>
+<li>Launch and log in to your Kali Purple <span class="No-Break">VM instance</span></li>
+<li>Select the Kali Linux dragon icon at the top left of your screen, under the <span class="No-Break">word </span><span class="No-Break"><strong class="bold">File</strong></span></li>
+<li>Move your cursor down the left column and hover over <strong class="bold">08 - </strong><span class="No-Break"><strong class="bold">Exploitation Tools</strong></span></li>
+<li>Select <strong class="bold">Kali Autopilot</strong> from the second column that appears, as seen in <span class="No-Break"><em class="italic">Figure 11</em></span><span class="No-Break"><em class="italic">.1</em></span><span class="No-Break">:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer200">
+<img alt="Figure 11.1 – Launch Kali Autopilot from the menu" height="844" src="image/B21223_11_01.jpg" width="650"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.1 – Launch Kali Autopilot from the menu</p>
+<p>Alternatively, if for some odd<a id="_idIndexMarker932"/> reason Kali Autopilot is not already installed in your Kali Purple instance – that really, truly should not be the case – then you can open a terminal window and type <strong class="source-inline">sudo apt install kali-autopilot</strong>, making sure you include <span class="No-Break">the dash.</span></p>
+<p>Once you complete the preceding steps, the <strong class="bold">Kali Autopilot - Automated Attack Generator</strong> will load, showing two rows of content. The first row will have three columns. The left column will be a windowpane to manage your attack scripts, to include options to add, delete, import, export, or save them. The middle column will be a windowpane you will use to manage your variables for the selected script. The right windowpane will be networking and communication settings for the product to do its job. The second row has<a id="_idIndexMarker933"/> only one column, spanning the distance. It contains the <span class="No-Break">attack sequence:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer201">
+<img alt="Figure 11.2 – Kali Autopilot default GUI" height="1063" src="image/B21223_11_02.jpg" width="1100"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.2 – Kali Autopilot default GUI</p>
+<p>Now that you’ve learned how to launch it the hard way, we should tell you that you can also open the command terminal and simply type <strong class="source-inline">kali-autopilot</strong> to load the Autopilot GUI. Let’s go ahead and create our very first automated attack script using Autopilot. If you’ve never written code or created a script before, fear not! Autopilot does most of the hard work <a id="_idIndexMarker934"/>for you. We will guide you through <span class="No-Break">it all.</span></p>
+<p>Before we get too much further along, let’s make<a id="_idIndexMarker935"/> sure we have a utility called <strong class="bold">Dirb</strong> available to us. Make sure you have this tool by going to your command line and typing <strong class="source-inline">sudo apt-get install dirb</strong>. Dirb is often referred to as <strong class="bold">Directory Buster</strong> or <strong class="bold">Directory Brute-Forcer</strong>. Its purpose is to find hidden web content, directories, and files on web<a id="_idIndexMarker936"/> servers by performing <span class="No-Break">dictionary attacks.</span></p>
+<p>Next, let’s start making our attack script. To create a test script, go to the <strong class="bold">Attack Scripts</strong> windowpane in the upper left of Autopilot. Within the <strong class="bold">Script</strong> field at the bottom of that pane, type <strong class="source-inline">MyFirstAutopilotScript</strong> or any name you want – just remember it’s the name of your script. Then select the <strong class="bold">Add</strong> button, as you see in <span class="No-Break"><em class="italic">Figure 11</em></span><span class="No-Break"><em class="italic">.3</em></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer202">
+<img alt="Figure 11.3 – Creating your first Kali Autopilot script" height="429" src="image/B21223_11_03.jpg" width="450"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.3 – Creating your first Kali Autopilot script</p>
+<p>You will notice the middle windowpane will automatically populate with your new script name, as seen in <span class="No-Break"><em class="italic">Figure 11</em></span><em class="italic">.6</em>. All we’re going to do here is make a simple script to scan our host machine and a web server, which we will set up now. You may already have it on your system, but in case you don’t, type <strong class="source-inline">sudo apt install apache2</strong> and follow any prompts. If you have it, you’ll get a message saying as much. If not, it will install. It’s very quick, painless, and should not involve the loss of blood. If you do lose blood from installing the Apache Web Server, stop what you’re doing immediately because you are doing something very, very wrong. Seek medical attention and then find a Linux install professional in your area <span class="No-Break">before proceeding.</span></p>
+<p>When medically and technologically cleared to return, start the web server you just installed by typing <strong class="source-inline">sudo systemctl start apache2</strong> and follow that up by typing <strong class="source-inline">sudo systemctl status apache2</strong> to ensure everything was successful. Now, we’re going to create<a id="_idIndexMarker937"/> two variables. The first, we’ll call <strong class="source-inline">Subnet</strong> and that will be to scan our host system. The second will be <strong class="source-inline">Webserver</strong> and that will be to scan the web server we just installed. We are going to set the values of these variables as their respective IP addresses. This way, if those IP addresses ever change, we don’t need to rewrite the entire script. We can simply return to this middle windowpane, change their values, and ask Autopilot to regenerate the script. It will substitute the new values in place of the <span class="No-Break">old ones.</span></p>
+<p>To create these variables, we first need to grab the default values, which are the present IP address. Drop into your host system and open the command terminal. Return to <a href="B21223_03.xhtml#_idTextAnchor052"><span class="No-Break"><em class="italic">Chapter 3</em></span></a> and review it if you don’t remember how to do this. If your host is Windows, type <strong class="source-inline">ipconfig</strong> and look for the IPv4 value, as you see highlighted in <span class="No-Break"><em class="italic">Figure 11</em></span><em class="italic">.4</em>. If it’s macOS or Linux, you would type <strong class="source-inline">ifconfig</strong> to grab the <span class="No-Break">same information:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer203">
+<img alt="Figure 11.4 – Windows system ipconfig command" height="327" src="image/B21223_11_04.jpg" width="1125"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.4 – Windows system ipconfig command</p>
+<p>Record that information and then, within a terminal window in your Kali Purple instance, type <strong class="source-inline">ifconfig</strong> to get information for your web server. Your web server is hosted on your Kali Purple instance. You’ll want to grab your eth0 IP address as highlighted in <span class="No-Break"><em class="italic">Figure 11</em></span><span class="No-Break"><em class="italic">.5</em></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer204">
+<img alt="Figure 11.5 – VM system ifconfig command" height="431" src="image/B21223_11_05.jpg" width="800"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.5 – VM system ifconfig command</p>
+<p>Return to your Autopilot <a id="_idIndexMarker938"/>application and create <span class="No-Break">two variables.</span></p>
+<p>To create a variable, you will want to place your cursor on the first empty row (in this case, it’s row 1) in the first column of the middle windowpane, just under the <strong class="bold">Name</strong> header. With the field highlighted, simply start typing the content you wish to enter and then press <em class="italic">Enter</em>. Name the first one <strong class="source-inline">Subnet</strong> and the second one <strong class="source-inline">Webserver</strong>. Place the value of your host machine’s IP address, adding a slash and the number 24 after it, as seen in <span class="No-Break"><em class="italic">Figure 11</em></span><em class="italic">.6</em>. The usage of that slash is<a id="_idIndexMarker939"/> known as a <strong class="bold">Classless Inter-Domain Routing</strong> (<strong class="bold">CIDR</strong>) notation. It’s a shortcut manner of defining a range of IP addresses without having to list each and every single one. We’ll toss a link in the <em class="italic">Further reading</em> section if you’d like to study in more depth about the mechanics of <span class="No-Break">CIDR notations.</span></p>
+<p>In this case, you’ll note that each IP address is comprised of four groups of numbers separated by a dot. This is known as an octet – because the dot itself is part of the code and there are four dots. The final dot, at the end of every IP address, is invisible. It’s not really – we just leave it out when writing IP addresses for readability. Each non-dot octet – also 4 of them – is a number ranging from 0 to 255, which is a maximum of 256 numbers (zero plus 1 – 255). So here, we’re telling the code that 24 of a maximum possible 32 bits are not available, leaving only 8 bits to work with, and that means your variable is going to scan a total of 256 IP addresses because those 8 bits can be manipulated by 256 different combinations of ones and zeros. The 256 IP addresses are <strong class="source-inline">10.0.0.0</strong> – <strong class="source-inline">10.0.0.255</strong> with only the final numerical octet changing <span class="No-Break">in value:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer205">
+<img alt="Figure 11.6 – Setting variables in Autopilot" height="384" src="image/B21223_11_06.jpg" width="500"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.6 – Setting variables in Autopilot</p>
+<p>Once our variables are set, we have the option in the top-right windowpane to add some randomization to our attack script. Why would we do this? Well, if you ask any experienced SOC analyst, you will learn that they notice things such as patterns. Patterns such as precise actions occurring with identical precise timing intervals are an obvious sign of automation. Automation will nearly always trigger a deeper dig and there is a high probability that the<a id="_idIndexMarker940"/> attack will be noticed. Why do we care if we are only operating ethically? Because part of being a pentester or ethical hacker is doing whatever you can to evade defenses in very much the same way a real cybercriminal does. That will help us to learn from our vulnerabilities and work to discover or develop new ways to identify potentially <span class="No-Break">malicious behavior.</span></p>
+<p>Those of you working in law enforcement or who have law enforcement backgrounds have probably heard something along the lines of <em class="italic">“If you want to learn how to catch a criminal, then you need to learn how to think like a criminal”</em> at some point in your training. The same is true in the cybersecurity profession. If you want to learn how to catch a hacker, then you need to learn how to think like <span class="No-Break">a hacker.</span></p>
+<p>It’s pretty much self-explanatory in the <strong class="bold">Settings</strong> pane. The values for <strong class="bold">Delay</strong> are the range between the minimum milliseconds versus the maximum milliseconds you want the script to randomly delay between each action. The <strong class="bold">Interface</strong> field is a reference to the network interface you are running the attack against. We will leave ours at <strong class="source-inline">eth0</strong>. We will also leave the API port set to <strong class="source-inline">80</strong> since we’re launching an attack against a <span class="No-Break">web server:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer206">
+<img alt="Figure 11.7 – Settings windowpane allows for randomization" height="429" src="image/B21223_11_07.jpg" width="300"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.7 – Settings windowpane allows for randomization</p>
+<p>We have our script name, variables, and settings set. Now, let’s write the actual attack script. Autopilot works in stages, with stage zero being the first. We don’t write instructions for stage zero. That’s internal, which Autopilot can use to set up the main attack. That said, let’s identify the beginning of our instructions as stage one. On line 1 of <strong class="bold">Scripted Attack Sequence</strong>, write <strong class="source-inline">STAGE</strong> in all caps under the first column – <strong class="bold">Action</strong>. It’s actually not necessary to write it in all caps, this is just something that is done for readability. Under the second column – <strong class="bold">Refer</strong> – input the number <strong class="source-inline">1</strong> to reflect which stage we are <span class="No-Break">talking</span><span class="No-Break"><a id="_idIndexMarker941"/></span><span class="No-Break"> about.</span></p>
+<p>On lines two and three, we are going to perform two scanning actions – one against our host operating system and the other against the web server we set up. Therefore, we will name the actions very precisely according to which action we are taking, and we are taking the action of scanning. Type <strong class="source-inline">Scanning</strong> on rows two and three under the <strong class="bold">Action</strong> column. Now that we’ve identified the action, let’s input the <span class="No-Break">actual command.</span></p>
+<p>On row two, under the <strong class="bold">Command</strong> column, type <strong class="source-inline">nmap -sn {Subnet}</strong>. The braces indicate that we are inputting a variable in our instructions. The value inside those braces is the name of the variable. In this case, we’ve input <strong class="source-inline">Subnet</strong>, which is the first variable we created in Autopilot. So, the <strong class="source-inline">nmap -sn {Subnet}</strong> command could just as easily have been written as <strong class="source-inline">nmap -sn {10.0.0.192/24}</strong>, except by doing it this way, if we want to change the range or IP address we are scanning, we only need to change the value in the <strong class="bold">Variables</strong> windowpane for <strong class="bold">Subnet</strong>, without having to touch the actual attack <span class="No-Break">sequence code:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer207">
+<img alt="Figure 11.8 – Autopilot attack sequence" height="671" src="image/B21223_11_08.jpg" width="1100"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.8 – Autopilot attack sequence</p>
+<p>The <strong class="source-inline">–</strong> symbol, which is often referred to as a <em class="italic">tack</em> symbol (it can also be called a dash, hyphen, or minus sign but has gained popularity as tack, which comes from the military), means these are extra instructions added to Nmap. The <strong class="source-inline">s</strong> is telling Nmap to apply the values in this command to a scanning activity. This is because Nmap has many uses other than scanning. The <strong class="source-inline">n</strong> is telling Nmap that this is a no-port scan. It’s telling Nmap to be broader in its scan and send<a id="_idIndexMarker942"/> ICMP echo requests to determine the online or offline status of the target without taking the time to scan for <span class="No-Break">open ports.</span></p>
+<p>On row three, under the <strong class="bold">Command</strong> column, type <strong class="source-inline">nmap -PS -sV {Webserver}</strong>. Note that we do not need to add the port number to this command because that was set in the top-right <strong class="bold">Settings</strong> windowpane. In this case, the <strong class="source-inline">-PS</strong> is telling Nmap to perform a TCP SYN ping scan. It’s telling Nmap to perform this scan by sending TCP SYN packets to the target hosts to determine whether they are reachable. It evaluates whether they are by this scan discovering whether the hosts are active and responding. The <strong class="source-inline">-sV</strong> option enables version detection. It tries to determine the version of the services running on the target host. This can be very valuable information to an attacker because older versions of any particular service could have documented vulnerabilities associated with them, which could tell the attacker they have more attack vectors than <span class="No-Break">originally expected.</span></p>
+<p>On row four, we are going to attempt to enumerate, therefore the value in the <strong class="bold">Action</strong> column should be <strong class="source-inline">Enumeration</strong>. Then, in the <strong class="bold">Command</strong> column, type <span class="No-Break"><strong class="source-inline">dirb http://{Webserver}</strong></span><span class="No-Break">.</span></p>
+<p>When finished, click the <strong class="bold">Generate</strong> button at the bottom of Autopilot and it will automatically generate the <a id="_idIndexMarker943"/>Python attack script for you. You’ll get a popup showing the location at which Autopilot placed your attack script, as seen in <span class="No-Break"><em class="italic">Figure 11</em></span><em class="italic">.9</em>. Navigate to that location using the <span class="No-Break"><strong class="source-inline">cd</strong></span><span class="No-Break"> utility:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer208">
+<img alt="Figure 11.9 – Autopilot Python script generation" height="673" src="image/B21223_11_09.jpg" width="1100"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.9 – Autopilot Python script generation</p>
+<p>In our case, the command is <strong class="source-inline">cd kali-autopilot/MyFirstAutopilotScript</strong>. Next, we will issue a command to invoke our web server with Python and get it running. Type <strong class="source-inline">python3 -m http.server</strong> to make that happen. You can press <em class="italic">Ctrl</em> + <em class="italic">Z</em> to break out of the loop and then type <strong class="source-inline">ps ux</strong> to look for and confirm that the server is running. It will show up on<a id="_idIndexMarker944"/> a row near the bottom of your active process listing as the exact command you typed – <strong class="source-inline">python3 -m http.server</strong> – in the far-right column, as seen in <span class="No-Break"><em class="italic">Figure 11</em></span><span class="No-Break"><em class="italic">.10</em></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer209">
+<img alt="Figure 11.10 – PS ux command showing our server is running" height="137" src="image/B21223_11_10.jpg" width="922"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.10 – PS ux command showing our server is running</p>
+<p>Leaving that terminal window open, double-click on the terminal icon to open another terminal window and navigate to your Python script by typing the same <strong class="source-inline">cd kali-autopilot/MyFirstAutopilotScript</strong> command as the preceding step. Naturally, if you named your script something else, then the path will be adjusted to match what you named it. Once there, type <strong class="source-inline">ls</strong> to see if your script is in the folder – and it very well should be. Type <strong class="source-inline">./MyFirstAutopilotScript.py</strong> to run the script. You may get an error for a missing module. To get a missing module, you would type <strong class="source-inline">pip install &lt;module name&gt;</strong>. So, in our case, we typed <strong class="source-inline">pip install paramiko</strong>, as seen in <span class="No-Break"><em class="italic">Figure 11</em></span><em class="italic">.11</em>. Once you’ve installed any missing modules, attempt to start your script by again typing <strong class="source-inline">python3 ./&lt;scriptname&gt;</strong>, and, if successful, you’ll get the input you see in <span class="No-Break"><em class="italic">Figure 11</em></span><span class="No-Break"><em class="italic">.11</em></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer210">
+<img alt="Figure 11.11 – Install missing modules and start the Autopilot script" height="614" src="image/B21223_11_11.jpg" width="1250"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.11 – Install missing modules and start the Autopilot script</p>
+<p class="callout-heading">Note</p>
+<p class="callout">If not successful, read any errors very carefully. Often, they will tell you what needs to be done. There are an indefinite number of possibilities as to why one might receive an error that others don’t. Almost always, it’s something specific to your technology. One of the best modern-day recommendations we can give when it comes to Linux shells, scripts, and compiling errors is to simply copy and paste that error into your favorite AI chatbot. We highly recommend Google’s Gemini for anything Linux- <span class="No-Break">or code-related.</span></p>
+<p>At this point, your script has <a id="_idIndexMarker945"/>been launched but has not yet been put into play by us. It is at stage zero. To move it along, we will open a web browser and go to <a href="http://localhost/check">http://localhost/check</a>. When you get there, you’ll be asked to sign in with a username and password. The default username and password for Autopilot are both <strong class="bold">offsec</strong>. Then, when the page loads, you’ll get a very simple text report that confirms the attack is at stage zero. In this case, it says it’s at stage zero of one because we only established one stage in our script. If we had twelve stages, it would’ve said <strong class="bold">Attack is at Stage 0 of 12</strong>. You get <span class="No-Break">the point:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer211">
+<img alt="Figure 11.12 – Browser confirms attack is at stage 0 out of the maximum stages in the script" height="141" src="image/B21223_11_12.jpg" width="600"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.12 – Browser confirms attack is at stage 0 out of the maximum stages in the script</p>
+<p>To push our attack along, we will select the <strong class="bold">URL</strong> field in the browser and change the address to read <a href="http://localhost/set?mutex=1">http://localhost/set?mutex=1</a> to set the attack stage to 1. Return to the terminal where you typed the command to invoke your script and you’ll see your script beginning its magic, as seen in <span class="No-Break"><em class="italic">Figure 11</em></span><span class="No-Break"><em class="italic">.13</em></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer212">
+<img alt="Figure 11.13 – Browser confirms attack is at stage 0 out of the maximum stages in the script" height="210" src="image/B21223_11_13.jpg" width="549"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.13 – Browser confirms attack is at stage 0 out of the maximum stages in the script</p>
+<p>There you have it! If you made it this far, congratulations! You’ve just successfully created and run your very own automated cyber-attack script! There are many programming languages that developers will use for scripting. While there are no hard rules for when to use which scripting language, you are most likely to find JavaScript, for example, within a web developer’s toolbox. In cybersecurity, you’ll find a lot of Bash within the *nix family of operating systems, which includes Linux. However, cybersecurity is not restricted to *nix operating systems. Probably the most likely and most universal scripting<a id="_idIndexMarker946"/> language you’ll find for cybersecurity purposes is Python. In fact, you’ve seen dependencies for Python numerous times already within this book alone. This is because Python is versatile, easy to learn compared to other languages, and filled with a very rich set of libraries and frameworks, which make it suitable for tasks such as penetration testing, network security monitoring, automation, and general scripting. That said, let’s take a look at the Python <span class="No-Break">scripting language.</span></p>
+<h1 id="_idParaDest-183"><a id="_idTextAnchor187"/>Python</h1>
+<p>Our Python lessons here are going to be unlike any other programming language lessons you’ve likely encountered thus far. They are<a id="_idIndexMarker947"/> going to be very quick and concise. That’s because we are not here to teach you how to code. There are already a plethora of resources out there for that. While learning how to write your own code is something that has great value, especially at the middle to higher levels of cybersecurity, knowing how to do so from the start is not a necessity. What is a necessity, however, is being able to read and understand code. That requires a much less stringent <span class="No-Break">lesson plan.</span></p>
+<p>One of the most important aspects of Python is knowing when the language in the script is part of the code itself versus being part of the coder’s instructions for humans to read. This is done by entering the <strong class="source-inline">#</strong> symbol, which tells any Python compiler to ignore all the text that comes after it on that line. So, if you have a large amount of non-code information to share, you will need to precede each line with the <strong class="source-inline">#</strong> <span class="No-Break">symbol:</span></p>
+<pre class="source-code">
+<strong class="bold">#</strong> This is the
+<strong class="bold">#</strong> beginning of a
+<strong class="bold">#</strong> multi-line comment</pre> <p>One of the strengths of any programming language is having the ability to define and use variable information. That is information that can change over time. In Python, this is simple. You decide what you want to name your variable, add an equals sign, and then add a default (<span class="No-Break">starting) value:</span></p>
+<pre class="source-code">
+awesomeSauce = 0</pre> <p>This means that any time you see the word <strong class="source-inline">awesomeSauce</strong> in the code, it is either the value of <strong class="source-inline">0</strong> or the new value if a mathematical operation has been applied to it in <span class="No-Break">the code:</span></p>
+<pre class="source-code">
+print(awesomeSauce + 1)
+# This is the same as the computer printing the value of
+# awesomeSauce + 1, in other words 0 + 1 which is 1.</pre> <p>In that context, you’ve also noted that if you want your Python code to print something to the user’s screen, you will simply use the <span class="No-Break">word </span><span class="No-Break"><strong class="source-inline">print</strong></span><span class="No-Break">.</span></p>
+<p>What if you wanted to have a variable that is a word instead of a number? That is just as simple. You would simply place the value inside quotation marks to tell the compiler that the characters inside of the quote, whether letters or numbers, are text characters and <span class="No-Break">not numbers:</span></p>
+<pre class="source-code">
+<strong class="bold">awesomeSauce = “Sweet Baby Ray’s”</strong>
+print("My favorite sauce is: " + awesomeSauce + "!")
+# This prints - My favorite sauce is: Sweet Baby Ray's! - to your
+# screen. You might someday decide that your favorite sauce has
+# changed. So, you simply need to change the variable, leaving the
+# rest of the code alone.
+<strong class="bold">awesomeSauce = "Sour Baby Ray's"</strong>
+print("My favorite sauce is: " + awesomeSauce + "!")
+# Now it will print – My favorite sauce is: Sour Baby Ray's!</pre> <p>You’ll notice the string, that is text characters, is reflected by using quotations. Both mathematical values and calling a variable, as seen inside the <strong class="source-inline">print</strong> function, do not use quotes. You can use <a id="_idIndexMarker948"/>plus symbols to piece together the different pieces of a phrase in the event a variable is used within <span class="No-Break">a sentence.</span></p>
+<p>You’ll notice the plus signs are not adding numbers per se but they are adding something. They are adding pieces of the string together. Rest assured, when you see the usual mathematical operators within Python code, they are performing the mathematical operations you think they are in some capacity. These include <span class="No-Break">the following:</span></p>
+<table class="No-Table-Style _idGenTablePara-1" id="table001-2">
+<colgroup>
+<col/>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break"><strong class="bold">Title</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break"><strong class="bold">Symbol</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break"><strong class="bold">Operation</strong></span></p>
+</td>
+</tr>
+</thead>
+<tbody>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Plus</span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="source-inline">+</strong></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">Addition</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Minus</span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="source-inline">-</strong></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">Subtraction</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Asterisk</span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="source-inline">*</strong></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">Multiplication</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Forward Slash</span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="source-inline">/</strong></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">Division</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Percent</span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="source-inline">%</strong></p>
+</td>
+<td class="No-Table-Style">
+<p><span lang="en-US" xml:lang="en-US">Modulus (the remainder </span><span class="No-Break" lang="en-US" xml:lang="en-US">of division)</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Double asterisk</span></p>
+</td>
+<td class="No-Table-Style">
+<p><strong class="source-inline">**</strong></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">Exponents</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Table 11.1 – Python mathematical operators</p>
+<p>There are others but this is just an introductory lesson to help you understand a basic piece of code written in Python. Along those lines, you will also want to familiarize yourself with comparison<a id="_idIndexMarker949"/> operators. This is when you compare one piece of data to another. These include <span class="No-Break">the following:</span></p>
+<table class="No-Table-Style _idGenTablePara-1" id="table002">
+<colgroup>
+<col/>
+<col/>
+</colgroup>
+<thead>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><strong class="bold">Comparison </strong><span class="No-Break"><strong class="bold">Operator Name</strong></span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break"><strong class="bold">Symbol</strong></span></p>
+</td>
+</tr>
+</thead>
+<tbody>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Equal</span></p>
+</td>
+<td class="No-Table-Style">
+<p>a == b</p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Not equal</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span lang="en-US" xml:lang="en-US">a != b</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Less than</span></p>
+</td>
+<td class="No-Table-Style">
+<p>a &lt; b</p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p>Less than or <span class="No-Break">equal to</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">a &lt;=b</span></p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p><span class="No-Break">Greater than</span></p>
+</td>
+<td class="No-Table-Style">
+<p>a &gt; b</p>
+</td>
+</tr>
+<tr class="No-Table-Style">
+<td class="No-Table-Style">
+<p>Great than or <span class="No-Break">equal to</span></p>
+</td>
+<td class="No-Table-Style">
+<p><span class="No-Break">a &gt;=b</span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Table 11.2 – Python comparison operator</p>
+<p>Using these mathematical and comparison operators, you can control the flow of information. So when reading Python code, you can examine such statements as follows to get an idea of what the code might do based on the <span class="No-Break">identified conditions:</span></p>
+<pre class="source-code">
+If a &lt; b:
+print(a + " is less than " + b)
+elif a == b:
+print(a + " is equal to " + b)
+else:
+print(a + " is greater than " + b)</pre> <p>In the preceding code, <strong class="source-inline">elif</strong> stands for <em class="italic">“or else if the previous statement isn’t true but if this statement is true, then do the following line”</em> and <strong class="source-inline">else</strong> stands for <em class="italic">“or else if none of the previous statements are true, then perform the following action no </em><span class="No-Break"><em class="italic">matter what.”</em></span></p>
+<p>You can also control the flow <a id="_idIndexMarker950"/>of information with loops. The first is called a <strong class="source-inline">while</strong> loop. It just means that while a condition is true, continue to perform the following action over and over and over until it is no longer true. Consider <span class="No-Break">the following:</span></p>
+<pre class="source-code">
+morale = 0
+while morale &lt; 11:
+	if morale == 10:
+		print("Morale has improved! The beatings will stop.")
+	elif morale &lt; 10:
+		print ("The beatings will continue")
+	morale += 1</pre> <p>What do you think the preceding code would do? If you said it would print the line <strong class="source-inline">"The beatings will continue"</strong> 10 times before printing the line <strong class="source-inline">"Morale has improved! The beatings will stop."</strong> just one time, you are correct. That’s because the <strong class="source-inline">morale</strong> variable starts at the value of <strong class="source-inline">0</strong> and the final line of the code means to increment the value of that variable by <strong class="source-inline">1</strong> and then run through the loop again. It will continue to run through the loop until the initial condition becomes false. That happens when <strong class="source-inline">morale</strong> reaches the value of <strong class="source-inline">11</strong> because the <strong class="source-inline">while</strong> loop clearly states that it is only to run if the value is less <span class="No-Break">than </span><span class="No-Break"><strong class="source-inline">11</strong></span><span class="No-Break">.</span></p>
+<p>The next kind of loop is called a <strong class="source-inline">for</strong> loop. In Python, this is a little bit different from many other languages. It’s <a id="_idIndexMarker951"/>much simpler. It more or less means <em class="italic">“as long as”</em> and can be done with strings <span class="No-Break">or numbers:</span></p>
+<pre class="source-code">
+for n in range (20, 60, 5):
+	print(x)
+# calling the (range) function. 1<span class="superscript">st</span> number is bottom, 2<span class="superscript">nd</span> is top, 3<span class="superscript">rd</span> is
+# the value to increment by. In this case, we are counting by fives
+# starting at the number 20 and finishing at 55.
+money = ["rich", "wealthy", "modest", "struggling", "poor", "broke", "can't even afford to pay attention"]
+for m in money:
+	if m == "struggling"
+		continue
+	print(m)
+# This for loop will loop through the entire list of text except when # it reaches the word "struggling" which it will skip but then
+# continue on with the rest of the list.</pre> <p>The core of any programming language is the function. In Python, functions are declared pretty much the same as in any other language, with just a subtle change in syntax. Creating a function in Python is done by using the word <strong class="source-inline">def</strong>, which stands for define. Then, on the same line, you state the name of the function, and within parentheses, any parameters you wish to set for that<a id="_idIndexMarker952"/> function. If you later wish to call that function, you simply type the function name with any value you want to apply to it within the parentheses. The following code sets the parameter of <strong class="source-inline">cname</strong> to serve as a variable for any information that is passed to the function whenever it is called from somewhere else in the code. We call the function six times, passing six different text variables to the original function parameter of <strong class="source-inline">cname</strong> to <span class="No-Break">be processed:</span></p>
+<pre class="source-code">
+def security_clearance(cname):
+	print(cname + "** CLASSIFIED **")
+security_clearance("Confidential")
+security_clearance("Secret")
+security_clearance("Top Secret")
+security_clearance("Top Secret – White Knight")
+security clearance("Top Secret – Black Knight")
+security clearance("Top Secret – Night night")</pre> <p>The preceding code creates a function called <strong class="source-inline">security_clearance</strong> and accepts a parameter that it has named <strong class="source-inline">cname</strong>. When the function is called, it executes the commands within. In this case, the only command is to take the parameter of <strong class="source-inline">cname</strong>, which will be entered when the function is called, and append the text <strong class="source-inline">** CLASSIFIED **</strong> to it. The following six lines are all examples of calling the function and passing the data that is within the parentheses to the function, making it the <strong class="source-inline">cname</strong> variable. So, for each line, it takes the value in parentheses and adds the text <strong class="source-inline">** CLASSIFIED **</strong> after it. The first line, for example, would print <strong class="source-inline">"Confidential ** CLASSIFIED **"</strong> to <span class="No-Break">your screen.</span></p>
+<p>When reading Python code, any time you see <strong class="source-inline">def &lt;sometext&gt;(&lt;value&gt;)</strong>, then you can assume that’s a function being defined. Any time you see <strong class="source-inline">&lt;sometext&gt;(&lt;value&gt;)</strong>, without the word <strong class="source-inline">def</strong> in front of it, that’s an example of calling the function and taking the value in parentheses and passing it to the function definition where the instructions are located about what to do with the information you are passing <span class="No-Break">to it.</span></p>
+<p>If you see the following in a Python script, you can safely conclude that the code is trying to read the file that you see listed at the location of the file path you see listed. Of course, if you’re trying to<a id="_idIndexMarker953"/> open that file, hopefully, it means you’re working for the FBI and looking to save some lives. Otherwise, you might find yourself in a very <span class="No-Break">bad place:</span></p>
+<pre class="source-code">
+f = open("D:\\mafiaFiles\hitlist.txt", "r")
+print(f.read())</pre> <p>You should also look for the Python code to create new files or write <span class="No-Break">to them:</span></p>
+<pre class="source-code">
+f = open("hitlistTwo.txt", "a")
+f.write("'Joey The Sledgehammer Hoffa")
+f.close()
+# A good coder will close the file after appending to it
+# and then open it using f.read to view it
+f = open("hitlistTwo.txt", "r")
+print(f.read())</pre> <p>If you see code that looks like the following, that’s Python connecting to a database. In this case, it’s connecting to MySQL, which is a very popular database <span class="No-Break">folks use:</span></p>
+<pre class="source-code">
+import mysql.connector
+myfirstdatabase = mysql.connector.connect(
+ host="localhost",
+ user="Karllane",
+ password="Batman"
+)
+print(myfirstdatabase)
+# You will see words, usually in all caps but not necessarily, like
+# SELECT, INSERT, WHERE, DELETE, CREATE, JOIN, LIMIT, ORDER BY,
+# and DROP that will indicate database activity is occurring</pre> <p>Okay, so there’s a whole lot more to Python folks; an exponentially greater number of features. However, the purpose of this lesson is not to teach you Python. It’s how to recognize the most basic<a id="_idIndexMarker954"/> components of Python code so that, as you navigate through others’ Python scripts, you can glean a basic understanding of what the code <span class="No-Break">is doing.</span></p>
+<p>Let’s put your newly acquired Python identification skills to use. Consider the following code, which checks for specific keywords in log files and raises an alert if it finds <span class="No-Break">a match:</span></p>
+<pre class="source-code">
+# Import libraries
+import re                  #Regular expressions for pattern matching
+#Main function
+def check_logs(filename, keywords):
+  with open(filename, "r") as f:      #open the log file to check
+    for line in f:                    #Read the log file line by line
+      for keyword in keywords:        #Check for each keyword
+        if re.search(keyword, line):  #If there's a match… do nextline
+          print(f"Alert! Found keyword '{keyword}' in log file: {line.strip()}")
+# Define the log file path and keywords to search for
+log_file = "/path/to/your/log/file.log"
+keywords = ["ERROR", "WARNING", "unauthorized access"]
+# Call the function to check the logs
+check_logs(log_file, keywords)</pre> <p>As we near the<a id="_idIndexMarker955"/> end of our journey, we’ve begun to cover automation and have taken a look at the Python code that Autopilot uses – and many of Kali Purple’s utilities use, for that matter. We should now take a look at the framework that guides Kali Purple’s structure. We introduced it briefly in <a href="B21223_01.xhtml#_idTextAnchor013"><span class="No-Break"><em class="italic">Chapter 1</em></span></a>. It is the NIST CSF, which was updated by NIST for the first time on February 26, 2024, to <span class="No-Break">version 2.0.</span></p>
+<h1 id="_idParaDest-184"><a id="_idTextAnchor188"/>NIST Control</h1>
+<p>When Kali Purple <a id="_idIndexMarker956"/>was developed, initially as a proof of concept (which rapidly evolved into a total framework and platform), the developers based it on five basic cyber defense stages: <em class="italic">Identify</em>, <em class="italic">Protect</em>, <em class="italic">Detect</em>, <em class="italic">Respond</em>, and <em class="italic">Recover</em>. These five stages<a id="_idIndexMarker957"/> themselves were developed by the <strong class="bold">National Institute of Standards and Technology</strong> (<strong class="bold">NIST</strong>). In February of 2024, NIST added a sixth stage, <em class="italic">Govern</em>, to <span class="No-Break">the framework.</span></p>
+<p>NIST is actually an agency within the US Department of Commerce and was founded way back in the year 1901 when most technology was likely to be manifested within the factory industry. The great irony of NIST creating a cyber framework is that it was originally established as a physical science laboratory. However, it has expanded its area of coverage over the years and its purpose as it relates to cybersecurity is to establish best practices to improve the security and resilience of information systems as well as the protection of sensitive data. NIST regularly conducts research and provides resources to help organizations address cybersecurity challenges so they can maintain a strong <span class="No-Break">cybersecurity posture.</span></p>
+<p>If you boot up your Kali Purple VM instance and log in to the desktop, you’ll see an icon in the upper-left corner, just<a id="_idIndexMarker958"/> underneath the word <strong class="bold">File</strong>, with the Kali Linux dragon mascot and a purple background. Select that icon and notice the organization of the <span class="No-Break">drop-down menu:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer213">
+<img alt="Figure 11.14 – Kali Purple tools menu" height="864" src="image/B21223_11_14.jpg" width="700"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.14 – Kali Purple tools menu</p>
+<p>The full NIST framework consists of three main – or parent – components, the Core, Implementation Tiers, and Profiles. For the purposes of Kali Purple, we are only going to focus on the Core. More specifically, we are going to focus on the five main functions of the Core. Those functions are <em class="italic">Identify</em>, <em class="italic">Protect</em>, <em class="italic">Detect</em>, <em class="italic">Respond</em>, <span class="No-Break">and </span><span class="No-Break"><em class="italic">Recover</em></span><span class="No-Break">.</span></p>
+<h2 id="_idParaDest-185"><a id="_idTextAnchor189"/>Identify</h2>
+<p>The <em class="italic">Identify</em> function in the NIST <a id="_idIndexMarker959"/>CSF is a critical component that focuses on developing an understanding of the organization’s assets, business environment, cybersecurity risks, and processes. It involves establishing<a id="_idIndexMarker960"/> the foundation for effective cybersecurity risk management by identifying and documenting the following elements in <span class="No-Break">great detail:</span></p>
+<ul>
+<li><span class="No-Break">Asset management</span></li>
+<li><span class="No-Break">Business environment</span></li>
+<li><span class="No-Break">Governance</span></li>
+<li>Risk management <span class="No-Break">and strategy</span></li>
+<li>Supply chain <span class="No-Break">risk management</span></li>
+<li>Cybersecurity roles <span class="No-Break">and responsibilities</span></li>
+</ul>
+<p>Can you think of any tools we’ve covered that might apply to any of these areas? There indeed are some that will loosely fall under this category but the majority of Kali Purple’s <em class="italic">Identify</em> tools can be found on the Red Team – the strictly Kali Linux – side of the family. We’ve talked about several of those previously and in this chapter. They include the likes of GVM, Kali Autopilot, Maltego, <span class="No-Break">and ZAP.</span></p>
+<h2 id="_idParaDest-186"><a id="_idTextAnchor190"/>Protect</h2>
+<p>The <em class="italic">Protect</em> function within the <a id="_idIndexMarker961"/>NIST CSF focuses on implementing safeguards to ensure<a id="_idIndexMarker962"/> the security, integrity, and resilience of an organization’s assets and infrastructure. It aims to develop and implement appropriate safeguards to ensure the protection and privacy of sensitive data, as well as to respond to cybersecurity risks in a timely and effective manner. Some of the core aspects of this function include <span class="No-Break">the following:</span></p>
+<ul>
+<li><span class="No-Break">Access control</span></li>
+<li>Awareness <span class="No-Break">and training</span></li>
+<li><span class="No-Break">Data security</span></li>
+<li>Information protection, processes, <span class="No-Break">and procedures</span></li>
+<li><span class="No-Break">Technology maintenance</span></li>
+<li>Secure <span class="No-Break">tech configurations</span></li>
+</ul>
+<p>The tools we’ve covered <a id="_idIndexMarker963"/>definitely contribute to this function as well as some<a id="_idIndexMarker964"/> of the Kali Linux-specific tools. Keep in mind that the classification of these tools can fall under multiple core functions, and where a tool falls may be subjective in nature, depending on how you use it. Under <em class="italic">Protect</em>, you’ll find Suricata and Zeek; the latter will also fall under <em class="italic">Detect</em>, which we speak <span class="No-Break">of next.</span></p>
+<h2 id="_idParaDest-187"><a id="_idTextAnchor191"/>Detect</h2>
+<p>The <em class="italic">Detect</em> function of the NIST CSF involves the ongoing identification of, detection of, and timely response to cybersecurity <a id="_idIndexMarker965"/>events. It focuses on developing <a id="_idIndexMarker966"/>and implementing systems, processes, and capabilities to identify the occurrence of cybersecurity threats, unauthorized activities, and potential vulnerabilities within an <span class="No-Break">organization’s environment.</span></p>
+<p>The primary goal of this function is to enable organizations to promptly and effectively recognize and respond to security incidents, intrusions, and anomalous activities that may pose risks to their assets, data, and operations. Some of the key components associated with the <em class="italic">Detect</em> function include <span class="No-Break">the following:</span></p>
+<ul>
+<li><span class="No-Break">Continuous monitoring</span></li>
+<li><span class="No-Break">Anomaly detection</span></li>
+<li>Threat <span class="No-Break">intelligence integration</span></li>
+<li>Incident <span class="No-Break">response preparedness</span></li>
+<li>Vulnerability scanning <span class="No-Break">and assessment</span></li>
+<li>Security <span class="No-Break">event correlation</span></li>
+<li>Endpoint detection <span class="No-Break">and response</span></li>
+<li>Threat hunting <span class="No-Break">and analysis</span></li>
+</ul>
+<p>As you might well have guessed, most of the tools we’ve covered definitely fall into this category, such as the<a id="_idIndexMarker967"/> ELK Stack, depending on how you configure and use<a id="_idIndexMarker968"/> it, and Arkime and Zeek, the IDS and IPS systems we just talked about in the <span class="No-Break">previous section.</span></p>
+<h2 id="_idParaDest-188"><a id="_idTextAnchor192"/>Respond</h2>
+<p>The <em class="italic">Respond</em> core function pertains to the development and implementation of measures and processes to<a id="_idIndexMarker969"/> respond promptly and effectively to cybersecurity<a id="_idIndexMarker970"/> incidents, breaches, and disruptions. It emphasizes the capability to contain, mitigate, and recover from security events, while also ensuring the restoration of normal operations and the preservation of critical assets. The <em class="italic">Respond</em> function focuses on coordinated actions, communication, and strategic decision-making to address the impact of security incidents and minimize their consequences. The core features of this function include <span class="No-Break">the following:</span></p>
+<ul>
+<li>Incident <span class="No-Break">response planning</span></li>
+<li>Containment <span class="No-Break">and eradication</span></li>
+<li>Communication <span class="No-Break">and reporting</span></li>
+<li><span class="No-Break">Evidence preservation</span></li>
+<li>Recovery <span class="No-Break">and remediation</span></li>
+<li><span class="No-Break">Post-incident analysis</span></li>
+<li>Legal and <span class="No-Break">regulatory compliance</span></li>
+<li>Business continuity <span class="No-Break">and resilience</span></li>
+<li><span class="No-Break">Stakeholder coordination</span></li>
+</ul>
+<p>The tools and topics we discussed in <a href="B21223_08.xhtml#_idTextAnchor134"><span class="No-Break"><em class="italic">Chapter 8</em></span></a> are directly related to this function, such as Cortex, MISP, <span class="No-Break">and TheHive.</span></p>
+<h2 id="_idParaDest-189"><a id="_idTextAnchor193"/>Recover</h2>
+<p>The <em class="italic">Recover</em> core function within the NIST CSF focuses on developing and implementing strategies and <a id="_idIndexMarker971"/>processes to restore, recover, and reconstitute critical capabilities and services following cybersecurity incidents, disruptions, or breaches. It aims to minimize the impact of incidents, improve response effectiveness, and facilitate the timely recovery of operations, systems, and <a id="_idIndexMarker972"/>data. This function emphasizes continuity and restoration of normal business operations while simultaneously addressing the root causes of incidents to prevent future reoccurrences. Key recovery components include <span class="No-Break">the following:</span></p>
+<ul>
+<li><span class="No-Break">Continuity planning</span></li>
+<li><span class="No-Break">Resource restoration</span></li>
+<li>Data recovery <span class="No-Break">and integrity</span></li>
+<li><span class="No-Break">Infrastructure reconstitution</span></li>
+<li>Resilience <span class="No-Break">and redundancy</span></li>
+<li>Post-incident analysis <span class="No-Break">and improvement</span></li>
+<li><span class="No-Break">Stakeholder communication</span></li>
+<li>Legal and <span class="No-Break">regulatory compliance</span></li>
+<li>Vendor and supply <span class="No-Break">chain coordination</span></li>
+<li>Business <span class="No-Break">impact assessment</span></li>
+</ul>
+<p>Several of the tools we’ve covered would contribute to the <em class="italic">Recover</em> function of the NIST CSF. However, it’s important to recognize that Kali Linux itself provides over 600 preinstalled tools, and Kali Purple – which includes the default Kali Linux – adds an additional 100 or so tools. In this book, we’ve covered some of the most common, well-known tools and added coverage of others that are similar or supportive of those. Most of the data collection tools assist in recovery, such as Elasticsearch, Suricata, Zeek logs, and especially TheHive/Cortex group <span class="No-Break">of utilities.</span></p>
+<h2 id="_idParaDest-190"><a id="_idTextAnchor194"/>Govern</h2>
+<p>The <em class="italic">Govern</em> function in the NIST CSF was added to the framework in version 2.0, which was released in February 2024. It was created with <strong class="bold">Chief Information Security Officers</strong> (<strong class="bold">CISOs</strong>) in mind. As the role of <a id="_idIndexMarker973"/>cybersecurity as a self-contained profession expanded and the tools, teams, and <a id="_idIndexMarker974"/>challenges grew, so did the gaps in policy, transparency, and the ability to manage as such. <em class="italic">Govern</em> is designed to improve transparency, provide <a id="_idIndexMarker975"/>organizational context, establish clear definitions of roles in cybersecurity functions, and promote adherence to policies, procedures, and processes. We won’t delve too deeply into this function here because this book is about learning about and understanding a suite of technologies. However, those technologies are based upon the other five NIST CSF functions and those five functions are now considered to fall under the all-encompassing sixth function of <em class="italic">Govern</em>. <em class="italic">Govern</em> establishes the pathways and parameters of what an organization may do to achieve the other five functions. It helps CISOs to understand the full organization context as it relates to risk management, roles, responsibilities, authority, and policy. It is very much an oversight function. We will provide a direct link to the NIST CSF 2.0 in <span class="No-Break"><em class="italic">Further reading</em></span><span class="No-Break">.</span></p>
+<h1 id="_idParaDest-191"><a id="_idTextAnchor195"/>Summary</h1>
+<p>What a journey! Here in this final chapter of <em class="italic">Introduction to Kali Purple</em>, you evaluated the process of automating pentesting through the simulation of cyber-attacks by setting up Kali Autopilot and providing a simple scanning script. Now, you know the basics of creating your own automated <span class="No-Break">attack script.</span></p>
+<p>We also covered a very high-level overview of the Python scripting language, with the expectation that you’d recognize the core components of the majority of Python scripts out there. This should enable you to understand what is going on within any particular script and even give you the ability to edit the script so that it performs to your liking without having to actually know how to write <span class="No-Break">Python code!</span></p>
+<p>Finally, we covered the updated NIST CSF 2.0, which includes the newly added <em class="italic">Govern</em> function, and grabbed a basic understanding of each of the NIST functions, including <em class="italic">Govern</em>. We learned that the Kali Purple distribution was created with the NIST CSF in mind and the idea that a well-rounded set of tools would be most useful for cybersecurity professionals from either the Red or <span class="No-Break">Blue team.</span></p>
+<p>As you continue to negotiate your cybersecurity career, whether you are on the Blue Team, the Red Team, or are a true Purple Teamer who utilizes concepts and technologies from both to better understand and master both, you will always encounter new challenges, and with them, new solutions. Remember, the learning never stops because the bad actors never stop. They will always find new exploits for which the good actors will always find cures. Perhaps, eventually, someday we will have a foolproof world where bad deeds will no longer be possible. However, until such a world comes to fruition, there will always be a need for folks like you <span class="No-Break">and us.</span></p>
+<p>We are a community of professional problem solvers, and we emphasize the use of the word professional. We are not here to pick on others or boost our own egos (well… maybe a little), but instead, we are here to hold each other up; build each other up; empower each other; and create a unified, safer world using nothing but our brains and ability to <span class="No-Break">solve problems.</span></p>
+<p>We leave you with this final instruction as you embark on upskilling your cyber careers: No matter what your knowledge and skill level, always be kind, humble, and curious. Master those three things and the rest of your path will present itself <span class="No-Break">before you.</span></p>
+<h1 id="_idParaDest-192"><a id="_idTextAnchor196"/>Questions</h1>
+<ol>
+<li>What is <span class="No-Break">Kali Autopilot?</span><ol><li class="Alphabets">An application used to <span class="No-Break">hack drones</span></li><li class="Alphabets">An application used to automate pentesting and mock cyber-attacks against <span class="No-Break">digital defenses</span></li><li class="Alphabets">An application used by airline pilots flying out <span class="No-Break">of California</span></li></ol></li>
+<li>If you want to learn how to catch a hacker then, you <span class="No-Break">need to…</span><ol><li class="Alphabets">Watch Swordfish over and over until it <span class="No-Break">sinks in</span></li><li class="Alphabets">Eat like a hacker; diet <span class="No-Break">is critical!</span></li><li class="Alphabets">Go to hacker school and complete a four-year degree <span class="No-Break">in hacking</span></li><li class="Alphabets">Think like <span class="No-Break">a hacker</span></li></ol></li>
+<li>How do you distinguish between Python code and text meant for <span class="No-Break">human eyes?</span><ol><li class="Alphabets">All data after the <strong class="source-inline">#</strong> symbol is ignored by the compiler/interpreter and meant for <span class="No-Break">human eyes</span></li><li class="Alphabets">Python statements all end <span class="No-Break">in </span><span class="No-Break"><strong class="source-inline">Sssssssssss</strong></span><span class="No-Break">…</span></li><li class="Alphabets">All data after the <strong class="source-inline">#</strong> symbol is processed by the compiler/interpreter and everything else is <span class="No-Break">for humans</span></li><li class="Alphabets">Only members of Slytherin House can <span class="No-Break">read Python</span></li></ol></li>
+<li>How does one define a function <span class="No-Break">in Python?</span><ol><li class="Alphabets">Type <strong class="source-inline">define func</strong> followed by the <span class="No-Break">function name</span></li><li class="Alphabets">Type the name of the function and append it <span class="No-Break">with </span><span class="No-Break"><strong class="source-inline">.py</strong></span></li><li class="Alphabets">Type the word <strong class="source-inline">def</strong> followed by the function name and function parameters <span class="No-Break">in parenthesis</span></li><li class="Alphabets">Look it up in <span class="No-Break">Webster’s Dictionary</span></li></ol></li>
+<li>For the first time since its creation, NIST has released an update to the CSF. What is the new sixth function that has been added to <span class="No-Break">the framework?</span><ol><li class="Alphabets"><span class="No-Break">Identify</span></li><li class="Alphabets"><span class="No-Break">Govern</span></li><li class="Alphabets"><span class="No-Break">Rule</span></li><li class="Alphabets"><span class="No-Break">Protect</span></li></ol></li>
+<li>Who’s your favorite author (only one <span class="No-Break">correct answer)?</span><ol><li class="Alphabets"><span class="No-Break">Carl Laehn</span></li><li class="Alphabets"><span class="No-Break">Karl Layne</span></li><li class="Alphabets"><span class="No-Break">Karl Lane</span></li><li class="Alphabets"><span class="No-Break">Carl Lane</span></li><li class="Alphabets"><span class="No-Break">Carl Layne</span></li><li class="Alphabets"><span class="No-Break">Karl Laehn</span></li><li class="Alphabets"><span class="No-Break">James Patterson</span></li></ol></li>
+</ol>
+<h1 id="_idParaDest-193"><a id="_idTextAnchor197"/>Further reading</h1>
+<ul>
+<li><strong class="bold">Understanding CIDR </strong><span class="No-Break"><strong class="bold">Notation</strong></span><span class="No-Break">: </span><a href="https://www.w3schools.com/training/aws/understanding-cidr-notation.php"><span class="No-Break">https://www.w3schools.com/training/aws/understanding-cidr-notation.php</span></a></li>
+<li><strong class="bold">Learn to code in </strong><span class="No-Break"><strong class="bold">Python</strong></span><span class="No-Break">: </span><a href="https://www.packtpub.com/search?query=introduction%20to%20python"><span class="No-Break">https://www.packtpub.com/search?query=introduction%20to%20python</span></a></li>
+<li><strong class="bold">NIST CSF 2.0 </strong><span class="No-Break"><strong class="bold">publication</strong></span><span class="No-Break">: </span><a href="https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf"><span class="No-Break">https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf</span></a></li>
+</ul>
+</div>
+</div></body></html>

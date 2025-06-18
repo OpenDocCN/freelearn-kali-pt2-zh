@@ -1,0 +1,1015 @@
+<html><head></head><body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Password Cracking</h1>
+                </header>
+            
+            <article>
+                
+<p>In this chapter, we will cover the following topics:</p>
+<ul>
+<li>Resetting local Windows machine password</li>
+<li>Cracking remote Windows machine passwords</li>
+<li>Windows domain password attacks</li>
+<li>Cracking local Linux password hashes</li>
+<li>Cracking password hashes with a wordlist</li>
+<li>Brute force password hashes</li>
+<li>Cracking FTP passwords</li>
+<li>Cracking Telnet and SSH passwords</li>
+<li>Cracking RDP and VNC passwords</li>
+<li>Cracking ZIP file passwords</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Introduction</h1>
+                </header>
+            
+            <article>
+                
+<p>Password cracking has its own uses, often times you may be able to access and recover password databases but they are encrypted and on other times to escalate privilege or gain access, you may have to use a password attack.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Resetting local Windows machine password</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will crack the local Windows machine passwords with direct access to the computer.</p>
+<p>In this recipe, we will also simulate booting off a CD-ROM in order to reset the local password.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Windows workstation is powered down</li>
+<li>You have recently downloaded the Kali ISO</li>
+<li>Have a local standard user on the Windows workstation with a password</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now reset the Windows password using Kali boot media:</p>
+<ol>
+<li>With your Windows machine off, start by going into VirtualBox, click on the Windows VM, and click on <span class="packt_screen">Settings</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="252" width="250" class="alignnone size-full wp-image-1045 image-border" src="assets/5c9c15f5-f2e0-4f49-916d-4ba8edf6969c.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">VirtualBox machine screen</div>
+<ol start="2">
+<li>From the <span class="packt_screen">Settings</span> menu click on <span class="packt_screen">Storage</span>.<strong> </strong>Click on the <span class="packt_screen">CD-ROM</span> drive and choose the Kali ISO you recently downloaded. Then click <span class="packt_screen">OK</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="498" width="642" class="alignnone size-full wp-image-1046 image-border" src="assets/5b5a9489-6d84-44bd-b57b-f884d21a304b.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">VirtualBox machine storage settings</div>
+<ol start="3">
+<li>Now start your Windows VM and it should automatically load the Kali CD. From the main menu select <span class="packt_screen">Live (forensic mode)</span>.</li>
+</ol>
+<div class="packt_tip">Watch the screen carefully depending on what operating system you are working with, you may be asked to boot off the CD. </div>
+<div class="CDPAlignCenter CDPAlign"><img height="362" width="443" class="alignnone size-full wp-image-1047 image-border" src="assets/8f70c352-1d9a-464f-bd82-943996ea1f0e.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali boot screen</div>
+<ol start="4">
+<li>Once Kali is running open your terminal screen. <img src="assets/d96f9769-1242-42d7-9f44-8eee7330cd4c.png"/></li>
+<li>You must change to the directory of your mounted Windows volume. Your ID of the drive will be different from mine but follow the following steps to <span>find it:</span></li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd /media/root</strong><br/><strong>ls</strong></pre>
+<ol start="6">
+<li>From the listed directory contents you will probably just have the one drive – use the <kbd>cd</kbd> command to make that the active drive. Once in the directory use the following commands:</li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><strong>cd Windows/System32/config</strong><br/><strong>chntpw -l SAM</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="254" width="484" class="alignnone size-full wp-image-1048 image-border" src="assets/0daee393-bb04-46c2-8e74-d33609b46d7c.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali SAM output</div>
+<ol start="7">
+<li>You will now see a list of users and whether or not they are an admin. Let's reset <kbd>UserA</kbd> password and make it an admin on the system:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>chnt -u UserA SAM</strong></pre>
+<ol start="8">
+<li>You will now be brought to a configuration screen. Select 1 and then 3, then select <kbd>Y</kbd> when asked to do it. Next hit <kbd>q</kbd> to quit and select <kbd>y</kbd> to write the hive files back:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="293" width="440" class="alignnone size-full wp-image-1049 image-border" src="assets/560817cf-ca2a-4801-966e-baa601eda581.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">chnt user modify screen</div>
+<ol start="9">
+<li>To validate, type the following command and you will note that <kbd>UserA</kbd> is now an <kbd>ADMIN</kbd> and has a <kbd>*BLANK*</kbd> password:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>chntpw -l SAM</strong> </pre>
+<div class="CDPAlignCenter CDPAlign"><img height="161" width="455" class="alignnone size-full wp-image-1050 image-border" src="assets/cdc199c4-db7d-44dd-b2cb-682e77e71281.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">chnt show SAM screen</div>
+<ol start="10">
+<li>Power off the VM at this point and remove the ISO from the CD-ROM drive. Lastly, start the VM. This time it should take you right to Windows. Click on your user and you will be brought right in without requiring a password:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="449" width="579" class="alignnone size-full wp-image-1051 image-border" src="assets/3d63314c-84b5-4479-8c62-64d04e00dec6.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Windows 7 main login screen</div>
+<ol start="11">
+<li>If you go in and check your user account you will notice that <kbd>UserA</kbd> is now an administrator:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="370" width="494" class="alignnone size-full wp-image-1052 image-border" src="assets/2833cfad-1433-49a0-abfa-87061b6e0ee5.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Windows 7 user administration screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking remote Windows machine passwords</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will crack a remote Windows machine password. In this case, we will assume we have already launched the attack through Armitage and have taken the hashes we need. Please refer to <a href="9f678d15-2115-4e29-a75d-03dba65d3398.xhtml" target="_blank">Chapter 4</a>, <em>Finding Exploits in the Target</em> and the <em>Advanced attacks with Armitage</em> recipe if needed.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+<li>You have started Armitage up and it's running</li>
+<li>You have collected the needed hashes already from the remote machine</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now break the password hashes of a Windows machine:</p>
+<ol>
+<li>From the Armitage screen select <span class="packt_screen">Console</span><strong> </strong>| <span class="packt_screen">Credentials</span>. Notice from our prior attack, we have the hashes that we pulled off the Windows XP machine: </li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="393" width="494" class="alignnone size-full wp-image-1053 image-border" src="assets/be6142ec-f8bd-46d4-bc03-bccd33d710c2.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage screen</div>
+<ol start="2">
+<li>At the bottom select <span class="packt_screen">Crack Passwords</span>.</li>
+<li>From there you will be presented with an <span class="packt_screen">Option</span> <span>dialog. Scroll through it a bit and see the options that are available to you. Without making any changes click on </span>Launch:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="331" width="434" class="alignnone size-full wp-image-1054 image-border" src="assets/acd3ee1d-b805-4893-b710-b4fd7f449b99.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage implementation of John the Ripper</div>
+<ol start="4">
+<li>It will take a couple of minutes but ultimately you should be given the passwords as per the following figure:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="247" width="685" class="alignnone size-full wp-image-1055 image-border" src="assets/9491986a-5c9c-4363-8613-a739537a014d.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Armitage output screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">There's more...</h1>
+                </header>
+            
+            <article>
+                
+<p>This attack uses John the Ripper to extract passwords. If for some reason it was not able to crack your passwords in this run, we will be talking about further advanced techniques and various options to make John the Ripper more effective. We will be exploring this further as we continue through this chapter.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Windows domain password attacks</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will try to crack the active directory database from a Windows domain controller. We will assume you have already recovered the needed files, the system file, and <kbd>NTDS.dit</kbd> files from the computer through other exploitation means.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+<li>Your domain controller has some sample accounts on it</li>
+<li>You have collected the system file and the <kbd>NTDS.dit</kbd> files through other means</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now recover passwords from a windows domain controller:</p>
+<ol>
+<li>Open up a terminal by clicking on the terminal icon. <img src="assets/284e924e-3ef3-46fd-9602-871f91ea344a.png"/></li>
+<li>We need to install a couple of packages to assist us with the cracking of the <strong>Active Directory</strong> (<strong>AD</strong>) <span>Domain. Specifically, these are</span> <kbd>libexedb</kbd> <span>and</span> <kbd>ntdsxtract</kbd><span>. </span></li>
+<li>If you do not already have a logon to GitHub<span>, open your browser and go to <kbd>www.github.com</kbd> and register as a user.</span></li>
+<li>To download <kbd>libexedb</kbd> <span>enter the following commands:</span></li>
+</ol>
+<pre><strong>       cd </strong><br/><strong>       apt install autoconf automake autopoint libtool pkg-config </strong><br/><strong>       git clone https://www.github.com/libyal/libesedb.git </strong><br/><strong>       cd libesedb </strong><br/><strong>       ./synclibs.sh</strong><br/><strong>       ./autogen.sh</strong><br/><strong>       ./configure</strong><br/><strong>       make install</strong></pre>
+<div class="packt_infobox">For more detailed instructions or issues on installation refer to the following site: <a href="https://github.com/libyal/libesedb/wiki/Building">https://github.com/libyal/libesedb/wiki/Building</a>.</div>
+<ol start="5">
+<li>Now let's get the <kbd>ntdsxtract</kbd> scripts:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd </strong><br/><strong>git clone https://www.github.com/csababarta/ntdsxtract.git</strong></pre>
+<ol start="6">
+<li>Let's change to the directory that contains the files we obtained from the domain controller. In my case AD files, from here we will use <kbd>esedbexport</kbd> to parse and extract the <kbd>ntds.dit</kbd> file:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd ~/ADfiles</strong><br/><strong>esedbexport -t ./actived ./ntds.dit </strong><br/><strong>ls -lai </strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="377" width="466" class="alignnone size-full wp-image-1056 image-border" src="assets/da666ad6-6d22-4f53-8cf1-e7c1d60ca4ec.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Directory listing</div>
+<ol start="7">
+<li>Now let's see what files are in our new <kbd>actived.export</kbd> directory:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd actived.export </strong><br/><strong>ls -lai </strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="274" width="512" class="alignnone size-full wp-image-1057 image-border" src="assets/8142a71f-5da5-41d8-9282-1f8a4b3ba31c.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Directory listing</div>
+<ol start="8">
+<li>Now we can extract the hashes and other data output tables that we can then use with John the Ripper:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>python ~/ntdsxtract/dsusers.py ./datatable.3 ./link_table.5 ~/temp --passwordhashes --lmoutfile lm.out --ntoutfile nt.out --pwdformat john --syshive ~/ADfiles/SYSTEM </strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="343" width="568" class="alignnone size-full wp-image-1058 image-border" src="assets/fc5a00be-3df6-48eb-9969-9ca38a4c4331.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">HASH extraction</div>
+<ol start="9">
+<li>Now if we take a look in our <kbd>temp</kbd> directory we will see several files including the two output files that we specified as <kbd>lm.out</kbd> and <kbd>nt.out</kbd>:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>ls -lai ~/temp</strong> </pre>
+<div class="CDPAlignCenter CDPAlign"><img height="237" width="499" class="alignnone size-full wp-image-1059 image-border" src="assets/d5b8ddbd-9fbe-424d-9c5a-e137f1d33f6c.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Directory listing</div>
+<ol start="10">
+<li>Now let's get ready to use <kbd>john</kbd>. One of the first things we need to do is make sure the <kbd>rockyou</kbd> password file is unzipped. Then we will run <kbd>john</kbd> and see the output:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd ~/temp </strong><br/><strong>john nt.out </strong><br/><strong>john --show nt.out </strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="284" width="471" class="alignnone size-full wp-image-1060 image-border" src="assets/51b8abf8-d785-4fe1-856f-2381ed5cc8bc.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Output of cracked passwords</div>
+<div class="packt_infobox">Try running <kbd>john</kbd> with the following command line switch with the<br/>
+<kbd>--format=LM</kbd> and using the <kbd>lm.out</kbd> file.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking local Linux password hashes </h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will crack Linux passwords using John the Ripper.</p>
+<p>In this recipe, we will also simulate booting off a CD-ROM in order to crack the passwords using John the Ripper.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+<li>You have some sample users and passwords setup on your Linux machine</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now crack Linux password with John the Ripper:</p>
+<ol>
+<li>With your Windows machine off start by going into VirtualBox, clicking on the Linux VM, and click on <span class="packt_screen">Settings</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="323" width="269" class="alignnone size-full wp-image-1061 image-border" src="assets/3875a895-0df2-4b57-94ab-1e2dc23321e2.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">VirtualBox virtual machine screen</div>
+<ol start="2">
+<li>From the settings menu click <span class="packt_screen">Storage</span>.<strong> </strong>Click on the CD-ROM drive and choose the Kali ISO that you recently downloaded. Then click <span class="packt_screen">OK</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="455" width="583" class="alignnone size-full wp-image-1062 image-border" src="assets/bf64376b-59b5-4e04-877e-7b4b9d03a476.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">VirtualBox virtual machine storage settings</div>
+<ol start="3">
+<li>Now start your Linux VM and it should automatically load the Kali CD. From the main menu select <span class="packt_screen">Live (forensic mode)</span>.</li>
+</ol>
+<div class="packt_tip">Watch the screen carefully depending on what operating system you are working with, you may be asked to boot off the CD. </div>
+<div class="CDPAlignCenter CDPAlign"><img height="416" width="510" class="alignnone size-full wp-image-1063 image-border" src="assets/e7dab174-ec0e-4cac-9a97-3852a974443b.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali boot screen</div>
+<ol start="4">
+<li>Let's use places to find our Linux volume: <span class="packt_screen">Click Places</span> | <span class="packt_screen">Computer</span><strong> </strong>| <span class="packt_screen">+ Other Locations</span> and double-click on our Linux volume. You can then close places window:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="812" width="1024" class="alignnone size-full wp-image-1064 image-border" src="assets/7f90bf8b-4de3-4757-ac04-6e6716295cee.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Kali places screen</div>
+<ol start="5">
+<li>Now open your terminal screen. <img src="assets/7d490293-ac82-4e19-b3cf-10e92c3297d2.png"/></li>
+<li>You must change to the directory of your mounted Linux <span>volume. Your ID of the drive will be different from mine but follow the following steps to find it:</span></li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd /media/root </strong><br/><strong>ls</strong> </pre>
+<ol start="7">
+<li>From the listed directory contents you will probably just have the one drive - <kbd>cd</kbd> into that drive directory:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="139" width="502" class="alignnone size-full wp-image-1065 image-border" src="assets/53a13360-bbdd-4f5b-82b8-27f3143f1e65.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Directory listing</div>
+<ol start="8">
+<li>Now let's use the <kbd>shadow</kbd> file and John the Ripper to try and crack the passwords. We are going to use John the Ripper with default settings. You will notice from the output that we have cracked a few passwords:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd etc/ </strong><br/><strong>john shadow </strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="174" width="500" class="alignnone size-full wp-image-1066 image-border" src="assets/0fc42544-15ff-4adb-b4dd-1d61125363c5.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">John the Ripper output screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">There's more...</h1>
+                </header>
+            
+            <article>
+                
+<p>Although we did this attack locally against the <kbd>shadow</kbd> file, the attack is the exact same if done remotely, you just need to get the <kbd>shadow</kbd> file from the Linux machine through an exploit.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking password hashes with a wordlist</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will crack hashes using John the Ripper and the password lists. We will also work with a local <kbd>shadow</kbd> file from a Linux machine and we will try to recover passwords based off wordlists. </p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+<li>You have some sample users and passwords setup on your Linux machine</li>
+<li>You copied the <kbd>shadow</kbd> file to your Kali <kbd>root</kbd> directory</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now attempt to crack passwords using a pre-defined wordlist:</p>
+<ol>
+<li>Verify you have the <kbd>shadow</kbd> file copied in the <kbd>root</kbd> directory:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="106" width="527" class="alignnone size-full wp-image-1067 image-border" src="assets/fd16c746-c746-43f3-9ec9-b4a686ca2919.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Directory listing</div>
+<ol start="2">
+<li>Let's extract the <kbd>rockyou</kbd> password list:</li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><strong>gunzip /usr/share/wordlists/rockyou.txt.gz</strong></pre>
+<ol start="3">
+<li>Let's use John the Ripper with the password file that we just extracted against the <kbd>shadow</kbd> file. You will note that we have some passwords that we recovered that appear like very simple passwords:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd  </strong><br/><strong>john --rules -w=/usr/share/wordlists/rockyou.txt shadow </strong><br/><strong>john --show shadow</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="339" width="501" class="alignnone size-full wp-image-1068 image-border" src="assets/d490aa72-f2df-4eef-a535-0e98f3ecbc8b.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">John the Ripper output screen</div>
+<div class="packt_infobox">Note that all the passwords we recovered were not actually dictionary words but some were just very simple combinations.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Brute force password hashes</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will crack hashes using John the Ripper in brute force mode. We will work with a local <kbd>shadow</kbd> file from a Linux machine and we will try to recover passwords by brute forcing them.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+<li>You have some sample users and passwords setup on your Linux machine add some more and make a couple accounts with random 4 character passwords.</li>
+<li>You copied the <kbd>shadow</kbd> file to your Kali <kbd>root</kbd> directory</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will use a brute force method of attack on password hashes:</p>
+<ol>
+<li>Verify you have the <kbd>shadow</kbd> file copied in the <kbd>root</kbd> directory:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="96" width="478" class="alignnone size-full wp-image-1069 image-border" src="assets/88a8d1a9-3809-471b-9676-ab876245515c.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Directory listing</div>
+<ol start="2">
+<li>To use a brute force attack against our <kbd>shadow</kbd> file we can use the following commands. This command will take a very long time to crack any passwords and is considered as a last resort:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd</strong><br/><strong>john -incremental:lanman shadow</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="142" width="479" class="alignnone size-full wp-image-1070 image-border" src="assets/74e13169-5d53-40f5-919b-ab19512b5691.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">John the Ripper progress screen</div>
+<div class="packt_tip">You can press the spacebar at any time to get an update as to how the password cracking is going. Also, there are several options after the <kbd>-incremental</kbd> to speed mine along, as I knew my passwords were all lowercase letters, I used <kbd>-incremental:lower</kbd>.</div>
+<ol start="3">
+<li>After several hours I was able to obtain the passwords for Amy and Sheldon:</li>
+</ol>
+<div class="mce-root CDPAlignCenter CDPAlign"><img height="242" width="541" class="alignnone size-full wp-image-1071 image-border" src="assets/b31d279a-4435-45fa-b3f1-b4c62bd82b6b.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">John the Ripper output screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking FTP passwords</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will try and crack FTP passwords.</p>
+<p>Cracking FTP passwords is a great way to both access the system through FTP and get the username and passwords against other systems and services. For this recipe, we will use hydra to test the system.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+<li>Your Metasploitable machine is powered up</li>
+<li>Validate the IP address of the Metasploitable machine</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's attempt to crack an FTP server passwords:</p>
+<ol>
+<li>Let's start by logging into the Metasploitable machine and we will create a couple of users to test against:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd</strong><br/><strong>sudo useradd raj -p cinnamon -m </strong><br/><strong>sudo useradd penny -p monkey -m</strong><br/><strong>sudo useradd leonard -p penny -m</strong> </pre>
+<ol start="2">
+<li>Validate the IP address of the Metasploitable machine – in my case it is <kbd>192.168.56.104</kbd>.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">You have a username but not a password</h1>
+                </header>
+            
+            <article>
+                
+<p>In this section we will proceed having a known username but an unknown password:</p>
+<ol>
+<li>Open a terminal window in Kali by clicking the icon. <img src="assets/379d3bef-ac2c-4a60-9d63-14a3577c8079.png"/></li>
+</ol>
+<ol start="2">
+<li>We will use a hydra to hunt for passwords using a wordlist. You will note that quite quickly we get a hit for the user we added: </li>
+</ol>
+<pre style="padding-left: 60px"><strong>hydra -l penny -P /usr/share/wordlists/rockyou.txt ftp://192.168.56.104/</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="184" width="490" class="alignnone size-full wp-image-1072 image-border" src="assets/0299755a-f892-48f5-9bd8-1359d4d63315.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Hydra output screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">You have a userlist</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe we will used a defined list of actual or potential usernames that exist on the server:</p>
+<ol>
+<li>Open a terminal window in Kali by clicking the icon. <img src="assets/eadb7caf-999e-4c48-a805-b2dc2641e46b.png"/></li>
+<li>We will use a hydra to hunt for passwords using a wordlist along with a predefined set of usernames. Let's build our name list:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd </strong><br/><strong>touch usernames </strong><br/><strong>echo 'penny' &gt;&gt; usernames </strong><br/><strong>echo 'leonard' &gt;&gt; usernames </strong><br/><strong>echo 'raj' &gt;&gt; usernames</strong> </pre>
+<ol start="3">
+<li>Now let's run hydra using our username list and wordlist. You will notice that this does take some time but ultimately you will get the passwords:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>hydra -L ~/usernames -P /usr/share/wordlists/rockyou.txt ftp://192.168.56.104/</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="323" width="476" class="alignnone size-full wp-image-1073 image-border" src="assets/7a1fbc4f-3018-438e-871f-224358c84fa1.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Hydra output screen</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking Telnet and SSH passwords</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will try and crack Telnet and SSH passwords.</p>
+<p>Cracking Telnet and SSH passwords can be used against systems as well as infrastructures. With this, you have the ability to try and penetrate into switches, firewalls, routers, pretty much any network equipment and most often Linux machines will have this method of access enabled.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+<li>Your Metasploitable machine is powered up</li>
+<li>Validate the IP address of the Metasploitable machine</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will attempt to crack Telnet and SSH passwords:</p>
+<ol>
+<li>Let's start by logging into the Metasploitable machine and we will create a couple of users to test against:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd </strong><br/><strong>sudo useradd johndoe -p ketchup -m </strong><br/><strong>sudo useradd janedoe -p mustard -m </strong><br/><strong>sudo useradd kiddoe -p monkey -m</strong><br/><br/></pre>
+<ol start="2">
+<li>Validate the IP address of the Metasploitable machine—in my case it is <kbd>192.168.56.104</kbd>.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking Telnet passwords with a userlist</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe we will try and crack telnet passwords based on known or potential username list:</p>
+<ol>
+<li>Open a terminal window in Kali by clicking the icon. <img src="assets/512520b2-9a1d-4779-8d1a-f2fe1843e6f2.png"/></li>
+<li>We will use a hydra to hunt for passwords using a wordlist along with a predefined set of usernames. Let's build our name list:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd </strong><br/><strong>touch usernames2 </strong><br/><strong>echo 'kiddoe' &gt;&gt; usernames2 </strong><br/><strong>echo 'janedoe' &gt;&gt; usernames2 </strong><br/><strong>echo 'johndoe' &gt;&gt; usernames2</strong><br/><br/></pre>
+<ol start="3">
+<li>Now let's run hydra using our username list and wordlist. You will notice that this does take some time but ultimately you will get the passwords:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>hydra -L ~/usernames2 -P /usr/share/wordlists/rockyou.txt telnet://192.168.56.104 </strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="246" width="472" class="alignnone size-full wp-image-1074 image-border" src="assets/bd6894f5-4547-47f9-8aa6-ddd774bf1bce.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Hydra output screen</div>
+<div class="packt_tip">Telnet can take a very long time and provide unreliable results. However, because of its prevalence in legacy networks, it's a great method of attack.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking SSH password with a known user</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe we will crack SSH passwords with a know username:</p>
+<ol>
+<li>Open a terminal window in Kali by clicking the icon. <img src="assets/a93ff871-5615-4b56-bd6b-ac4025b5fdcb.png"/></li>
+</ol>
+<ol start="2">
+<li>Now let's run hydra using our known username and wordlist. You will notice that this does take some time but ultimately you will get the passwords:</li>
+</ol>
+<pre style="padding-left: 60px"><span><strong>hydra -t 4 -l kiddoe -P /usr/share/wordlists/rockyou.txt ssh://192.168.56.104</strong> <br/></span></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="183" width="485" class="alignnone size-full wp-image-1075 image-border" src="assets/7a020347-c3b2-43e0-8880-77b44d7de26a.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Hydra output screen</div>
+<div class="packt_tip">The <kbd>-t 4</kbd> slows the amount of processes down so it does not overwhelm or trigger protections against some SSL instances.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking RDP and VNC passwords</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will try and crack RDP and VNC passwords on our Windows machine.</p>
+<p>Cracking into either RDP or VNC can be a very powerful method to access any system. While RDP is restricted to Windows systems VNC is a cross platform remote control utility covering Windows, Mac, and Linux. You can use your previous scanning to look for open VNC ports even on Windows machines.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+<li>Your Windows machine is powered up on the NAT network</li>
+<li>Validate internet connectivity</li>
+<li>You have some valid users on the system with RDP enabled for them</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now attempt to crack remote access passwords:</p>
+<ol>
+<li>Let's start by logging into the Windows machine and validate that we have some accounts ready and also to get VNC downloaded and installed as well.</li>
+<li>Open internet explorer and browse to <kbd>www.uvnc.com</kbd>. Click <span class="packt_screen">Downloads</span> at the top. Select the latest version of the software and download it.</li>
+<li>Install <kbd>UltraVNC</kbd> by double-clicking the icon from the download location:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="399" width="533" class="alignnone size-full wp-image-1077 image-border" src="assets/12fbd7ea-46de-498d-81a0-5617a72db849.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Directory listing</div>
+<ol start="4">
+<li>When asked, click <span class="packt_screen">Run</span> and select <span class="packt_screen">Yes</span> when the UAC dialog box comes up. Select the appropriate language and click the radio button to accept the agreement and click <span class="packt_screen">Next</span>. Click <span class="packt_screen">Next</span> on the release notes info. Validate the installation directory and click <span class="packt_screen">Next</span>. Validate the components being installed—<span class="packt_screen">Full Installation</span><strong> </strong>and verify if the <span class="packt_screen">UltraVNC Server</span> is selected then click <span class="packt_screen">Next</span>. At the shortcut name screen, accept the default and select <span class="packt_screen">Next</span>.</li>
+<li>At the select additional tasks screen selects all check boxes and click <span class="packt_screen">Next</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="313" width="408" class="alignnone size-full wp-image-1078 image-border" src="assets/e553ace3-93ea-4599-9e15-2ce2ecb88399.png"/></div>
+<ol start="6">
+<li>Finally, go ahead and click <span class="packt_screen">Install</span>.</li>
+<li>Once done, click through the remainder of the screens as needed.</li>
+<li>Shut down your Windows machine–switch it back to host only–start the Windows VM.</li>
+<li>For the purpose of this test, we will assume you know how to add users through the control panel using the user accounts tab. Add two users:
+<ul>
+<li>Username - <kbd>UserA</kbd>, password - <kbd>franks</kbd></li>
+<li>Username - <kbd>UserB</kbd>, password - <kbd>beans</kbd></li>
+</ul>
+</li>
+</ol>
+<ol start="10">
+<li>Make sure if you set these users up as standard users and not admins that you allow them to access the RDP services. To do this on Windows 7, right-click on <span class="packt_screen">My Computer</span> and then click on <span class="packt_screen">Properties</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="400" width="572" class="alignnone size-full wp-image-1079 image-border" src="assets/28b7f7d0-7a84-4d1c-bcb1-972f57fd6fd3.png"/></div>
+<ol start="11">
+<li>In the upper- left hand corner, click on <span class="packt_screen">Remote</span> settings.</li>
+</ol>
+<ol start="12">
+<li>On the system properties screen, please make sure that you have the radio button selected to <span class="packt_screen">Allow connections from computers running any version of Remote Desktop (less Secure)</span> selected. <span>Then click on</span> <span class="packt_screen">Select Users... </span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="436" width="391" class="alignnone size-full wp-image-1080 image-border" src="assets/d2ad342d-f7f3-45f9-a91a-010eb7aa9f28.png"/></div>
+<ol start="13">
+<li>From the select user dialog, add <kbd>UserA</kbd> and <kbd>UserB</kbd> and click <span class="packt_screen">OK</span>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="328" width="379" class="alignnone size-full wp-image-1081 image-border" src="assets/2d8a5c0f-2053-41b2-9e6f-06c147f5b0e7.png"/></div>
+<ol start="14">
+<li>Close out all the remaining dialog boxes.</li>
+<li>Validate the IP of your Windows machine; for mine, I am using <kbd>192.168.56.105</kbd>.</li>
+<li>Open a terminal window in Kali by clicking the icon. <img style="font-size: 1em" src="assets/adfdb39a-2c7b-4fac-a887-d1e3d8cf60fb.png"/></li>
+</ol>
+<ol start="17">
+<li>Now let's run hydra using our known username and wordlist. You will notice that this does take some time but ultimately you will get the passwords:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>hydra -t 4 -W 1 -l UserA -P /usr/share/wordlists/rockyou.txt rdp://192.168.56.105</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="217" width="478" class="alignnone size-full wp-image-1083 image-border" src="assets/e5ab44b9-b9e3-4b68-b15e-c61b5cf0255e.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Hydra output screen</div>
+<ol start="18">
+<li>To run the same against VNC, simply replace RDP with VNC:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>hydra -t 4 -W 1 -l UserA -P /usr/share/wordlists/rockyou.txt vnc://192.168.56.105</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Cracking ZIP file passwords</h1>
+                </header>
+            
+            <article>
+                
+<p>In this recipe, we will try and crack a ZIP file password.</p>
+<p>Sometimes, you will come across ZIP files that have a password on them. Normally, you can easily crack these passwords with a simple dictionary attack.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Let's ensure the following prerequisites:</p>
+<ul>
+<li>Your Kali machine is powered up</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>We will now crack a ZIP files password and recover it's contents:</p>
+<ol>
+<li>Open a terminal window in Kali by clicking the icon. <img src="assets/656b7853-2057-4554-ae27-7cc6b88046e5.png"/></li>
+<li>Enter the following commands to create an encrypted ZIP file:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>cd </strong><br/><strong>mkdir 6.10 </strong><br/><strong>cd 6.10</strong><br/><strong>touch one two three </strong><br/><strong>zip -e numbers.zip one two three</strong></pre>
+<ol start="3">
+<li>When asked for a password, let's use a simple one such as <kbd>password</kbd>.</li>
+<li>We will use our <kbd>rockyou.txt</kbd> dictionary file from the past recipes along with <kbd>fcrackzip</kbd>:</li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><strong>fcrackzip -u -D -p '/usr/share/wordlists/rockyou.txt' numbers.zip</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="76" width="485" class="alignnone size-full wp-image-1084 image-border" src="assets/17644e3c-ea01-4966-b6b1-7697f389a0c9.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">fcrackzip output</div>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>

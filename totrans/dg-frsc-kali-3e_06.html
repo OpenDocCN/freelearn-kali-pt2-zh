@@ -1,0 +1,251 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer139">
+<h1 class="chapter-number" id="_idParaDest-61"><a id="_idTextAnchor085"/>5</h1>
+<h1 id="_idParaDest-62"><a id="_idTextAnchor086"/>Installing Wine in Kali Linux</h1>
+<p>In this chapter, we will learn how to extend the functionality of our Kali Linux environment by adding the capability to install Windows tools within Kali <span class="No-Break">using Wine.</span></p>
+<p>We will look at the following topics in <span class="No-Break">this chapter:</span></p>
+<ul>
+<li>What Wine is and the advantages of using it in <span class="No-Break">Kali Linux</span></li>
+<li><span class="No-Break">Installing Wine</span></li>
+<li>Testing our <span class="No-Break">Wine installation</span></li>
+</ul>
+<p>Let’s begin by looking at Wine and <span class="No-Break">its advantages.</span></p>
+<h1 id="_idParaDest-63"><a id="_idTextAnchor087"/>What Wine is and the advantages of using it in Kali Linux</h1>
+<p><strong class="bold">Wine</strong> is commonly, but <a id="_idIndexMarker417"/>mistakenly, referred to as<a id="_idIndexMarker418"/> a <strong class="bold">Windows Emulator</strong>, but as stated on the official website, it was initially known as <strong class="bold">Wine Is Not an Emulator</strong>, hence <a id="_idIndexMarker419"/>the acronym. Wine allows non-Windows users to run certain Windows applications on <strong class="bold">Portable Operating System Interface</strong> (<strong class="bold">POSIX</strong>)-compliant systems, including <a id="_idIndexMarker420"/>macOS and versions of Linux and BSD, including <span class="No-Break">Kali Linux.</span></p>
+<p>For <a id="_idIndexMarker421"/>our <strong class="bold">Digital Forensics and Incident Response</strong> (<strong class="bold">DFIR</strong>) purposes, this is incredibly useful, as we can now use many industry-standard tools, specifically made for Windows on our Kali Linux systems, whether using them as standalone operating systems or as virtual machines. This also addresses the issue of having to purchase a license for Windows, as we do not have to use a device running Windows. These cost savings are also extended when considering that you can now use less hardware if running all DFIR tools within your Kali <span class="No-Break">Linux box.</span></p>
+<p>By installing Wine in our Kali Linux installations, we can now have an advantage not only from a DFIR perspective but also from a purple teaming one, as we can also install many red teaming tools for Windows in our Kali machines. Drawing from personal experience, I’ve always used two laptops for DFIR exercises and investigations, with one running Linux-based operating systems such as Kali Linux, CSI Linux, and Ubuntu, and another running Windows 10. Some very important Windows applications that I use for almost every <a id="_idIndexMarker422"/>DFIR exercise and investigation are Belkasoft RAM capturer, FTK Imager, and Autopsy 4 <strong class="bold">GUI</strong> (<strong class="bold">Graphical User Interface</strong>). These tools are highly used throughout the community, as they are very powerful and fairly simple to use. With Wine<a id="_idIndexMarker423"/> installed on my Kali Linux and other Linux-based systems, I can now perform all tasks using one machine, which saves on time, effort, <span class="No-Break">and cost.</span></p>
+<p>In the sections ahead within this chapter, we will be installing Wine manually using the Terminal and then installing the Google Chrome browser as a test to ensure that our Wine installation is a successful one. In later chapters, we will also install Belkasoft RAM Capturer, FTK Imager, and Autopsy 4 using Wine for DFIR purposes within Kali Linux. More information about Wine<a id="_idIndexMarker424"/> can be found on the official site <span class="No-Break">at </span><a href="https://www.winehq.org/"><span class="No-Break">https://www.winehq.org/</span></a><span class="No-Break">.</span></p>
+<h1 id="_idParaDest-64"><a id="_idTextAnchor088"/>Installing Wine</h1>
+<p>Installing Wine<a id="_idIndexMarker425"/> requires that we run a few commands in precise order. Although I am sure that many of the commands used will be new to many of you, I’ve outlined the exact steps in the <span class="No-Break">following sequence:</span></p>
+<ol>
+<li>Be sure that you are connected to the internet <span class="No-Break">before proceeding.</span></li>
+</ol>
+<p>Let’s first download Wine by opening a new Terminal and typing the following command, followed by pressing the <span class="No-Break"><em class="italic">Enter</em></span><span class="No-Break"> key:</span></p>
+<pre class="console">
+<strong class="bold">sudo dpkg --add-architecture i386</strong></pre>
+<p>In the following screenshot, we added the <span class="No-Break">32-bit architecture:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer117">
+<img alt="Figure 5.1: Running the sudo dpkg –add-architecture i386 command" height="392" src="image/Figure_5.01_B19441.jpg" width="717"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.1: Running the sudo dpkg –add-architecture i386 command</p>
+<ol>
+<li value="2">Next, we need to download the <strong class="source-inline">wine</strong> key by typing the <span class="No-Break">following command:</span><pre class="console">
+<strong class="bold">wget nc https://dl.winehq.org/wine-builds/winehq.key</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer118">
+<img alt="Figure 5.2: Installing WINE in the Terminal" height="392" src="image/Figure_5.02_B19441.jpg" width="901"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.2: Installing Wine in the Terminal</p>
+<ol>
+<li value="3">Once our key <a id="_idIndexMarker426"/>has been downloaded, we can then add it to <strong class="source-inline">/usr/share/keyrings/winehq-archive.key</strong> by typing the <span class="No-Break">following command:</span><pre class="console">
+<strong class="bold">sudo mv winehq.key /usr/share/keyrings/winehq-archive.key</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer119">
+<img alt="Figure 5.3: Adding the keyring" height="392" src="image/Figure_5.03_B19441.jpg" width="897"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.3: Adding the keyring</p>
+<ol>
+<li value="4">Next, we download the Wine <strong class="source-inline">sources</strong> file by typing the <span class="No-Break">following command:</span><pre class="console">
+<strong class="bold">wget –nc https://dl.winehq.org/wine-builds/debian/dists/bullseye/winehq-bullseye.sources</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer120">
+<img alt="Figure 5.4: Downloading the required WINE sources" height="377" src="image/Figure_5.04_B19441.jpg" width="709"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.4: Downloading the required Wine sources</p>
+<ol>
+<li value="5">Once<a id="_idIndexMarker427"/> our <strong class="source-inline">sources</strong> file has been downloaded and saved successfully, we can add it to our sources list by typing the <span class="No-Break">following command:</span><pre class="console">
+<strong class="bold">sudo mv winehq-bullseye.sources /etc/apt/sources.list.d/</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer121">
+<img alt="Figure 5.5: Adding the sources file to the sources list" height="377" src="image/Figure_5.05_B19441.jpg" width="716"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.5: Adding the sources file to the sources list</p>
+<ol>
+<li value="6">We will now add the Debian repository for a smooth installation by typing <span class="No-Break">the following:</span><pre class="console">
+<strong class="bold">echo "deb </strong><strong class="bold">http://ftp.us.debian.org/debian bullseye main " | sudo tee -a /etc/apt/sources.list</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer122">
+<img alt="Figure 5.6: Adding the Debian repository" height="80" src="image/Figure_5.06_B19441.jpg" width="671"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.6: Adding the Debian repository</p>
+<ol>
+<li value="7">Once your Terminal looks like the preceding screenshot, you can check for any newer updates by typing the <strong class="source-inline">sudo apt update</strong> command. As seen in the following <a id="_idIndexMarker428"/>screenshot, there are quite a few updates to <span class="No-Break">my installation:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer123">
+<img alt="Figure 5.7: Updating Kali" height="281" src="image/Figure_5.07_B19441.jpg" width="644"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.7: Updating Kali</p>
+<ol>
+<li value="8">Once all updates have been completed, we can now download the latest stable version of Wine by using the <span class="No-Break">following command:</span><pre class="console">
+<strong class="bold">sudo apt install --install-recommends winehq-stable</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer124">
+<img alt="Figure 5.8: Installing the latest stable version of WINE" height="71" src="image/Figure_5.08_B19441.jpg" width="662"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.8: Installing the latest stable version of Wine</p>
+<p class="callout-heading">Note</p>
+<p class="callout">You will be prompted to enter your password and press <em class="italic">Y</em> for Yes to continue the installation when prompted. This may take a couple of minutes to install as the file <span class="No-Break">is large.</span></p>
+<ol>
+<li value="9">Once all <a id="_idIndexMarker429"/>goes well and all the necessary files and packages are downloaded and installed, we can verify the installation and version of Wine installed by running the <span class="No-Break">following command:</span><pre class="console">
+<strong class="bold">wine --version</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer125">
+<img alt="Figure 5.9: Verifying the version of WINE installed" height="65" src="image/Figure_5.09_B19441.jpg" width="252"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.9: Verifying the version of Wine installed</p>
+<h2 id="_idParaDest-65"><a id="_idTextAnchor089"/>Configuring our Wine installation</h2>
+<p>Our final step in the<a id="_idIndexMarker430"/> Terminal before we move on to the graphical installation and configuration of Wine is to run the <span class="No-Break"><strong class="source-inline">winecfg</strong></span><span class="No-Break"> command:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer126">
+<img alt="Figure 5.10: Running the winecfg command to start WINE" height="52" src="image/Figure_5.10_B19441.jpg" width="635"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.10: Running the winecfg command to start Wine</p>
+<p>Once all is as it should be, the <strong class="bold">Wine Mono Installer</strong> box appears and asks us to install the Microsoft .NET Framework, which is required for Windows applications to run correctly, and then <a id="_idIndexMarker431"/>follow these steps to configure and complete <span class="No-Break">the installation:</span></p>
+<ol>
+<li value="1">Click on the <span class="No-Break"><strong class="bold">Install</strong></span><span class="No-Break"> button.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer127">
+<img alt="Figure 5.11: Installing Wine Mono" height="188" src="image/Figure_5.11_B19441.jpg" width="403"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.11: Installing Wine Mono</p>
+<ol>
+<li value="2">Wine Mono will then begin downloading <span class="No-Break">and installing.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer128">
+<img alt="Figure 5.12: Wine Mono installation status bar" height="189" src="image/Figure_5.12_B19441.jpg" width="755"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.12: Wine Mono installation status bar</p>
+<ol>
+<li value="3">In the <strong class="bold">Wine configuration</strong> box, you can also select the version of Microsoft Windows you would like to mimic on your Kali <span class="No-Break">Linux box.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer129">
+<img alt="Figure 5.13: Configuring Wine" height="486" src="image/Figure_5.13_B19441.jpg" width="425"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.13: Configuring Wine</p>
+<ol>
+<li value="4">In this instance, we<a id="_idIndexMarker432"/> can see that <strong class="bold">Windows 7</strong> is selected and presented by default. To change this setting to another version of Windows, click the drop-down arrow to the right of the Windows version and select your operating system of choice, as <span class="No-Break">seen here:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer130">
+<img alt="Figure 5.14: Windows OS selection" height="558" src="image/Figure_5.14_B19441.jpg" width="453"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.14: Windows OS selection</p>
+<p>I’ve <a id="_idIndexMarker433"/>selected <strong class="bold">Windows 10</strong> as my operating system as the Windows DFIR applications that we will be installing all run on <span class="No-Break">Windows 10.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer131">
+<img alt="Figure 5.15: Selecting Windows 10" height="485" src="image/Figure_5.15_B19441.jpg" width="426"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.15: Selecting Windows 10</p>
+<ol>
+<li value="5">Click<a id="_idIndexMarker434"/> on <strong class="bold">Apply</strong> to continue, then enter your details for <strong class="bold">Owner</strong> and <strong class="bold">Organization</strong> in the <strong class="bold">About</strong> tab, as seen next, and click on <strong class="bold">Apply</strong> and <strong class="bold">OK</strong> to complete the <span class="No-Break">Wine configuration.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer132">
+<img alt="Figure 5.16: Completion of Wine configuration" height="489" src="image/Figure_5.16_B19441.jpg" width="426"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.16: Completion of Wine configuration</p>
+<p>Now that we’ve <a id="_idIndexMarker435"/>completed all the steps to install Wine in this section, we will need to install a Windows program as a test, which we will now do in the <span class="No-Break">next section.</span></p>
+<h1 id="_idParaDest-66"><a id="_idTextAnchor090"/>Testing our Wine installation</h1>
+<p>Good job on <a id="_idIndexMarker436"/>getting this far. To test our installation, let’s try installing a file recovery tool called Recuva in our Kali Linux system using Wine. Recuva is a<a id="_idIndexMarker437"/> popular tool that comes in both a free and paid version. Let’s get started with its download <span class="No-Break">and installation:</span></p>
+<ol>
+<li value="1">You can download<a id="_idIndexMarker438"/> the free version at <a href="https://www.ccleaner.com/recuva/download">https://www.ccleaner.com/recuva/download</a>, which allows users to only perform advanced file recovery. At the time of this writing, the file can also be downloaded directly <span class="No-Break">at </span><a href="https://www.ccleaner.com/recuva/download/standard"><span class="No-Break">https://www.ccleaner.com/recuva/download/standard</span></a><span class="No-Break">.</span></li>
+<li>Whichever download method you choose, please be sure to click on the <strong class="bold">FREE </strong><span class="No-Break"><strong class="bold">RECUVA</strong></span><span class="No-Break"> option.</span></li>
+</ol>
+<p>The<a id="_idIndexMarker439"/> filename will appear as <strong class="source-inline">rcsetup153.exe</strong>, which indicates that it is a Windows executable file, as seen in the <span class="No-Break">following </span><span class="No-Break"><a id="_idIndexMarker440"/></span><span class="No-Break">screenshot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer133">
+<img alt="Figure 5.17: The Recuva installation file download" height="125" src="image/Figure_5.18_B19441.jpg" width="548"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.17: The Recuva installation file download</p>
+<ol>
+<li value="3">Click on the folder icon to the right of the file download or navigate to the <strong class="source-inline">Downloads</strong> folder, where we should find the downloaded Recuva <span class="No-Break">file (</span><span class="No-Break"><strong class="source-inline">rcsetup153.3xe</strong></span><span class="No-Break">).</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer134">
+<img alt="Figure 5.18: Recuva installation file in the Downloads folder" height="162" src="image/Figure_5.19_B19441.jpg" width="708"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.18: Recuva installation file in the Downloads folder</p>
+<ol>
+<li value="4">Installing <a id="_idIndexMarker441"/>Recuva from here is very simple. Double-click on the <strong class="source-inline">rcsetup153.exe</strong> file and it will open the installer, exactly as it would on a Windows machine, as seen in the <span class="No-Break">next figure.</span></li>
+<li>Alternatively, you may also right-click on the<a id="_idIndexMarker442"/> file and select <strong class="bold">Open With Wine Windows </strong><span class="No-Break"><strong class="bold">Program Loader</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer135">
+<img alt="Figure 5.19: The Recuva installation interface" height="608" src="image/Figure_5.20_B19441.jpg" width="976"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.19: The Recuva installation interface</p>
+<ol>
+<li value="6">Click on <strong class="bold">Install</strong> to continue and install Recuva in <span class="No-Break">Kali Linux.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer136">
+<img alt="Figure 5.20: The Recuva installation completion screen" height="447" src="image/Figure_5.21_B19441.jpg" width="737"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.20: The Recuva installation completion screen</p>
+<ol>
+<li value="7">Once<a id="_idIndexMarker443"/> installed, you can uncheck the <strong class="bold">View release notes</strong> box and <a id="_idIndexMarker444"/>then click on the <strong class="bold">Run Recuva</strong> button to <span class="No-Break">start Recuva.</span></li>
+</ol>
+<p>This completes our installation, and you should now also see the Recuva icon on your Kali Linux desktop, similar to the <span class="No-Break">following screenshot.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer137">
+<img alt="Figure 5.21: Recuva desktop shortcut" height="357" src="image/Figure_5.22_B19441.jpg" width="555"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.21: Recuva desktop shortcut</p>
+<ol>
+<li value="8">Click on the <strong class="bold">Next</strong> button to close off the installation screen. Notice in the following screenshot that there is a wine glass in the top-left corner of the screen, indicating that Recuva is being installed <span class="No-Break">using Wine.</span></li>
+<li>Although we will look <a id="_idIndexMarker445"/>at using Recuva in a later chapter, you can<a id="_idIndexMarker446"/> run Recuva as a final test to ensure that the program and Wine were both <span class="No-Break">successfully installed.</span></li>
+<li>Once you see the following screenshot, it means that both Wine and Recuva were <span class="No-Break">installed successfully:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer138">
+<img alt="Figure 5.22: The Recuva scan configuration interface" height="478" src="image/Figure_5.23_B19441.jpg" width="506"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 5.22: The Recuva scan configuration interface</p>
+<p>At this point, you<a id="_idIndexMarker447"/> can click on the <strong class="bold">Cancel</strong> button to <a id="_idIndexMarker448"/>cancel running Recuva, as we will configure and run Recuva later on in <a href="B19441_09.xhtml#_idTextAnchor179"><span class="No-Break"><em class="italic">Chapter 9</em></span></a>, <em class="italic">File Recovery and Data Carving Tools</em>, where we will look at <strong class="bold">File Recovery</strong> and <strong class="bold">Data </strong><span class="No-Break"><strong class="bold">Carving</strong></span><span class="No-Break"> tools.</span></p>
+<p>We can now view our Wine installation and configuration as a success, as we were able to install and run the Recuva tool, which was built for Windows, within <span class="No-Break">Kali Linux.</span></p>
+<h1 id="_idParaDest-67"><a id="_idTextAnchor091"/>Summary</h1>
+<p>In this chapter, we learned about Wine and some great advantages of using the software for our DFIR purposes. We also learned how to install the latest stable version of Wine via the Terminal in Kali Linux, which allows us to run Windows applications in our Kali Linux system, along with the Microsoft .NET Framework, which is required by Windows to run programs and applications. We also looked at how to choose between Windows operating systems that Wine mimics, as some programs may only run on newer versions of Windows. Finally, we tested our Wine installation by downloading the Recuva file-recovery tool, which was built specifically for Windows, and then installed Recuva on our <span class="No-Break">Kali system.</span></p>
+<p>Before we continue any further on our exciting journey with Recuva, we’ll next look at some fundamental knowledge on understanding file systems, which will cover the basics and background knowledge required for file recovery. See you in the <span class="No-Break">next chapter!</span></p>
+</div>
+</div></body></html>

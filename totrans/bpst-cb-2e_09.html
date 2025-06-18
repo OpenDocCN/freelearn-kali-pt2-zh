@@ -1,0 +1,440 @@
+<html><head></head><body>
+		<div id="_idContainer499">
+			<h1 id="_idParaDest-202" class="chapter-number"><a id="_idTextAnchor522"/>9</h1>
+			<h1 id="_idParaDest-203"><a id="_idTextAnchor523"/>Attacking the Client</h1>
+			<p><a id="_idTextAnchor524"/>Code available on the client that is executed in the browser requires testing to determine any presence of sensitive information or the allowance of user input without server-side validation. We will learn how to perform these tests using <span class="No-Break">Burp Suite.</span></p>
+			<p><a id="_idTextAnchor525"/>In this chapter, we will cover the <span class="No-Break">following recipes:</span></p>
+			<ul>
+				<li>Testing <span class="No-Break">for clickjacking</span></li>
+				<li>Testing for DOM-based <span class="No-Break">cross-site scripting</span></li>
+				<li>Leveraging DOM Invader to test for <span class="No-Break">DOM XSS</span></li>
+				<li>Testing for <span class="No-Break">JavaScript execution</span></li>
+				<li>Testing for <span class="No-Break">HTML injection</span></li>
+				<li>Testing for client-side <span class="No-Break">resource manipulation</span></li>
+			</ul>
+			<h1 id="_idParaDest-204"><a id="_idTextAnchor526"/>Technical requirements</h1>
+			<p>To complete the recipes in this chapter, you will need <span class="No-Break">the following:</span></p>
+			<ul>
+				<li>OWASP Broken <span class="No-Break">Web Applications</span></li>
+				<li>OWASP <span class="No-Break">Mutillidae link</span></li>
+				<li>Burp Suite Proxy Community or <span class="No-Break">Professional (</span><a href="https://portswigger.net/BurpSuite/"><span class="No-Break">https://portswigger.net/BurpSuite/</span></a><span class="No-Break">)</span><a id="_idTextAnchor527"/></li>
+			</ul>
+			<h1 id="_idParaDest-205"><a id="_idTextAnchor528"/>Testing for clickjacking</h1>
+			<p><strong class="bold">Clickjacking</strong> is also<a id="_idIndexMarker537"/> known<a id="_idIndexMarker538"/> as a <strong class="bold">UI redress attack</strong>. This attack is a deceptive technique that tricks a user into interacting with a transparent <strong class="source-inline">iframe</strong> and, potentially, sending unauthorized commands or sensitive information to an attacker-controlled website. Let’s see how to use Burp Clickbandit to test whether a site is vulnerable <span class="No-Break">to clickjacking<a id="_idTextAnchor529"/>.</span><a id="_idTextAnchor530"/></p>
+			<h2 id="_idParaDest-206"><a id="_idTextAnchor531"/>Getting ready</h2>
+			<p>We’ll use the OWASP Mutillidae II application and Burp Clickbandit to determine whether the application protects against <span class="No-Break">clickjacking attack<a id="_idTextAnchor532"/>s<a id="_idTextAnchor533"/>.</span></p>
+			<h2 id="_idParaDest-207"><a id="_idTextAnchor534"/>How to do it...</h2>
+			<ol>
+				<li>Navigate to<a id="_idIndexMarker539"/> the <strong class="bold">Home</strong> page of OWASP <span class="No-Break">Mutillidae II.</span></li>
+				<li>Switch to <strong class="bold">Burp</strong> and, from the top-level menu, select <span class="No-Break"><strong class="bold">Burp Clickbandit</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer459" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.01.jpg" alt="Figure 9.1 – Clickbandit menu item"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.1 – Clickbandit menu item</p>
+			<ol>
+				<li value="3">A pop-up box explains the tool. Click the <strong class="bold">Copy Clickbandit to </strong><span class="No-Break"><strong class="bold">clipboard</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer460" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.02.jpg" alt="Figure 9.2 – Copying code to the clipboard"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.2 – Copying code to the clipboard</p>
+			<ol>
+				<li value="4">Return to the Firefox browser and the landing page of Mutillidae. Make sure you are not logged <a id="_idIndexMarker540"/>into the application. Press <em class="italic">F12</em> to bring up the developer tools. From the developer tools menu, select <strong class="bold">Console</strong>, and look for the prompt at <span class="No-Break">the bottom:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer461" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.03.jpg" alt="Figure 9.3 – The F12 developer tools Console prompt"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.3 – The F12 developer tools Console prompt</p>
+			<ol>
+				<li value="5">In the <strong class="bold">Console</strong> prompt (for example, <strong class="source-inline">&gt;&gt;</strong>), paste the Clickbandit script you copied to <span class="No-Break">your clipboard:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer462" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.04.jpg" alt="Figure 9.4 – Pasted Clickbandit code"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.4 – Pasted Clickbandit code</p>
+			<ol>
+				<li value="6">After pasting the<a id="_idIndexMarker541"/> script into the prompt, press the <em class="italic">Enter</em> key. You should see Burp Clickbandit’s <strong class="bold">Record mode</strong>. Click the <strong class="bold">Start</strong> button <span class="No-Break">to begin:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer463" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.05.jpg" alt="Figure 9.5 – Starting Clickbandit record mode"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.5 – Starting Clickbandit record mode</p>
+			<ol>
+				<li value="7">Start clicking around on the application after it appears. Click available links on the top Mutillidae menu, click available links on the side menu, or browse to pages within Mutillidae. Once you’ve clicked around, press the <strong class="bold">Finish</strong> button on the Burp <span class="No-Break">Clickbandit menu.</span></li>
+				<li>You should notice big red blocks appear transparently on top of the Mutillidae web pages. Each red block indicates a place where a malicious <strong class="source-inline">iframe</strong> <span class="No-Break">can appear.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer464" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.06.jpg" alt="Figure 9.6 – Framing of victim web page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.6 – Framing of victim web page</p>
+			<p>Feel free to click<a id="_idIndexMarker542"/> each red block to see the next red block appear, and so on, until you see the message <strong class="bold">You’ve </strong><span class="No-Break"><strong class="bold">been clickjacked!</strong></span><span class="No-Break">:</span></p>
+			<div>
+				<div id="_idContainer465" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.07.jpg" alt="Figure 9.7 – Final confirmation message"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.7 – Final confirmation message</p>
+			<ol>
+				<li value="9">To save your results to a file for replay purposes (to give to your client as evidence), click the <strong class="bold">Save</strong> button. This will save the clickjacking <strong class="bold">proof of concept</strong> (<strong class="bold">PoC</strong>) in an <a id="_idIndexMarker543"/>HTML file for you to place inside your penetration <span class="No-Break">test report.</span><div id="_idContainer466" class="IMG---Figure"><img src="image/B21173_Figure_9.08.jpg" alt="Figure 9.8 – Saving to a file"/></div></li>
+			</ol>
+			<p class="IMG---Figure"><a id="_idTextAnchor535"/></p>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.8 – Saving to a file</p>
+			<ol>
+				<li value="10">Click the <strong class="bold">Reset</strong> button<a id="_idIndexMarker544"/> to return to the normal application without the <span class="No-Break">Clickbandit code:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer467" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.09.jpg" alt="Figure 9.9 – After the Reset button is clicked"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.9 – After the Reset button is clicked</p>
+			<h2 id="_idParaDest-208">H<a id="_idTextAnchor536"/>ow it works...</h2>
+			<p>Since the Mutillidae application does not make use of the <strong class="source-inline">X-FRAME-OPTIONS</strong> header set to <strong class="source-inline">DENY</strong>, it is possible to inject a malicious <strong class="source-inline">iframe</strong> instance into the Mutillidae web pages. This is particularly dangerous on the login page in a phishing attack, luring victims into typing their credentials into an attacker-controlled page. You can increase the level of opaqueness of the <strong class="source-inline">iframe</strong> instance used by Clickbandit for visibility. You can use Clickbandit to create your PoC to illustrate how the vulnerability can be exploited. <a id="_idTextAnchor537"/>Applications can be <a id="_idIndexMarker545"/>secured against clickjacking attacks by adding the <strong class="source-inline">X-FRAME-OPTIONS</strong> header set to <strong class="source-inline">DENY</strong> or by adding the Content-Security-Policy <strong class="source-inline">frame-ancestors</strong> directive to a <span class="No-Break">whitelisted domain.</span></p>
+			<h1 id="_idParaDest-209"><a id="_idTextAnchor538"/>Testing for DOM-based cross-site scripting</h1>
+			<p>The <strong class="bold">Document Object Model</strong> (<strong class="bold">DOM</strong>) is a<a id="_idIndexMarker546"/> tree-like structural <a id="_idIndexMarker547"/>representation of all HTML web pages captured in a browser. Developers use the DOM to store information inside the browser for convenience. As a web penetration tester, it is important to determine the presence of<a id="_idIndexMarker548"/> DOM-based <strong class="bold">cross-site scripting</strong> (<span class="No-Break"><strong class="bold">XSS</strong></span><span class="No-Break">) vulnerabiliti<a id="_idTextAnchor539"/>e<a id="_idTextAnchor540"/>s.</span></p>
+			<h2 id="_idParaDest-210"><a id="_idTextAnchor541"/>Getting ready</h2>
+			<p>We will use the OWASP Mutillidae II HTML5 web storage exercise to determine whether the application is susceptible to DOM-based <span class="No-Break">XSS attac<a id="_idTextAnchor542"/>k<a id="_idTextAnchor543"/>s.</span></p>
+			<h2 id="_idParaDest-211"><a id="_idTextAnchor544"/>How to do it...</h2>
+			<ol>
+				<li>Navigate to <strong class="bold">HTML 5</strong> | <strong class="bold">HTML5 Web Storage</strong> | <span class="No-Break"><strong class="bold">HTML5 Storage</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer468" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.010.jpg" alt="Figure 9.10 – HTML5 Storage lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.10 – HTML5 Storage lesson</p>
+			<ol>
+				<li value="2">Note the name/value pairs stored in the DOM using the <strong class="bold">HTML5 Web Storage</strong> locations. Web storage includes <strong class="bold">Session</strong> and <strong class="bold">Local</strong> variables. Developers use these storage <a id="_idIndexMarker549"/>locations to conveniently store information inside a <span class="No-Break">user’s browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer469" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.011.jpg" alt="Figure 9.11 – Web storage entries"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.11 – Web storage entries</p>
+			<ol>
+				<li value="3">Switch to the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab. Turn <strong class="bold">Intercept</strong> on with the <strong class="bold">Intercept is </strong><span class="No-Break"><strong class="bold">on</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer470" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.012.jpg" alt="Figure 9.12 – Turning Intercept on"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.12 – Turning Intercept on</p>
+			<ol>
+				<li value="4">Reload the <strong class="bold">HTML 5 Web Storage</strong> page in the Firefox browser by pressing <em class="italic">F5</em> or clicking the <span class="No-Break"><em class="italic">reload</em></span><span class="No-Break"> button.</span></li>
+				<li>Switch to the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab. Find the paused request created by the<a id="_idIndexMarker550"/> reload you just performed. Note that the <strong class="source-inline">User-Agent</strong> string is highlighted, as shown in the <span class="No-Break">following screenshot:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer471" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.013.jpg" alt="Figure 9.13 – Note the original user-agent value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.13 – Note the original user-agent value</p>
+			<ol>
+				<li value="6">Replace the preceding highlighted <strong class="source-inline">User-Agent</strong> with the following script. Note the XSS injection (e.g., <strong class="source-inline">alert()</strong>) inside of <span class="No-Break">the payload:</span><pre class="source-code">
+&lt;script&gt;try{var m = "";var l = window.localStorage; 
+var s = window.sessionStorage;for(i=0;i&lt;l.length;i++)
+{var lKey = l.key(i);m += lKey + "=" + l.getItem(lKey) + 
+";\n";};for(i=0;i&lt;s.length;i++){var lKey = s.key(i);m += lKey 
++ "=" + s.getItem(lKey) + ";\n";};alert(m);}catch(e){alert(e.
+message);}&lt;/script&gt;</pre></li>			</ol>
+			<p>Here is how the <a id="_idIndexMarker551"/>payload looks in the request held up in the <span class="No-Break"><strong class="bold">Proxy</strong></span><span class="No-Break"> interceptor:</span></p>
+			<div>
+				<div id="_idContainer472" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.014.jpg" alt="Figure 9.14 – Changing User-Agent to payload"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.14 – Changing User-Agent to payload</p>
+			<ol>
+				<li value="7">Click the <strong class="bold">Forward</strong> button. Now, turn <strong class="bold">Intercept</strong> off by clicking the toggle button to <strong class="bold">Intercept </strong><span class="No-Break"><strong class="bold">is off</strong></span><span class="No-Break">.</span></li>
+				<li>Note the alert popup showing the contents of the <span class="No-Break">DOM storage:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer473" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.015.jpg" alt="Figure 9.15 – Evidence of XSS payload execution﻿"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.15 – Evidence of XSS payload execution<a id="_idTextAnchor545"/></p>
+			<h2 id="_idParaDest-212"><a id="_idTextAnchor546"/>How it works...</h2>
+			<p>The injected script <a id="_idIndexMarker552"/>illustrates how the presence of an XSS vulnerability combined with sensitive information stored in the DOM can allow an attacker to steal sensitive data. The danger of storing sensitive data in web storage is that if XSS is possible anywhere within the application, then the sensitive data may be able to be exfiltrated and sent to an attacker via a malicious <span class="No-Break">JavaScript payload<a id="_idTextAnchor547"/>.</span></p>
+			<h1 id="_idParaDest-213"><a id="_idTextAnchor548"/>Leveraging DOM Invader for testing DOM XSS</h1>
+			<p>Let’s use PortSwigger’s integrated <a id="_idIndexMarker553"/>browser with <a id="_idIndexMarker554"/>an add-on called DOM Invader to cover more of the attack surface on the client, probing for potential DOM XSS and <span class="No-Break">other weaknesses.</span></p>
+			<h2 id="_idParaDest-214"><a id="_idTextAnchor549"/>Getting ready</h2>
+			<p>We will use the same exercise, HTML5 Storage, and Burp Suite’s DOM Invader to help us determine whether there are any vulnerable sinks or sources on the <span class="No-Break">web page.</span></p>
+			<h2 id="_idParaDest-215"><a id="_idTextAnchor550"/>How to do it...</h2>
+			<ol>
+				<li>Using <a id="_idIndexMarker555"/>the<a id="_idIndexMarker556"/> Burp Suite browser, click the <em class="italic">DOM Invader</em> icon at <span class="No-Break">the top.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer474" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.016.jpg" alt="Figure 9.16 – DOM Invader icon on the Burp Suite browser"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.16 – DOM Invader icon on the Burp Suite browser</p>
+			<ol>
+				<li value="2">Select the <strong class="bold">DOM Invader</strong> tab and make sure <strong class="bold">DOM Invader is on</strong> is set. Also, note the canary value that is assigned. This is randomized and you can customize the value if <span class="No-Break">you like:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer475" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.017.jpg" alt="Figure 9.17 – DOM Invader menu"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.17 – DOM Invader menu</p>
+			<ol>
+				<li value="3">Navigate<a id="_idIndexMarker557"/> to <a id="_idIndexMarker558"/>the <strong class="bold">HTML 5 Storage</strong> page in your Burp <span class="No-Break">Suite browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer476" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.018.jpg" alt="Figure 9.18 – HTML 5 Storage page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.18 – HTML 5 Storage page</p>
+			<ol>
+				<li value="4">Press <em class="italic">F12</em> in the Burp Suite browser to open the development tools console. Go all the way to the end of the tabs in the development tools console and select <strong class="bold">DOM Invader</strong>. Note: DOM Invader is only available in the Burp Suite browser, so if you do not see this tab, you are using the <span class="No-Break">wrong browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer477" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.019.jpg" alt="Figure 9.19 – DOM Invader tab in F12 Developer Tools"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.19 – DOM Invader tab in F12 Developer Tools</p>
+			<ol>
+				<li value="5">Using DOM Invader, click the <strong class="bold">Inject forms</strong> button. Note how your canary value is now<a id="_idIndexMarker559"/> populated<a id="_idIndexMarker560"/> in all textboxes and <span class="No-Break">button labels:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer478" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.020.jpg" alt="Figure 9.20 – Canary value used in DOM Invader injection points"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.20 – Canary value used in DOM Invader injection points</p>
+			<ol>
+				<li value="6">Now, click the <strong class="bold">Add New</strong> button, which is now displaying the canary value instead of <strong class="bold">Add New</strong>. It’s the only button on the <span class="No-Break">web page.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer479" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.021.jpg" alt="Figure 9.21 – After injection"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.21 – After injection</p>
+			<ol>
+				<li value="7">After clicking<a id="_idIndexMarker561"/> the<a id="_idIndexMarker562"/> button, note you have three findings (sinks) from DOM Invader, shown on the <span class="No-Break">top icon:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer480" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.022.jpg" alt="Figure 9.22 – DOM Invader icon with three findings"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.22 – DOM Invader icon with three findings</p>
+			<p>These are shown in the <strong class="bold">Developer Tools</strong> console, available by pressing <em class="italic">F12</em> in your Burp Suite browser (you must use the Burp Suite Browser to see this). Look for the <strong class="bold">DOM </strong><span class="No-Break"><strong class="bold">Invader</strong></span><span class="No-Break"> tab:</span></p>
+			<div>
+				<div id="_idContainer481" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.023.jpg" alt="Figure 9.23 – DOM Invader findings"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.23 – DOM Invader findings</p>
+			<p>The DOM Invader findings give us enough clues to know we need to continue to craft a payload that will give us JavaScript execution. DOM Invader identified the sink as <strong class="source-inline">element.innerHTML(1)</strong>, which helps us to know that the potential for exploiting a DOM XSS is <span class="No-Break">very high.</span></p>
+			<h2 id="_idParaDest-216"><a id="_idTextAnchor551"/>How it works...</h2>
+			<p>The presence of <strong class="source-inline">innerHTML</strong> on the web page of this recipe is a DOM XSS HTML sink. The <strong class="source-inline">innerHTML</strong> attribute receives user input and immediately renders inside the browser. The use of <a id="_idIndexMarker563"/>this <a id="_idIndexMarker564"/>attribute is very dangerous and usually avoided by <span class="No-Break">most developers.</span></p>
+			<h2 id="_idParaDest-217"><a id="_idTextAnchor552"/>There’s more...</h2>
+			<p>PortSwigger provides background information about DOM Invader <a id="_idIndexMarker565"/>and its many features here: <a href="https://portswigger.net/burp/documentation/desktop/tools/dom-invader">https://portswigger.net/burp/documentation/desktop/tools/dom-invader</a>. We just barely touched on the multitude of scans that DOM Invader can perform in the browser. Other scan features include <strong class="source-inline">postMessage</strong> attacks, DOM clobbering, prototype pollution, <span class="No-Break">and <a id="_idTextAnchor553"/>more.</span></p>
+			<h1 id="_idParaDest-218"><a id="_idTextAnchor554"/>Testing for JavaScript execution</h1>
+			<p>JavaScript injection is<a id="_idIndexMarker566"/> a subtype of XSS attacks specific to the arbitrary injection of JavaScript. Vulnerabilities in this area can affect sensitive information held in the browser, such as user session cookies, or it can lead to the modification of page content, allowing script execution from <span class="No-Break">attacker-controlled<a id="_idTextAnchor555"/> <a id="_idTextAnchor556"/>sites.</span></p>
+			<h2 id="_idParaDest-219"><a id="_idTextAnchor557"/>Getting ready</h2>
+			<p>We will the OWASP Mutillidae II <strong class="bold">Password Generator</strong> exercise to determine whether the application is susceptible to JavaScript <span class="No-Break">XSS a<a id="_idTextAnchor558"/>t<a id="_idTextAnchor559"/>tacks.</span></p>
+			<h2 id="_idParaDest-220"><a id="_idTextAnchor560"/>How to do it...</h2>
+			<ol>
+				<li>Navigate to <strong class="bold">OWASP 2013</strong> | <strong class="bold">A1 - Injection (Other)</strong> | <strong class="bold">JavaScript Injection</strong> | <span class="No-Break"><strong class="bold">Password Generator</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer482" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.024.jpg" alt="Figure 9.24 – Password Generator lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.24 – Password Generator lesson</p>
+			<ol>
+				<li value="2">Note that after <a id="_idIndexMarker567"/>clicking the <strong class="bold">Generate Password</strong> button, a password is shown. Also, note that the username value provided in the URL is reflected in the browser <em class="italic">as is</em> on the web page: <strong class="source-inline">http://192.168.56.101/mutillidae/index.php?page=password-generator.php&amp;username=anonymous</strong>. This means a potential XSS vulnerability may exist on <span class="No-Break">the page:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer483" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.025.jpg" alt="Figure 9.25 – Generating a new password"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.25 – Generating a new password</p>
+			<ol>
+				<li value="3">Switch to the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and find the HTTP message associated with the <strong class="bold">Password Generator</strong> page. Flip to the <strong class="bold">Response</strong> tab in the message editor and perform a search on the <strong class="source-inline">catch</strong> string. Note that the JavaScript returned has a <strong class="source-inline">catch</strong> block where error messages display to the user. We will use this position for the placement of a carefully crafted<a id="_idIndexMarker568"/> JavaScript <span class="No-Break">injection attack:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer484" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.026.jpg" alt="Figure 9.26 – Catch block for injection point"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.26 – Catch block for injection point</p>
+			<ol>
+				<li value="4">Switch to the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab. Turn <strong class="bold">Intercept</strong> on with the <strong class="bold">Intercept is </strong><span class="No-Break"><strong class="bold">on</strong></span><span class="No-Break"> button.</span></li>
+				<li>Reload the <strong class="bold">Password Generator</strong> page in the Firefox browser by pressing <em class="italic">F5</em> or clicking the <span class="No-Break"><em class="italic">reload </em></span><span class="No-Break">button.</span></li>
+				<li>Switch to the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab. While the request is paused, note the <strong class="source-inline">username</strong> parameter value highlighted <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer485" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.027.jpg" alt="Figure 9.27 – Username parameter"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.27 – Username parameter</p>
+			<ol>
+				<li value="7">Replace the<a id="_idIndexMarker569"/> preceding highlighted value of <strong class="source-inline">anonymous</strong> with the following carefully crafted JavaScript <span class="No-Break">injection script:</span><pre class="source-code">
+canary";}catch(e){}alert(1);try{a="</pre></li>			</ol>
+			<p>This is how the payload looks in the request held up in the <span class="No-Break"><strong class="bold">Proxy</strong></span><span class="No-Break"> interceptor:</span></p>
+			<div>
+				<div id="_idContainer486" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.028.jpg" alt="Figure 9.28 – Injection point"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.28 – Injection point</p>
+			<ol>
+				<li value="8">Click the <strong class="bold">Forward</strong> button. Now, turn <strong class="bold">Intercept</strong> off by clicking the toggle button to <strong class="bold">Intercept </strong><span class="No-Break"><strong class="bold">is off</strong></span><span class="No-Break">.</span></li>
+				<li>Note the alert <a id="_idIndexMarker570"/>popup. You’ve successfully demonstrated the presence of a JavaScript injection <span class="No-Break">XSS vulnerability!</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer487" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.029.jpg" alt="Figure 9.29 – Evidence of JavaScript exec﻿u﻿tion"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.29 – Evidence of JavaScript exec<a id="_idTextAnchor561"/>u<a id="_idTextAnchor562"/>tion</p>
+			<h2 id="_idParaDest-221"><a id="_idTextAnchor563"/>How it works...</h2>
+			<p>The JavaScript snippet injected into the web page matched the structure of the original <strong class="source-inline">catch</strong> statement. By<a id="_idIndexMarker571"/> creating a fake name of <strong class="source-inline">canary</strong> and ending the statement with a semicolon, a specially crafted <em class="italic">new</em> <strong class="source-inline">catch</strong> block was created, which contained the malicious <span class="No-Break">JavaScript pa<a id="_idTextAnchor564"/>y<a id="_idTextAnchor565"/>load.</span></p>
+			<h1 id="_idParaDest-222"><a id="_idTextAnchor566"/>Testing for HTML injection</h1>
+			<p>HTML injection is <a id="_idIndexMarker572"/>the insertion of arbitrary HTML code into a vulnerable web page. Vulnerabilities in this area may lead to the disclosure of sensitive information or the modification of page content for the purposes of socially engineering <span class="No-Break">th<a id="_idTextAnchor567"/>e<a id="_idTextAnchor568"/> user.</span></p>
+			<h2 id="_idParaDest-223"><a id="_idTextAnchor569"/>Getting ready</h2>
+			<p>We will use OWASP Mutillidae II’s <strong class="bold">Capture Data Page</strong> to determine whether the application is susceptible to HTML <span class="No-Break">injection a<a id="_idTextAnchor570"/>t<a id="_idTextAnchor571"/>tacks.</span></p>
+			<h2 id="_idParaDest-224"><a id="_idTextAnchor572"/>How to do it...</h2>
+			<ol>
+				<li>Navigate to <strong class="bold">OWASP 2013</strong> | <strong class="bold">A1 - Injection (Other)</strong> | <strong class="bold">HTMLi Via Cookie Injection</strong> | <strong class="bold">Capture </strong><span class="No-Break"><strong class="bold">Data Page</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer488" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.030.jpg" alt="Figure 9.30 – Capture Data Page lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.30 – Capture Data Page lesson</p>
+			<ol>
+				<li value="2">Note how the page looks before <span class="No-Break">the attack:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer489" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.031.jpg" alt="Figure 9.31 – Data Capture Page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.31 – Data Capture Page</p>
+			<p>Switch to the Burp <a id="_idIndexMarker573"/>Suite <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab and turn <strong class="bold">Intercept</strong> on with the <strong class="bold">Intercept is </strong><span class="No-Break"><strong class="bold">on</strong></span><span class="No-Break"> button.</span></p>
+			<ol>
+				<li value="3">While the request is paused, make a note of the last <span class="No-Break">cookie, </span><span class="No-Break"><strong class="source-inline">acgroupswitchpersist=nada</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer490" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.032.jpg" alt="Figure 9.32 – Turning Intercept on"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.32 – Turning Intercept on</p>
+			<ol>
+				<li value="4">While the request is<a id="_idIndexMarker574"/> paused, replace the value of the last cookie with this HTML <span class="No-Break">injection script:</span><pre class="source-code">
+&lt;h1&gt;Sorry, please login again&lt;/h1&gt;&lt;br/&gt;Username&lt;input 
+type="text"&gt;&lt;br/&gt;Password&lt;input type="text"&gt;&lt;br/&gt;&lt;input 
+type="submit" value="Submit"&gt;&lt;h1&gt;&amp;nbsp;&lt;/h1&gt;</pre></li>			</ol>
+			<p>This is how the payload looks in the request held up in the <span class="No-Break"><strong class="bold">Proxy</strong></span><span class="No-Break"> interceptor:</span></p>
+			<div>
+				<div id="_idContainer491" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.033.jpg" alt="Figure 9.33 – Changing the value of the cookie to payload"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.33 – Changing the value of the cookie to payload</p>
+			<ol>
+				<li value="5">Click <a id="_idIndexMarker575"/>the <strong class="bold">Forward</strong> button. Now, turn <strong class="bold">Intercept</strong> off by clicking the toggle button to <strong class="bold">Intercept </strong><span class="No-Break"><strong class="bold">is off</strong></span><span class="No-Break">.</span></li>
+				<li>Note how the HTML is now included inside <span class="No-Break">the page!</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer492" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.034.jpg" alt="Figure 9.34 – Evidence of HTML inje﻿c﻿tion"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.34 – Evidence of HTML inje<a id="_idTextAnchor573"/>c<a id="_idTextAnchor574"/>tion</p>
+			<h2 id="_idParaDest-225"><a id="_idTextAnchor575"/>How it works...</h2>
+			<p>Due to the lack of input validation and output encoding, an HTML injection vulnerability can exist. The result of <a id="_idIndexMarker576"/>exploiting this vulnerability is the insertion of arbitrary HTML code, which can lead to XSS attacks or social engineering schemes such as the one seen in the <span class="No-Break">preceding r<a id="_idTextAnchor576"/>e<a id="_idTextAnchor577"/>cipe.</span></p>
+			<h1 id="_idParaDest-226"><a id="_idTextAnchor578"/>Testing for client-side resource manipulation</h1>
+			<p>If an application <a id="_idIndexMarker577"/>performs actions based on client-side URL information or pathing to a resource (that is, AJAX call, external JavaScript, or <strong class="source-inline">iframe</strong> source), the result can lead to a client-side resource manipulation vulnerability. This vulnerability relates to attacker-controlled URLs in, for example, the JavaScript <strong class="source-inline">location</strong> attribute, the location header found in an HTTP response, or a <strong class="source-inline">POST</strong> body parameter, which controls redirection. The impact of this vulnerability could lead to an <span class="No-Break">XSS <a id="_idTextAnchor579"/>a<a id="_idTextAnchor580"/>ttack.</span></p>
+			<h2 id="_idParaDest-227"><a id="_idTextAnchor581"/>Getting ready</h2>
+			<p>We will use the OWASP Mutillidae II application to determine whether it is possible to manipulate any URL parameters that are exposed on the client side and whether the manipulation of those values causes the application to <span class="No-Break">behave diffe<a id="_idTextAnchor582"/>r<a id="_idTextAnchor583"/>ently.</span></p>
+			<h2 id="_idParaDest-228"><a id="_idTextAnchor584"/>How to do it...</h2>
+			<ol>
+				<li>Navigate to <strong class="bold">OWASP 2013</strong> | <strong class="bold">A10 - Unvalidated Redirects and Forwards</strong> | <span class="No-Break"><strong class="bold">Credits</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer493" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.035.jpg" alt="Figure 9.35 – Credits page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.35 – Credits page</p>
+			<ol>
+				<li value="2">Click the <strong class="bold">ISSA Kentuckiana</strong> link<a id="_idIndexMarker578"/> available on the <span class="No-Break"><strong class="bold">Credits</strong></span><span class="No-Break"> page:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer494" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.036.jpg" alt="Figure 9.36 – External links"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.36 – External links</p>
+			<ol>
+				<li value="3">Switch to the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and find your request to the <strong class="bold">Credits</strong> page. Note that there are two query string parameters: <strong class="source-inline">page</strong> and <strong class="source-inline">forwardurl</strong>. What<a id="_idIndexMarker579"/> would happen if we manipulated the URL where the user <span class="No-Break">is sent?</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer495" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.037.jpg" alt="Figure 9.37 – Call to an external link"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.37 – Call to an external link</p>
+			<ol>
+				<li value="4">Switch to the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab. Turn <strong class="bold">Intercept</strong> <strong class="bold">on</strong> with the <strong class="bold">Intercept is </strong><span class="No-Break"><strong class="bold">on</strong></span><span class="No-Break"> button.</span></li>
+				<li>Click the <strong class="bold">ISSA Kentuckiana</strong> link again. While the request is paused, note the current value of the <span class="No-Break"><strong class="source-inline">forwardurl</strong></span><span class="No-Break"> parameter:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer496" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.038.jpg" alt="Figure 9.38 – Changing the original value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.38 – Changing the original value</p>
+			<ol>
+				<li value="6">Replace the<a id="_idIndexMarker580"/> value of the <strong class="source-inline">forwardurl</strong> parameter to <a href="https://www.owasp.org">https://www.owasp.org</a> instead of the original choice <span class="No-Break">of </span><a href="http://www.issa-kentuckiana.org"><span class="No-Break">http://www.issa-kentuckiana.org</span></a><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer497" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.039.jpg" alt="Figure 9.39 – Changing to an attacker-controlled value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.39 – Changing to an attacker-controlled value</p>
+			<ol>
+				<li value="7">Click the <strong class="bold">Forward</strong> button. Now, turn <strong class="bold">Intercept</strong> off by clicking the toggle button to <strong class="bold">Intercept is off</strong>. Note how we were redirected to a site other than the one <span class="No-Break">originally clicked!</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer498" class="IMG---Figure">
+					<img src="image/B21173_Figure_9.040.jpg" alt="Figure 9.40 – Evidence of redi﻿rect﻿ion"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 9.40 – Evidence of redi<a id="_idTextAnchor585"/>rect<a id="_idTextAnchor586"/>ion</p>
+			<h2 id="_idParaDest-229"><a id="_idTextAnchor587"/>How it works...</h2>
+			<p>Application code <a id="_idIndexMarker581"/>decisions, such as where to redirect a user, should never rely on client-side available values. Such values can be tampered with and modified to redirect users to attacker-controlled websites or to execute <span class="No-Break">attacker-controlled scripts.</span></p>
+		</div>
+	</body></html>

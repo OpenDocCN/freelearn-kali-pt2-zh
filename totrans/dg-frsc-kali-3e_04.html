@@ -1,0 +1,545 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div class="IMG---Figure" id="_idContainer089">
+<h1 class="chapter-number" id="_idParaDest-40"><a id="_idTextAnchor058"/>3</h1>
+<h1 id="_idParaDest-41"><a id="_idTextAnchor059"/>Installing Kali Linux</h1>
+<p>Join me as we get started with the practical aspects of Kali Linux. Some of you may already be familiar with the installation process and perhaps even some of the advanced features, such as partitioning and networking. For beginners and those of you who are new to Kali Linux, we encourage you to pay particular attention to this chapter as we begin from the absolute basics of downloading Kali Linux, working our way up to a <span class="No-Break">successful installation.</span></p>
+<p>The topics that we are going to cover in this chapter are <span class="No-Break">the following:</span></p>
+<ul>
+<li>Installing Kali Linux on portable storage media for <span class="No-Break">live DFIR</span></li>
+<li>Downloading and installing Kali Linux as a standalone <span class="No-Break">operating system</span></li>
+<li>Installing Kali Linux <span class="No-Break">in VirtualBox</span></li>
+</ul>
+<h1 id="_idParaDest-42"><a id="_idTextAnchor060"/>Technical requirements</h1>
+<p>As previously mentioned, Kali Linux has been around for quite some time. Known previously as BackTrack, with releases from versions one to five, Kali Linux was first seen in 2015 and released as Kali 1.0. From 2016 onward, Kali was then named according to the year. So, for instance, at the time of writing this book, the version used is Kali 2022.3, released in <span class="No-Break">August 2022.</span></p>
+<p>For those running older versions of Kali Linux or purchasing this book at a later date when new versions of Kali Linux, such as 2023 and later, may be available, you can easily update your instance of Kali Linux by using the <strong class="source-inline">sudo apt-get update</strong> command, demonstrated later in the <em class="italic">Updating </em><span class="No-Break"><em class="italic">Kali</em></span><span class="No-Break"> section.</span></p>
+<h1 id="_idParaDest-43"><a id="_idTextAnchor061"/>Downloading Kali Linux</h1>
+<p>For safety and <a id="_idIndexMarker184"/>security reasons, it is always best to download Kali Linux directly from the website of its <a id="_idIndexMarker185"/>creators, <strong class="bold">Offensive Security</strong>. The main reason for this is that the downloads of Kali on other pages could possibly be fake or, worse, infected with malware, such as Trojans, rootkits, and even ransomware. Offensive Security has also included hashes of all versions of Kali downloads on their site, allowing users to compare the hash of their downloaded version of Kali with what was generated and posted by Offensive Security on their website (<a href="https://www.kali.org">https://www.kali.org</a>). Once there, you can click on the <strong class="bold">Downloads</strong> link or go directly to the Kali Linux <strong class="bold">Downloads</strong> page by <span class="No-Break">visiting </span><a href="https://www.kali.org/get-kali/"><span class="No-Break">https://www.kali.org/get-kali/</span></a><span class="No-Break">.</span></p>
+<p>Once on the <strong class="bold">Downloads</strong> page, four main options are available, and you are prompted to choose your version of Kali Linux <a id="_idIndexMarker186"/>for the platform of <span class="No-Break">your choice:</span></p>
+<ul>
+<li><strong class="bold">Installer Images</strong>: These ISO images <a id="_idIndexMarker187"/>can be downloaded <a id="_idIndexMarker188"/>and installed directly on the hard drive to be used as a main operating system in the same way that you would install Windows or another operating system. ISO files (or ISO images, as they are commonly called) are exact copies of data used specifically when <span class="No-Break">duplicating data.</span></li>
+<li><strong class="bold">Virtual Machines</strong>: These images <a id="_idIndexMarker189"/>are used on<a id="_idIndexMarker190"/> virtual platforms, such as VirtualBox and VMware, and are pre-configured to run straight out of <span class="No-Break">the box.</span></li>
+<li><strong class="bold">ARM</strong>: These<a id="_idIndexMarker191"/> images<a id="_idIndexMarker192"/> are specifically for low-powered<a id="_idIndexMarker193"/> devices and <strong class="bold">Single Board Computers</strong> (<strong class="bold">SBC</strong>) such<a id="_idIndexMarker194"/> as Raspberry Pi, Pinebook, and <span class="No-Break">Gateworks devices.</span></li>
+<li><strong class="bold">Mobile</strong>: This portable <a id="_idIndexMarker195"/>version of Kali Linux is called Kali NetHunter <a id="_idIndexMarker196"/>and can now be installed on many more devices since its inception, including OnePlus, ZTE, Nexus, Samsung, Sony, Nokia, and even the TicWatch Pro smartwatch. Kali NetHunter Lite can also be installed on ARM64 and <span class="No-Break">ARMhf devices.</span></li>
+</ul>
+<p>The following screenshot shows the main download menu with various <span class="No-Break">platform options.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer038">
+<img alt="Figure 3.1: Available versions of Kali Linux" height="900" src="image/Figure_3.01_B19441.jpg" width="1276"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.1: Available versions of Kali Linux</p>
+<p>Once you click on a <a id="_idIndexMarker197"/>menu item, it will take you to the downloads section for that specific platform. For example, if you click on the <strong class="bold">Virtual Machines</strong> option in the menu, you will be taken to the download section for both 64-bit and 32-bit versions of Kali Linux for <strong class="bold">VMware</strong> <span class="No-Break">and </span><span class="No-Break"><strong class="bold">VirtualBox</strong></span><span class="No-Break">.</span></p>
+<p class="callout-heading">Important note</p>
+<p class="callout">32-bit operating systems are limited to utilizing only 4 GB of RAM. Should you have a system with more than 4 GB of RAM, you may wish to download the 64-bit version of <span class="No-Break">Kali Linux.</span></p>
+<p>In the following screenshot, the <strong class="bold">64-bit</strong> version <span class="No-Break">is selected.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer039">
+<img alt="Figure 3.2: Available 32-bit and 64-bit Kali Linux versions for VirtualBox and VMware" height="558" src="image/Figure_3.02_B19441.jpg" width="912"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.2: Available 32-bit and 64-bit Kali Linux versions for VirtualBox and VMware</p>
+<p>You can choose either the <strong class="bold">VMware</strong> or <strong class="bold">VirtualBox</strong> platforms. You can download Kali directly within the browser by clicking on the download arrow below the icons, which indicates that the file is <strong class="bold">2.4G</strong> in size. You can also download it using the Torrent software of your choice, such as Tixati or BitTorrent, by clicking on the <strong class="bold">torrent</strong> option. Torrent software <a id="_idIndexMarker198"/>must be downloaded separately. The <strong class="bold">docs</strong> option directs us to the documentation pages for each platform, and the <strong class="bold">sum</strong> option provides the <strong class="source-inline">SHA256sum</strong> output of the original file, which was uploaded by <span class="No-Break">the creators.</span></p>
+<p class="callout-heading">Important note</p>
+<p class="callout">The <strong class="source-inline">sha256sum</strong> command is used in Linux to generate a checksum or digital output representing the existing data, which can then be used to compare against the checksum of the downloaded copy to ensure that no data or bits were changed or <span class="No-Break">tampered with.</span></p>
+<p>Now that we’re familiar with the versions of Kali Linux available to us, let’s look at the software required<a id="_idIndexMarker199"/> for installing the various instances of <span class="No-Break">Kali Linux.</span></p>
+<h2 id="_idParaDest-44"><a id="_idTextAnchor062"/>Downloading the required tools and images</h2>
+<p>To be able to follow <a id="_idIndexMarker200"/>along with the installations of Kali Linux on various platforms in this chapter, you will be required to download the following versions of Kali as well as some additional tools, which I’ve <span class="No-Break">listed here:</span></p>
+<ul>
+<li><strong class="bold">Kali Linux 64-bit Installer Image</strong> (this <a id="_idIndexMarker201"/>can <a id="_idIndexMarker202"/>be installed as <a id="_idIndexMarker203"/>a standalone operating system or<a id="_idIndexMarker204"/> as a <strong class="bold">Virtual Machine</strong> (<span class="No-Break"><strong class="bold">VM</strong></span><span class="No-Break">)): </span><a href="https://cdimage.kali.org/kali-2022.3/kali-linux-2022.3-installer-amd64.iso"><span class="No-Break">https://cdimage.kali.org/kali-2022.3/kali-linux-2022.3-installer-amd64.iso</span></a></li>
+<li><strong class="bold">Kali Linux 64-bit for </strong><span class="No-Break"><strong class="bold">VirtualBox</strong></span><span class="No-Break">: </span><a href="https://kali.download/virtual-images/kali-2022.3/kali-linux-2022.3-virtualbox-amd64.7z"><span class="No-Break">https://kali.download/virtual-images/kali-2022.3/kali-linux-2022.3-virtualbox-amd64.7z</span></a></li>
+<li><strong class="bold">Kali Everything </strong><span class="No-Break"><strong class="bold">torrent</strong></span><span class="No-Break">: </span><a href="https://cdimage.kali.org/kali-2022.3/kali-linux-2022.3-installer-everything-amd64.iso.torrent"><span class="No-Break">https://cdimage.kali.org/kali-2022.3/kali-linux-2022.3-installer-everything-amd64.iso.torrent</span></a></li>
+<li><strong class="bold">Tixati torrent client software</strong>: (to download<a id="_idIndexMarker205"/> the Kali Everything ISO <span class="No-Break">image): </span><a href="https://www.tixati.com/download/windows64.xhtml"><span class="No-Break">https://www.tixati.com/download/windows64.xhtml</span></a></li>
+<li><strong class="bold">7-Zip tool</strong> (to unzip <a id="_idIndexMarker206"/>and decompress <strong class="source-inline">.7z</strong> <span class="No-Break">files): </span><a href="https://www.7-zip.org/download.xhtml"><span class="No-Break">https://www.7-zip.org/download.xhtml</span></a></li>
+<li><strong class="bold">Rufus 3.2</strong> (a tool for<a id="_idIndexMarker207"/> creating a bootable <span class="No-Break">drive): </span><a href="https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20.exe"><span class="No-Break">https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20.exe</span></a></li>
+<li><strong class="bold">VirtualBox and the VirtualBox Oracle VM extension </strong><span class="No-Break"><strong class="bold">pack</strong></span><span class="No-Break">: </span><a href="https://www.virtualbox.org/wiki/Downloads"><span class="No-Break">https://www.virtualbox.org/wiki/Downloads</span></a></li>
+<li><strong class="bold">Raspberry Pi Imager</strong> (for downloading a<a id="_idIndexMarker208"/>nd installing Kali on Raspberry Pi): <a href="https://www.raspberrypi.com/software/">https://www.raspberrypi.com/software/</a>. When visiting the Imager downloads page, be sure to choose the correct platform. I’ll be using Imager on a Windows machine, which can be downloaded <span class="No-Break">at </span><a href="https://downloads.raspberrypi.org/imager/imager_latest.exe"><span class="No-Break">https://downloads.raspberrypi.org/imager/imager_latest.exe</span></a><span class="No-Break">.</span></li>
+</ul>
+<h2 id="_idParaDest-45"><a id="_idTextAnchor063"/>Downloading the Kali Linux Everything torrent</h2>
+<p>There is a variation<a id="_idIndexMarker209"/> of the Kali Linux Installer called Kali Everything. The Kali Everything image is significantly larger than the other installer versions as it contains all tools available for Kali Linux. Although these tools are available for manual download and installation in the form of repositories (often referred to as repos), it can be much simpler to download the Everything version and explore the tools if you are unfamiliar with installing Kali tools and repos. You can download the Kali Everything ISO image by performing the <span class="No-Break">following steps:</span></p>
+<ol>
+<li>Kali Everything can be installed directly to the hard drive as a standalone <strong class="bold">operating system</strong> (<strong class="bold">OS</strong>) and <a id="_idIndexMarker210"/>also as a VM within VirtualBox if you prefer this option instead. We’ll cover both instances in the coming sections. The Kali Everything torrent can be downloaded by <span class="No-Break">visiting </span><a href="https://kali.download/base-images/kali-2022.3/kali-linux-2022.3-installer-everything-amd64.iso.torrent"><span class="No-Break">https://kali.download/base-images/kali-2022.3/kali-linux-2022.3-installer-everything-amd64.iso.torrent</span></a><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer040">
+<img alt="Figure 3.3: Image of the Kali Everything download button" height="193" src="image/Figure_3.03_B19441.jpg" width="230"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.3: Image of the Kali Everything download button</p>
+<ol>
+<li value="2">You can then open that link with the torrent application of your choice. I used the <strong class="bold">Tixati</strong> software for Windows, which I downloaded from <a href="https://www.tixati.com/download/">https://www.tixati.com/download/</a> and then installed on my Windows 10 laptop. After clicking on the link, the Kali Everything torrent file opens in the Tixati client. I’ve chosen to save the Kali Everything file to my <strong class="source-inline">Downloads</strong> folder, as seen in the following screenshot. After choosing your download location, click on the <span class="No-Break"><strong class="bold">Start</strong></span><span class="No-Break"> button.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer041">
+<img alt="Figure 3.4: The Tixati torrent interface" height="338" src="image/Figure_3.04_B19441.jpg" width="586"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.4: The Tixati torrent interface</p>
+<ol>
+<li value="3">The Kali <a id="_idIndexMarker211"/>Everything file download will begin in Tixati and will be saved to the selected folder with the <strong class="source-inline">kali-linux-2022.3-installer-everything-amd64.iso</strong> filename. We will be using this ISO file in the <span class="No-Break">coming sections.</span></li>
+</ol>
+<p>You should now have at least two versions of Kali Linux downloaded to your system, as I do in my <span class="No-Break"><strong class="source-inline">Downloads</strong></span><span class="No-Break"> folder.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer042">
+<img alt="Figure 3.5: Downloaded Kali images in the Downloads folder" height="95" src="image/Figure_3.05_B19441.jpg" width="516"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.5: Downloaded Kali images in the Downloads folder</p>
+<p>Let’s now look at creating bootable versions of these two instances of Kali Linux on flash drives or any <a id="_idIndexMarker212"/>other storage media type using <span class="No-Break">Rufus 3.2.</span></p>
+<h1 id="_idParaDest-46"><a id="_idTextAnchor064"/>Installing Kali Linux on portable storage media for  live DFIR</h1>
+<p>As mentioned<a id="_idIndexMarker213"/> previously, Kali<a id="_idIndexMarker214"/> Linux can be<a id="_idIndexMarker215"/> installed on a variety of platforms and can be installed either as a standalone OS or as a VM. We’ll first look at creating a bootable Kali Linux flash drive using the Kali Installer ISO file we downloaded. If you did not download ISO files, you can do so now by clicking on the links and following the instructions in the <span class="No-Break">previous section.</span></p>
+<p>This <strong class="source-inline">.iso</strong> file, or image file as it is sometimes called, can be used with Rufus 3.20 to create bootable drives from which to install Kali Linux onto a PC or laptop. It can also be installed and used within VirtualBox as a VM, which we will get into using the Kali Everything ISO file later in this chapter. Let’s first look at how to create a bootable flash drive using the Kali Linux Installer ISO and then learn how to install Kali as a <span class="No-Break">standalone OS.</span></p>
+<p>Creating a bootable flash drive or SD card with Kali Linux can be very useful as it eliminates the need to carry around your personal laptop or desktop with Kali Linux on it as Kali can be run from the portable storage media device itself once inserted into and booted from a desktop <span class="No-Break">or laptop.</span></p>
+<p>For this lab, (<em class="italic">we will refer to practicals as labs from time to time</em>), I’ll be using the Rufus 3.20 tool on a Windows 10 laptop to create the bootable flash drive using <strong class="bold">Kali Installer ISO</strong>, which <a id="_idIndexMarker216"/>we downloaded. If you haven’t downloaded Rufus 3.20, please do so now by clicking <span class="No-Break">on </span><a href="https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20.exe"><span class="No-Break">https://github.com/pbatard/rufus/releases/download/v3.20/rufus-3.20.exe</span></a><span class="No-Break">.</span></p>
+<p>Rufus is very user-friendly and has a simple interface which is one of the reasons why I’ve chosen it to create our bootable drive. Once Rufus has been downloaded, locate the downloaded file and double-click on it to run Rufus. At this point, you should have the flash drive you wish to use as your Kali Linux bootable drive inserted into your computer or laptop. In this instance, I’m using a 32 GB flash drive that I’ve labeled as CFSI for <span class="No-Break">easy recognition.</span></p>
+<p>Have a look at the <a id="_idIndexMarker217"/>following<a id="_idIndexMarker218"/> screenshot and <a id="_idIndexMarker219"/>observe the <span class="No-Break">following items:</span></p>
+<ul>
+<li><strong class="bold">Device</strong>: This is your target device. I’ve selected my 32 <span class="No-Break">GB drive.</span></li>
+<li><strong class="bold">Boot selection</strong>: We will be creating our bootable drive using the Kali Installer and Kali Everything <strong class="source-inline">.iso</strong> files that <span class="No-Break">we downloaded.</span></li>
+<li><strong class="bold">Partition scheme</strong>: <strong class="bold">MBR</strong> (older devices) or <strong class="bold">GPT</strong> (newer devices). I’ve selected <strong class="bold">MBR</strong> as I’ll be creating this bootable Kali drive to run on older systems. If you are only using this bootable drive on newer laptops or desktops, you may want to choose <strong class="bold">GPT</strong>. You can also create two bootable drives, one with an MBR partition scheme and another with GPT if you have <span class="No-Break">available drives.</span></li>
+<li><strong class="bold">File system</strong>: Many flash drives and SD cards are formatted as FAT32 by default and work without issues, so we’ll leave it selected as <span class="No-Break"><strong class="bold">FAT32 (Default)</strong></span><span class="No-Break">.</span></li>
+</ul>
+<div>
+<div class="IMG---Figure" id="_idContainer043">
+<img alt="Figure 3.6: The Rufus interface" height="768" src="image/Figure_3.06_B19441.jpg" width="1366"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.6: The Rufus interface</p>
+<p>Now follow<a id="_idIndexMarker220"/> these<a id="_idIndexMarker221"/> steps<a id="_idIndexMarker222"/> for installing Kali Linux on portable storage media for <span class="No-Break">live DFIR:</span></p>
+<ol>
+<li value="1">In the preceding screenshot, you will notice that there is a screen tip to the right that reads, <strong class="bold">Click to select or download an image</strong>. Click on the <strong class="bold">SELECT</strong> drop-down menu and browse to the location where you downloaded and saved the Kali Installer (<span class="No-Break"><strong class="source-inline">kali-linux-2022.3-installer-amd64.iso</strong></span><span class="No-Break">) file.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer044">
+<img alt="Figure 3.7: Selecting the Kali ISO image in Rufus" height="275" src="image/Figure_3.07_B19441.jpg" width="661"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.7: Selecting the Kali ISO image in Rufus</p>
+<ol>
+<li value="2">I’ve<a id="_idIndexMarker223"/> saved<a id="_idIndexMarker224"/> the <strong class="source-inline">kali-linux-2022.3-installer-amd64.iso</strong> file<a id="_idIndexMarker225"/> to my <strong class="source-inline">isos</strong> folder within the <strong class="source-inline">Downloads</strong> folder. Click on the <strong class="source-inline">kali-linux-2022.3-installer-amd64.iso</strong> file to select it, and then click on the <span class="No-Break"><strong class="bold">Open</strong></span><span class="No-Break"> button.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer045">
+<img alt="Figure 3.8: Choosing the Partition scheme in Rufus" height="768" src="image/Figure_3.08_B19441.jpg" width="1366"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.8: Choosing the Partition scheme in Rufus</p>
+<p>As seen in the preceding screenshot, you should now notice <strong class="source-inline">kali-linux-2022.3-installer-amd64.iso</strong> listed under the <strong class="bold">Boot selection</strong> section. I’ve also set <strong class="bold">Persistent partition size</strong> to <strong class="source-inline">2</strong> <strong class="bold">GB</strong>, which creates a space to act as storage in the event I need to download files or install tools within the bootable installation <span class="No-Break">of Kali.</span></p>
+<ol>
+<li value="3">At this point, you may again choose between the <strong class="bold">MBR</strong> or <strong class="bold">GPT</strong> options in the <strong class="bold">Partition scheme</strong> field. I’ve also changed the <strong class="bold">Volume label</strong> option to read <strong class="source-inline">Kali Linux amd 64 1</strong>. The reason for using the number <strong class="source-inline">1</strong> at the end of the volume label is that I’ve used this drive with the <strong class="bold">MBR</strong> partition scheme, and I’ve created another bootable drive using the <strong class="bold">GPT</strong> partition scheme, which is labeled <strong class="source-inline">Kali Linux amd </strong><span class="No-Break"><strong class="source-inline">64 2</strong></span><span class="No-Break">.</span></li>
+<li>Once you have configured all the options as you would like them and ensured that all settings are correct, click on the <span class="No-Break"><strong class="bold">START</strong></span><span class="No-Break"> button.</span></li>
+<li>You<a id="_idIndexMarker226"/> may <a id="_idIndexMarker227"/>be <a id="_idIndexMarker228"/>prompted to download two additional files named <strong class="source-inline">ldlinux.sys</strong> and <strong class="source-inline">ldlinux.bss</strong>. Click on the <strong class="bold">Yes</strong> button to allow Rufus to do so automatically. Your computer must be connected to the internet for Rufus to download <span class="No-Break">these files.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer046">
+<img alt="Figure 3.9: The Syslinux download requirement confirmation screen" height="284" src="image/Figure_3.09_B19441.jpg" width="475"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.9: The Syslinux download requirement confirmation screen</p>
+<ol>
+<li value="6">Rufus will then ask for confirmation and warns that all data on the removable storage <a id="_idIndexMarker229"/>device<a id="_idIndexMarker230"/> will<a id="_idIndexMarker231"/> be destroyed. If you are certain that you have selected the correct drive, click the <strong class="bold">OK</strong> button <span class="No-Break">to proceed.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer047">
+<img alt="Figure 3.10: The operation confirmation screen" height="167" src="image/Figure_3.10_B19441.jpg" width="431"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.10: The operation confirmation screen</p>
+<p>Rufus will then begin formatting the drive, as seen in the <span class="No-Break">following screenshot.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer048">
+<img alt="Figure 3.11: Rufus formatting operation status" height="679" src="image/Figure_3.11_B19441.jpg" width="467"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.11: Rufus formatting operation status</p>
+<p>Once formatting is complete, Rufus will then copy the ISO file to <span class="No-Break">the drive.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer049">
+<img alt="Figure 3.12: Rufus file copying status" height="151" src="image/Figure_3.12_B19441.jpg" width="469"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.12: Rufus file copying status</p>
+<ol>
+<li value="7">When the <a id="_idIndexMarker232"/>process <a id="_idIndexMarker233"/>is<a id="_idIndexMarker234"/> complete, the <strong class="bold">Status</strong> bar will appear green with the word <strong class="bold">READY</strong> in the middle of the bar. You can now click on the <strong class="bold">CLOSE</strong> button, as seen in the <span class="No-Break">following screenshot.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer050">
+<img alt="Figure 3.13: Bootable drive creation completed" height="366" src="image/Figure_3.13_B19441.jpg" width="470"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.13: Bootable drive creation completed</p>
+<ol>
+<li value="8">You can <a id="_idIndexMarker235"/>now <a id="_idIndexMarker236"/>remove <a id="_idIndexMarker237"/>your bootable Kali Linux drive and place it into a computer or laptop on which you wish to run Kali as a live OS or install it on the <span class="No-Break">hard drive.</span></li>
+</ol>
+<p>Running Kali as a live OS means that it does not install on the hard drive and runs using the <a id="_idIndexMarker238"/>device’s <strong class="bold">Random Access Memory</strong> (<strong class="bold">RAM</strong>). This way, we can preserve the original OS and use Kali and all the tools within for <strong class="bold">Digital Forensics and Incident Response</strong> (<strong class="bold">DFIR</strong>) while<a id="_idIndexMarker239"/> leaving the current installed <span class="No-Break">OS intact.</span></p>
+<ol>
+<li value="9">To do so, you insert the bootable Kali Linux drive into the desktop or laptop and reboot the system. You may have to press the <em class="italic">F12</em> key upon reboot to choose the flash drive as the bootable OS. This tells the <strong class="bold">Basic Input Output System</strong> (<strong class="bold">BIOS</strong>) to<a id="_idIndexMarker240"/> boot from the removable storage media and not the hard drive, thus allowing us to run Kali Linux within RAM as a <span class="No-Break">live OS.</span></li>
+</ol>
+<p>Now that we have learned how to install Kali Linux on a bootable flash drive, we will learn how to <a id="_idIndexMarker241"/>install <a id="_idIndexMarker242"/>Kali<a id="_idIndexMarker243"/> as a standalone OS on a desktop or laptop device using the bootable <span class="No-Break">flash drive.</span></p>
+<h1 id="_idParaDest-47"><a id="_idTextAnchor065"/>Installing Kali as a standalone operating system</h1>
+<p>In this section, we <a id="_idIndexMarker244"/>will be installing <a id="_idIndexMarker245"/>Kali Linux onto our desktop or laptop as a standalone operating system. For this exercise, we will be using the bootable Kali Installer flash drive, which we just created using Rufus 3.2. If you’ve ever booted a desktop or laptop from a flash drive or any removable storage media, you may already be familiar with the process. For anyone new to the process, let’s take a step-by-step look at booting into Kali Linux. The installation and configuration of Kali Linux are the same (if using the Kali Linux Installer version, which we are using) when installing Kali onto a physical machine and a VM. So, we’ll look at the installation itself in the following section to keep <span class="No-Break">things consistent:</span></p>
+<ol>
+<li value="1">Once your bootable Kali Linux Installer flash drive has been created, insert the drive into your desktop or laptop and power on the device. If your device is already on, restart the device with the flash drive inserted in the <span class="No-Break">USB port.</span></li>
+<li>As soon as the device powers on, press the <em class="italic">F12</em> key on the keyboard for <strong class="bold">Advanced Boot Options</strong>. This key and setting may vary on different machines, and you may have to refer to the device manual if <em class="italic">F12</em> does not carry you to the <span class="No-Break">boot menu.</span></li>
+<li>Select the USB or removable drive as the main boot device and press the <span class="No-Break"><em class="italic">Enter</em></span><span class="No-Break"> key.</span></li>
+</ol>
+<p>You should now<a id="_idIndexMarker246"/> be<a id="_idIndexMarker247"/> presented with the Kali boot menu as seen in the photo I took of <span class="No-Break">my monitor.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer051">
+<img alt="Figure 3.14: Picture of the Kali boot screen on a desktop pc" height="720" src="image/Figure_3.14_B19441.jpg" width="1107"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.14: Picture of the Kali boot screen on a desktop pc</p>
+<p>Once here, you can refer to the following <em class="italic">Installing Kali Linux in VirtualBox</em> section to continue the installation and configuration process. Let’s pause here in our standalone installation and learn how to install Kali Linux as a VM in VirtualBox. Once we’ve installed Kali in VirtualBox, we’ll then resume installation and configuration, which can be applied to both standalone and <span class="No-Break">virtual systems.</span></p>
+<h1 id="_idParaDest-48"><a id="_idTextAnchor066"/>Installing Kali in VirtualBox</h1>
+<p>The creators <a id="_idIndexMarker248"/>of Kali Linux (Offensive Security) have been kind<a id="_idIndexMarker249"/> enough to simplify our lives by creating a pre-configured version of Kali for VirtualBox and VMware, which requires minimal configuration. These pre-configured images and even the installer images, including Kali Everything, can all be installed on virtual platforms and run no differently than they would on physical machines. The advantage of using Kali Linux as a VM is that you do not have to purchase any new or additional hardware. You can also delete and reinstall the VMs very easily and even create a snapshot of the OS once you’ve  configured exactly as you would like it, which you can boot into at any time if you’ve broken your Kali machine and need to revert to a <span class="No-Break">saved state.</span></p>
+<p>For those of you who are installing Kali as a standalone OS, you can continue the installation after booting from your bootable Kali flash drive in <em class="italic">Step 3</em> in the <em class="italic">Installing Kali as a standalone operating system</em> section, as the steps for installation of the Kali Linux Installer on both physical and VMs are exactly <span class="No-Break">the same.</span></p>
+<p>Before we begin, please ensure that you have already downloaded the latest stable version of VirtualBox and the VirtualBox additions. If you haven’t, you can do so now by visiting <a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a>. Please download and install the appropriate VirtualBox platform packages and the VirtualBox Oracle Extension Pack. I’m using a Windows 10 host, so I’ll be downloading and VirtualBox platform for Windows by clicking on <span class="No-Break"><strong class="bold">Windows hosts</strong></span><span class="No-Break">.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer052">
+<img alt="Figure 3.15: The VirtualBox website downloads page" height="469" src="image/Figure_3.15_B19441.jpg" width="806"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.15: The VirtualBox website downloads page</p>
+<h2 id="_idParaDest-49"><a id="_idTextAnchor067"/>Preparing the Kali Linux VM</h2>
+<p>Once VirtualBox has <a id="_idIndexMarker250"/>been downloaded, it can be installed and then configured to run Kali Linux and many other OSs, depending on the amount of <span class="No-Break">RAM available:</span></p>
+<ol>
+<li value="1">When setting up a new guest OS or guest VM, we first click on <strong class="bold">New</strong> and then fill in the <span class="No-Break">following details:</span><ul><li><strong class="bold">Name</strong>: <strong class="source-inline">Kali Linux 2022.3 Everything</strong>  (or name of <span class="No-Break">your choice)</span></li></ul></li>
+</ol>
+<p class="callout-heading">Note</p>
+<p class="callout">For this installation, I am using the large Kali Linux Everything ISO version, as it comes with every tool installed. You may also use the Kali Installer ISO, as the installation is exactly the same for <span class="No-Break">both versions.</span></p>
+<ul>
+<li><strong class="bold">Machine Folder</strong>: Default location for <span class="No-Break">the VM</span></li>
+<li><span class="No-Break"><strong class="bold">Type</strong></span><span class="No-Break">: </span><span class="No-Break"><strong class="bold">Linux</strong></span></li>
+<li><strong class="bold">Version</strong>: <span class="No-Break"><strong class="bold">Debian (64-bit)</strong></span></li>
+</ul>
+<div>
+<div class="IMG---Figure" id="_idContainer053">
+<img alt="Figure 3.16: VirtualBox name and OS details" height="367" src="image/Figure_3.16_B19441.jpg" width="433"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.16: VirtualBox name and OS details</p>
+<ol>
+<li value="2">We then click <strong class="bold">Next</strong> and<a id="_idIndexMarker251"/> proceed to allocate RAM in the <strong class="bold">Memory size</strong> slider prompt. On my screen, you’ll notice that I’ve selected 10 GB of RAM for the VM. I’ve chosen this amount as I have 32 GB RAM in total. It should be noted that when choosing the amount of RAM for our VMs, we do not exceed more than half the total amount of RAM or exceed an amount that shows as pink in the slider window, as doing so may cause our host and virtual systems to become unstable or crash. I do recommend at least 4 GB of RAM for smooth functionality when using the <span class="No-Break">forensic tools.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer054">
+<img alt="Figure 3.17: VirtualBox memory allocation" height="347" src="image/Figure_3.17_B19441.jpg" width="431"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.17: VirtualBox memory allocation</p>
+<ol>
+<li value="3">Next, we create <a id="_idIndexMarker252"/>the VM by adding a virtual hard disk. I recommend starting with a new virtual hard disk, which is the second option in the selection. Click on <strong class="bold">Create</strong> <span class="No-Break">to proceed:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer055">
+<img alt="Figure 3.18: VirtualBox hard disk creation" height="339" src="image/Figure_3.18_B19441.jpg" width="429"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.18: VirtualBox hard disk creation</p>
+<ol>
+<li value="4">Then<a id="_idIndexMarker253"/> choose <strong class="bold">VDI (VirtualBox Disk Image)</strong> as <strong class="bold">Hard disk file type</strong> and <span class="No-Break">click </span><span class="No-Break"><strong class="bold">Next</strong></span><span class="No-Break">:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer056">
+<img alt="Figure 3.19: VirtualBox hard disk file type selection" height="266" src="image/Figure_3.19_B19441.jpg" width="421"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.19: VirtualBox hard disk file type selection</p>
+<ol>
+<li value="5">Once the VDI has <a id="_idIndexMarker254"/>been selected, choose the <strong class="bold">Dynamically allocated</strong> option to allow the virtual hard disk to be expanded if the <span class="No-Break">need arises:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer057">
+<img alt="Figure 3.20: VirtualBox storage allocation" height="341" src="image/Figure_3.20_B19441.jpg" width="417"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.20: VirtualBox storage allocation</p>
+<ol>
+<li value="6">For the next step, we <a id="_idIndexMarker255"/>select the file location and the size of the virtual hard disk chosen. The recommended size for the Kali Linux VDI is 8 GB, but I’ve assigned an ample <strong class="source-inline">32.00</strong> GB. I’ve also chosen the location for the VDI as <strong class="source-inline">C:\Users\Administrator\VirtualBox VMs\Kali 2022.3 Everything\Kali </strong><span class="No-Break"><strong class="source-inline">2022.3 Everything</strong></span><span class="No-Break">.</span></li>
+<li>Once the location is selected, click on <strong class="bold">Create</strong> to complete the creation of the virtual <span class="No-Break">hard disk.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer058">
+<img alt="Figure 3.21: VirtualBox storage allocation size" height="307" src="image/Figure_3.21_B19441.jpg" width="422"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.21: VirtualBox storage allocation size</p>
+<p>Now that we <a id="_idIndexMarker256"/>have set up the Kali Linux ISO image in VirtualBox, we can begin the installation process, which will perform in the <span class="No-Break">next section.</span></p>
+<h1 id="_idParaDest-50"><a id="_idTextAnchor068"/>Installing Kali Linux on the virtual machine</h1>
+<p>Once the virtual<a id="_idIndexMarker257"/> hard disk has been prepared and <a id="_idIndexMarker258"/>completed by following the steps in the previous subsection, we can then begin the Kali Linux installation process. In the <strong class="bold">Oracle VM VirtualBox Manager</strong> window, which is the main OS management window for VirtualBox, we can see that the VM has been prepared, and we can now install <span class="No-Break">Kali Linux:</span></p>
+<ol>
+<li value="1">To the right of the screen, you can see the resources assigned, such as <strong class="bold">Name</strong> and the <strong class="bold">Operating System</strong> type in the <strong class="bold">General</strong> section and the amount of RAM assigned in the <strong class="bold">System</strong> section. Other <a id="_idIndexMarker259"/>settings, such as the <strong class="bold">Video RAM</strong> (<strong class="bold">VRAM</strong>), <strong class="bold">Network</strong>, and <strong class="bold">Display</strong> settings, can <a id="_idIndexMarker260"/>also <a id="_idIndexMarker261"/>be accessed within <span class="No-Break">this section.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer059">
+<img alt="Figure 3.22: VirtualBox Manager" height="657" src="image/Figure_3.22_B19441.jpg" width="814"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.22: VirtualBox Manager</p>
+<ol>
+<li value="2">To begin our Kali Linux installation, click on the <strong class="bold">Kali 2022.3 Everything</strong> entry to the left and then click on the green <strong class="bold">Start</strong> arrow in the top right corner of the <strong class="bold">Select start-up disk</strong> section, as seen in the <span class="No-Break">following screenshot.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer060">
+<img alt="Figure 3.23: Start-up disk selection" height="455" src="image/Figure_3.23_B19441.jpg" width="498"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.23: Start-up disk selection</p>
+<ol>
+<li value="3">In the next step, locate <a id="_idIndexMarker262"/>the Kali Linux Everything <a id="_idIndexMarker263"/>ISO image that we downloaded from the Offensive Security website. Click on the browse folder icon, which carries us to <strong class="bold">Optical Disk Selector</strong>, and then click on the <strong class="bold">Add</strong> icon at the top-left of <span class="No-Break">the box.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer061">
+<img alt="Figure 3.24: Optical disk selection fields" height="456" src="image/Figure_3.24_B19441.jpg" width="584"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.24: Optical disk selection fields</p>
+<ol>
+<li value="4"> Navigate <a id="_idIndexMarker264"/>to<a id="_idIndexMarker265"/> the <strong class="source-inline">Kali-linux-2022.3-installer-everything-amd64.iso</strong> file you previously downloaded and click on it and then click on the <strong class="bold">Open</strong> button to see the ISO listed as an entry in <strong class="bold">Optical </strong><span class="No-Break"><strong class="bold">Disk Selector</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer062">
+<img alt="Figure 3.25: Selecting the Kali ISO" height="464" src="image/Figure_3.25_B19441.jpg" width="581"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.25: Selecting the Kali ISO</p>
+<ol>
+<li value="5">Click on the <strong class="bold">Choose</strong> button <a id="_idIndexMarker266"/>to<a id="_idIndexMarker267"/> continue and then click on the <strong class="bold">Start</strong> button in the <strong class="bold">Select start-up disk</strong> box once the <strong class="source-inline">Kali-linux-2022.3-installer-everything-amd64.iso</strong> file is selected, as seen in the <span class="No-Break">following screenshot.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer063">
+<img alt="Figure 3.26: Selecting Kali ISO as the start up image" height="465" src="image/Figure_3.26_B19441.jpg" width="517"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.26: Selecting Kali ISO as the start up image</p>
+<p>You should now <a id="_idIndexMarker268"/>see <a id="_idIndexMarker269"/>the Kali Linux Installer screen and menu options that you also saw in the previous section: <em class="italic">Installing Kali Linux as a </em><span class="No-Break"><em class="italic">standalone OS</em></span><span class="No-Break">.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer064">
+<img alt="Figure 3.27: Kali boot menu in VirtualBox" height="553" src="image/Figure_3.27_B19441.jpg" width="638"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.27: Kali boot menu in VirtualBox</p>
+<p class="callout-heading">Important note</p>
+<p class="callout">For those of you installing Kali Linux as a standalone OS, you can also follow the steps in the <em class="italic">Installing and configuring Kali Linux</em> section, as they are exactly the same for both physical and <span class="No-Break">virtual installations.</span></p>
+<p>We’re all set with Kali Linux configured and ready to be installed on both our standalone and <a id="_idIndexMarker270"/>virtual <a id="_idIndexMarker271"/>installations. Let’s <a id="_idTextAnchor069"/>learn how to install and configure Kali in the <span class="No-Break">next section.</span></p>
+<h2 id="_idParaDest-51"><a id="_idTextAnchor070"/>Installing and configuring Kali Linux as a virtual machine or as a standalone OS</h2>
+<p>Now that we’re <a id="_idIndexMarker272"/>at the Kali Linux <a id="_idIndexMarker273"/>installation screen, we can <a id="_idIndexMarker274"/>follow <a id="_idIndexMarker275"/>the steps below, which will be identical whether installing and configuring Kali as a VM or as a <span class="No-Break">standalone OS:</span></p>
+<ol>
+<li value="1">To begin the installation, select the <strong class="bold">Graphical install</strong> option and press the <em class="italic">Enter</em> key. Again, whether installing Kali Linux as a standalone or VM, you will be presented with the same options as seen in the <span class="No-Break">following screenshot.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer065">
+<img alt="Figure 3.28: Graphical install option in the Kali boot menu" height="553" src="image/Figure_3.28_B19441.jpg" width="638"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.28: Graphical install option in the Kali boot menu</p>
+<ol>
+<li value="2"> Next, select <a id="_idIndexMarker276"/>your<a id="_idIndexMarker277"/> language and <a id="_idIndexMarker278"/>click <a id="_idIndexMarker279"/><span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer066">
+<img alt="Figure 3.29: Kali language selection menu" height="511" src="image/Figure_3.29_B19441.jpg" width="833"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.29: Kali language selection menu</p>
+<ol>
+<li value="3">Select<a id="_idIndexMarker280"/> your<a id="_idIndexMarker281"/> county<a id="_idIndexMarker282"/> or <a id="_idIndexMarker283"/>region and click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer067">
+<img alt="Figure 3.30: Country selection menu" height="522" src="image/Figure_3.30_B19441.jpg" width="794"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.30: Country selection menu</p>
+<ol>
+<li value="4">Choose <a id="_idIndexMarker284"/>your<a id="_idIndexMarker285"/> keyboard configuration <a id="_idIndexMarker286"/>and click<a id="_idIndexMarker287"/> <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer068">
+<img alt="Figure 3.31: Language selection menu" height="510" src="image/Figure_3.31_B19441.jpg" width="422"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.31: Language selection menu</p>
+<ol>
+<li value="5">Give<a id="_idIndexMarker288"/> your<a id="_idIndexMarker289"/> system <a id="_idIndexMarker290"/>a <a id="_idIndexMarker291"/>hostname or leave the default <span class="No-Break">name, </span><span class="No-Break"><strong class="source-inline">kali</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer069">
+<img alt="Figure 3.32: Assigning a hostname for the Kali system" height="294" src="image/Figure_3.32_B19441.jpg" width="799"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.32: Assigning a hostname for the Kali system</p>
+<ol>
+<li value="6">If the <a id="_idIndexMarker292"/>machine<a id="_idIndexMarker293"/> will <a id="_idIndexMarker294"/>be <a id="_idIndexMarker295"/>joining a domain, you can enter it here, or leave it blank if not joining a domain, and <span class="No-Break">click </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer070">
+<img alt="Figure 3.33: Configuring the network" height="371" src="image/Figure_3.33_B19441.jpg" width="797"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.33: Configuring the network</p>
+<ol>
+<li value="7">Next up, we’ll<a id="_idIndexMarker296"/> create<a id="_idIndexMarker297"/> a <a id="_idIndexMarker298"/>non-root <a id="_idIndexMarker299"/>user account that does not have root or administrator privileges. Please be sure to use lowercase letters for <span class="No-Break">the name.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer071">
+<img alt="Figure 3.34: Username creation" height="313" src="image/Figure_3.34_B19441.jpg" width="789"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.34: Username creation</p>
+<ol>
+<li value="8">Next, create <a id="_idIndexMarker300"/>a secure <a id="_idIndexMarker301"/>and complex<a id="_idIndexMarker302"/> password, then <a id="_idIndexMarker303"/>click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer072">
+<img alt="Figure 3.35: Password creation" height="377" src="image/Figure_3.35_B19441.jpg" width="793"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.35: Password creation</p>
+<ol>
+<li value="9">Choose<a id="_idIndexMarker304"/> your<a id="_idIndexMarker305"/> timezone<a id="_idIndexMarker306"/> and <a id="_idIndexMarker307"/>click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer073">
+<img alt="Figure 3.36: Timezone configuration" height="432" src="image/Figure_3.36_B19441.jpg" width="799"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.36: Timezone configuration</p>
+<ol>
+<li value="10">Now that <a id="_idIndexMarker308"/>our<a id="_idIndexMarker309"/> personalized <a id="_idIndexMarker310"/>settings <a id="_idIndexMarker311"/>have been configured, let’s prepare the hard disk for installation. For simple installation, I recommend using the entire hard disk for Kali, whether virtual or physical. To do this, select the <strong class="bold">Guided – use entire disk</strong> option and <span class="No-Break">click </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer074">
+<img alt="Figure 3.37: Disk partitioning options" height="381" src="image/Figure_3.37_B19441.jpg" width="799"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.37: Disk partitioning options</p>
+<ol>
+<li value="11">Choose<a id="_idIndexMarker312"/> the<a id="_idIndexMarker313"/> disk<a id="_idIndexMarker314"/> for installation, which in my case is<a id="_idIndexMarker315"/> a 34.4 GB virtual hard disk, and click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer075">
+<img alt="Figure 3.38: Disk partition selection" height="331" src="image/Figure_3.38_B19441.jpg" width="787"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.38: Disk partition selection</p>
+<ol>
+<li value="12">To keep <a id="_idIndexMarker316"/>things <a id="_idIndexMarker317"/>simple, I recommend leaving all<a id="_idIndexMarker318"/> files<a id="_idIndexMarker319"/> in one partition. Select the <strong class="bold">All files in one partition (recommended for new users)</strong> option and click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer076">
+<img alt="Figure 3.39: File partitioning" height="368" src="image/Figure_3.39_B19441.jpg" width="794"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.39: File partitioning</p>
+<ol>
+<li value="13">Review <a id="_idIndexMarker320"/>your<a id="_idIndexMarker321"/> disk<a id="_idIndexMarker322"/> partition settings and select <a id="_idIndexMarker323"/>the <strong class="bold">Finish partitioning and write changes to disk</strong> option and click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer077">
+<img alt="Figure 3.40: Writing changes to the disk" height="448" src="image/Figure_3.40_B19441.jpg" width="796"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.40: Writing changes to the disk</p>
+<ol>
+<li value="14">To<a id="_idIndexMarker324"/> confirm <a id="_idIndexMarker325"/>the <a id="_idIndexMarker326"/>partition <a id="_idIndexMarker327"/>and formatting settings and begin writing the changes to the disk, select the <strong class="bold">Yes</strong> button and click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer078">
+<img alt="Figure 3.41: Finishing the partition process" height="349" src="image/Figure_3.41_B19441.jpg" width="796"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.41: Finishing the partition process</p>
+<p>Partitioning <a id="_idIndexMarker328"/>and formatting <a id="_idIndexMarker329"/>will begin, and<a id="_idIndexMarker330"/> the installation<a id="_idIndexMarker331"/> process will now continue with the extraction of <span class="No-Break">required packages.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer079">
+<img alt="Figure 3.42: Base system installation process" height="156" src="image/Figure_3.42_B19441.jpg" width="720"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.42: Base system installation process</p>
+<ol>
+<li value="15">We can<a id="_idIndexMarker332"/> now<a id="_idIndexMarker333"/> select<a id="_idIndexMarker334"/> various <a id="_idIndexMarker335"/>software packages and repositories to be automatically added to Kali. I’ve chosen to have all tools and supporting software and packages in my installation and have selected all checkboxes except for the <strong class="bold">GNOME</strong> and <strong class="bold">KDE Plasma</strong> options, as I prefer the typical Kali Linux interface with all <span class="No-Break">possible tools.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer080">
+<img alt="Figure 3.43: Additional software selection" height="640" src="image/Figure_3.43_B19441.jpg" width="794"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.43: Additional software selection</p>
+<ol>
+<li value="16">Once <a id="_idIndexMarker336"/>you<a id="_idIndexMarker337"/> have selected your choice of software, click on <strong class="bold">Continue</strong> to <a id="_idIndexMarker338"/>continue<a id="_idIndexMarker339"/> with the installation. This process will take some time. In the meantime, feel free to browse the large selection of other brilliant digital forensics titles <span class="No-Break">at </span><a href="https://subscription.packtpub.com/search?category=Security&amp;concept=Forensics&amp;_ga=2.265355399.920003428.1665758595-170131085.1665758595"><span class="No-Break">https://subscription.packtpub.com/search?category=Security&amp;concept=</span> <span class="No-Break">Forensics&amp;_ga=2.265355399.920003428.1665758595-170131085.1665758595</span></a><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer081">
+<img alt="Figure 3.44: Software installation status" height="162" src="image/Figure_3.44_B19441.jpg" width="720"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.44: Software installation status</p>
+<ol>
+<li value="17">Next, you <a id="_idIndexMarker340"/>can <a id="_idIndexMarker341"/>choose<a id="_idIndexMarker342"/> a display <a id="_idIndexMarker343"/>manager or leave the default <strong class="bold">gdm3</strong> option if you are unfamiliar with <span class="No-Break">the settings.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer082">
+<img alt="Figure 3.45: Graphical display manager selection" height="513" src="image/Figure_3.45_B19441.jpg" width="780"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.45: Graphical display manager selection</p>
+<p>The installation will continue as indicated by the <span class="No-Break">status bar.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer083">
+<img alt="Figure 3.46: Software installation progress bar" height="160" src="image/Figure_3.46_B19441.jpg" width="743"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.46: Software installation progress bar</p>
+<ol>
+<li value="18">Just <a id="_idIndexMarker344"/>a<a id="_idIndexMarker345"/> few <a id="_idIndexMarker346"/>more<a id="_idIndexMarker347"/> steps, and we’ll be done. We now move on to the GRUB boot loader, which will allow Kali to boot as your primary OS on your primary hard drive. Select <strong class="bold">Yes</strong> and click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer084">
+<img alt="Figure 3.47: GRUB boot loader selection" height="521" src="image/Figure_3.47_B19441.jpg" width="790"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.47: GRUB boot loader selection</p>
+<ol>
+<li value="19">For our<a id="_idIndexMarker348"/> final <a id="_idIndexMarker349"/>configuration, we need to make <a id="_idIndexMarker350"/>our<a id="_idIndexMarker351"/> system bootable by installing the boot loader on the disk. Select the disk with Kali installed (if not already selected by default) and click <span class="No-Break">on </span><span class="No-Break"><strong class="bold">Continue</strong></span><span class="No-Break">.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer085">
+<img alt="Figure 3.48: GRUB boot loader installation" height="518" src="image/Figure_3.48_B19441.jpg" width="794"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.48: GRUB boot loader installation</p>
+<ol>
+<li value="20">Our<a id="_idIndexMarker352"/> installation will<a id="_idIndexMarker353"/> soon <a id="_idIndexMarker354"/><span class="No-Break">be </span><span class="No-Break"><a id="_idIndexMarker355"/></span><span class="No-Break">complete.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer086">
+<img alt="Figure 3.49: Kali installation process status" height="117" src="image/Figure_3.49_B19441.jpg" width="724"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.49: Kali installation process status</p>
+<ol>
+<li value="21">When prompted, click on <strong class="bold">Continue</strong> to complete the installation and reboot <span class="No-Break">the system.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer087">
+<img alt="Figure 3.50: Kali installation completion screen" height="667" src="image/Figure_3.50_B19441.jpg" width="800"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.50: Kali installation completion screen</p>
+<ol>
+<li value="22">Enter <a id="_idIndexMarker356"/>your username <a id="_idIndexMarker357"/><span class="No-Break">and password.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer088">
+<img alt="Figure 3.51: Kali Linux login screen" height="599" src="image/Figure_3.51_B19441.jpg" width="687"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 3.51: Kali Linux login screen</p>
+<p>We’ve <a id="_idIndexMarker358"/>now<a id="_idIndexMarker359"/> completed <a id="_idIndexMarker360"/>the <a id="_idIndexMarker361"/>process of installing and configuring Kali Linux on both standalone and VMs. There are still other methods available for installing Kali Linux, which we will learn about in the next chapter. I’d like to show you another easier way to install a pre-configured version of kali Linux <span class="No-Break">in VirtualBox.</span></p>
+<h1 id="_idParaDest-52"><a id="_idTextAnchor071"/>Summary</h1>
+<p>We certainly learned quite a bit in this chapter. Feel free to wipe or delete your installations and try doing them again to become more acquainted with the processes for the different versions if <span class="No-Break">need be.</span></p>
+<p>In this chapter, we learned about the different versions of Kali Linux and the various platforms on which they can be installed and looked at the different methods for downloading different versions of Kali Linux. We then dived into the technical aspect by first learning how to create a bootable Kali Linux flash drive using Rufus utilizing the ISO image of Kali Linux, which we downloaded at the start of this chapter. We then learned how to install Kali on a physical device as a standalone OS and learned how to install Kali within VirtualBox as <span class="No-Break">a VM.</span></p>
+<p>In our next chapter, we will look at another method for installing Kali as a VM and learn how to install Kali on Raspberry Pi 4, followed by some post-installation tasks. See you in the <span class="No-Break">next chapter.</span></p>
+</div>
+</div></body></html>

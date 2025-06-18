@@ -1,0 +1,712 @@
+<html><head></head><body>
+        <section id="D3JNG1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Working with Sparta</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta is a reconnaissance tool that integrates a number of the tools we've covered into a single GUI.  It includes Nmap, Hydra, Nikto, Netcat, and a number of other tools. Additionally, Sparta can be configured to use other tools by editing the <kbd class="calibre16">sparta.conf</kbd> file. The following are the recipes we will cover in this chapter:</p>
+<ul class="calibre18">
+<li class="calibre19">Information gathering with Sparta</li>
+<li class="calibre19">Creating custom commands for Sparta</li>
+<li class="calibre19">Port scanning with Sparta</li>
+<li class="calibre19">Fingerprinting with Sparta</li>
+<li class="calibre19">Vulnerability scanning with Sparta</li>
+<li class="calibre19">Web application scanning with Sparta</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D4I821-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Information gathering with Sparta</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta offers a great deal of functionality out of the box. In this recipe, we will take a look at the Sparta interface, explore what Sparta does by default when you add hosts to the scope, look at some of the tools Sparta utilizes, and brute-force passwords.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D5GOK1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta comes pre-bundled with Kali Linux 2. To use it to perform scans, you will need to have a remote system that is running network services. In the examples provided, an instance of Metasploitable2 is used to perform this task. For more information on how to set up Metasploitable2, refer to <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>. </p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D6F961-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Let's now dive straight into Sparta:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To get started, navigate to <span>Applications</span> | <span>Information Gathering</span> | <span>s</span><span>parta</span>:</li>
+</ol>
+<div class="p"><img src="../images/00310.jpeg" class="calibre45"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Once Sparta has started, we need to define our target. In the <span>Hosts</span> pane, select <span>Click here to add host(s) to scope</span>.  For our examples, we will be using an IP address of <kbd class="calibre16">172.16.69.128</kbd>:</li>
+</ol>
+<div class="p"><img class="alignnone358" src="../images/00314.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Once you click on the <span>Add to scope</span> button, the scans begin. First, Sparta will run a staged Nmap scan. The staged Nmap scan is a number of scans actually, which will determine open ports and running services:</li>
+</ol>
+<div class="p"><img class="alignnone359" src="../images/00317.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">As the scans progress, the services found will begin showing up in the <span>Services</span> window to the right of the <span>Hosts</span> pane. Additionally, it will do its best to identify specific software and versions where it can:</li>
+</ol>
+<div class="p"><img class="alignnone360" src="../images/00318.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">We can also see information about the services found by clicking on the <span>S</span><span>ervices</span> pane. This would be more useful if we were scanning a network range and wanted to see what was found listed by service rather than host:</li>
+</ol>
+<div class="p"><img class="alignnone361" src="../images/00322.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">Upon discovery of certain services, Sparta will automatically deploy tools to gather further information. In the following screenshot, on discovering an FTP service running, Sparta launches <span>Hydra</span> in an effort to uncover passwords, as shown in the following screenshot: </li>
+</ol>
+<div class="p"><img class="alignnone362" src="../images/00587.jpeg"/></div>
+<ol start="7" class="calibre20">
+<li value="7" class="calibre19">If a web service is discovered, it will run <span>n</span><span>ikto</span>. Additionally, it runs <span>screenshooter</span> to take a screenshot of the website found:</li>
+</ol>
+<div class="p"><img class="alignnone362" src="../images/00326.jpeg"/></div>
+<ol start="8" class="calibre20">
+<li value="8" class="calibre19">When we look at all the information Sparta has acquired and organized for us, it is quite impressive. It has found a number of services and discovered usernames and passwords for a great deal of them, including MySQL, PostgreSQL, and FTP services. However, there is one FTP service it was not able to find credentials for; check out the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone363" src="../images/00330.jpeg"/></div>
+<ol start="9" class="calibre20">
+<li value="9" class="calibre19">Given that no password was found, let's see whether we can find it using Sparta's <span>Brute</span> tab. If we click on that tab, we can configure the <span>IP</span>, <span>Port</span>, and <span>Service</span>:  </li>
+</ol>
+<div class="p"><img class="alignnone364" src="../images/00332.jpeg"/></div>
+<ol start="10" class="calibre20">
+<li value="10" class="calibre19">We will also use a <span>Username list</span> and <span>Password list</span>. We do this by clicking on the radio button and browsing to the lists we want to use. Kali has some great word lists in the <kbd class="calibre16">/usr/share/wordlists</kbd> directory.  We will use <kbd class="calibre16">/usr/share/wordlists/unix_users.txt</kbd> for the <span>Username list</span> and <kbd class="calibre16">/usr/share/wordlists/unix_passwords.txt</kbd> for the <span>Passwords list</span>:</li>
+</ol>
+<div class="p"><img class="alignnone365" src="../images/00335.jpeg"/></div>
+<ol start="11" class="calibre20">
+<li value="11" class="calibre19">Once we have it properly configured, we are presented with a dialog box; just click on the <span>Run</span> button and let it do the work. It finds the username/password combination in short order and displays it back to the screen:</li>
+</ol>
+<div class="p"><img class="alignnone366" src="../images/00339.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D7DPO1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta has a number of tools already integrated into its GUI and is an excellent way of consolidating your reconnaissance into one place. Upon configuring your scope, it will scan one or more hosts for open ports and services. Additional tools are also used to scan when certain services are discovered.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D8CAA1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Creating custom commands for Sparta</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In the previous recipe, we saw what Sparta can do out of the box. A great feature of Sparta is the ability to add other tools. These can then show up in the contextual menus, and the results can be consolidated within the Sparta interface. In this recipe, we cover how to custom-integrate a new tool.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="D9AQS1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta comes pre-bundled with Kali Linux 2. To use Sparta to perform scans, you will need to have remote systems that are running network services. In the examples provided, a combination of Linux and Windows systems are used. For more information on setting up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+<p class="calibre5">We will also be editing Sparta's configuration file; refer to the <em class="calibre15">Using text editors (Vim and <span>GNU n</span>ano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DA9BE1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta is a great interface for performing our scanning and collecting our information in one place. Before we begin, let's make a change to Sparta that will prevent it from running all its tools automatically. As we saw in the previous recipe, Sparta will do a great deal of scanning and launch a number of tools based on what it finds. This may not always be the approach we want to take, especially if we are trying to be stealthy. To make this change, open a terminal window and type <kbd class="calibre16">vi /usr/share/sparta/sparta.conf</kbd>.<br class="title-page-name"/>
+Change the line <kbd class="calibre16">enable-scheduler-on-import=True</kbd> to <kbd class="calibre16">enable-scheduler=False</kbd> and save:</p>
+<div class="p"><img class="alignnone367" src="../images/00651.jpeg"/></div>
+<p class="calibre5">The following steps will guide you to create custom commands:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">To get started, navigate to <span>Applications</span> | <span>Information Gathering</span> | <span>sparta</span>:</li>
+<li value="2" class="calibre19">Once Sparta has started, we need to define our target. Select <span>Click here to add host(s) to scope</span>. For our examples, we will be using an IP range of <kbd class="calibre16">172.16.69.0/24</kbd>.</li>
+<li value="3" class="calibre19">
+<div class="title-page-name">Uncheck <span>Run staged nmap scan</span>. <span>If left checked, it</span> will run a number of Nmap scans identifying ports and services: </div>
+<div class="p"><img class="image-border140" src="../images/00344.jpeg"/></div>
+</li>
+<li value="4" class="calibre19">After the Nmap host discovery scan has been run, we can see the discovered IPs under the <span>Hosts</span> tab, as seen in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone368" src="../images/00670.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">Now that we have a list of discovered hosts, we can right-click on any one of them to see a menu of what we can do next, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone369" src="../images/00220.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">Before we go any further, let's save our Sparta session by going to <span>File</span> | <span>Save As</span>. Save your session:</li>
+</ol>
+<p class="calibre39">We can add additional tools to Sparta, provided they run in non-interactive mode. To demonstrate this, we will add <kbd class="calibre16">fping</kbd> to the tools contained within Sparta.<br class="title-page-name"/>
+There are three types of actions you can define in Sparta:</p>
+<div class="calibre31">
+<ul class="calibre18">
+<li class="calibre19"><strong class="calibre1">Host</strong>: A host action is one that would target a specific machine</li>
+<li class="calibre19"><strong class="calibre1">Port</strong>: Port actions target a specific port or service</li>
+<li class="calibre19"><strong class="calibre1">Terminal</strong>: Terminal actions allow you to spawn a terminal from within Sparta</li>
+</ul>
+</div>
+<p class="calibre39">To add an action, it needs to be defined in the following format:</p>
+<p class="calibre46"><kbd class="calibre16">tool=label, command, services</kbd></p>
+<p class="calibre39">Let's not look at the meaning of each of these words:</p>
+<div class="calibre31">
+<ul class="calibre18">
+<li class="calibre19"><kbd class="calibre16">tool</kbd>: This is the name of the tool we are adding.</li>
+<li class="calibre19"><kbd class="calibre16">label</kbd>: This is what will show within the contextual menus in Sparta.</li>
+<li class="calibre19"><kbd class="calibre16">command</kbd>: This is what you would type if running the tool from the terminal. The <kbd class="calibre16">command</kbd> tool uses the following placeholders: <kbd class="calibre16">[IP]</kbd>, <kbd class="calibre16">[PORT]</kbd>, and <kbd class="calibre16">[OUTPUT]</kbd>. These variables are replaced with the appropriate values at runtime.</li>
+<li class="calibre19"><kbd class="calibre16">services</kbd>: Services is a list of Nmap service names the tool would apply to.</li>
+</ul>
+</div>
+<p class="calibre39">Let's now define a tool as an example. For our example, we will use the command <kbd class="calibre16">fping</kbd>. This will be a host action, as <kbd class="calibre16">fping</kbd> is used to see whether a host is up. Running <kbd class="calibre16">fping</kbd> from the command line would look something like <kbd class="calibre16">fping 172.16.69.130</kbd>.<br class="title-page-name"/>
+You should see something similar to the following screenshot:</p>
+<div class="p"><img class="image-border47" src="../images/00291.jpeg"/></div>
+<ol start="7" class="calibre20">
+<li value="7" class="calibre19">Now, let's add <kbd class="calibre16">fping</kbd> to Sparta. Open a terminal window and type the following command:</li>
+</ol>
+<pre class="calibre24">
+        <strong class="calibre1">vi /usr/share/sparta/sparta.conf</strong>
+</pre>
+<p class="calibre39">You should see something similar to the following screenshot:</p>
+<div class="p"><img class="alignnone49" src="../images/00206.jpeg"/></div>
+<ol start="8" class="calibre20">
+<li value="8" class="calibre19">Now, we will add a tool to the Sparta configuration. We will define <kbd class="calibre16">fping</kbd> under <kbd class="calibre16">[HostActions]</kbd>, shown as follows:</li>
+</ol>
+<pre class="calibre24">
+        fping=Run fping, fping [IP]
+</pre>
+<p class="calibre39">You will note that we do not use <kbd class="calibre16">[PORT]</kbd> or <kbd class="calibre16">[OUTPUT]</kbd> as <kbd class="calibre16">fping</kbd> does not require them. Also, <kbd class="calibre16">services</kbd> is not required in our definition because <kbd class="calibre16">fping</kbd> is a host action.</p>
+<ol start="9" class="calibre20">
+<li value="9" class="calibre19">Save the file by hitting the <em class="calibre15">Esc</em> key, then typing, <kbd class="calibre16">:wq</kbd> and hitting the <em class="calibre15">Enter</em> key.</li>
+<li value="10" class="calibre19">In order to see our new command in Sparta, we will need to restart the service. To close Sparta, go to the <span>File</span> | <span>Exit</span> menu option. Now we can reopen Sparta. Once started, go to the <span>File</span> | <span>Open</span> menu option and load back in the Sparta scan we saved earlier.</li>
+<li value="11" class="calibre19">Now when we right-click on the host, you will see <span>Run fping</span>, the host action we created. Select that option, and our <kbd class="calibre16">fping</kbd> command will run. You will notice that a new tab opens up within Sparta, displaying the results:</li>
+</ol>
+<div class="p"><img class="alignnone368" src="../images/00221.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DB7S01-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta has a number of tools already integrated into its GUI and is an excellent way of consolidating your reconnaissance into one place. If you have other tools you would like to integrate, you can do so by modifying the configuration and adding tools to expand its capabilities.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DC6CI1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Port scanning with Sparta</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta conducts port scanning out of the box using Nmap. In this recipe, we will discuss how we can conduct port scanning by adding tools and customizing the Sparta interface.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DD4T41-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta comes pre-bundled with Kali Linux 2. To use Sparta to perform scans, you will need to have remote systems that are running network services. In the examples provided, a combination of Linux and Windows systems is used. For more information on setting up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+<p class="calibre5">We will also be editing Sparta's configuration file. Refer to the <em class="calibre15">Using text editors (Vim and <span>GNU n</span>ano) recipe</em> in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DE3DM1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Let's now learn to perform port scanning with Sparta:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">Sparta uses Nmap to perform its port-scanning operations. We can see this by right-clicking on a host and navigating to the <span>Portscan</span> submenu. A number of Nmap scanning options are available to us; these options are also configurable in the <kbd class="calibre16">sparta.conf</kbd> file:</li>
+</ol>
+<div class="p"><img class="alignnone370" src="../images/00235.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">If we want to add other options with different tools, we can do that as well. Let's begin by adding an option to conduct a stealth scan using <kbd class="calibre16">hping3</kbd>.  Close the Sparta application and open a terminal window. From here, let's edit the Sparta configuration file using the following command:</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        vi /usr/share/sparta/sparta.conf</strong>  
+</pre>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Now let's add a new host action, defined as <kbd class="calibre16">hping3=hping3 (stealth scan), hping3 [IP] --scan 0-65535</kbd>. You should see something similar to the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone371" src="../images/00598.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">We can now save our changes and reopen Sparta. Now if we right-click on a host, we see our new host action, <span>hping3 (stealth scan)</span>:  </li>
+</ol>
+<div class="p"><img class="alignnone372" src="../images/00353.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">Clicking on this option runs our stealth scan against the designated host. A new tab is opened, displaying the results of the scan:</li>
+</ol>
+<div class="p"><img class="alignnone373" src="../images/00277.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">Let's add one more port-scanning option. Once again, we close Sparta and will edit the <kbd class="calibre16">/usr/share/sparta/sparta.conf</kbd> file.  This time, we will add a host action option to conduct a connect scan via <kbd class="calibre16">dmitry</kbd>.  We configure our host action as follows:  <kbd class="calibre16">dmitry-connect=dmitry (connect scan), dmitry -p [IP]</kbd>. Then, we save the file:</li>
+</ol>
+<div class="p"><img class="alignnone374" src="../images/00292.jpeg"/></div>
+<ol start="7" class="calibre20">
+<li value="7" class="calibre19">Let's now relaunch Sparta and load our hosts. We once again, see a new host action: </li>
+</ol>
+<div class="p"><img class="alignnone375" src="../images/00313.jpeg"/></div>
+<ol start="8" class="calibre20">
+<li value="8" class="calibre19">Select <span>dimitry (connect scan)</span> from our host actions menu, and the scan is fired off. A new tab is opened, displaying the results of our connect scan:</li>
+</ol>
+<div class="p"><img class="alignnone376" src="../images/00323.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DF1U81-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta has a number of tools already integrated into its GUI and is an excellent way of consolidating your reconnaissance into one place. Sparta uses Nmap to scan for ports by default. In this recipe, we've expanded Sparta's capabilities adding <kbd class="calibre16">hping3</kbd> and <kbd class="calibre16">dmitry</kbd>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DG0EQ1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Fingerprinting with Sparta</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The next step in our discovery process is fingerprinting, something we talked about earlier in <a href="part0189.html#5K7QA1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 5</a>, <em class="calibre15">Fingerprinting</em>.  When fingerprinting, we want to uncover more details about the operating system and software services being used. Sparta allows us to continue gathering these details, keeping the details within its interface.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DGUVC1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta comes pre-bundled with Kali Linux 2. To use Sparta to perform scans, you will need to have remote systems running network services. In the examples provided, a combination of Linux and Windows systems is used. For more information on setting up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server recipes</em> in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+<p class="calibre5">We will also be editing Sparta's configuration file; refer to the <em class="calibre15">Using text editors (Vim and <span>GNU n</span>ano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DHTFU1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">You will remember from our discussion of fingerprinting in <a href="part0440.html#D3JNG1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 5</a>, <em class="calibre15">Fingerprinting</em>, that after we identify our hosts and ports, we want to continue gathering more detailed information about the OS and services running. Sparta has some great preconfigured tools to help with this.  As an example, let's examine the contextual menus we now get when right-clicking on a service.  In the following example, we are examining an FTP service, and we are given the options to open a Telnet session, opening with Netcat, and grabbing the banner, among others:</p>
+<div class="p"><img class="alignnone377" src="../images/00340.jpeg"/></div>
+<p class="calibre5">Sparta will change the contextual menus depending on the service. In the following example, we're looking at an HTTP service. Given this, Sparta presents us with some new items related to web services, such as <span>Run nikto</span> and <span>Launch dirbuster</span>:</p>
+<div class="p"><img class="alignnone378" src="../images/00354.jpeg"/></div>
+<p class="calibre5">Let's configure a new host action that will allow us to analyze SNMP. This will be a host action and be displayed in that contextual menu. In order to achieve this, we follow these steps:  </p>
+<ol class="calibre20">
+<li value="1" class="calibre19">As before, we close Sparta and edit our Sparta configuration file using the <kbd class="calibre16">vi /usr/share/sparta/sparta.conf</kbd> command.  Under <kbd class="calibre16">[HostActions]</kbd>, we add a new item, <kbd class="calibre16">snmp=SNMPwalk, snmpwalk [IP] -c public -v 2c</kbd>:</li>
+</ol>
+<div class="p"><img class="alignnone379" src="../images/00373.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Once we are done editing, save and exit the configuration file. </li>
+</ol>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Now when we launch Sparta and reload our hosts, we can see a new host action when we right-click on a given host:</li>
+</ol>
+<div class="p"><img class="alignnone380" src="../images/00392.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">If we run <span>SNMPwalk</span>, we can see the results opened up in a new tab, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone381" src="../images/00413.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DIS0G1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta has a number of tools already integrated into its GUI and is an excellent way of consolidating your reconnaissance into one place. Sparta uses Nmap to collect fingerprinting information. In this recipe, we added <span>SNMPwalk</span> to its capabilities.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DJQH21-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Vulnerability scanning with Sparta</h1>
+            
+
+            <article>
+                
+<p class="calibre5">As we have seen, Sparta is a great tool for conducting our reconnaissance and collecting that information in a central repository. We will now see how we can use Sparta and Nmap NSE together to scan for specific vulnerabilities in our target systems. </p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DKP1K1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta comes pre-bundled with Kali Linux 2. To use Sparta to perform scans, you will need to have remote systems that are running network services. In the examples provided, a combination of Linux and Windows systems is used. For more information on setting up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+<p class="calibre5">We will also be editing Sparta's configuration file, refer to the <em class="calibre15">Using text editors (Vim and <span>GNU n</span>ano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DLNI61-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Let's now learn to perform vulnerability scanning with Sparta:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">In order to add a new port action, we close Sparta and use <kbd class="calibre16">vi</kbd> once again to edit the Sparta configuration file using the <kbd class="calibre16">vi /usr/share/sparta/sparta.conf</kbd> command.  </li>
+</ol>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Navigate down to the <kbd class="calibre16">[PortActions]</kbd> section, and we will add a new action. Back in <a href="part0255.html#7J5VE1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 6</a>, <em class="calibre15">Vulnerability Scanning</em>, we used Nmap NSE to check for one of the four vulnerabilities exploited by the Stuxnet worm. We will add a port action here that will run this check. We will define our <kbd class="calibre16">[PortAction]</kbd> as <kbd class="calibre16">smb-vuln=Check</kbd> and for printer spooler impersonation, <kbd class="calibre16">vuln, nmap -p[PORT] --script=smb-vuln-ms10-061 [IP] -vvvv</kbd> and <kbd class="calibre16">netbios-ssn,microsoft-ds</kbd>:</li>
+</ol>
+<div class="p"><img class="alignnone382" src="../images/00661.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Save the configuration file, open Sparta, and reload our Sparta project. We navigate down to one of our Windows XP boxes and look at the services available. We can see that port <span><kbd class="calibre16">445</kbd></span> is open, and the <kbd class="calibre16">microsoft-ds</kbd> service is available.  If we right-click on that service, we can see our newly defined port action is there and available to use:</li>
+</ol>
+<div class="p"><img class="alignnone383" src="../images/00448.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">Now we can check for this vulnerability right within the Sparta interface. If we run the check, a new tab is opened and the results of the test are displayed:</li>
+</ol>
+<div class="p"><img class="alignnone384" src="../images/00464.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DMM2O1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta has a number of tools already integrated into its GUI and is an excellent way of consolidating your reconnaissance into one place. Sparta is very configurable; in this recipe, we added the ability for Nmap NSE commands to check for specific vulnerabilities.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DNKJA1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Web application scanning with Sparta</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta comes preconfigured with a number of tools we can use to examine web services. In the following recipe, we'll look at its scanning capabilities.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DOJ3S1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta comes pre-bundled with Kali Linux 2. To use Sparta to perform scans, you will need to have remote systems that are running network services. In the examples provided, a combination of Linux and Windows systems is used. For more information on setting up systems in a local lab environment, refer to the <em class="calibre15">Installing Metasploitable2</em> and <em class="calibre15">Installing Windows Server</em> recipes in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+<p class="calibre5">We will also be editing Sparta's configuration file; refer to the <em class="calibre15">Using text editors (Vim and <span>GNU n</span>ano)</em> recipe in <a href="part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 1</a>, <em class="calibre15">Getting Started</em>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DPHKE1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta comes preconfigured with a number of port actions defined for web services. If we right-click on a web service, we can see our available actions listed. We will take a look at a couple of these port actions in this recipe:</p>
+<div class="p"><img class="alignnone385" src="../images/00074.jpeg"/></div>
+<ul class="calibre18">
+<li class="calibre19"><span>Run nikto</span>: One of the first options that stands out is the ability to run Nikto against our target web service. You will remember from our coverage of Nikto in <a href="part0381.html#BBB6A1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 9</a>, <em class="calibre15">Web Application Scanning</em>, that it spiders through a target application and also makes numerous preconfigured requests, attempting to identify potentially dangerous scripts and files that exist in an application:</li>
+</ul>
+<div class="p"><img class="alignnone386" src="../images/00490.jpeg"/></div>
+<ul class="calibre18">
+<li class="calibre19"><span>Run nmap (scripts) on port</span>: If we run Nmap scripts on the port, we get some banner grabs identifying <span>http-methods</span>, <span>http-server-header</span>, and <span>http-title</span>:</li>
+</ul>
+<div class="p"><img class="alignnone387" src="../images/00505.jpeg"/></div>
+<ul class="calibre18">
+<li class="calibre19"><span>Launch dirbuster</span>: We can also run <span>dirbuster</span> and the OWASP tool, which will look for directories and files on the target server. If we click on <span>Launch dirbuster</span>, the target URL and port are preconfigured. It can do a pure brute-force attack or list based off a file. For our example, we will give it a list of directories to try. There are a number of these lists available in the <kbd class="calibre16"> /usr/share/wordlists/dirbuster/</kbd> directory:   </li>
+</ul>
+<div class="p"><img class="alignnone388" src="../images/00519.jpeg"/></div>
+<p class="calibre27">Dirbuster can take some time to run, largely depending on the type of scanning and/or the size of the word list we give it. Once we click on <span>Start</span>, dirbuster begins its checks and reports back in a new tab about what it finds:</p>
+<div class="p"><img class="alignnone389" src="../images/00531.jpeg"/></div>
+<ul class="calibre18">
+<li class="calibre19"><span>Run whatweb</span>:<span> </span>Whatweb,<span> </span>as configured by our Sparta port action, provides us information about the web servers, operating system, and languages. Whatweb is quite powerful, and you may want to consider creating your own port actions after reviewing its capabilities. To learn more about whatweb, use its help document by typing <kbd class="calibre16">whatweb -h</kbd> in your terminal. For our example, we will use whatweb as it comes configured in Sparta:</li>
+</ul>
+<div class="p"><img class="alignnone390" src="../images/00538.jpeg"/></div>
+<ul class="calibre18">
+<li class="calibre19"><span>Launch webslayer</span>: Finally, you will see an option for using webslayer within the context menu. Unfortunately, webslayer is not included in the Kali Linux 2.0 distribution. If you try to run it, it will just crash, as can be seen in the following screenshot:</li>
+</ul>
+<div class="p"><img class="alignnone390" src="../images/00626.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="DQG501-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Sparta has a number of tools already integrated into its GUI and is an excellent way of consolidating your reconnaissance into one place. Sparta comes preconfigured with a number of great tools for analyzing web applications. In this recipe, we explored how to use these tools to test discovered web services.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    </body></html>

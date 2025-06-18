@@ -1,0 +1,392 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer291">
+<h1 class="chapter-number" id="_idParaDest-141"><a id="_idTextAnchor191"/>10</h1>
+<h1 id="_idParaDest-142"><a id="_idTextAnchor192"/>Memory Forensics and Analysis with Volatility 3</h1>
+<p>In the previous chapters, we looked at the various methods for data carving and file recovery. In this chapter, we’ll look at the analysis of content stored in <strong class="bold">Random Access Memory</strong> (<strong class="bold">RAM</strong>) using<a id="_idIndexMarker857"/> the very powerful Volatility 3. RAM is volatile, meaning that the data in RAM is easily lost when there is no longer an electrical charge or current going to the RAM. With the data on RAM being the most volatile, it ranks high in the order of volatility and must be forensically acquired and preserved as a matter of <span class="No-Break">high priority.</span></p>
+<p>Many types of data and forensic artifacts reside in RAM and the paging file. As discussed in previous chapters, login passwords, user information, running and hidden processes, malware, and even encrypted passwords are just some of the many types of interesting data that can be found when performing RAM analysis, further compounding the need for <span class="No-Break">memory forensics.</span></p>
+<p>In this chapter, we will look at the very powerful Volatility framework and its many uses i<a id="_idTextAnchor193"/>n memory forensics, including the <span class="No-Break">following topics:</span></p>
+<ul>
+<li>What’s new in <span class="No-Break">Volatility 3</span></li>
+<li>Downloading a sample memory dump file <span class="No-Break">for analysis</span></li>
+<li>Installing Volatility 3 in <span class="No-Break">Kali Linux</span></li>
+<li>Memory dump analysis using <span class="No-Break">Volatility <a id="_idTextAnchor194"/>3</span></li>
+</ul>
+<h1 id="_idParaDest-143"><a id="_idTextAnchor195"/>What’s new in Volatility 3</h1>
+<p>The Volatility<a id="_idIndexMarker858"/> framework is an open source, cross-platform incident response framework that comes with many useful plugins that provide the investigator with a wealth of information from a snapshot of memory, also known as a <strong class="bold">memory dump</strong>. The concept of Volatility has been around for a decade, and apart from <a id="_idIndexMarker859"/>analyzing running and hidden processes, it is also a very popular choice for <span class="No-Break">malware analysis.</span></p>
+<p>To<a id="_idIndexMarker860"/> create<a id="_idIndexMarker861"/> a <a id="_idIndexMarker862"/>memory<a id="_idIndexMarker863"/> dump, several <a id="_idIndexMarker864"/>tools, such <a id="_idIndexMarker865"/>as <strong class="bold">Belkasoft RAM Capturer</strong>, <strong class="bold">FTK Imager</strong>, <strong class="bold">dd</strong>, <strong class="bold">dc3dd</strong>, <strong class="bold">CAINE</strong>, <strong class="bold">Helix</strong>, and <strong class="bold">LiME</strong> (short for <strong class="bold">Linux Memory Extractor</strong>), can be <a id="_idIndexMarker866"/>used to acquire the memory image or memory dump (which we previously did in <a href="B19441_08.xhtml#_idTextAnchor147"><span class="No-Break"><em class="italic">Chapter 8</em></span></a>, <em class="italic">Evidence Acquisition Tools</em>) and then analyzed using various tools known as plugins within the <span class="No-Break">Volatility framework.</span></p>
+<p>The Volatility framework can be<a id="_idIndexMarker867"/> run on any <strong class="bold">Operating System</strong> (<strong class="bold">OS</strong>), that is, 32- and 64-bit, that supports Python, including <span class="No-Break">the following:</span></p>
+<ul>
+<li>Windows XP, 7, 8, 8.1, and <span class="No-Break">Windows 10</span></li>
+<li>Windows Server 2003, 2008, 2012/R2, <span class="No-Break">and 2016</span></li>
+<li>Linux 2.6.11-4.2.3 (including Kali, Debian, Ubuntu, and CentOS) and macOS Leopard (10.5.x) and Snow <span class="No-Break">Leopard (10.12.x)</span></li>
+</ul>
+<p>Volatility supports <a id="_idIndexMarker868"/>several memory dump formats (both 32- and 64-bit), including <span class="No-Break">the following:</span></p>
+<ul>
+<li>Windows crash and hibernation dumps (Windows 7 <span class="No-Break">and earlier)</span></li>
+<li><span class="No-Break">VirtualBox</span></li>
+<li>VMware – <strong class="source-inline">.</strong><span class="No-Break"><strong class="source-inline">vmem</strong></span><span class="No-Break"> dump</span></li>
+<li>VMware saved state and suspended dumps – <strong class="source-inline">.</strong><span class="No-Break"><strong class="source-inline">vmss</strong></span><span class="No-Break">/</span><span class="No-Break"><strong class="source-inline">.vmsn</strong></span></li>
+<li>Raw physical memory – <strong class="source-inline">.</strong><span class="No-Break"><strong class="source-inline">dd</strong></span></li>
+<li>Direct<a id="_idIndexMarker869"/> physical <a id="_idIndexMarker870"/>memory dump over IEEE <span class="No-Break">1394 FireWire</span></li>
+<li><strong class="bold">Expert Witness Format</strong> (<strong class="bold">EWF</strong>) – <strong class="source-inline">.</strong><span class="No-Break"><strong class="source-inline">E01</strong></span></li>
+<li><strong class="bold">QEMU</strong> (<span class="No-Break"><strong class="bold">Quick Emulator</strong></span><span class="No-Break">)</span></li>
+</ul>
+<p>Volatility even allows for conversion between these formats and boasts of<a id="_idTextAnchor196"/> being able to accomplish everything similar <span class="No-Break">tools can.</span></p>
+<p>In previous editions of this book, we used Volatility 2, which was based on the now-deprecated Python 2. Volatility 3 is based on Python 3 and has the <span class="No-Break">following changes:</span></p>
+<ul>
+<li>Faster scans and processing of <span class="No-Break">memory dumps</span></li>
+<li>Support for <span class="No-Break">newer OSs</span></li>
+<li>More <span class="No-Break">efficient plugins</span></li>
+<li><span class="No-Break">Operating-specific plugins</span></li>
+</ul>
+<p>Before we <a id="_idIndexMarker871"/>begin using Volatility 3, let’s first download all the sample memory dump files that we will be analyzing <span class="No-Break">usin<a id="_idTextAnchor197"/>g Volatility.</span></p>
+<h1 id="_idParaDest-144"><a id="_idTextAnchor198"/>Downloading sample memory dump files</h1>
+<p>For this chapter, we’ll be <a id="_idIndexMarker872"/>using a memory dump called <strong class="source-inline">cridex.vmem</strong>, which we will be analyzing using a variety of Volatility 3 plugins. The file can be downloaded <span class="No-Break">from </span><a href="http://files.sempersecurus.org/dumps/cridex_memdump.zip"><span class="No-Break">http://files.sempersecurus.org/dumps/cridex_memdump.zip</span></a><span class="No-Break">.</span></p>
+<p>There are many other images that are publicly available for analysis at <a href="https://github.com/volatilityfoundation/volatility/wiki/Memory-Samples">https://github.com/volatilityfoundation/volatility/wiki/Memory-Samples</a>. To practice working with the Volatility framework and further enhance your analytical skills, you may wish to download as many images as you like and use the various plugins available <span class="No-Break">in Volatility.</span></p>
+<p>Let’s first download and extract our sample memory dump, which we will later move to our Volatility installation folder for analysis. If you haven’t already downloaded the file, please do <span class="No-Break">so now.</span></p>
+<p>I’ve downloaded the <strong class="source-inline">cridex.vem</strong> sample file to my <strong class="source-inline">Downloads</strong> folder. To extract the file, right-click on the file and click on <strong class="bold">Extract Here</strong> as you have done with previously <span class="No-Break">downloaded files.</span></p>
+<p>We will now install Volatility 3 and then copy the <strong class="source-inline">cridex.vmem</strong> memory dump file to our installation folder <span class="No-Break">for analysis.</span></p>
+<p>Now that we have downloaded all our sample files, let’s install Volatility 3 on our <span class="No-Break">Kali machines.</span></p>
+<h1 id="_idParaDest-145"><a id="_idTextAnchor199"/>Installing Volatility 3 in Kali Linux</h1>
+<p>Volatility is <a id="_idIndexMarker873"/>no longer <a id="_idIndexMarker874"/>installed in Kali Linux by default and instead must be <span class="No-Break">manually installed:</span></p>
+<ol>
+<li>Let’s first download Volatility 3 from the official site <span class="No-Break">at </span><a href="https://www.volatilityfoundation.org/releases-vol3"><span class="No-Break">https://www.volatilityfoundation.org/releases-vol3</span></a><span class="No-Break">.</span></li>
+<li>Be sure to click on the <strong class="source-inline">.zip</strong> file link within the <strong class="bold">Volatility 3</strong> tab, as seen in the <span class="No-Break">following screenshot:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer264">
+<img alt="Figure 10.1 – Volatility downloads page" height="316" src="image/Figure_10.01_B19441.jpg" width="631"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.1 – Volatility downloads page</p>
+<p>I’ve chosen to save the file in my <strong class="source-inline">Downloads</strong> folder. I’ve also extracted the files by right-clicking on the <strong class="source-inline">.zip</strong> file and then selecting <strong class="bold">Extract Here</strong>, as seen in the <span class="No-Break">following screenshot.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer265">
+<img alt="Figure 10.2 – Extracting the Volatility 3 ZIP file" height="392" src="image/Figure_10.02_B19441.jpg" width="669"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.2 – Extracting the Volatility 3 ZIP file</p>
+<p class="callout-heading">Note</p>
+<p class="callout">I’ve also renamed the extracted folder <strong class="source-inline">volatility3</strong> to simplify things. Be sure to take note of the folder name exactly as it is typed as it will be <span class="No-Break">required later.</span></p>
+<ol>
+<li value="3">Before<a id="_idIndexMarker875"/> installing<a id="_idIndexMarker876"/> Volatility 3, I highly recommend updating your Kali installation to ensure that all files are the most current. Run the <strong class="source-inline">sudo apt-get update</strong> command to <span class="No-Break">do this.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer266">
+<img alt="Figure 10.3 – Updating Kali Linux" height="275" src="image/Figure_10.03_B19441.jpg" width="932"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.3 – Updating Kali Linux</p>
+<ol>
+<li value="4">Now that our system has been updated, let’s install Python 3 by typing the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">sudo apt install python3</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the preceding command when installing <span class="No-Break">Volatility 3.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer267">
+<img alt="Figure 10.4 – Installing Python 3 in Kali" height="427" src="image/Figure_10.04_B19441.jpg" width="822"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.4 – Installing Python 3 in Kali</p>
+<ol>
+<li value="5">Volatility 3 also<a id="_idIndexMarker877"/> requires dependencies that must be <a id="_idIndexMarker878"/>installed for full functionality. To install all the required dependencies, type <span class="No-Break">the following:</span><pre class="source-code">
+<strong class="bold">sudo apt install python3-pip python-setuptools build-essential</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the preceding command when installing Python tools in <span class="No-Break">Volatility 3.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer268">
+<img alt="Figure 10.5 – Installing Volatility 3 dependencies" height="462" src="image/Figure_10.05_B19441.jpg" width="915"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.5 – Installing Volatility 3 dependencies</p>
+<ol>
+<li value="6">Let’s now change directories to the folder containing all Volatility 3 files. In this instance, I have <a id="_idIndexMarker879"/>renamed my folder <strong class="source-inline">volatility3</strong> within <a id="_idIndexMarker880"/>the <strong class="source-inline">Downloads</strong> folder. To change to that directory, I’ll use the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">cd Downloads/volatility3</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer269">
+<img alt="Figure 10.6 – Changing directories" height="70" src="image/Figure_10.06_B19441.jpg" width="333"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.6 – Changing directories</p>
+<ol>
+<li value="7">We can then use the <strong class="source-inline">ls</strong> command to list and show all files within the <span class="No-Break"><strong class="source-inline">volatility3</strong></span><span class="No-Break"> folder:</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer270">
+<img alt="Figure 10.7 – ls command output" height="107" src="image/Figure_10.07_B19441.jpg" width="932"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.7 – ls command output</p>
+<p>In the preceding screenshot, we can see all files required to set up and run <span class="No-Break">Volatility 3.</span></p>
+<ol>
+<li value="8">Within my <strong class="source-inline">volatility3</strong> folder, I can now install Volatility 3 by typing the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">sudo python3 setup.py install</strong></pre></li>
+</ol>
+<p>The <a id="_idIndexMarker881"/>following <a id="_idIndexMarker882"/>screenshot shows the output of the preceding command when installing <span class="No-Break">Python 3.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer271">
+<img alt="Figure 10.8 – Installing Volatility 3" height="452" src="image/Figure_10.08_B19441.jpg" width="838"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.8 – Installing Volatility 3</p>
+<ol>
+<li value="9">Now that Python 3 and all the Volatility packages and prerequisites have been installed, we can verify the installation by typing the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">python3 vol.py</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer272">
+<img alt="Figure 10.9 – Volatility installation verification" height="254" src="image/Figure_10.09_B19441.jpg" width="946"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.9 – Volatility installation verification</p>
+<p>Volatility<a id="_idIndexMarker883"/> contains<a id="_idIndexMarker884"/> many plugins that you will need to occasionally reference. I recommend having the list of all plugins open in a separate Terminal for easy reference as this is much easier than having to scroll to the top of the Terminal to find the Volatility <span class="No-Break">plugin commands.</span></p>
+<ol>
+<li value="10">Open a new Terminal within the <strong class="source-inline">volatility3</strong> directory and type the following command to view <span class="No-Break">all plugins:</span><pre class="source-code">
+<strong class="bold">python3 vol.py –h</strong></pre></li>
+</ol>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer273">
+<img alt="Figure 10.10 – Volatility help command" height="455" src="image/Figure_10.10_B19441.jpg" width="812"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.10 – Volatility help command</p>
+<p>Volatility 3 now <a id="_idIndexMarker885"/>uses <strong class="bold">OS-specific</strong> plugins for<a id="_idIndexMarker886"/> Linux, Mac, and<a id="_idIndexMarker887"/> Windows, as seen in the snippet of the <strong class="source-inline">python3 vol.py –h</strong> <span class="No-Break">output here:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer274">
+<img alt="Figure 10.11 – OS-specific plugins in Volatility 3" height="393" src="image/Figure_10.11_B19441.jpg" width="825"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.11 – OS-specific plugins in Volatility 3</p>
+<ol>
+<li value="11">Before we begin the analysis of our previously downloaded <strong class="source-inline">cridex.vmem</strong> sample memory d<a id="_idIndexMarker888"/>ump<a id="_idIndexMarker889"/> file, let’s copy the file from its current directory in the <strong class="source-inline">Downloads</strong> folder and paste it into the <strong class="source-inline">volatility3</strong> folder. This makes access to our memory dump file easier by not having to specify a lengthy path to the file each time we need to use <span class="No-Break">a plugin.</span></li>
+<li>Keeping the previous Terminal open, let’s open a new Terminal and change directories to our <strong class="source-inline">volatility3</strong> folder and issue the <strong class="source-inline">ls</strong> command to ensure that our <strong class="source-inline">cridex.vmem</strong> memory dump sample can be found within that directory, as seen in the <span class="No-Break">following screenshot.</span></li>
+</ol>
+<div>
+<div class="IMG---Figure" id="_idContainer275">
+<img alt="Figure 10.12 – Contents of the volatility3 directory" height="187" src="image/Figure_10.12_B19441.jpg" width="663"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.12 – Contents of the volatility3 directory</p>
+<p>Here’s the <a id="_idIndexMarker890"/>exciting<a id="_idIndexMarker891"/> part. Let’s do some DFIR analysis using Volatility 3 and see what we <span class="No-Break">can find!</span></p>
+<h1 id="_idParaDest-146"><a id="_idTextAnchor200"/>Memory dump analysis using Volatility 3</h1>
+<p>For those of you who<a id="_idIndexMarker892"/> may have read previous editions of this book where we used Volatility 2, or are just familiar with using Volatility 2, you will notice that Volatility 3 is a bit different as far as the plugins are concerned. You may also notice that the speed at which the plugins work is also faster in <span class="No-Break">Volatility 3.</span></p>
+<p>For this lab, we’ll take a very structured approach using the various plugins in Volatility 3. We’ll first look at process and service identification, gather some user information, have a look at registry information, and discover any malware that may be running on <span class="No-Break">the device.</span></p>
+<p>Using Volatility 3 is quite simple. Once you are in the Volatility directory, the commands to use the plugins are essentially the same apart from the <span class="No-Break">plugin name.</span></p>
+<p>The syntax is <span class="No-Break">as follows:</span></p>
+<pre class="console">
+python3 -f (dump name) (OS.plugin)</pre>
+<p>In the preceding example, <strong class="source-inline">-f</strong> specifies the filename of the dump, which in our case is <strong class="source-inline">cridex.vmem</strong>, and <strong class="source-inline">OS.plugin</strong> will be the plugin that we would like to run against our memory dump. Let’s use the <strong class="source-inline">info</strong> plugin as o<a id="_idTextAnchor201"/><a id="_idTextAnchor202"/>ur first <span class="No-Break">analysis task.</span></p>
+<h2 id="_idParaDest-147"><a id="_idTextAnchor203"/>Image and OS verification</h2>
+<p>Although no<a id="_idIndexMarker893"/> longer required in Volatility 3, it is useful to identify the version of the OS of the device from which the memory dump was created to ensure that we use the correct plugins, as they are now specific to various OSs, which we learned earlier on in <span class="No-Break">this chapter.</span></p>
+<p>Let’s find out what OS was running on the system by using the <span class="No-Break"><strong class="source-inline">info</strong></span><span class="No-Break"> plugin:</span></p>
+<pre class="console">
+python3 vol.py -f cridex.vmem windows.info</pre>
+<p>The following screenshot shows the output of the <span class="No-Break">preceding command.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer276">
+<img alt="Figure 10.13 – Volatility 3 info plugin output" height="644" src="image/Figure_10.13_B19441.jpg" width="602"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.13 – Volatility 3 info plugin output</p>
+<p>The output for the <strong class="source-inline">info</strong> plugin is lengthy; however, I’ve included a snippet of the output in the following figure, where we can see that this memory dump was taken from a Windows XP Service Pack <span class="No-Break">3 machine:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer277">
+<img alt="Figure 10.14 – info plugin snippet" height="298" src="image/Figure_10.14_B19441.jpg" width="497"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.14 – info plugin snippet</p>
+<p>This tells us that<a id="_idIndexMarker894"/> we must only use Windows plugins against this dump for our analysis. Let’s now attempt to identify running processes <span class="No-Break">and services.</span></p>
+<h2 id="_idParaDest-148"><a id="_idTextAnchor204"/>Process identification and analysis</h2>
+<p>Let’s officially <a id="_idIndexMarker895"/>start our<a id="_idIndexMarker896"/> DFIR memory dump analysis by attempting to identify and link connected processes, their IDs, times started, and offset locations within the memory image. We will be using several plugins but will begin with the following three plugins to get <span class="No-Break">us started<a id="_idTextAnchor205"/><a id="_idTextAnchor206"/>:</span></p>
+<ul>
+<li><span class="No-Break"><strong class="source-inline">pslist</strong></span></li>
+<li><span class="No-Break"><strong class="source-inline">pstree</strong></span></li>
+<li><span class="No-Break"><strong class="source-inline">psscan</strong></span></li>
+</ul>
+<h3>The pslist plugin</h3>
+<p>This tool not <a id="_idIndexMarker897"/>only <a id="_idIndexMarker898"/>displays a list of all running processes but also gives useful information <a id="_idIndexMarker899"/>such as the <strong class="bold">Process ID</strong> (<strong class="bold">PID</strong>) and the <strong class="bold">Parent PID</strong> (<strong class="bold">PPID</strong>), and shows<a id="_idIndexMarker900"/> the time the processes <span class="No-Break">were started.</span></p>
+<p>The command to run the <strong class="source-inline">pslist</strong> plugin is <span class="No-Break">as follows:</span></p>
+<pre class="console">
+python3 vol.py -f cridex.vmem windows.pslist</pre>
+<p>In the following screenshot, we can see that the <strong class="source-inline">System</strong>, <strong class="source-inline">smss</strong>, <strong class="source-inline">csrss</strong>, <strong class="source-inline">winlogon.exe</strong>, <strong class="source-inline">services.exe</strong>, <strong class="source-inline">lsass.exe</strong>, <strong class="source-inline">svchost.exe</strong>, and <strong class="source-inline">explorer.exe</strong> services were all started first and then followed by a few others. Notice any <span class="No-Break">suspicious-looking services?</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer278">
+<img alt="Figure 10.15 – The plslist plugin output" height="486" src="image/Figure_10.15_B19441.jpg" width="1198"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.15 – The plslist plugin output</p>
+<p>The PID identifies the process and the PPID identifies the parent of the process. Looking at the <strong class="source-inline">pslist</strong> output, we can see that the <strong class="source-inline">winlogon.exe</strong> process has a PID of <strong class="source-inline">608</strong> and a PPID of <strong class="source-inline">368</strong>. The PPIDs of the <strong class="source-inline">services.exe</strong> and <strong class="source-inline">lsass.exe</strong> processes (directly after the <strong class="source-inline">winlogon.exe</strong> process) are both <strong class="source-inline">608</strong>, indicating that <strong class="source-inline">winlogon.exe</strong> is in fact the PPID for both <strong class="source-inline">services.exe</strong> <span class="No-Break">and </span><span class="No-Break"><strong class="source-inline">lsass.exe</strong></span><span class="No-Break">.</span></p>
+<p>For those new to PIDs and processes themselves, a quick Google search can assist with identification and description information. It is also useful to become familiar with many of the startup processes to be able to readily point out processes that may be unusual <span class="No-Break">or suspect.</span></p>
+<p>The timing and order of the processes should also be noted as these may assist in investigations. If we scroll down a bit, we can also tell that <strong class="source-inline">explorer.exe</strong> with a PID of <strong class="source-inline">1484</strong> is<a id="_idIndexMarker901"/> the<a id="_idIndexMarker902"/> PPID <span class="No-Break">of </span><span class="No-Break"><strong class="source-inline">reader_sl.exe</strong></span><span class="No-Break">.</span></p>
+<p>Let’s dig a bit deeper using the <span class="No-Break"><strong class="source-inline">pstree</strong></span><span class="No-Break"> plugin.</span></p>
+<h3>The pstree plugin</h3>
+<p>Another process <a id="_idIndexMarker903"/>identification<a id="_idIndexMarker904"/> command that can be used to list processes is the <strong class="source-inline">pstree</strong> plugin. This plugin shows the same list of processes as the <strong class="source-inline">pslist</strong> plugin but indentation is also used to identify child and <span class="No-Break">parent processes.</span></p>
+<p>Run the <strong class="source-inline">pstree</strong> plugin by typing <span class="No-Break">the following:</span></p>
+<pre class="console">
+ python3 vol.py -f cridex.vmem windows.pstree</pre>
+<p>In the following screenshot, the asterisks represent the tree structure. One asterisk indicates the PID and more than one asterisk indicates it is a <span class="No-Break">child process.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer279">
+<img alt="Figure 10.16 – pstree plugin output" height="494" src="image/Figure_10.16_B19441.jpg" width="1255"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.16 – pstree plugin output</p>
+<p>Let’s look at the first asterisk, which represents the <strong class="source-inline">smss.exe</strong> process with a PID of <strong class="source-inline">386</strong>. We can see that under this process, there are other processes with more than one asterisk that have a PPID of <strong class="source-inline">386</strong>, indicating that they are all child processes of <strong class="source-inline">smss.exe</strong>. Similarly, if we look further down, we can see that <strong class="source-inline">explorer.exe</strong> with a PID of <strong class="source-inline">1484</strong> is the parent process of <strong class="source-inline">reader_sl.exe</strong> with a PPID of <strong class="source-inline">1484</strong>. It takes some time to adjust to this format but it helps simplify parent and child <a id="_idIndexMarker905"/>processes in <span class="No-Break">DFIR</span><span class="No-Break"><a id="_idIndexMarker906"/></span><span class="No-Break"> analysis.</span></p>
+<h3>The psscan plugin</h3>
+<p>The <strong class="source-inline">psscan</strong> command<a id="_idIndexMarker907"/> displays<a id="_idIndexMarker908"/> inactive and even hidden processes that can be used by malware, such as rootkits, and are well known for doing just that to evade discovery by users and <span class="No-Break">antivirus programs.</span></p>
+<p>Let’s run the <strong class="source-inline">psscan</strong> plugin by typing <span class="No-Break">the following:</span></p>
+<pre class="console">
+python3 vol.py -f cridex.vmem windows.psscan</pre>
+<p>The following screenshot shows the output of the preceding command when running the <span class="No-Break"><strong class="source-inline">psscan</strong></span><span class="No-Break"> plugi<a id="_idTextAnchor207"/><a id="_idTextAnchor208"/>n.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer280">
+<img alt="Figure 10.17 – psscan output" height="503" src="image/Figure_10.17_B19441.jpg" width="1101"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.17 – psscan output</p>
+<p>So far, there’s nothing that stands out. Let’s <span class="No-Break">keep digging.</span></p>
+<h3>The modscan plugin</h3>
+<p>The <strong class="source-inline">modscan</strong> plugin <a id="_idIndexMarker909"/>displays <a id="_idIndexMarker910"/>a list of all modules present in the memory image. This helps us<a id="_idIndexMarker911"/> identify the path and directory for processes, system files, and <strong class="bold">Dynamic Link Library</strong> (<span class="No-Break"><strong class="bold">DLL</strong></span><span class="No-Break">) files.</span></p>
+<p>Run the <strong class="source-inline">modscan</strong> plugin by typing <span class="No-Break">the following:</span></p>
+<pre class="console">
+python3 vol.py -f cridex.vmem windows.modscan</pre>
+<p>As seen in the following screenshot, the <strong class="source-inline">modscan</strong> plugin lists all modules running that were not available in the previous <span class="No-Break">process scans.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer281">
+<img alt="Figure 10.18 – modscan plugin output" height="361" src="image/Figure_10.18_B19441.jpg" width="886"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.18 – modscan plugin output</p>
+<p>Let’s <span class="No-Break">keep looking.</span></p>
+<h3>The getsids plugin</h3>
+<p>All users<a id="_idIndexMarker912"/> can also be uniquely<a id="_idIndexMarker913"/> identified <a id="_idIndexMarker914"/>by a <strong class="bold">Security Identifier</strong> (<strong class="bold">SID</strong>). The <strong class="source-inline">getsids</strong> command has four very useful items in the order in which the processes were started (refer to the <strong class="source-inline">pslist</strong> and <strong class="source-inline">pstree</strong> command screenshots in <em class="italic">Figures 10.15</em> <span class="No-Break">and </span><span class="No-Break"><em class="italic">10.16</em></span><span class="No-Break">).</span></p>
+<p>The format for the <strong class="source-inline">getsids</strong> command output is <span class="No-Break">as follows:</span></p>
+<p><strong class="source-inline"> [Process] (PID) [</strong><span class="No-Break"><strong class="source-inline">SID] (User)</strong></span></p>
+<p>The first result in the list, for example, lists <span class="No-Break">the following:</span></p>
+<p><strong class="source-inline">System (4) : S – 1 – 5- </strong><span class="No-Break"><strong class="source-inline">18 (User)</strong></span></p>
+<p><span class="No-Break">Where:</span></p>
+<ul>
+<li><strong class="source-inline">System</strong> is <span class="No-Break">the process</span></li>
+<li><strong class="source-inline">(4)</strong> is <span class="No-Break">the PID</span></li>
+<li><strong class="source-inline">S - 1 - 5- 18</strong> is <span class="No-Break">the SID</span></li>
+<li><strong class="source-inline">User</strong> is the <span class="No-Break">local system</span></li>
+</ul>
+<p>To run the <strong class="source-inline">getsids</strong> plugin, type <span class="No-Break">the following:</span></p>
+<pre class="console">
+python3 vol.py -f cridex.vmem windows.getsids</pre>
+<p>The<a id="_idIndexMarker915"/> following<a id="_idIndexMarker916"/> screenshot shows the output of the preceding command when running the <span class="No-Break"><strong class="source-inline">getsids</strong></span><span class="No-Break"> plugin.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer282">
+<img alt="Figure 10.19 – getsids plugin output" height="388" src="image/Figure_10.19_B19441.jpg" width="552"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.19 – getsids plugin output</p>
+<p>If we scroll further down, we<a id="_idIndexMarker917"/> can see that the <strong class="source-inline">reader_sl.exe</strong> process was started by a user named <a id="_idIndexMarker918"/>Robert with the SID <span class="No-Break">of </span><span class="No-Break"><strong class="source-inline">S-1-5-21</strong></span><span class="No-Break">.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer283">
+<img alt="Figure 10.20 – getsids output snippet" height="169" src="image/Figure_10.20_B19441.jpg" width="830"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.20 – getsids output snippet</p>
+<h3>The envars plugin</h3>
+<p>Let’s<a id="_idIndexMarker919"/> continue our<a id="_idIndexMarker920"/> analysis using the <strong class="source-inline">envars</strong> plugin, which displays process environment variables and nicely maps all processes to paths <span class="No-Break">and users.</span></p>
+<p>Run the <strong class="source-inline">envars</strong> plugin by typing <span class="No-Break">the following:</span></p>
+<pre class="console">
+python3 vol.py -f cridex.vmem windows.envars</pre>
+<div>
+<div class="IMG---Figure" id="_idContainer284">
+<img alt="Figure 10.21 – envars plugin output" height="500" src="image/Figure_10.21_B19441.jpg" width="1012"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.21 – envars plugin output</p>
+<p>Scrolling <a id="_idIndexMarker921"/>through the lengthy output down to the <strong class="source-inline">reader_sl.exe</strong> process, we can find some very useful information about the process, path and directories, computer name architecture, drive information, and temporary file location. <span class="No-Break">Good stuff.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer285">
+<img alt="Figure 10.22 – envars output snippet" height="528" src="image/Figure_10.22_B19441.jpg" width="951"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.22 – envars output snippet</p>
+<p>Let’s do a bit<a id="_idIndexMarker922"/> of registry analysis <a id="_idIndexMarker923"/>and see what we can come <span class="No-Break">up with.</span></p>
+<h3>The hivelist plugin</h3>
+<p>The <strong class="source-inline">hivelist</strong> plugin<a id="_idIndexMarker924"/> lists<a id="_idIndexMarker925"/> the registry hives present at the time the memory dump was taken and will also show logged-in users. The <strong class="source-inline">hivelist</strong> command shows the details of virtual and physical addresses along with the easier readable plaintext names <span class="No-Break">and locations.</span></p>
+<p>To run this plugin, type <span class="No-Break">the following:</span></p>
+<pre class="console">
+vol.py -f cridex.vmem windows.registry.hivelist</pre>
+<p>The following screenshot shows the output of the preceding command when running the <span class="No-Break"><strong class="source-inline">hivelist</strong></span><span class="No-Break"> plugin.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer286">
+<img alt="Figure 10.23 – hivelist plugin output" height="408" src="image/Figure_10.23_B19441.jpg" width="1023"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.23 – hivelist plugin output</p>
+<h3>Password dumping</h3>
+<p>The location<a id="_idIndexMarker926"/> of the <strong class="bold">Security Accounts Manager</strong> (<strong class="bold">SAM</strong>) file is also listed using the <strong class="source-inline">hivelist</strong> plugin, shown<a id="_idIndexMarker927"/> in the following screenshot (<span class="No-Break"><em class="italic">Figure 10</em></span><em class="italic">.24</em>). The <strong class="source-inline">SAM</strong> file contains hashed passwords for usernames in Windows machines. The path to the <strong class="source-inline">SAM</strong> file is seen in the following screenshot: <strong class="source-inline">Windows\system32\config\SAM</strong>. This file cannot be accessed by users within Windows while the system is on. This can be further used to acquire the hashed passwords in the <strong class="source-inline">SAM</strong> file to crack passwords using a wordlist along with password-cracking tools such as John the Ripper, also available in <span class="No-Break">Kali Linux:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer287">
+<img alt="Figure 10.24 – SAM file location" height="46" src="image/Figure_10.24_B19441.jpg" width="466"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.24 – SAM file location</p>
+<p>Let’s expand on this a bit further using the <span class="No-Break"><strong class="source-inline">userassist</strong></span><span class="No-Break"> plugin.</span></p>
+<h3>The userassist plugin</h3>
+<p>The <strong class="source-inline">userassist</strong> plugin<a id="_idIndexMarker928"/> displays <a id="_idIndexMarker929"/>more registry information and, as we can see in the following screenshot, displays much more details about users, file locations, files accessed, <span class="No-Break">and timestamps.</span></p>
+<p>To run the <strong class="source-inline">userassist</strong> plugin, type <span class="No-Break">the following:</span></p>
+<pre class="console">
+python3 vol.py -f cridex.vmem windows.registry.userassist</pre>
+<p>The following screenshot <a id="_idIndexMarker930"/>shows <a id="_idIndexMarker931"/>the output of the preceding command when running the <span class="No-Break"><strong class="source-inline">userassist</strong></span><span class="No-Break"> plugin.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer288">
+<img alt="Figure 10.25 – userassist plugin output" height="505" src="image/Figure_10.25_B19441.jpg" width="1018"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.25 – userassist plugin output</p>
+<p>Lastly, for this chapter, let’s <a id="_idIndexMarker932"/>see whether we can find any malicious code <span class="No-Break">or applications.</span></p>
+<h3>The malfind plugin</h3>
+<p>The <strong class="source-inline">malfind</strong> plugin, as the<a id="_idIndexMarker933"/> name <a id="_idIndexMarker934"/>suggests, scans the dump for any malicious embedded code. This will be covered more in detail in <a href="B19441_11.xhtml#_idTextAnchor211"><span class="No-Break"><em class="italic">Chapter 11</em></span></a>, <em class="italic">Artifact, Malware, and Ransomware Analysis</em>, but let’s see whether we can find any embedded code within our current <span class="No-Break">DFIR investigation.</span></p>
+<p>To run the <strong class="source-inline">malfind</strong> plugin, type <span class="No-Break">the following:</span></p>
+<pre class="console">
+python3 vol.py -f cridex.vmem windows.malfind</pre>
+<p>The following screenshot shows the output of the preceding command when running the <span class="No-Break"><strong class="source-inline">malfind</strong></span><span class="No-Break"> plugin.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer289">
+<img alt="Figure 10.26 – malfind plugin output" height="346" src="image/Figure_10.26_B19441.jpg" width="1033"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.26 – malfind plugin output</p>
+<p>This plugin is a bit <a id="_idIndexMarker935"/>more complex <a id="_idIndexMarker936"/>to understand but very useful once you understand the basics. The column names that we need to focus on are <span class="No-Break">the following:</span></p>
+<ul>
+<li><span class="No-Break"><strong class="source-inline">PID</strong></span></li>
+<li><span class="No-Break"><strong class="source-inline">Process</strong></span></li>
+<li><span class="No-Break"><strong class="source-inline">CommitCharge</strong></span></li>
+<li><span class="No-Break"><strong class="source-inline">PrivateMemory</strong></span></li>
+</ul>
+<p>Let’s look closer at the <strong class="source-inline">reader_sl.exe</strong> details in the <strong class="source-inline">malfind</strong> output, <span class="No-Break">as follows.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer290">
+<img alt="Figure 10.27 – malfind snippet" height="228" src="image/Figure_10.27_B19441.jpg" width="1023"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.27 – malfind snippet</p>
+<p>Let’s analyze the output of the first line of the preceding <span class="No-Break"><strong class="source-inline">malfind</strong></span><span class="No-Break"> snippet:</span></p>
+<ul>
+<li><span class="No-Break"><strong class="source-inline">PID</strong></span><span class="No-Break">: </span><span class="No-Break"><strong class="source-inline">1640</strong></span></li>
+<li><span class="No-Break"><strong class="source-inline">Process</strong></span><span class="No-Break">: </span><span class="No-Break"><strong class="source-inline">reader_sl.exe</strong></span></li>
+<li><span class="No-Break"><strong class="source-inline">CommitCharge</strong></span><span class="No-Break">: </span><span class="No-Break"><strong class="source-inline">PAGE_EXECUTE_READWRITE</strong></span></li>
+<li><span class="No-Break"><strong class="source-inline">PrivateMemory</strong></span><span class="No-Break">: </span><span class="No-Break"><strong class="source-inline">33</strong></span></li>
+<li><strong class="source-inline">File </strong><span class="No-Break"><strong class="source-inline">output</strong></span><span class="No-Break">: </span><span class="No-Break"><strong class="source-inline">1</strong></span></li>
+</ul>
+<p>In the preceding <a id="_idIndexMarker937"/>output, we <a id="_idIndexMarker938"/>see that <strong class="source-inline">reader_sl.exe</strong> is executable code and is writing hidden code in memory. We will dive deeper into malware analysis in the <span class="No-Break">next chapter.</span></p>
+<h1 id="_idParaDest-149"><a id="_idTextAnchor209"/>Summary</h1>
+<p>In this chapter, we looked at memory forensics and analysis using some of the many plugins available within the Volatility 3 framework. We were able to successfully perform process, registry, DLL, and even malware analysis using this versatile tool. As we’ve seen, Volatility can perform several important functions in DFIR analysis and should be used together with other tools we’ve used previously to perform in-depth and detailed forensic analyses <span class="No-Break">and investigations.</span></p>
+<p>Be sure to download more publicly available memory images and samples to test your skills in this area. Experiment with as many plugins as you can and, of course, be sure to <a id="_idTextAnchor210"/>document your findings and consider sharing <span class="No-Break">them online.</span></p>
+<p>Next up, we’ll be going even deeper into Volatility as we perform ransomware analysis and use many other tools to discover and analyze various DFIR artifacts. See you in the <span class="No-Break">next chapter!</span></p>
+</div>
+<div>
+<div id="_idContainer292">
+</div>
+</div>
+</div></body></html>

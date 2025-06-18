@@ -1,0 +1,435 @@
+<html><head></head><body>
+		<div id="_idContainer371">
+			<h1 id="_idParaDest-126" class="chapter-number"><a id="_idTextAnchor328"/>6</h1>
+			<h1 id="_idParaDest-127"><a id="_idTextAnchor329"/>Assessing Session Management Mechanisms</h1>
+			<p><a id="_idTextAnchor330"/>This chapter covers techniques used to bypass and assess session management schemes. Session management schemes are used by applications to keep track of user activity, usually by means of session tokens. Web assessments of session management also involve determining the strength of the session tokens used and whether those tokens are properly protected. We will learn how to use Burp Suite to perform <span class="No-Break">such tests.</span></p>
+			<p><a id="_idTextAnchor331"/>In this chapter, we will cover the <span class="No-Break">following recipes:</span></p>
+			<ul>
+				<li>Testing session token strength <span class="No-Break">using Sequencer</span></li>
+				<li>Testing for <span class="No-Break">cookie attributes</span></li>
+				<li>Testing for <span class="No-Break">session fixation</span></li>
+				<li>Testing for exposed <span class="No-Break">session variables</span></li>
+				<li>Testing for cross-site <span class="No-Break">request forgery</span></li>
+			</ul>
+			<h1 id="_idParaDest-128"><a id="_idTextAnchor332"/>Technical requirements</h1>
+			<p>To complete the recipes in this chapter, you will need <span class="No-Break">the following:</span></p>
+			<ul>
+				<li>An OWASP <strong class="bold">Broken Web Applications</strong> (<span class="No-Break"><strong class="bold">BWA</strong></span><span class="No-Break">) VM</span></li>
+				<li>OWASP <span class="No-Break">Mutillidae link</span></li>
+				<li>Burp Suite Proxy Community or <span class="No-Break">Professional (</span><a href="https://portswigger.net/burp/"><span class="No-Break">https://portswigger.net/burp/</span></a><span class="No-Break">)</span></li>
+				<li>A Firefox browser or Burp Suite browser configured to allow Burp Suite to proxy <span class="No-Break">traffic (</span><a href="https://www.mozilla.org/en-US/firefox/new/"><span class="No-Break">https://www.mozilla.org/en-US/firefox/new/</span></a><span class="No-Break">)</span><a id="_idTextAnchor333"/></li>
+			</ul>
+			<h1 id="_idParaDest-129"><a id="_idTextAnchor334"/>Testing session token strength using Sequencer</h1>
+			<p>To track user activity from page<a id="_idIndexMarker403"/> to page within an application, developers<a id="_idIndexMarker404"/> create and assign unique session token values to each user. Most session token mechanisms include session IDs, hidden form fields, or cookies. Cookies are placed within the user’s browser on the <span class="No-Break">client side.</span></p>
+			<p>These session tokens should be examined by a penetration tester to ensure their uniqueness, randomness, and cryptographic strength, to prevent <span class="No-Break">information leakage.</span></p>
+			<p>If a session token value is easily<a id="_idIndexMarker405"/> guessable or remains unchanged after login, an attacker could apply (or fixate) a pre-known token value to a user. This is known as a <strong class="bold">session fixation attack</strong>. The purpose of the attack is to harvest sensitive data in the user’s account, since the session token is known to <span class="No-Break">the attack<a id="_idTextAnchor335"/>e<a id="_idTextAnchor336"/>r.</span></p>
+			<h2 id="_idParaDest-130"><a id="_idTextAnchor337"/>Getting ready</h2>
+			<p>We’ll check the session tokens used in OWASP Mutillidae II to ensure they are created in a secure and unpredictable way. An attacker who is able to predict and forge a weak session token can perform session <span class="No-Break">fixation attac<a id="_idTextAnchor338"/>ks.</span></p>
+			<p>Ensure Burp Suite and the OWASP BWA VM are running and that Burp Suite is configured in the Firefox browser used to view OWASP BWA applications, or use Burp Suite’s <span class="No-Break">built-in browse<a id="_idTextAnchor339"/>r.</span></p>
+			<h2 id="_idParaDest-131"><a id="_idTextAnchor340"/>How to do it...</h2>
+			<ol>
+				<li>From the <strong class="bold">OWASP BWA</strong> landing page, click the link<a id="_idIndexMarker406"/> to the OWASP Mutillidae <span class="No-Break">II application.</span></li>
+				<li>Open the Firefox browser or Burp Suite browser to access the home page of OWASP Mutillidae II (URL: <strong class="source-inline">http://&lt;your_VM_assigned_IP_address&gt;/mutillidae/</strong>). Make sure you are starting a fresh session of the Mutillidae application and are not logged in to <span class="No-Break">it already:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer333" class="IMG---Figure">
+					<img src="image/B21173_06_001.jpg" alt="Figure 6.1 – Ensure you are not logged in to the application"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.1 – Ensure you are not logged in to the application</p>
+			<ol>
+				<li value="3">Switch to the <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and select<a id="_idIndexMarker407"/> the request showing<a id="_idIndexMarker408"/> your initial browse to the Mutillidae <span class="No-Break">home page.</span></li>
+				<li>Look for the <strong class="source-inline">GET</strong> request and the associated response containing the <strong class="source-inline">Set-Cookie:</strong> assignments. Whenever you see this assignment, you know you are getting a freshly created cookie for your session. Specifically, we are interested in the <strong class="source-inline">PHPSESSID</strong> <span class="No-Break">cookie value:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer334" class="IMG---Figure">
+					<img src="image/B21173_06_002.jpg" alt="Figure 6.2 – Cookie value of PHPSESSID"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.2 – Cookie value of PHPSESSID</p>
+			<ol>
+				<li value="5">Highlight the value of the of the <strong class="source-inline">PHPSESSID</strong> cookie, right-click, and select <strong class="bold">Send </strong><span class="No-Break"><strong class="bold">to Sequencer</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer335" class="IMG---Figure">
+					<img src="image/B21173_06_003.jpg" alt="Figure 6.3 – Send request to Sequencer"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.3 – Send request to Sequencer</p>
+			<p>Sequencer is a tool within Burp Suite<a id="_idIndexMarker409"/> designed to determine the strength or the quality of the randomness<a id="_idIndexMarker410"/> created within a <span class="No-Break">session token.</span></p>
+			<ol>
+				<li value="6">After sending the value of the <strong class="source-inline">PHPSESSID</strong> parameter over to <strong class="bold">Sequencer</strong>, you will see the value loaded in the <strong class="bold">Select live capture </strong><span class="No-Break"><strong class="bold">request</strong></span><span class="No-Break"> table.</span></li>
+				<li>Before pressing the <strong class="bold">Start live capture</strong> button, scroll down to the <strong class="bold">Token location within response</strong> section. In the <strong class="bold">Cookie</strong> drop-down list, select <strong class="source-inline">PHPSESSID=&lt;captured session </strong><span class="No-Break"><strong class="source-inline">token value&gt;</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer336" class="IMG---Figure">
+					<img src="image/B21173_06_004.jpg" alt="Figure 6.4 – Set the cookie value for Sequencer"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.4 – Set the cookie value for Sequencer</p>
+			<ol>
+				<li value="8">Since we have the correct<a id="_idIndexMarker411"/> cookie value selected, we can begin<a id="_idIndexMarker412"/> the live capture process. Click the <strong class="bold">Start live capture</strong> button, and Burp Suite will send multiple requests, extracting the <strong class="source-inline">PHPSESSID</strong> cookie out of each response. After each capture, <strong class="bold">Sequencer</strong> performs a statistical analysis of the level of randomness in <span class="No-Break">each token.</span></li>
+				<li>Allow the capture to gather and analyze at least 200 tokens, but feel free to let it run longer if <span class="No-Break">you like:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer337" class="IMG---Figure">
+					<img src="image/B21173_06_005.jpg" alt="Figure 6.5 – Live capture of Sequencer"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.5 – Live capture of Sequencer</p>
+			<ol>
+				<li value="10">Once you have at least 200 samples, click the <strong class="bold">Analyze now</strong> button. Whenever you are ready to stop the capturing process, press the <strong class="bold">Stop</strong> button and confirm by <span class="No-Break">clicking </span><span class="No-Break"><strong class="bold">Yes</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer338" class="IMG---Figure">
+					<img src="image/B21173_06_006.jpg" alt="Figure 6.6 – Stopping the live capture"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.6 – Stopping the live capture</p>
+			<ol>
+				<li value="11">After the analysis<a id="_idIndexMarker413"/> is complete, the output of <strong class="bold">Sequencer</strong> provides an overall<a id="_idIndexMarker414"/> result. In this case, the quality of randomness for the <strong class="source-inline">PHPSESSID</strong> session token is excellent. The amount of effective entropy is estimated to be 112 bits. From a web pentester perspective, these session tokens are very strong, so there is no vulnerability to report here. However, though there is no vulnerability present, it is good practice to perform such checks on <span class="No-Break">session tokens:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer339" class="IMG---Figure">
+					<img src="image/B21173_06_007.jpg" alt="Figure 6.7 – Summary ana﻿l﻿ysis"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.7 – Summary ana<a id="_idTextAnchor341"/>l<a id="_idTextAnchor342"/>ysis</p>
+			<h2 id="_idParaDest-132"><a id="_idTextAnchor343"/>How it works...</h2>
+			<p>To better understand<a id="_idIndexMarker415"/> the math and hypothesis<a id="_idIndexMarker416"/> behind Sequencer, consult<a id="_idIndexMarker417"/> PortSwigger’s documentation on the topic <span class="No-Break">here: </span><a href="https://portswigger.net/burp/documentation/desktop/tools/sequencer/tests"><span class="No-Break">https://portswigger.net/burp/documentation/desktop/tools/sequence<span id="_idTextAnchor344"/>r<span id="_idTextAnchor345"/>/tests</span></a><span class="No-Break">.</span></p>
+			<h1 id="_idParaDest-133"><a id="_idTextAnchor346"/>Testing for cookie attributes</h1>
+			<p>Important user-specific<a id="_idIndexMarker418"/> information, such as session tokens, is often stored in cookies within the client browser. Due to their importance, cookies need to be protected from malicious attacks. This protection usually comes in the form of two flags—<strong class="source-inline">secure</strong> <span class="No-Break">and </span><span class="No-Break"><strong class="source-inline">HttpOnly</strong></span><span class="No-Break">.</span></p>
+			<p>The <strong class="source-inline">secure</strong> flag informs the browser to only send the cookie to the web server if the protocol is encrypted (for example, HTTPS or TLS). This flag protects the cookie from eavesdropping over <span class="No-Break">unencrypted channels.</span></p>
+			<p>The <strong class="source-inline">HttpOnly</strong> flag instructs the browser to not allow access or manipulation of the cookie via JavaScript. This flag protects the cookie from cross-site <span class="No-Break">scripting<a id="_idTextAnchor347"/> <a id="_idTextAnchor348"/>attacks.</span></p>
+			<h2 id="_idParaDest-134"><a id="_idTextAnchor349"/>Getting ready</h2>
+			<p>Check the cookies used in the OWASP Mutillidae II application, to ensure the presence of protective flags. Since the Mutillidae application runs over an unencrypted channel (for example, HTTP), we can only check for the presence of the <strong class="source-inline">HttpOnly</strong> flag. Therefore, the <strong class="source-inline">secure</strong> flag is out of scope for <span class="No-Break">this<a id="_idTextAnchor350"/> recipe.</span></p>
+			<p>Ensure Burp Suite and the OWASP BWA VM are running and that Burp Suite is configured in the Firefox browser used to view OWASP BWA applications, or use Burp Suite’s <span class="No-Break">built-in <a id="_idTextAnchor351"/>browser.</span></p>
+			<h2 id="_idParaDest-135"><a id="_idTextAnchor352"/>How to do it...</h2>
+			<ol>
+				<li>From the <strong class="bold">OWASP BWA</strong> landing page, click the link<a id="_idIndexMarker419"/> to the OWASP Mutillidae <span class="No-Break">II application.</span></li>
+				<li>Open the Firefox browser or the Burp Suite browser to access the home page of OWASP Mutillidae II (URL: <strong class="source-inline">http://&lt;your_VM_assigned_IP_address&gt;/mutillidae/</strong>). Make sure you are starting a fresh<a id="_idIndexMarker420"/> session and you are not logged in to the <span class="No-Break">Mutillidae application:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer340" class="IMG---Figure">
+					<img src="image/B21173_06_008.jpg" alt="Figure 6.8 – Ensure you are not logged in to the application"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.8 – Ensure you are not logged in to the application</p>
+			<ol>
+				<li value="3">Switch to the <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and select the request showing your initial browse to the Mutillidae home page. Look for the <strong class="source-inline">GET</strong> request and its associated response containing <strong class="source-inline">Set-Cookie:</strong> assignments. Whenever you see this assignment, you can ensure you are getting a freshly created cookie for your session. Specifically, we are interested in the <strong class="source-inline">PHPSESSID</strong> <span class="No-Break">cookie value.</span></li>
+				<li>Immediately after successful login, cookies should be set. Examine the end of the <strong class="source-inline">Set-Cookie:</strong> assignments lines. Notice the absence of the <strong class="source-inline">HttpOnly</strong> flag for both lines. This means the <strong class="source-inline">PHPSESSID</strong> and <strong class="source-inline">showhints</strong> cookie values are not protected from JavaScript manipulation. This is a security finding that you would include in <span class="No-Break">your report:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer341" class="IMG---Figure">
+					<img src="image/B21173_06_009.jpg" alt="Figure 6.9 – Setting the value of the PHPSESSID cookie, absence of secur﻿i﻿ty flags"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.9 – Setting the value of the PHPSESSID cookie, absence of secur<a id="_idTextAnchor353"/>i<a id="_idTextAnchor354"/>ty flags</p>
+			<h2 id="_idParaDest-136"><a id="_idTextAnchor355"/>How it works...</h2>
+			<p>If the two cookies had <strong class="source-inline">HttpOnly</strong> flags set, the flags would appear at the end of the <strong class="source-inline">Set-Cookie:</strong> assignment lines. When present, the flag would immediately be followed by a semicolon ending the path scope of the cookie, followed by the <strong class="source-inline">HttpOnly</strong> string. The display<a id="_idIndexMarker421"/> is similar for the <strong class="source-inline">Secure</strong> flag <span class="No-Break">as well:</span></p>
+			<pre class="source-code">
+Set-Cookie: PHPSESSID=&lt;session token value&gt;;path=/;Secure<a id="_idTextAnchor356"/>;<a id="_idTextAnchor357"/>HttpOnly;</pre>			<h1 id="_idParaDest-137"><a id="_idTextAnchor358"/>Testing for session fixation</h1>
+			<p>Session tokens are assigned<a id="_idIndexMarker422"/> to users for tracking purposes. This means that when browsing an application as an unauthenticated user, they are assigned a unique session ID, which is usually stored in a cookie. Application developers should always create a new session token after the user logs in to the website. If this session token does not change, the application could be susceptible to a session fixation attack. It is the responsibility of web penetration testers to determine whether this token changes values from an unauthenticated state to an <span class="No-Break">authenticated state.</span></p>
+			<p>Session fixation is present when application developers do not invalidate the unauthenticated session token, allowing the user to use the same one after authentication. This scenario allows an attacker with a stolen session token to masquerade a<a id="_idTextAnchor359"/>s<a id="_idTextAnchor360"/> <span class="No-Break">the user.</span></p>
+			<h2 id="_idParaDest-138"><a id="_idTextAnchor361"/>Getting ready</h2>
+			<p>Using the OWASP Mutillidae II application<a id="_idIndexMarker423"/> and the <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab in Burp Suite, as well as <strong class="bold">Comparer</strong>, we will examine an unauthenticated <strong class="source-inline">PHPSESSID</strong> session token value. Then, we will log in to the application and compare the unauthenticated value against the authenticated value to determine the presence of the session <span class="No-Break">fixation vu<a id="_idTextAnchor362"/>l<a id="_idTextAnchor363"/>nerability.</span></p>
+			<h2 id="_idParaDest-139"><a id="_idTextAnchor364"/>How to do it...</h2>
+			<ol>
+				<li>Navigate to the login screen (click <strong class="bold">Login/Register</strong> from the top menu), but do not log <span class="No-Break">in yet.</span></li>
+				<li>Switch to Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab, and look for the <strong class="source-inline">GET</strong> request showing when you browsed to the login screen. Make a note of the value assigned to the <strong class="source-inline">PHPSESSID</strong> parameter placed within <span class="No-Break">a cookie:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer342" class="IMG---Figure">
+					<img src="image/B21173_06_010.jpg" alt="Figure 6.10 – Setting of PHPSESSID cookie value unauthenticated"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.10 – Setting of PHPSESSID cookie value unauthenticated</p>
+			<ol>
+				<li value="3">Right-click the <strong class="source-inline">PHPSESSID</strong> parameter <a id="_idIndexMarker424"/>and send the request <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Comparer</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer343" class="IMG---Figure">
+					<img src="image/B21173_06_011.jpg" alt="Figure 6.11 – Send request to Comparer"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.11 – Send request to Comparer</p>
+			<ol>
+				<li value="4">Return to the login screen (click <strong class="bold">Login/Register</strong> from the top menu), and this time, log in using the username <strong class="source-inline">ed</strong> and the <span class="No-Break">password </span><span class="No-Break"><strong class="source-inline">pentest</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer344" class="IMG---Figure">
+					<img src="image/B21173_06_012.jpg" alt="Figure 6.12 – Login as user ed"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.12 – Login as user ed</p>
+			<ol>
+				<li value="5">After logging in, switch<a id="_idIndexMarker425"/> to Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab. Look for the <strong class="source-inline">POST</strong> request showing your login (for example, the 302 HTTP status code) as well as the immediate <strong class="source-inline">GET</strong> request following the <strong class="source-inline">POST</strong> request. Note the <strong class="source-inline">PHPSESSID</strong> value assigned after login. Right-click and send the <strong class="source-inline">GET</strong> request <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Comparer</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer345" class="IMG---Figure">
+					<img src="image/B21173_06_013.jpg" alt="Figure 6.13 – GET request immediately after logging in as ed"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.13 – GET request immediately after logging in as ed</p>
+			<ol>
+				<li value="6">Switch to Burp Suite’s <strong class="bold">Comparer</strong>. The appropriate<a id="_idIndexMarker426"/> requests should already be highlighted <span class="No-Break">for you.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer346" class="IMG---Figure">
+					<img src="image/B21173_06_014.jpg" alt="Figure 6.14 – Comparing unauthenticated request against authenticated request"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.14 – Comparing unauthenticated request against authenticated request</p>
+			<ol>
+				<li value="7">Click the <strong class="bold">Words</strong> button<a id="_idIndexMarker427"/> in the bottom <span class="No-Break">right-hand corner:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer347" class="IMG---Figure">
+					<img src="image/B21173_06_015.jpg" alt="Figure 6.15 – Click the Words button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.15 – Click the Words button</p>
+			<ol>
+				<li value="8">A popup shows a detailed comparison of the differences between the two requests. Note the value of <strong class="source-inline">PHPSESSID</strong> does not change between the unauthenticated<a id="_idIndexMarker428"/> session (on the left) and the authenticated session (on the right). This means the application has a session <span class="No-Break">fixation vulnerability:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer348" class="IMG---Figure">
+					<img src="image/B21173_06_016.jpg" alt="Figure 6.16 – Notice value of PHPSESSID did not change a﻿f﻿ter login"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.16 – Notice value of PHPSESSID did not change a<a id="_idTextAnchor365"/>f<a id="_idTextAnchor366"/>ter login</p>
+			<h2 id="_idParaDest-140"><a id="_idTextAnchor367"/>How it works...</h2>
+			<p>In this recipe, we examined how the <strong class="source-inline">PHPSESSID</strong> value assigned to an unauthenticated user remained constant even after authentication. This is a security vulnerability allowing for the session<a id="_idIndexMarker429"/> <span class="No-Break">fixat<a id="_idTextAnchor368"/>i<a id="_idTextAnchor369"/>on attack.</span></p>
+			<h1 id="_idParaDest-141"><a id="_idTextAnchor370"/>Testing for exposed session variables</h1>
+			<p>Session variables<a id="_idIndexMarker430"/> such as tokens, cookies, or hidden form fields are used by application developers to send data between the client and the server. Since these variables are exposed on the client side, an attacker can manipulate them in an attempt to gain access to unauthorized data or to capture <span class="No-Break">sensitive information.</span></p>
+			<p>Burp Suite’s <strong class="bold">Proxy</strong> option provides<a id="_idIndexMarker431"/> a feature to enhance the visibility of so-called <em class="italic">hidden</em> form fields. This feature allows web application penetration testers to determine the level of sensitivity of the data held in these variables. Likewise, a pentester can determine whether the manipulation of these values produces a different behavior in <span class="No-Break">the<a id="_idTextAnchor371"/> <a id="_idTextAnchor372"/>application.</span></p>
+			<h2 id="_idParaDest-142"><a id="_idTextAnchor373"/>Getting ready</h2>
+			<p>Using the OWASP Mutillidae II application<a id="_idIndexMarker432"/> and Burp Suite’s <strong class="bold">Unhide hidden form fields</strong> feature under <strong class="bold">Proxy</strong>, we’ll determine whether manipulation of a hidden form field value results in gaining access to <span class="No-Break">unau<a id="_idTextAnchor374"/>t<a id="_idTextAnchor375"/>horized data.</span></p>
+			<h2 id="_idParaDest-143"><a id="_idTextAnchor376"/>How to do it...</h2>
+			<ol>
+				<li>Switch to Burp Suite’s <strong class="bold">Proxy</strong> tab by clicking the <strong class="bold">Settings</strong> gear icon in the top right-hand corner of <span class="No-Break">Burp Suite.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer349" class="IMG---Figure">
+					<img src="image/B21173_06_017.jpg" alt="Figure 6.17 – Global Settings button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.17 – Global Settings button</p>
+			<ol>
+				<li value="2">Once the large pop-out window displays, select <strong class="bold">All</strong> | <span class="No-Break"><strong class="bold">Proxy</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer350" class="IMG---Figure">
+					<img src="image/B21173_06_018.jpg" alt="Figure 6.18 – Settings menu"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.18 – Settings menu</p>
+			<ol>
+				<li value="3">Within the <strong class="bold">Proxy</strong> section, scroll down<a id="_idIndexMarker433"/> to the <strong class="bold">Response modification rules</strong> section, and check the boxes for <strong class="bold">Unhide hidden form fields</strong> and <strong class="bold">Prominently highlight </strong><span class="No-Break"><strong class="bold">unhidden fields</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer351" class="IMG---Figure">
+					<img src="image/B21173_06_019.jpg" alt="Figure 6.19 – Proxy | Response modification rules subsection"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.19 – Proxy | Response modification rules subsection</p>
+			<ol>
+				<li value="4">Navigate to the <strong class="bold">User Info</strong> page by going to <strong class="bold">OWASP 2013</strong> | <strong class="bold">A1 - Injection (SQL)</strong> | <strong class="bold">SQLi - Extract Data</strong> | <strong class="bold">User </strong><span class="No-Break"><strong class="bold">Info (SQL)</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer352" class="IMG---Figure">
+					<img src="image/B21173_06_020.jpg" alt="Figure 6.20 – User Info page of ﻿the application"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.20 – User Info page of the application</p>
+			<ol>
+				<li value="5">Note the hidden form fields<a id="_idIndexMarker434"/> now prominently displayed on <span class="No-Break">the page:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer353" class="IMG---Figure">
+					<img src="image/B21173_06_021.jpg" alt="Figure 6.21 – Hidden fields predominantly displayed"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.21 – Hidden fields predominantly displayed</p>
+			<ol>
+				<li value="6">Let’s try to manipulate the value shown, <strong class="source-inline">user-info.php</strong>, by changing it to <strong class="source-inline">admin.php</strong> and see how the application reacts. Modify <strong class="source-inline">user-info.php</strong> to <strong class="source-inline">admin.php</strong> within the <strong class="bold">Hidden field [</strong><span class="No-Break"><strong class="bold">page]</strong></span><span class="No-Break"> textbox:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer354" class="IMG---Figure">
+					<img src="image/B21173_06_022.jpg" alt="Figure 6.22 – Change value of hidden field"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.22 – Change value of hidden field</p>
+			<ol>
+				<li value="7">Hit the <em class="italic">Enter</em> key after making<a id="_idIndexMarker435"/> the change. You should<a id="_idIndexMarker436"/> now see a new page loaded showing <strong class="bold">PHP Server </strong><span class="No-Break"><strong class="bold">Configuration</strong></span><span class="No-Break"> information:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer355" class="IMG---Figure">
+					<img src="image/B21173_06_023.jpg" alt="Figure 6.23 – Resulting PHP configuration p﻿a﻿ge exposed"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.23 – Resulting PHP configuration p<a id="_idTextAnchor377"/>a<a id="_idTextAnchor378"/>ge exposed</p>
+			<h2 id="_idParaDest-144"><a id="_idTextAnchor379"/>How it works...</h2>
+			<p>As seen in this recipe, there isn’t anything hidden about hidden form fields. As penetration testers, we should examine<a id="_idIndexMarker437"/> and manipulate these values, to determine whether sensitive information is inadvertently exposed or whether we can change the behavior of the application from what is expected, based on our role and authentication status. In the case of this recipe, we were not even logged in to the application. We manipulated the hidden form field labeled <strong class="source-inline">page</strong> to access a page containing fingerprinting information. Access to such information should be protected from <span class="No-Break">unauthenti<a id="_idTextAnchor380"/>c<a id="_idTextAnchor381"/>ated users.</span></p>
+			<h1 id="_idParaDest-145"><a id="_idTextAnchor382"/>Testing for cross-site request forgery</h1>
+			<p><strong class="bold">Cross-Site Request Forgery</strong> (<strong class="bold">CSRF</strong>) is an attack that rides on an authenticated user’s session<a id="_idIndexMarker438"/> to allow an attacker to force the user to execute unwanted actions on the attacker’s behalf. The initial lure for this attack can be a phishing email or a malicious link executing through a cross-site scripting vulnerability found on the victim’s website. CSRF exploitation may lead to a data breach or even a full compromise of the <span class="No-Break">web<a id="_idTextAnchor383"/> <a id="_idTextAnchor384"/>application.</span></p>
+			<h2 id="_idParaDest-146"><a id="_idTextAnchor385"/>Getting ready</h2>
+			<p>Using the OWASP Mutillidae II application registration form, determine whether a CSRF attack is possible within the same browser (a different tab) while an authenticated user is logged in to <span class="No-Break">the<a id="_idTextAnchor386"/> <a id="_idTextAnchor387"/>application.</span></p>
+			<h2 id="_idParaDest-147"><a id="_idTextAnchor388"/>How to do it...</h2>
+			<p>To begin this recipe, let’s first baseline the current number of records in the account table and perform SQL injection to <span class="No-Break">see this:</span></p>
+			<ol>
+				<li>Navigate to the <strong class="bold">User Info</strong> page by going to <strong class="bold">OWASP 2013</strong> | <strong class="bold">A1 - Injection (SQL)</strong> | <strong class="bold">SQLi - Extract Data</strong> | <strong class="bold">User </strong><span class="No-Break"><strong class="bold">Info (SQL)</strong></span><span class="No-Break">.</span></li>
+				<li>At the username prompt, type in a SQL injection payload to dump the entire account table contents. The payload is <strong class="source-inline">' or 1=1-- &lt;space&gt;</strong> (<em class="italic">tick or 1 equals 1 dash dash space</em>). Then, press the <strong class="bold">View Account </strong><span class="No-Break"><strong class="bold">Details</strong></span><span class="No-Break"> button.</span></li>
+			</ol>
+			<p>Remember to include the space after the two dashes, since this is a MySQL database; otherwise, the payload will <span class="No-Break">not work:</span></p>
+			<div>
+				<div id="_idContainer356" class="IMG---Figure">
+					<img src="image/B21173_06_024.jpg" alt="Figure 6.24 – SQL injection payload"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.24 – SQL injection payload</p>
+			<ol>
+				<li value="3">When performed correctly, a message<a id="_idIndexMarker439"/> displays that 24 records were found in the database for users. The data shown following the message reveals the usernames, passwords, and signature strings of all 24 accounts. Only two account details are shown here as <span class="No-Break">a sample:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer357" class="IMG---Figure">
+					<img src="image/B21173_06_025.jpg" alt="Figure 6.25 – Baseline of 24 records"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.25 – Baseline of 24 records</p>
+			<p>We confirmed that 24 records currently exist in the accounts table of <span class="No-Break">the database.</span></p>
+			<ol>
+				<li value="4">Now, return to the login screen (click <strong class="bold">Login/Register</strong> from the top menu) and select the <strong class="bold">Please register </strong><span class="No-Break"><strong class="bold">here</strong></span><span class="No-Break"> link.</span></li>
+				<li>After clicking the <strong class="bold">Please register here</strong> link, you are presented with a <span class="No-Break">registration form.</span></li>
+				<li>Fill out the form to create<a id="_idIndexMarker440"/> a tester account. Type in <strong class="source-inline">tester</strong> as the username, <strong class="source-inline">tester</strong> as the password, and <strong class="source-inline">This is a tester account</strong> as <span class="No-Break">the signature:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer358" class="IMG---Figure">
+					<img src="image/B21173_06_026.jpg" alt="Figure 6.26 – Register a new user"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.26 – Register a new user</p>
+			<ol>
+				<li value="7">After clicking the <strong class="bold">Create Account</strong> button, you should see a green banner confirming the account <span class="No-Break">was created:</span></li>
+			</ol>
+			<p class="IMG---Figure"><img src="image/B21173_06_027.png" alt="Figure 6.27 – Confirmation of the new account creation"/></p>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.27 – Confirmation of the new account creation</p>
+			<ol>
+				<li value="8">Return to the <strong class="bold">User Info</strong> page by going to <strong class="bold">OWASP 2013</strong> | <strong class="bold">A1 - Injection (SQL)</strong> | <strong class="bold">SQLi - Extract Data</strong> | <strong class="bold">User </strong><span class="No-Break"><strong class="bold">Info (SQL)</strong></span><span class="No-Break">.</span></li>
+				<li>Perform the SQL injection attack again and verify that you can now see 25 rows in the account table, instead of the previous count <span class="No-Break">of 24:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer360" class="IMG---Figure">
+					<img src="image/B21173_06_028.jpg" alt="Figure 6.28 – 25 rows visible in the account table"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.28 – 25 rows visible in the account table</p>
+			<ol>
+				<li value="10">Switch to the <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab in Burp Suite and view the <strong class="source-inline">POST</strong> request that created the account for <span class="No-Break">the tester.</span></li>
+				<li>Studying this <strong class="source-inline">POST</strong> request<a id="_idIndexMarker441"/> shows the <strong class="source-inline">POST</strong> action (<strong class="source-inline">register.php</strong>) and the body data required to perform the action, in this case, <strong class="source-inline">username</strong>, <strong class="source-inline">password</strong>, <strong class="source-inline">confirm_password</strong>, and <strong class="source-inline">my_signature</strong>. Also, notice there is no CSRF token used. CSRF tokens are placed within web forms to protect against the very attack we are about to perform. <span class="No-Break">Let’s proceed.</span></li>
+				<li>Right-click on the <strong class="source-inline">POST</strong> request and click on <strong class="bold">Send </strong><span class="No-Break"><strong class="bold">to Repeater</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer361" class="IMG---Figure">
+					<img src="image/B21173_06_029.jpg" alt="Figure 6.29 – Send login to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.29 – Send login to Repeater</p>
+			<ol>
+				<li value="13">If you’re using Burp Suite Professional, right-click and select <strong class="bold">Engagement tools</strong> | <strong class="bold">Generate </strong><span class="No-Break"><strong class="bold">CSRF PoC:</strong></span></li>
+			</ol>
+			<div>
+				<div id="_idContainer362" class="IMG---Figure">
+					<img src="image/B21173_06_030.jpg" alt="Figure 6.30 – Generate CSRF PoC"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.30 – Generate CSRF PoC</p>
+			<ol>
+				<li value="14">Upon clicking this feature, a pop-up box<a id="_idIndexMarker442"/> generates the same form used on the registration page but without any CSRF token protection. Inside the CSRF HTML text area, change the <strong class="source-inline">"tester"</strong> username to <strong class="source-inline">"attacker"</strong>. Change the password to <strong class="source-inline">"attacker"</strong>. Change the <strong class="source-inline">"tester"</strong> confirm password value <span class="No-Break">to </span><span class="No-Break"><strong class="source-inline">"attacker"</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer363" class="IMG---Figure">
+					<img src="image/B21173_06_031.jpg" alt="Figure 6.31 – Modify and copy HTML"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.31 – Modify and copy HTML</p>
+			<ol>
+				<li value="15">Click the <strong class="bold">Copy HTML</strong> button<a id="_idIndexMarker443"/> and save it as a file called <strong class="source-inline">csrf.html</strong> on your <span class="No-Break">local system:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer364" class="IMG---Figure">
+					<img src="image/B21173_06_032.jpg" alt="Figure 6.32 – Name the new file csrf.html"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.32 – Name the new file csrf.html</p>
+			<ol>
+				<li value="16">If you are using Burp Suite<a id="_idIndexMarker444"/> Community, you can easily recreate the <strong class="bold">CSRF PoC</strong> form by viewing the source code<a id="_idIndexMarker445"/> of the <span class="No-Break">registration page:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer365" class="IMG---Figure">
+					<img src="image/B21173_06_033.jpg" alt="Figure 6.33 – For Burp Suite Community edition, how to create CSRF PoC"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.33 – For Burp Suite Community edition, how to create CSRF PoC</p>
+			<ol>
+				<li value="17">While viewing the page source, scroll down to the <strong class="source-inline">&lt;form&gt;</strong> tag section. For brevity, the form is recreated next. Insert <strong class="source-inline">attacker</strong> as a value for the username, password, and signature. Copy the following HTML code and save it in a file <span class="No-Break">entitled </span><span class="No-Break"><strong class="source-inline">csrf.html</strong></span><span class="No-Break">:</span><pre class="source-code">
+&lt;html&gt;
+&lt;body&gt;
+&lt;script&gt;history.pushState('', '', '/')&lt;/script&gt;
+&lt;form action="http://192.168.56.101/mutillidae/index.php?page=register.php" method="POST"&gt;
+&lt;input type="hidden" name="csrf-token" value="" /&gt;
+&lt;input type="hidden" name="username" value="attacker" /&gt;
+&lt;input type="hidden" name="password" value="attacker" /&gt;
+&lt;input type="hidden" name="confirm_password" value="attacker"
+/&gt; &lt;input type="hidden" name="my_signature" value="attacker account" /&gt;
+&lt;input type="hidden" name="register-php-submit-button" value="Create Account" /&gt;
+&lt;input type="submit" value="Submit request" /&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre></li>				<li>Now, return to the login screen (click <strong class="bold">Login/Register</strong> from the top menu) and log in to the application, using the username <strong class="source-inline">ed</strong> and the <span class="No-Break">password </span><span class="No-Break"><strong class="source-inline">pentest</strong></span><span class="No-Break">.</span></li>
+				<li>Open the location<a id="_idIndexMarker446"/> on your machine where you saved the <strong class="source-inline">csrf.html</strong> file. Drag the file into the browser where <strong class="source-inline">ed</strong> is authenticated. After you drag the file to this browser, <strong class="source-inline">csrf.html</strong> will appear as a separate tab in the <span class="No-Break">same browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer366" class="IMG---Figure">
+					<img src="image/B21173_06_034.jpg" alt="Figure 6.34 – Name the new file csrf.html"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.34 – Name the new file csrf.html</p>
+			<ol>
+				<li value="20">For demonstration purposes, there is a <strong class="bold">Submit request</strong> button. However, in the wild, a JavaScript function would automatically execute the action of creating an account for the attacker. Click the <strong class="bold">Submit </strong><span class="No-Break"><strong class="bold">request</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer367" class="IMG---Figure">
+					<img src="image/B21173_06_035.jpg" alt="Figure 6.35 – Submit request in new tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.35 – Submit request in new tab</p>
+			<p>You should receive a confirmation<a id="_idIndexMarker447"/> that the attacker account has <span class="No-Break">been created:</span></p>
+			<div>
+				<div id="_idContainer368" class="IMG---Figure">
+					<img src="image/B21173_06_036.jpg" alt="Figure 6.36 – Confirmation of CSRF attack success"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.36 – Confirmation of CSRF attack success</p>
+			<ol>
+				<li value="21">Switch to the <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab in Burp Suite and find the maliciously executed <strong class="source-inline">POST</strong> request used to create the account for the attacker, while riding on the authenticated session of <strong class="source-inline">ed</strong>. Note the <strong class="source-inline">Origin</strong> header value of <strong class="source-inline">"null"</strong>. This confirms we are using our CSRF PoC since we drag and drop it from our local machine (e.g., <em class="italic">origin of nothing</em>) into a new tab of an authenticated <span class="No-Break">user’s session.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer369" class="IMG---Figure">
+					<img src="image/B21173_06_037.jpg" alt="Figure 6.37 – CSRF attack as seen in Burp"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.37 – CSRF attack as seen in Burp</p>
+			<ol>
+				<li value="22">Return to the <strong class="bold">User Info</strong> page by going to <strong class="bold">OWASP 2013</strong> | <strong class="bold">A1 - Injection (SQL)</strong> | <strong class="bold">SQLi - Extract Data</strong> | <strong class="bold">User Info (SQL)</strong> and perform the SQL injection attack again. You will now see 26 rows in the account table instead of the previous<a id="_idIndexMarker448"/> count <span class="No-Break">of 25:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer370" class="IMG---Figure">
+					<img src="image/B21173_06_038.jpg" alt="Figure 6.38 – Record count incremented by 1 after CSR﻿F﻿ attack"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 6.38 – Record count incremented by 1 after CSR<a id="_idTextAnchor389"/>F<a id="_idTextAnchor390"/> attack</p>
+			<h2 id="_idParaDest-148"><a id="_idTextAnchor391"/>How it works...</h2>
+			<p>CSRF attacks require an authenticated user session to surreptitiously perform actions within the application on behalf of the attacker. In this case, an attacker rode on <strong class="source-inline">ed</strong>’s session to re-run the registration form to create an account for the attacker. If <strong class="source-inline">ed</strong> had been an admin, this could have allowed<a id="_idIndexMarker449"/> the attacker to gain access to an elevated role <span class="No-Break">as well.</span></p>
+		</div>
+	</body></html>

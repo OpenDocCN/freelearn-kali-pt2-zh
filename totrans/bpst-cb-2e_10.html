@@ -1,0 +1,667 @@
+<html><head></head><body>
+		<div id="_idContainer566">
+			<h1 id="_idParaDest-230" class="chapter-number"><a id="_idTextAnchor588"/>10</h1>
+			<h1 id="_idParaDest-231"><a id="_idTextAnchor589"/>Working with Burp Suite Macros and Extensions</h1>
+			<p>This chapter covers two separate topics that can also be blended together: macros and extensions. Burp Suite macros enable penetration testers to automate events, such as logins or parameter reads, to overcome potential error situations. Extensions, also known as plugins, extend the core functionality found <span class="No-Break">in Burp.</span></p>
+			<p><a id="_idTextAnchor590"/>In this chapter, we will cover the <span class="No-Break">following recipes:</span></p>
+			<ul>
+				<li>Creating <span class="No-Break">session-handling macros</span></li>
+				<li>Getting caught in the <span class="No-Break">cookie jar</span></li>
+				<li>Adding great <span class="No-Break">pentester plugins</span></li>
+				<li>Creating new issues via the <strong class="bold">Add &amp; Track Custom </strong><span class="No-Break"><strong class="bold">Issues</strong></span><span class="No-Break"> extension</span></li>
+				<li>Working with the <strong class="bold">Active </strong><span class="No-Break"><strong class="bold">Scan++</strong></span><span class="No-Break"> extension</span></li>
+				<li>Using Burp Suite extensions for <span class="No-Break">bug bounties</span></li>
+			</ul>
+			<h1 id="_idParaDest-232"><a id="_idTextAnchor591"/>Technical requirements</h1>
+			<p>In order to complete the recipes in this chapter, you will need <span class="No-Break">the following:</span></p>
+			<ul>
+				<li>OWASP <strong class="bold">Broken Web </strong><span class="No-Break"><strong class="bold">Applications</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">BWA</strong></span><span class="No-Break">)</span></li>
+				<li>OWASP <span class="No-Break">Mutillidae (</span><span class="No-Break"><strong class="source-inline">http://&lt;Your_VM_Assigned_IP_Address&gt;/mutillidae</strong></span><span class="No-Break">)</span></li>
+				<li><span class="No-Break">GetBoo (</span><span class="No-Break"><strong class="source-inline">http://&lt;Your_VM_Assigned_IP_Address&gt;/getboo</strong></span><span class="No-Break">)</span></li>
+				<li>Burp Proxy Community or <span class="No-Break">Professional (</span><a href="https://portswigger.net/burp/"><span class="No-Break">https://portswigger.net/burp/</span></a><span class="No-Break">)</span></li>
+			</ul>
+			<h1 id="_idParaDest-233"><a id="_idTextAnchor592"/>Creating session-handling macros</h1>
+			<p>In Burp Suite, the <strong class="bold">Project options</strong> tab allows testers to set up session-handling rules. A session-handling rule <a id="_idIndexMarker582"/>allows a tester to specify a set of actions Burp Suite will take in relation to session tokens or <strong class="bold">cross-site request forgery</strong> (<strong class="bold">CSRF</strong>) tokens<a id="_idIndexMarker583"/> while making HTTP requests. There is a default session-handling rule in scope for Spider and Scanner. However, in this recipe, we will create a new session-handling rule and use a macro to help us create an authenticated session from an unauthenticated one while <span class="No-Break">using </span><span class="No-Break"><strong class="bold">Repeate<a id="_idTextAnchor593"/>r<a id="_idTextAnchor594"/></strong></span><span class="No-Break">.</span></p>
+			<h2 id="_idParaDest-234"><a id="_idTextAnchor595"/>Getting ready</h2>
+			<p>Using the OWASP Mutillidae II application, we will create a new Burp Suite session-handling rule, with an associated macro, to create an authenticated session from an unauthenticated one while <span class="No-Break">using </span><span class="No-Break"><strong class="bold">Repeate<a id="_idTextAnchor596"/>r<a id="_idTextAnchor597"/></strong></span><span class="No-Break">.</span></p>
+			<h2 id="_idParaDest-235"><a id="_idTextAnchor598"/>How to do it...</h2>
+			<ol>
+				<li>Navigate to the <strong class="bold">Login</strong> page in Mutillidae. Log in to the application with the username <strong class="source-inline">ed</strong> with the <span class="No-Break">password </span><span class="No-Break"><strong class="source-inline">pentest</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer500" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.01.jpg" alt="Figure 10.1 – Logging in as ed/pentest"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.1 – Logging in as ed/pentest</p>
+			<ol>
+				<li value="2">Immediately log out of the application by clicking the <strong class="bold">Logout</strong> button, and make sure the application confirms you are <span class="No-Break">logged out:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer501" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.02.jpg" alt="Figure 10.2 – Logging out"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.2 – Logging out</p>
+			<ol>
+				<li value="3">Switch to Burp Suite’s <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab. Look for the logout request you just <a id="_idIndexMarker584"/>made along with the subsequent, unauthenticated <strong class="source-inline">GET</strong> request. Select the unauthenticated request, which is the second <strong class="source-inline">GET</strong> request. Right-click and send that request to <strong class="bold">Repeater</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer502" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.03.jpg" alt="Figure 10.3 – Sending a GET request to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.3 – Sending a GET request to Repeater</p>
+			<ol>
+				<li value="4">Switch to Burp Suite <strong class="bold">Repeater</strong>, then click the <strong class="bold">Send</strong> button. On the <strong class="bold">Render</strong> tab of the response, ensure you receive a <strong class="bold">Not Logged In</strong> message. We will use this scenario to build a session-handling rule to address the unauthenticated session <a id="_idIndexMarker585"/>and make it an authenticated one, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer503" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.04.jpg" alt="Figure 10.4 – Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.4 – Repeater</p>
+			<ol>
+				<li value="5">Click the Burp Suite <strong class="bold">Settings</strong> gear icon in the <span class="No-Break">top-right corner:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer504" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.05.jpg" alt="Figure 10.5 – Global Settings gear icon"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.5 – Global Settings gear icon</p>
+			<ol>
+				<li value="6">Then, select the <strong class="bold">Sessions</strong> area and click the <strong class="bold">Add</strong> button under the <strong class="bold">Session handling rules</strong> section, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer505" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.06.jpg" alt="Figure 10.6 – Adding a new session-handling rule"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.6 – Adding a new session-handling rule</p>
+			<ol>
+				<li value="7">After <a id="_idIndexMarker586"/>clicking the <strong class="bold">Add</strong> button, a pop-up box appears. Give your new rule a name, such as <strong class="source-inline">LogInSessionRule</strong>, and under <strong class="bold">Rule actions</strong>, select <strong class="bold">Run a macro</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer506" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.07.jpg" alt="Figure 10.7 – Rule name and action"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.7 – Rule name and action</p>
+			<ol>
+				<li value="8">Another<a id="_idIndexMarker587"/> pop-up box appears, which is the <strong class="bold">Session handling action editor</strong> dialog window. In the first section, under <strong class="bold">Select macro</strong>, click the <strong class="bold">Add</strong> button, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer507" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.08.jpg" alt="Figure 10.8 – Adding a new macro"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.8 – Adding a new macro</p>
+			<ol>
+				<li value="9">After<a id="_idIndexMarker588"/> clicking the <strong class="bold">Add</strong> button, the macro editor appears, along with another popup of <strong class="bold">Macro Recorder</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer508" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.09.jpg" alt="Figure 10.9 – Macro Recorder"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.9 – Macro Recorder</p>
+			<ol>
+				<li value="10">Inside <a id="_idIndexMarker589"/>the <strong class="bold">Macro Recorder</strong> window, look for the <strong class="source-inline">POST</strong> request where you logged in as <strong class="source-inline">ed</strong> as well as the following <strong class="source-inline">GET</strong> request. Highlight both of those requests within the <strong class="bold">Macro Recorder</strong> window and click <strong class="bold">OK</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer509" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.010.jpg" alt="Figure 10.10 – Selected actions"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.10 – Selected actions</p>
+			<ol>
+				<li value="11">Those two highlighted requests in the previous dialog window now appear inside the <strong class="bold">Macro Editor</strong> window. Give the macro a description, such as <strong class="source-inline">LogInMacro</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer510" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.011.jpg" alt="Figure 10.11 – Naming your macro"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.11 – Naming your macro</p>
+			<ol>
+				<li value="12">Click<a id="_idIndexMarker590"/> the <strong class="bold">Configure </strong><span class="No-Break"><strong class="bold">item</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer511" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.012.jpg" alt="Figure 10.12 – Configuring your macro"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.12 – Configuring your macro</p>
+			<p>You need to validate that the <strong class="bold">username</strong> and <strong class="bold">password</strong> values are correct. Click <strong class="bold">OK</strong> when this is done, <span class="No-Break">as follows:</span></p>
+			<div>
+				<div id="_idContainer512" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.013.jpg" alt="Figure 10.13 – Login parameters set"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.13 – Login parameters set</p>
+			<ol>
+				<li value="13">Click <strong class="bold">OK</strong> to close<a id="_idIndexMarker591"/> the <strong class="bold">Macro Editor</strong> window. You should see the newly created macro in the <strong class="bold">Session handling action editor</strong> window. Click <strong class="bold">OK</strong> to close this dialog window, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer513" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.014.jpg" alt="Figure 10.14 – Closing the Session handling action editor window"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.14 – Closing the Session handling action editor window</p>
+			<ol>
+				<li value="14">After<a id="_idIndexMarker592"/> closing the <strong class="bold">Session handling action editor</strong> window, you are returned to the <strong class="bold">Session handling rule editor</strong> window where you now see the <strong class="bold">Rule actions</strong> section populated with the name of your macro. Click the <strong class="bold">Scope</strong> tab of this window to define which tool will use <span class="No-Break">this rule:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer514" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.015.jpg" alt="Figure 10.15 – Identifying the scope"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.15 – Identifying the scope</p>
+			<ol>
+				<li value="15">On the <strong class="bold">Scope</strong> tab <a id="_idIndexMarker593"/>of the <strong class="bold">Session handling rule editor</strong> window, uncheck the other boxes, leaving only the <strong class="bold">Repeater</strong> box checked. Under <strong class="bold">URL scope</strong>, click the <strong class="bold">Include all URLs</strong> radio button. Click <strong class="bold">OK</strong> to close this editor, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer515" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.016.jpg" alt="Figure 10.16 – Setting the scope"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.16 – Setting the scope</p>
+			<ol>
+				<li value="16">You should <a id="_idIndexMarker594"/>now see the new session-handling rule listed in the <strong class="bold">Session handling rules</strong> window, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer516" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.017.jpg" alt="Figure 10.17 – Enabling your new rule"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.17 – Enabling your new rule</p>
+			<ol>
+				<li value="17">Return to<a id="_idIndexMarker595"/> the <strong class="bold">Repeater</strong> tab where you previously were not logged in to the application. Click the <strong class="bold">Send</strong> button to reveal that you are now logged in as <strong class="source-inline">ed</strong>! This means your session-handling rule and associated <span class="No-Break">macro worked:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer517" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.018.jpg" alt="Figure 10.18 – Result of session-handling rule and associated macro"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.18 – Result of session-handling rule and associated macro</p>
+			<h2 id="_idParaDest-236">How<a id="_idTextAnchor599"/> <a id="_idTextAnchor600"/>it works...</h2>
+			<p>In this recipe, we saw how an unauthenticated session can be changed to an authenticated one by replaying the login process. The creation of macros allows manual steps to be scripted and assigned to various tools within <span class="No-Break">Burp Suite.</span></p>
+			<p>Burp Suite allows testers to configure session-handling rules to address various conditions that the suite of tools may encounter. The rules provide additional actions to be taken when those conditions are met. In this recipe, we addressed an unauthenticated session by creating a new session-handling rule that is called a macro. We confined the scope for this rule to <strong class="bold">Repeater</strong> only for <span class="No-Break">demonstration purposes.</span></p>
+			<h1 id="_idParaDest-237">Get<a id="_idTextAnchor601"/>t<a id="_idTextAnchor602"/>ing caught in the cookie jar</h1>
+			<p>While targeting an application, Burp Suite captures all cookies while proxying and crawling. Burp Suite stores these cookies in a cache called <a id="_idIndexMarker596"/>the <strong class="bold">cookie jar</strong>. This cookie jar is used within the default session-handling rule and can be shared among the suite of Burp Suite tools, such as <strong class="bold">Proxy</strong>, <strong class="bold">Intruder</strong>, and <strong class="bold">Repeater</strong>. Inside the cookie jar, there is a historical table of requests. The table details each cookie domain and path. It is possible to edit or remove cookies from the <span class="No-Break">cookie jar.</span></p>
+			<h2 id="_idParaDest-238">Ge<a id="_idTextAnchor603"/>t<a id="_idTextAnchor604"/>ting ready</h2>
+			<p>We will<a id="_idIndexMarker597"/> open the Burp Suite cookie jar and look inside. Then, using the OWASP GetBoo application, we’ll identify new cookies added to the Burp Suite <span class="No-Break">cookie jar.</span></p>
+			<h2 id="_idParaDest-239">H<a id="_idTextAnchor605"/>o<a id="_idTextAnchor606"/>w to do it...</h2>
+			<ol>
+				<li>Click the Burp Suite <strong class="bold">Settings</strong> gear icon in the <span class="No-Break">top-right corner:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer518" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.019..jpg" alt="Figure 10.19 – Global Settings gear icon"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.19 – Global Settings gear icon</p>
+			<p>Then, select the <strong class="bold">Sessions</strong> area and go to the <strong class="bold">Cookie </strong><span class="No-Break"><strong class="bold">jar</strong></span><span class="No-Break"> section:</span></p>
+			<div>
+				<div id="_idContainer519" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.020..jpg" alt="Figure 10.20 – Cookie jar"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.20 – Cookie jar</p>
+			<ol>
+				<li value="2">In the <strong class="bold">Cookie jar</strong> section, click the <strong class="bold">Open cookie jar</strong> button, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer520" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.021..jpg" alt="Figure 10.21 – Opening the cookie jar"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.21 – Opening the cookie jar</p>
+			<ol>
+				<li value="3">A new <a id="_idIndexMarker598"/>pop-up box appears showing all cookies captured in <strong class="bold">Proxy</strong>. Notice each cookie has <strong class="bold">Domain</strong>, <strong class="bold">Path</strong>, <strong class="bold">Name</strong>, and <strong class="bold">Value</strong> <span class="No-Break">details identified:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer521" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.022..jpg" alt="Figure 10.22 – Details of each cookie"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.22 – Details of each cookie</p>
+			<ol>
+				<li value="4">Select a cookie in the list and click the <strong class="bold">Edit cookie</strong> button. For example, we can modify the value of the <strong class="source-inline">PHPSESSID</strong> cookie from a random cryptographic string to <strong class="source-inline">thisIsMyCookie</strong> and then click <strong class="bold">OK</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer522" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.023..jpg" alt="Figure 10.23 – Editing the PHPSESSID cookie value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.23 – Editing the PHPSESSID cookie value</p>
+			<ol>
+				<li value="5">The value <a id="_idIndexMarker599"/>is now changed, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer523" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.024..jpg" alt="Figure 10.24 – Setting the cookie to a new value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.24 – Setting the cookie to a new value</p>
+			<ol>
+				<li value="6">The default scope for the Burp Suite cookie jar is <strong class="bold">Proxy</strong>. However, you may expand the <a id="_idIndexMarker600"/>scope to include other tools. Click the checkbox for <strong class="bold">Repeater</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer524" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.025..jpg" alt="Figure 10.25 – Setting the scope"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.25 – Setting the scope</p>
+			<ol>
+				<li value="7">Now, if you create a new session-handling rule and use the default Burp Suite cookie jar, you will see the new value for that cookie used in the requests. We can see this in action by turning on our <strong class="source-inline">LoginSessionRule</strong> <span class="No-Break">session-handling rule:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer525" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.026..jpg" alt="Figure 10.26 – Enabling LoginSessionRule"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.26 – Enabling LoginSessionRule</p>
+			<ol>
+				<li value="8">Now, send an unauthenticated request to <strong class="bold">Repeater</strong> and click <strong class="bold">Send</strong>. Notice the value of your cookie is <strong class="source-inline">thisIsMyCookie</strong>. This technique can be very helpful for session-hijacking attacks when you steal the cookie of a victim and need to ensure the cookie value doesn’t change back to your <span class="No-Break">session cookie:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer526" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.027..jpg" alt="Figure 10.27 – Result of rule and cookie jar change"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.27 – Result of rule and cookie jar change</p>
+			<h2 id="_idParaDest-240">How it <a id="_idTextAnchor607"/>w<a id="_idTextAnchor608"/>orks...</h2>
+			<p>The Burp Suite cookie jar <a id="_idIndexMarker601"/>is used by session-handling rules for cookie handling when automating requests against a target application. In this recipe, we investigated the cookie jar, understood its contents, and even modified one of the values of a captured cookie. Any subsequent session-handling rules that use the default Burp Suite cookie jar will see the modified value in <span class="No-Break">the request.</span></p>
+			<h1 id="_idParaDest-241">Adding<a id="_idTextAnchor609"/> <a id="_idTextAnchor610"/>great pentester plugins</h1>
+			<p>As <a id="_idIndexMarker602"/>web application testers, you will find handy tools to add to your repertoire to make your assessments more efficient. The Burp Suite community offers many wonderful extensions. In this recipe, we will add a couple of them and <a id="_idIndexMarker603"/>explain how they can make your assessments better. <strong class="bold">Get All Params</strong> (<strong class="bold">GAP</strong>) and <strong class="bold">Software Vulnerability Scanner</strong> are the two plugins we will add to Burp Suite and use with the <span class="No-Break">passive scanner.</span></p>
+			<p class="callout-heading">Note</p>
+			<p class="callout">Both plugins require the Burp Suite <span class="No-Break">Professional version.</span></p>
+			<h2 id="_idParaDest-242">Gett<a id="_idTextAnchor611"/>i<a id="_idTextAnchor612"/>ng ready</h2>
+			<p>Using the <a id="_idIndexMarker604"/>OWASP Mutillidae II application, we will add two handy extensions that will help us find more vulnerabilities in <span class="No-Break">our target.</span></p>
+			<h2 id="_idParaDest-243">How<a id="_idTextAnchor613"/> <a id="_idTextAnchor614"/>to do it...</h2>
+			<ol>
+				<li>The first extension, <strong class="source-inline">GAP-Burp-Extension</strong>, is available at the following GitHub repository: <a href="https://github.com/xnl-h4ck3r/GAP-Burp-Extension">https://github.com/xnl-h4ck3r/GAP-Burp-Extension</a>. Install Git on Linux or Git for Windows (<a href="https://gitforwindows.org/">https://gitforwindows.org/</a>). Then, using the <strong class="source-inline">git clone </strong><a href="https://github.com/xnl-h4ck3r/GAP-Burp-Extension.git">https://github.com/xnl-h4ck3r/GAP-Burp-Extension.git</a> command, download the repo to your <span class="No-Break">local system.</span></li>
+				<li>Change directory into <strong class="source-inline">GAP-Burp-Extension</strong> after the download of the repo. Make note of the location of the <strong class="source-inline">GAP.py</strong> file. This is the file you will load into Burp Suite to use <span class="No-Break">the extension:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer527" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.028..jpg" alt="Figure 10.28 – Python script to run GAP"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.28 – Python script to run GAP</p>
+			<ol>
+				<li value="3">Note that you must have Jython installed prior to using the GAP extension. To install Jython, go to the <strong class="bold">Extensions</strong> | <strong class="bold">Extensions settings</strong> gear icon and click <span class="No-Break">the icon:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer528" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.029..jpg" alt="Figure 10.29 – Extension settings"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.29 – Extension settings</p>
+			<ol>
+				<li value="4">Go to<a id="_idIndexMarker605"/> the Jython site (<a href="https://www.jython.org/">https://www.jython.org/</a>) and download the standalone Jython <span class="No-Break">JAR file:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer529" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.030..jpg" alt="Figure 10.30 – Downloading Jython"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.30 – Downloading Jython</p>
+			<ol>
+				<li value="5">Set the location of your standalone Jython JAR file in the <strong class="bold">Python </strong><span class="No-Break"><strong class="bold">environment</strong></span><span class="No-Break"> section:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer530" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.031..jpg" alt="Figure 10.31 – Configuring Jython"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.31 – Configuring Jython</p>
+			<ol>
+				<li value="6">Once<a id="_idIndexMarker606"/> configured, close the <strong class="bold">Extension settings</strong> pop-out window by clicking the <strong class="bold">X</strong> sign in the top-right corner of <span class="No-Break">the window:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer531" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.032..jpg" alt="Figure 10.32 – Closing the settings"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.32 – Closing the settings</p>
+			<p>After configuring, go to the <strong class="bold">Burp Suite</strong> | <strong class="bold">Extensions</strong> tabs and select the <strong class="bold">Installed</strong> tab. Click <strong class="bold">Add</strong> and change the <strong class="bold">Extension type</strong> value to <strong class="bold">Python</strong>. Browse to the location of the <strong class="source-inline">GAP.py</strong> file inside the <strong class="source-inline">GAP-Burp-Extension</strong> directory on your local system. You may also need to perform a Python <strong class="source-inline">pip</strong> command to install the requirements for GAP on your local system, as follows: <strong class="source-inline">java -jar jython-standalone-2.7.3.jar -m pip install -r requirements.txt</strong> (<span class="No-Break">source: </span><a href="https://github.com/xnl-h4ck3r/GAP-Burp-Extension"><span class="No-Break">https://github.com/xnl-h4ck3r/GAP-Burp-Extension</span></a><span class="No-Break">):</span></p>
+			<div>
+				<div id="_idContainer532" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.033..jpg" alt="Figure 10.33 – Installing the extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.33 – Installing the extension</p>
+			<ol>
+				<li value="7">Make<a id="_idIndexMarker607"/> sure the extension is enabled by seeing the box checked next to its name within the Burp Suite <span class="No-Break"><strong class="bold">Extensions</strong></span><span class="No-Break"> area:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer533" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.034..jpg" alt="Figure 10.34 – Enabling the extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.34 – Enabling the extension</p>
+			<ol>
+				<li value="8">After the <a id="_idIndexMarker608"/>extension is loaded and enabled, notice you have a new <strong class="bold">GAP</strong> tab at the top of the Burp Suite menu <span class="No-Break">of tools:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer534" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.035..jpg" alt="Figure 10.35 – New GAP tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.35 – New GAP tab</p>
+			<ol>
+				<li value="9">Let’s run GAP on our Mutillidae target. Go to <strong class="bold">Target</strong> | <strong class="bold">Site map</strong>, right-click on the root directory of the application, and select <strong class="bold">Extensions</strong> | <span class="No-Break"><strong class="bold">GAP</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer535" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.036..jpg" alt="Figure 10.36 – Invoking the GAP extension against the target"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.36 – Invoking the GAP extension against the target</p>
+			<ol>
+				<li value="10">Now, select<a id="_idIndexMarker609"/> the <strong class="bold">GAP</strong> tab at the top of your Burp Suite tools. Notice the list of potential parameters GAP found. Our <strong class="source-inline">ToolID</strong> identifier is present, which we used to exploit in a previous recipe! Also, notice all links GAP found for you. These are new attack vectors you can use to widen your scope for <span class="No-Break">finding bugs:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer536" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.037..jpg" alt="Figure 10.37 – Results found with GAP"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.37 – Results found with GAP</p>
+			<ol>
+				<li value="11">For the second <a id="_idIndexMarker610"/>extension, switch to the Burp Suite <strong class="bold">Extensions</strong> tab. Go to the <strong class="bold">BApp Store</strong> subtab and find the <strong class="bold">Software Vulnerability </strong><span class="No-Break"><strong class="bold">Scanner</strong></span><span class="No-Break"> plugin:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer537" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.038..jpg" alt="Figure 10.38 – Software Vulnerability Scanner extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.38 – Software Vulnerability Scanner extension</p>
+			<ol>
+				<li value="12">Click the <strong class="bold">Install</strong> button on the right side and select the <span class="No-Break">extension name:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer538" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.039..jpg" alt="Figure 10.39 – Install button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.39 – Install button</p>
+			<ol>
+				<li value="13">After installing <a id="_idIndexMarker611"/>the two plugins, go to the <strong class="bold">Extensions</strong> tab, then the <strong class="bold">Burp Suite extensions</strong> section. Make sure both plugins are enabled with check marks inside the checkboxes. Also, notice the <strong class="bold">Software Vulnerability Scanner</strong> extension has a new tab, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer539" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.040..jpg" alt="Figure 10.40 – New tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.40 – New tab</p>
+			<ol>
+				<li value="14">Go to the <strong class="bold">Software Vulnerability Scanner</strong> tab and notice the default scan rules along with an option to supply an <strong class="bold">API Token</strong> type for faster <span class="No-Break">scan speeds:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer540" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.041..jpg" alt="Figure 10.41 – Inside the Software Vulnerability Scanner tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.41 – Inside the Software Vulnerability Scanner tab</p>
+			<ol>
+				<li value="15">Return<a id="_idIndexMarker612"/> to <strong class="bold">Target</strong> | <strong class="bold">Site map</strong> with Mutillidae home page as our target. Perform a lightweight, less invasive passive scan by right-clicking and selecting <strong class="bold">Passively scan this branch</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer541" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.042..jpg" alt="Figure 10.42 – Scanning the target"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.42 – Scanning the target</p>
+			<ol>
+				<li value="16">Note the additional findings created from <strong class="bold">Software Vulnerability Scanner</strong>. The <strong class="source-inline">Vulners</strong> plugin<a id="_idIndexMarker613"/> found numerous vulnerable <span class="No-Break">software issues:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer542" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.043..jpg" alt="Figure 10.43 – Looking for extension findings"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.43 – Looking for extension findings</p>
+			<p>Looking at the details of the first finding, note the various links provided to <span class="No-Break">known exploits:</span></p>
+			<div>
+				<div id="_idContainer543" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.044..jpg" alt="Figure 10.44 – Advisory showing exploits available"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.44 – Advisory showing exploits available</p>
+			<h2 id="_idParaDest-244">How it work<a id="_idTextAnchor615"/>s<a id="_idTextAnchor616"/>...</h2>
+			<p>Burp Suite functionality can<a id="_idIndexMarker614"/> be extended through a PortSwigger API to create custom extensions, also known as plugins. In this recipe, we installed two plugins that assist with identifying older versions of software contained in the application with <span class="No-Break">known vulnerabilities.</span></p>
+			<h1 id="_idParaDest-245">Creating n<a id="_idTextAnchor617"/>e<a id="_idTextAnchor618"/>w issues via the Add &amp; Track Custom Issues extension</h1>
+			<p>Though <a id="_idIndexMarker615"/>Burp Suite provides<a id="_idIndexMarker616"/> a listing of many security vulnerabilities commonly found in web applications, occasionally you will identify an issue and need to create a custom scan finding. This can be done using the <strong class="bold">Add &amp; Track Custom </strong><span class="No-Break"><strong class="bold">Issues</strong></span><span class="No-Break"> extension.</span></p>
+			<p class="callout-heading">Note</p>
+			<p class="callout">This plugin requires the Burp Suite <span class="No-Break">Professional edition.</span></p>
+			<h2 id="_idParaDest-246">Getting <a id="_idTextAnchor619"/>r<a id="_idTextAnchor620"/>eady</h2>
+			<p>Using the OWASP Mutillidae II application, we will add the <strong class="bold">Add &amp; Track Custom Issues</strong> extension, create steps revealing a finding, and then use the extension to create a <span class="No-Break">custom issue.</span></p>
+			<h2 id="_idParaDest-247">How to d<a id="_idTextAnchor621"/>o<a id="_idTextAnchor622"/> it...</h2>
+			<ol>
+				<li>Switch to the Burp Suite <strong class="bold">Extension</strong> tab. Go to the <strong class="bold">BApp Store</strong> subtab and find the plugin labeled <strong class="bold">Add &amp; Track Custom Issues</strong>. Click the <span class="No-Break"><strong class="bold">Install</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer544" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.045..jpg" alt="Figure 10.45 – Add &amp; Track Custom Issues extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.45 – Add &amp; Track Custom Issues extension</p>
+			<ol>
+				<li value="2">Ensure <a id="_idIndexMarker617"/>the extension<a id="_idIndexMarker618"/> is loaded and enabled in the <strong class="bold">Extensions</strong> | <strong class="bold">Installed</strong> | <strong class="bold">Burp </strong><span class="No-Break"><strong class="bold">extensions</strong></span><span class="No-Break"> section:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer545" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.046..jpg" alt="Figure 10.46 – Loading the extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.46 – Loading the extension</p>
+			<ol>
+				<li value="3">Return<a id="_idIndexMarker619"/> to the Firefox browser and browse to the Mutillidae <span class="No-Break">home page.</span></li>
+				<li>Switch to the <a id="_idIndexMarker620"/>Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and find the request you just made browsing to the home page. Click the <strong class="bold">Response</strong> tab. Note the overly verbose <strong class="source-inline">Server</strong> header indicating the web server type and version, along with the operating system and programming language used. This information can be used by an attacker to fingerprint the technology stack and identify vulnerabilities that can <span class="No-Break">be exploited:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer546" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.047..jpg" alt="Figure 10.47 – Issue to create"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.47 – Issue to create</p>
+			<ol>
+				<li value="5">Since<a id="_idIndexMarker621"/> this is a<a id="_idIndexMarker622"/> finding, we need to create a new issue manually to capture it for our report. While viewing the <strong class="bold">Response</strong> window, right-click and select <strong class="bold">Extensions</strong> | <strong class="bold">Add &amp; Track Custom Issues</strong> | <strong class="bold">Add &amp; Track Custom Issue</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer547" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.048..jpg" alt="Figure 10.48 – Creating a custom issue"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.48 – Creating a custom issue</p>
+			<ol>
+				<li value="6">A <a id="_idIndexMarker623"/>pop-up dialog <a id="_idIndexMarker624"/>box appears. Within the <strong class="bold">New Issue</strong> tab, we can create a new issue name of <strong class="bold">Information Leakage in Server Response</strong>. Change the severity to <strong class="bold">Medium</strong>. Notice how the extension copied our request and response for us in the bottom panels. You may continue to add more verbiage in the other text areas, such as the issue detail, background, and remediation areas. Click the <strong class="bold">Add &amp; Track Custom Issue</strong> button at the bottom when you <span class="No-Break">are done:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer548" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.049..jpg" alt="Figure 10.49 – Setting the name and severity"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.49 – Setting the name and severity</p>
+			<ol>
+				<li value="7">Once <a id="_idIndexMarker625"/>completed, switch <a id="_idIndexMarker626"/>back to <strong class="bold">Target</strong> | <strong class="bold">Site map</strong> and select the root directory for Mutillidae. You should see the newly created scan issue added to the <strong class="bold">Issues</strong> window, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer549" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.050..jpg" alt="Figure 10.50 – Seeing the custom issue you added"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.50 – Seeing the custom issue you added</p>
+			<ol>
+				<li value="8">The <strong class="bold">A<a id="_idTextAnchor623"/>dd &amp; Track Custom Issues</strong> extension provides a new tab allowing you to add issues to the internal database. This is a value-added feature, so it is not necessary to add your issues in this tab to use the tool. However, the option is available if you would like to build your own list of <span class="No-Break">custom issues:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer550" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.051..jpg" alt="Figure 10.51 – Database of issues"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.51 – Database of issues</p>
+			<h2 id="_idParaDest-248">How it<a id="_idTextAnchor624"/> works...</h2>
+			<p>In cases<a id="_idIndexMarker627"/> where <a id="_idIndexMarker628"/>an issue is not available within the Burp Suite core issue list, a tester can create their own issue using the <strong class="bold">Add &amp; Track Custom Issues</strong> extension. In this recipe, we created an issue for information leakage in <span class="No-Break">server responses.</span></p>
+			<h2 id="_idParaDest-249">See<a id="_idTextAnchor625"/> <a id="_idTextAnchor626"/>also</h2>
+			<p>For a listing of all <a id="_idIndexMarker629"/>issue definitions identified by Burp, go <span class="No-Break">to </span><a href="https://portswigger.net/kb/issues"><span class="No-Break">https://portswigger.net/kb/issues</span></a><span class="No-Break">.</span></p>
+			<h1 id="_idParaDest-250">Wo<a id="_idTextAnchor627"/>r<a id="_idTextAnchor628"/>king with the Active Scan++ extension</h1>
+			<p>Some extensions <a id="_idIndexMarker630"/>assist in finding vulnerabilities with specific payloads, such as XML, or help to find hidden issues, such as cache poisoning and DNS rebinding. In this recipe, we will add an active scanner extension called <strong class="bold">Active Scan++</strong>, which assists with identifying these more <span class="No-Break">specialized vulnerabilities.</span></p>
+			<p class="callout-heading">Note</p>
+			<p class="callout">This plugin requires the Burp Suite <span class="No-Break">Professional edition.</span></p>
+			<h2 id="_idParaDest-251">G<a id="_idTextAnchor629"/>e<a id="_idTextAnchor630"/>tting ready</h2>
+			<p>Using the OWASP Mutillidae II application, we will add the <strong class="bold">Active Scan++</strong> extension, and then run an active scan against <span class="No-Break">the target.</span></p>
+			<h2 id="_idParaDest-252">H<a id="_idTextAnchor631"/>o<a id="_idTextAnchor632"/>w to do it...</h2>
+			<ol>
+				<li>Switch<a id="_idIndexMarker631"/> to Burp Suite’s <strong class="bold">Extensions</strong> | <strong class="bold">BApp Store</strong> tab and select the <strong class="bold">Active Scan++</strong> extension. Click the <strong class="bold">Install</strong> button to install the extension, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer551" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.052..jpg" alt="Figure 10.52 – Active Scan++ extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.52 – Active Scan++ extension</p>
+			<ol>
+				<li value="2">Return to the Firefox browser and browse to the Mutillidae <span class="No-Break">home page.</span></li>
+				<li>Switch to Burp Suite’s <strong class="bold">Target</strong> tab and then the <strong class="bold">Site map</strong> subtab, right-click on the <strong class="source-inline">mutillidae</strong> folder, and select <strong class="bold">Actively scan this branch</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer552" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.053..jpg" alt="Figure 10.53 – Scanning the target"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.53 – Scanning the target</p>
+			<ol>
+				<li value="4">After <a id="_idIndexMarker632"/>the active scanner completes, browse to the <strong class="bold">Issues</strong> window. Make note of any additional issues found by the newly added extension. You can always tell which ones the extension found by looking for a <strong class="bold">This issue was generated by the Burp extension: Active Scan++</strong> message, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer553" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.054..jpg" alt="Figure 10.54 – Issue from the extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.54 – Issue from the extension</p>
+			<h2 id="_idParaDest-253">Ho<a id="_idTextAnchor633"/>w<a id="_idTextAnchor634"/> it works...</h2>
+			<p>Burp Suite <a id="_idIndexMarker633"/>functionality can be extended beyond core findings with the use of extensions. In this recipe, we installed a plugin that extends the active scanner functionality to assist with identifying additional issues such as arbitrary header injection, as seen in <span class="No-Break">this recipe.</span></p>
+			<h1 id="_idParaDest-254"><a id="_idTextAnchor635"/>Using Burp Suite extensions for bug bounties</h1>
+			<p>As bug <a id="_idIndexMarker634"/>bounty hunters, you will find handy tools to identify possible bugs more easily. There are many, but the two we will look at in this recipe are the <strong class="bold">Burp Bounty, Scan Check Builder</strong> and <span class="No-Break"><strong class="bold">Auth Analyzer</strong></span><span class="No-Break">.</span></p>
+			<p class="callout-heading">Note</p>
+			<p class="callout"><strong class="bold">Burp Bounty, Scan Check Builder</strong> requires the Burp Suite <span class="No-Break">Professional version.</span></p>
+			<h2 id="_idParaDest-255"><a id="_idTextAnchor636"/>Getting ready</h2>
+			<p>Both recommended<a id="_idIndexMarker635"/> extensions for bug bounty hunting can be found in the <strong class="bold">BApp Store</strong> subtab. We will download and install them within our Burp Suite instance. Then, we’ll see how to use each to potentially uncover bugs <span class="No-Break">for payouts!</span></p>
+			<h2 id="_idParaDest-256"><a id="_idTextAnchor637"/>How to do it...</h2>
+			<ol>
+				<li>Inside Burp Suite’s <strong class="bold">Extensions</strong> | <strong class="bold">BApp Store</strong> tab, select <strong class="bold">Burp Bounty, Scan Check Builder</strong> and click the <strong class="bold">Install</strong> button. Then, select <strong class="bold">Auth Analyzer</strong> and click the <span class="No-Break"><strong class="bold">Install</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer554" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.055..jpg" alt="Figure 10.55 – The two extensions covered in this recipe"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.55 – The two extensions covered in this recipe</p>
+			<ol>
+				<li value="2">Switch<a id="_idIndexMarker636"/> to the <strong class="bold">Extensions</strong> | <strong class="bold">Installed</strong> tab and ensure both extensions are installed and enabled in the <strong class="bold">Burp </strong><span class="No-Break"><strong class="bold">extensions</strong></span><span class="No-Break"> section:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer555" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.056..jpg" alt="Figure 10.56 – Extensions installed and enabled"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.56 – Extensions installed and enabled</p>
+			<ol>
+				<li value="3">Notice<a id="_idIndexMarker637"/> there is a new tool tab labeled <strong class="bold">Burp Bounty Free</strong>. Go to the tab and click the <strong class="bold">Profiles</strong> subtab. Notice there are several profiles available for the different types of scanners and for requests and responses. For now, we will use the <span class="No-Break">default settings:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer556" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.057..jpg" alt="Figure 10.57 – Burp Bounty Free tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.57 – Burp Bounty Free tab</p>
+			<ol>
+				<li value="4">Return<a id="_idIndexMarker638"/> to <strong class="bold">Target</strong> | <strong class="bold">Site map</strong>, right-click, and select <strong class="bold">Actively scan this branch</strong>. <strong class="bold">Burp Bounty</strong> will use both active and passive scans (unless you paused them) to find <span class="No-Break">potential bugs:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer557" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.058..jpg" alt="Figure 10.58 – Scanning the target"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.58 – Scanning the target</p>
+			<ol>
+				<li value="5">In the <strong class="bold">Issues</strong> panel, look for the <strong class="source-inline">BurpBounty</strong> keyword in front of each bug the extension found. This extension provides several areas for you to dig deeper for <span class="No-Break">potential weaknesses:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer558" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.059..jpg" alt="Figure 10.59 – Results of scan"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.59 – Results of scan</p>
+			<ol>
+				<li value="6">Let’s now<a id="_idIndexMarker639"/> turn our attention to the <strong class="bold">Auth Analyzer</strong> extension. <strong class="bold">Auth Analyzer</strong> assists in discovering unauthenticated API endpoints, as well as horizontal and vertical privilege escalation. Notice there is a new tool tab labeled <span class="No-Break"><strong class="bold">Auth Analyzer</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer559" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.060..jpg" alt="Figure 10.60 – Auth Analyzer tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.60 – Auth Analyzer tab</p>
+			<ol>
+				<li value="7">Return to<a id="_idIndexMarker640"/> the Mutillidae landing page and log in as <strong class="source-inline">admin</strong> with a password of <strong class="source-inline">admin</strong>. Find the <strong class="source-inline">POST</strong> request of your login, right-click, and then select <strong class="bold">Extensions</strong> | <strong class="bold">Auth Analyzer</strong> | <strong class="bold">Set Parameters Automatically</strong> | <strong class="bold">Create </strong><span class="No-Break"><strong class="bold">New Session</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer560" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.061..jpg" alt="Figure 10.61 – Sending an admin request to Auth Analyzer"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.61 – Sending an admin request to Auth Analyzer</p>
+			<ol>
+				<li value="8">Now, log<a id="_idIndexMarker641"/> out as <strong class="source-inline">admin</strong>. Log in to the application as <strong class="source-inline">ed</strong> with a password of <strong class="source-inline">pentest</strong>. Send the <strong class="source-inline">POST</strong> request of your second login to <strong class="bold">Auth Analyzer</strong> with a right-click, and then select <strong class="bold">Extensions</strong> | <strong class="bold">Auth Analyzer</strong> | <strong class="bold">Repeat </strong><span class="No-Break"><strong class="bold">Request (1)</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer561" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.062..jpg" alt="Figure 10.62 – Sending a regular user request to Auth Analyzer"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.62 – Sending a regular user request to Auth Analyzer</p>
+			<ol>
+				<li value="9">Switch to the <strong class="bold">Auth Analyzer</strong> tab and turn the analyzer on. You should see a green dot instead of a red dot and an <strong class="bold">Analyzer </strong><span class="No-Break"><strong class="bold">Running</strong></span><span class="No-Break"> label:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer562" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.063..jpg" alt="Figure 10.63 – Turning Auth Analyzer on"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.63 – Turning Auth Analyzer on</p>
+			<ol>
+				<li value="10">After<a id="_idIndexMarker642"/> turning <strong class="bold">Auth Analyzer</strong> on, notice <strong class="bold">DIFFERENCE</strong> is determined between the two logins. Click the <strong class="bold">Show Diff</strong> button to have the difference color-coded for you to <span class="No-Break">easily see:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer563" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.064..jpg" alt="Figure 10.64 – Seeing differences between requests"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.64 – Seeing differences between requests</p>
+			<ol>
+				<li value="11">You would use this extension to log in as a higher-privileged user first. Then, you’d map the application’s functionality. After you’ve completed the mapping, click the <strong class="bold">Logout</strong> button. Then, log in again, but this time, as a regular user, perform mapping and use <strong class="bold">Auth Analyzer</strong> to identify any areas across the application where the lower-privileged user can access <span class="No-Break">administrative functions.</span></li>
+				<li>In <a id="_idIndexMarker643"/>addition, <strong class="bold">Auth Analyzer</strong> can also be used to remove cookies and access tokens inside of requests. This would allow you to test for unauthenticated API endpoints much faster. After sending a request to test to <strong class="bold">Auth Analyzer</strong>, identify the cookie(s) you <span class="No-Break">want removed:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer564" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.065..jpg" alt="Figure 10.65 – Removing the cookie functionality"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.65 – Removing the cookie functionality</p>
+			<ol>
+				<li value="13">Then, send a request against a web page or API endpoint and let <strong class="bold">Auth Analyzer</strong> tell you if there are any differences seen when the cookie is removed. See the following example after the <strong class="source-inline">PHPSESSID</strong> cookie is removed. Notice there are no cookies in the second request. When using this feature, you can quickly determine if the functionality is properly using authorization checks or if a bug <span class="No-Break">is present:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer565" class="IMG---Figure">
+					<img src="image/B21173_Figure_10.066..jpg" alt="Figure 10.66 – Seeing the difference between two requests"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 10.66 – Seeing the difference between two requests</p>
+			<h2 id="_idParaDest-257"><a id="_idTextAnchor638"/>How it works...</h2>
+			<p>Finding bugs for bug<a id="_idIndexMarker644"/> bounty hunting can be time-consuming. The <strong class="bold">Burp Bounty, Scan Check Builder</strong> and <strong class="bold">Auth Analyzer</strong> extensions can both help to speed up discovery time for finding vulnerabilities in your <span class="No-Break">target applications.</span></p>
+		</div>
+	</body></html>

@@ -1,0 +1,316 @@
+<html><head></head><body>
+		<div id="_idContainer027">
+			<h1 id="_idParaDest-19" class="chapter-number"><a id="_idTextAnchor020"/>1</h1>
+			<h1 id="_idParaDest-20"><a id="_idTextAnchor021"/>Getting Started with Burp Suite</h1>
+			<p>This chapter provides the setup instructions necessary to proceed through the material in this book. Starting with downloading Burp, the details include the two main Burp editions available and their <span class="No-Break">distinguishing characteristics.</span></p>
+			<p>To use Burp Suite, a <a id="_idIndexMarker000"/>penetration tester requires a target application. This chapter includes instructions on downloading and installing OWASP applications contained within<a id="_idIndexMarker001"/> a <strong class="bold">Virtual Machine</strong> (<strong class="bold">VM</strong>). Such applications will be used throughout this book as targeted vulnerable <span class="No-Break">web applications.</span></p>
+			<p>This chapter includes instructions to configure the Burp Suite Proxy listener. This listener is required to capture all HTTP traffic flowing between your local browser and the target website. Default settings for the listener include<a id="_idIndexMarker002"/> an <strong class="bold">Internet Protocol</strong> (<strong class="bold">IP</strong>) address, <strong class="source-inline">127.0.0.1</strong>, and a port <span class="No-Break">number, </span><span class="No-Break"><strong class="source-inline">8080</strong></span><span class="No-Break">.</span></p>
+			<p>Finally, this chapter will conclude with the options for starting Burp Suite. This includes how to start Burp Suite at the command line, with an optional headless mode, and using <span class="No-Break">the executabl<a id="_idTextAnchor022"/>e.</span></p>
+			<p>In this chapter, we will cover the <span class="No-Break">following recipes:</span></p>
+			<ul>
+				<li>Downloading Burp Suite (Community and <span class="No-Break">Professional editions)</span></li>
+				<li>Setting up a web app <span class="No-Break">pentesting lab</span></li>
+				<li>Creating a PortSwigger account to access Web <span class="No-Break">Security Academy</span></li>
+				<li>Starting Burp Suite at a command line or as <span class="No-Break">an executable</span></li>
+				<li>Listening for HTTP traffic <span class="No-Break">using B<a id="_idTextAnchor023"/>u<a id="_idTextAnchor024"/>rp</span></li>
+			</ul>
+			<h1 id="_idParaDest-21"><a id="_idTextAnchor025"/>Downloading Burp Suite (Community and Professional editions)</h1>
+			<p>The first step in learning the techniques contained within this book is to download the Burp <a id="_idIndexMarker003"/>Suite application. The download page is available here: <a href="https://portswigger.net/burp/">https://portswigger.net/burp/</a>. You <a id="_idIndexMarker004"/>will need to decide which edition of Burp Suite you <a id="_idIndexMarker005"/>would like to download from <span class="No-Break">the following:</span></p>
+			<ul>
+				<li><span class="No-Break">Professional</span></li>
+				<li><span class="No-Break">Community</span></li>
+				<li>Enterprise (not covered): This product is designed for large companies to run Burp Scanner across thousands <span class="No-Break">of targets</span></li>
+				<li>Dastardly (not covered): This edition only provides Burp Scanner capabilities and is specifically designed to integrate with Jenkins and other CI tools as jobs within a <span class="No-Break">DevOps pipeline</span></li>
+			</ul>
+			<p>What is<a id="_idIndexMarker006"/> now termed <strong class="bold">Community</strong> was once labeled <strong class="bold">Free Edition</strong>. You may see both referenced on the internet, but they are the same. At the time of writing, the Professional edition <span class="No-Break">costs $449.</span></p>
+			<p>To help you make your decision, let’s compare the two. The Community version offers many of the functions used in this book, but not all. For example, the Community version does not include any scanning functionality. In addition, the Community version contains some forced throttling of threads when using the Burp Suite Intruder functionality. There are no built-in payloads in the Community version, though you can load custom ones. And, finally, several Burp Suite extensions that require the Professional edition will, obviously, not work in the <span class="No-Break">Community edition.</span></p>
+			<p>The <a id="_idIndexMarker007"/>Professional version has <a id="_idIndexMarker008"/>all the functionality enabled, including passive and active scanners. There is no forced throttling. <strong class="bold">PortSwigger</strong> (that is, the name of the company that writes and maintains Burp Suite) provides several built-in payloads for fuzzing and brute-forcing. Burp Suite extensions that use scanner-related API calls work in the Professional version <span class="No-Break">as well.</span></p>
+			<p>In this book, we will be using the Professional version, which provides access to an extensive array of functionality compared to the Community edition. However, when a feature is used in this book that’s specific to the Professional edition, a special icon will <span class="No-Break">indicate this:</span></p>
+			<div>
+				<div id="_idContainer005" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.1.jpg" alt="Figure 1.1 – Burp Suite Profession﻿a﻿l icon"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.1 – Burp Suite Profession<a id="_idTextAnchor026"/>a<a id="_idTextAnchor027"/>l icon</p>
+			<h2 id="_idParaDest-22"><a id="_idTextAnchor028"/>Getting ready</h2>
+			<p>To begin our <a id="_idIndexMarker009"/>adventure together, go to <a href="https://portswigger.net/burp">https://portswigger.net/burp</a> and download the edition of Burp Suite you wish to use. The page provides a slider, as shown here, which highlights the features of Professional and Community, allowing you to <span class="No-Break">compare them:</span></p>
+			<div>
+				<div id="_idContainer006" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.2.jpg" alt="Figure 1.2 – Burp Suite Professional versus Community features"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.2 – Burp Suite Professional versus Community features</p>
+			<p>You may wish to choose the Community edition to gain familiarity with the product before purchasing the <span class="No-Break">Professional version.</span></p>
+			<p>Should you choose to purchase or use the trial version of the Professional edition, you will need to complete forms or payments and subsequent email confirmations will be sent to you. Once your account is created, you may log in and perform the download from the links provided in <span class="No-Break">our <a id="_idTextAnchor029"/>a<a id="_idTextAnchor030"/>ccount.</span></p>
+			<h3>Software tool requirements</h3>
+			<p>To<a id="_idIndexMarker010"/> complete this recipe, you will need <span class="No-Break">the fo<a id="_idTextAnchor031"/>llowing:</span></p>
+			<ul>
+				<li>Oracle <span class="No-Break">Java (</span><a href="https://www.oracle.com/java/technologies/downloads/"><span class="No-Break">https://www.oracle.com/java/technologies/downloads/</span></a><span class="No-Break">)</span></li>
+				<li>Burp Proxy Community or <span class="No-Break">Professional (</span><a href="https://portswigger.net/burp/"><span class="No-Break">https://portswigger.net/burp/</span></a><span class="No-Break">)</span></li>
+				<li> Mozilla Firefox <span class="No-Break">browser (</span><a href="https://www.mozilla.org/en-US/firefox/new/"><span class="No-Break">https://www.mozilla.org/en-US/firefo<span id="_idTextAnchor032"/>x/new/</span></a><span class="No-Break">)</span></li>
+			</ul>
+			<h2 id="_idParaDest-23"><a id="_idTextAnchor033"/>How to do it...</h2>
+			<p>After<a id="_idIndexMarker011"/> deciding on the edition you need, you have two installation options, including an executable or a plain JAR file. The executable is only available in Windows and is offered in both 32-bit and 64-bit versions. The plain JAR file is available for Windows, macOS, and Linux. You can find all the available download options <span class="No-Break">here: </span><a href="https://portswigger.net/burp/releases/professional-community-2023-4-5?requestededition=community&amp;requestedplatform="><span class="No-Break">https://portswigger.net/burp/releases/professional-community-2023-4-5?requestededition=community&amp;requestedplatform=</span></a><span class="No-Break">.</span></p>
+			<p>The Windows executable is self-contained and will create icons in your program listing. However, the plain JAR file requires your platform to have Java (<a href="https://www.oracle.com/java/technologies/downloads/">https://www.oracle.com/java/technologies/downloads/</a>) pre-installed. You may choose the current version of Java (JRE or JDK), so feel free to choose the <span class="No-Break">latest version:</span></p>
+			<div>
+				<div id="_idContainer007" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.3.jpg" alt="Figure 1.3 – PortSwigger’s Downl﻿o﻿ads page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.3 – PortSwigger’s Downl<a id="_idTextAnchor034"/>o<a id="_idTextAnchor035"/>ads page</p>
+			<h1 id="_idParaDest-24"><a id="_idTextAnchor036"/>Setting up a web app pentesting lab</h1>
+			<p>The <strong class="bold">Broken Web Application</strong> (<strong class="bold">BWA</strong>) is<a id="_idIndexMarker012"/> an OWASP project that provides a self-contained VM complete with a variety of applications with known vulnerabilities. The applications within this VM enable students to learn about web application security, practice and observe web attacks, and make use of penetration tools such as <a id="_idIndexMarker013"/><span class="No-Break">Burp Suite.</span></p>
+			<p>To follow the recipes shown in this book, we will utilize OWASP’s BWA VM. At the time of writing this book, the OWASP BWA VM<a id="_idIndexMarker014"/> can be downloaded <span class="No-Break">from </span><a href="https://sourceforge.net/projects/owaspbwa/files/"><span class="No-Break">https://sourceforge.net/projects/owasp<span id="_idTextAnchor037"/>b<span id="_idTextAnchor038"/>wa/files/</span></a><span class="No-Break">.</span></p>
+			<h2 id="_idParaDest-25"><a id="_idTextAnchor039"/>Getting ready</h2>
+			<p>We will <a id="_idIndexMarker015"/>download the OWASP BWA VM along with supportive tools to create our web app <span class="No-Break">pe<a id="_idTextAnchor040"/>n<a id="_idTextAnchor041"/>testing lab.</span></p>
+			<h3>Software tool requirements</h3>
+			<p>To complete <a id="_idIndexMarker016"/>this recipe, you will need <span class="No-Break">the following:</span></p>
+			<ul>
+				<li>Oracle VirtualBox (<a href="https://www.virtualbox.org/wiki/Downloads">https://www.virtualbox.org/wiki/Downloads</a>): Choose an executable specific to <span class="No-Break">your platform</span></li>
+				<li>Mozilla Firefox <span class="No-Break">browser (</span><a href="https://www.mozilla.org/en-US/firefox/new/"><span class="No-Break">https://www.mozilla.org/en-US/firefox/new/</span></a><span class="No-Break">)</span></li>
+				<li>7-Zip file <span class="No-Break">archiver (</span><a href="https://www.7-zip.org/download.html"><span class="No-Break">https://www.7-zip.org/download.html</span></a><span class="No-Break">)</span></li>
+				<li>OWASP BWA <span class="No-Break">VM (</span><a href="https://sourceforge.net/projects/owaspbwa/files/"><span class="No-Break">https://sourceforge.net/projects/owaspbwa/files/</span></a><span class="No-Break">)</span></li>
+				<li>Burp Proxy Community or <span class="No-Break">Professional (</span><a href="https://portswigger.net/burp/"><span class="No-Break">https://portswigger.net/burp/</span></a><span class="No-Break">)</span></li>
+				<li>Oracle <span class="No-Break">Java (</span><a href="https://www.oracle.com/java/technologies/downloads/"><span class="No-Break">https://www.oracle.com/java/technologi<span id="_idTextAnchor042"/>e<span id="_idTextAnchor043"/>s/downloads/</span></a><span class="No-Break">)</span></li>
+			</ul>
+			<h2 id="_idParaDest-26"><a id="_idTextAnchor044"/>How to do it...</h2>
+			<p>For this recipe, you will need to download the OWASP BWA VM and install it by performing the <span class="No-Break">following steps:</span></p>
+			<ol>
+				<li>Click <strong class="bold">Download Latest Version</strong> after clicking the OWASP BWA VM link provided earlier and unzip the <span class="No-Break"><strong class="source-inline">OWASP_Broken_Web_Apps_VM_1.2.7z</strong></span><span class="No-Break"> file.</span></li>
+				<li>You will be presented with a listing of several files, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer008" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.4.jpg" alt="Figure 1.4 – File listing after unzipping OWASP_Broken_Web_Apps_VM_1.2.7z"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.4 – File listing after unzipping OWASP_Broken_Web_Apps_VM_1.2.7z</p>
+			<ol>
+				<li value="3">All file <a id="_idIndexMarker017"/>extensions shown indicate that the VM can be imported into Oracle VirtualBox or VMware Player/Workstation. To set up the web application pentesting lab for this book, we will use <span class="No-Break">Oracle VirtualBox.</span></li>
+				<li>Make a note of the <strong class="source-inline">OWASP Broken Web Apps-cl1.vmdk</strong> file. Open VirtualBox Manager (that is, the Oracle VM <span class="No-Break">VirtualBox program).</span></li>
+				<li>Within the VirtualBox Manager screen, select <strong class="bold">Machine</strong> | <strong class="bold">New</strong> from the top menu and type a name for the machine – for example, <span class="No-Break"><strong class="source-inline">OWASP BWA</strong></span><span class="No-Break">.</span></li>
+				<li>Set <strong class="bold">Type</strong> to <strong class="bold">Linux</strong> and <strong class="bold">Version</strong> to <strong class="bold">Ubuntu (64-bit)</strong>, and then click <strong class="bold">Next</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer009" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.5.jpg" alt="Figure 1.5 – Create Virtual Machine"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.5 – Create Virtual Machine</p>
+			<ol>
+				<li value="7">The next<a id="_idIndexMarker018"/> screen allows you to adjust the RAM or leave it as-is. <span class="No-Break">Click </span><span class="No-Break"><strong class="bold">Next</strong></span><span class="No-Break">.</span></li>
+				<li>On the next screen, choose <strong class="bold">Use an existing virtual hard </strong><span class="No-Break"><strong class="bold">disk file</strong></span><span class="No-Break">.</span></li>
+				<li>Use the folder icon on the right to select the <strong class="source-inline">OWASP Broken Web Apps-cl1.vmdk</strong> file from the extracted list and click <strong class="bold">Create</strong>, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer010" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.6.jpg" alt="Figure 1.6 – Hard disk allocation"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.6 – Hard disk allocation</p>
+			<ol>
+				<li value="10">Your VM <a id="_idIndexMarker019"/>will have been loaded into VirtualBox Manager. Let’s make some minor adjustments. Highlight the <strong class="bold">OWASP BWA</strong> entry and select <strong class="bold">Settings</strong> from the <span class="No-Break">top menu.</span></li>
+				<li>Select the <strong class="bold">Network</strong> section in the left-hand pane and change <strong class="bold">Attached to:</strong> to <strong class="bold">Host-only Adapter</strong>. <span class="No-Break">Click </span><span class="No-Break"><strong class="bold">OK</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer011" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.7.jpg" alt="Figure 1.7 – Network adapter settings"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.7 – Network adapter settings</p>
+			<ol>
+				<li value="12">Now, let’s start the VM. Right-click and then choose <strong class="bold">Start</strong> | <span class="No-Break"><strong class="bold">Normal Start</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer012" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.8.jpg" alt="Figure 1.8 – Starting the VM"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.8 – Starting the VM</p>
+			<ol>
+				<li value="13">Wait<a id="_idIndexMarker020"/> until the Linux system is fully booted, which may take a few minutes. After the booting process is complete, you should see the following screen. Note that the IP address shown will be different for <span class="No-Break">your machine:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer013" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.9.jpg" alt="Figure 1.9 – Your assigned IP address for the VM"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.9 – Your assigned IP address for the VM</p>
+			<ol>
+				<li value="14">The information presented on this screen identifies the URL where you can access vulnerable web applications running on the VM. For example, in the previous screenshot, the URL is <strong class="source-inline">http://192.168.56.101/</strong>. You will be given a prompt to administer the VM, but it is not necessary to log in at <span class="No-Break">this time.</span></li>
+				<li>Open the <a id="_idIndexMarker021"/>Firefox browser on your host system, not in the VM. Using the Firefox browser on your host machine, enter the URL provided (for example, <strong class="source-inline">http://192.168.56.101/</strong>), where the IP address is specific to <span class="No-Break">your machine.</span></li>
+				<li>In your browser, you will be presented with an index page containing links to vulnerable web applications. These applications will be used as targets throughout <span class="No-Break">t<a id="_idTextAnchor045"/>his book:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer014" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.10.jpg" alt="Figure 1.10 – Splash pag﻿e of the VM"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.10 – Splash pag<a id="_idTextAnchor046"/>e of the VM</p>
+			<h2 id="_idParaDest-27"><a id="_idTextAnchor047"/>How it works…</h2>
+			<p>Leveraging <a id="_idIndexMarker022"/>a customized VM created by OWASP, we can quickly set up a web app pentesting lab containing purposefully vulnerable applications that we can use as legal targets for our exercises througho<a id="_idTextAnchor048"/>ut <span class="No-Break">this book.</span></p>
+			<h1 id="_idParaDest-28"><a id="_idTextAnchor049"/>Creating a PortSwigger account to access Web Security Academy</h1>
+			<p>In this edition, we’ve added more web security-related labs to enrich your experience with Burp Suite. To follow along and complete these labs, you must register an account <span class="No-Break">with PortSwigger.</span></p>
+			<p>PortSwigger<a id="_idIndexMarker023"/> provides free, online web security training through Web Security <a id="_idIndexMarker024"/>Academy (<a href="https://portswigger.net/web-security">https://portswigger.net/web-security</a>). Academy consists of learning materials, hands-on labs, and practice exams. We will use some of these labs to demonstrate hacking techniques within <span class="No-Break">this book.</span></p>
+			<h2 id="_idParaDest-29"><a id="_idTextAnchor050"/>Getting ready</h2>
+			<p>Browse to the <a id="_idIndexMarker025"/>PortSwigger site (<a href="https://portswigger.net/">https://portswigger.net/</a>) and look for the <strong class="bold">LOGIN</strong> button. Click the <strong class="bold">LOGIN</strong> button to navigate to the login page, which has a <span class="No-Break">registration button:</span></p>
+			<div>
+				<div id="_idContainer015" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.11.jpg" alt="Figure 1.11 – PortSwigger LOGIN button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.11 – PortSwigger LOGIN button</p>
+			<h2 id="_idParaDest-30"><a id="_idTextAnchor051"/>How to do it…</h2>
+			<p>Follow <span class="No-Break">these steps:</span></p>
+			<ol>
+				<li>Go to <a href="https://portswigger.net/users">https://portswigger.net/users</a> and select the <strong class="bold">Create account</strong> button at the bottom, next to the <strong class="bold">Log </strong><span class="No-Break"><strong class="bold">In</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer016" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.12.jpg" alt="Figure 1.12 – The Create account button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.12 – The Create account button</p>
+			<ol>
+				<li value="2">You must provide a valid email address to receive your password for logging into <span class="No-Break">the site:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer017" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.13.jpg" alt="Figure 1.13 – PortSwigger account creation page"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.13 – PortSwigger account creation page</p>
+			<p>You should <a id="_idIndexMarker026"/>receive the password for the account within a short am<a id="_idTextAnchor052"/>ount <span class="No-Break">of time.</span></p>
+			<h1 id="_idParaDest-31"><a id="_idTextAnchor053"/>Starting Burp Suite at a command line or as an executable</h1>
+			<p>For <a id="_idIndexMarker027"/>non-Windows users or those Windows users who chose the plain JAR file option, you will start Burp at a command line each time you wish to run it. As such, you will require a particular Java command to <span class="No-Break">do so.</span></p>
+			<p>In some circumstances, such as automated scripting, you may wish to invoke Burp at the command line as a<a id="_idIndexMarker028"/> line item in your shell script. Additionally, you may wish to run Burp without a <strong class="bold">Graphical User Interface</strong> (<strong class="bold">GUI</strong>), referred to <a id="_idIndexMarker029"/>as <strong class="bold">headless mode</strong>. This recipe describes how to per<a id="_idTextAnchor054"/>f<a id="_idTextAnchor055"/>orm <span class="No-Break">these tasks.</span></p>
+			<h2 id="_idParaDest-32"><a id="_idTextAnchor056"/>How to do it...</h2>
+			<p>We will review the commands and actions required to start the Burp <span class="No-Break">Suite product:</span></p>
+			<ul>
+				<li>After<a id="_idIndexMarker030"/> running the installer from the downloaded <strong class="source-inline">.exe</strong> file, start Burp in Windows by double-clicking the icon on your desktop or selecting it from the <span class="No-Break">programs listing:</span></li>
+			</ul>
+			<div>
+				<div id="_idContainer018" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.14.jpg" alt="Figure 1.14 – Burp Suite menu items after installation"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.14 – Burp Suite menu items after installation</p>
+			<ul>
+				<li>When using the plain JAR file, the <strong class="source-inline">java</strong> executable is followed by the option of <strong class="source-inline">-</strong><strong class="source-inline">jar</strong>, followed by the name of the download <span class="No-Break">JAR file.</span></li>
+			</ul>
+			<p>Start Burp at the command line (minimal) with the plain JAR file (Java must be <span class="No-Break">installed first):</span></p>
+			<pre class="source-code">
+<strong class="bold">C:\Burp Jar Files&gt;java -jar burpsuite_pro_v2023.4.3.jar</strong></pre>			<p>If you wish to have more control over the heap size settings (that is, the amount of memory allocated for the program), you may modify the <span class="No-Break"><strong class="source-inline">java</strong></span><span class="No-Break"> command.</span></p>
+			<p>The <strong class="source-inline">java</strong> executable is followed by <strong class="source-inline">-</strong><strong class="source-inline">jar</strong>, followed by the memory allocation. In this case, 2 GB (that is, <strong class="source-inline">2g</strong>) is allocated <a id="_idIndexMarker031"/>for <strong class="bold">read access memory</strong> (<strong class="bold">RAM</strong>), followed by the name of the JAR file. If you receive an error to the effect that you cannot allocate that much memory, just drop the amount down to something like 1,024 MB (that is, <span class="No-Break"><strong class="source-inline">1024m</strong></span><span class="No-Break">) instead.</span></p>
+			<p>Start Burp at the command line (optimize) with the plain JAR file (Java must be <span class="No-Break">installed first):</span></p>
+			<pre class="source-code">
+<strong class="bold">C:\Burp Jar Files&gt;java -jar -Xmx2g burpsuite_pro_v2023.4.3.jar</strong></pre>			<ul>
+				<li>It is possible to start Burp Suite from the command line and run it in headless mode. Headless mode means running Burp without <span class="No-Break">the GUI.</span></li>
+			</ul>
+			<p class="callout-heading">Note</p>
+			<p class="callout">For this book, we will not be running Burp in headless mode since we are learning through the GUI. However, you may require this information in the future, which is why it is <span class="No-Break">presented here.</span></p>
+			<p>Start <a id="_idIndexMarker032"/>Burp Suite from the command line so that it can be run in headless mode with the plain JAR file (Java must be <span class="No-Break">installed first):</span></p>
+			<pre class="source-code">
+<strong class="bold">C:\Burp Jar Files&gt;java -jar -Djava.awt.headless=true burpsuite_</strong>
+<strong class="bold">pro_v2023.4.3.jar</strong></pre>			<p>Note the placement of the <strong class="source-inline">-Djava.awt.headless=true</strong> parameter immediately following the <strong class="source-inline">-jar</strong> option and before the name of the <span class="No-Break">JAR file.</span></p>
+			<p>If successful, you should see <span class="No-Break">the following:</span></p>
+			<pre class="source-code">
+<strong class="bold">proxy: Proxy service started on 127.0.0.1:8080</strong></pre>			<p>Press <em class="italic">Ctrl</em> + <em class="italic">C</em> or <em class="italic">Ctrl</em> + <em class="italic">Z</em> to stop <span class="No-Break">the process.</span></p>
+			<p>It is possible to provide a configuration file to the headless mode command so that you can customize the port number and IP address where the proxy listener <span class="No-Break">is located.</span></p>
+			<p class="callout-heading">Note</p>
+			<p class="callout">Please consult PortSwigger’s support pages <a id="_idIndexMarker033"/>for more information on this <span class="No-Break">topic: </span><a href="https://support.portswigger.net/customer/portal/questions/16805563-burp-command-line"><span class="No-Break">https://support.portswigger.net/customer/portal/questions/16805563-burp-command-line</span></a><span class="No-Break">.</span></p>
+			<p>In each startup scenario described, you should be presented with a <span class="No-Break"><strong class="bold">splash screen</strong></span><span class="No-Break">:</span></p>
+			<ol>
+				<li>The splash screen label will match whichever edition you decided to download, either Professional <span class="No-Break">or Community:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer019" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.15.jpg" alt="Figure 1.15 – Burp Suite splash screen"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.15 – Burp Suite splash screen</p>
+			<ol>
+				<li value="2">You may <a id="_idIndexMarker034"/>be prompted to update the version; feel free to do this, if you like. New features are constantly added to Burp to help you find vulnerabilities, so upgrading the application is a good idea. Choose <strong class="bold">Update Now</strong>, <span class="No-Break">if applicable.</span></li>
+				<li>Next, you will be presented with a dialog box asking about project files <span class="No-Break">and configurations:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer020" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.16.jpg" alt="Figure 1.16 – Project options upon startup"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.16 – Project options upon startup</p>
+			<ol>
+				<li value="4">If you are using the Community edition, you will only be able to create a temporary project. If you are using the Professional edition, create a new project on disk, saving it in an appropriate location so that you can find it. <span class="No-Break">Click </span><span class="No-Break"><strong class="bold">Next</strong></span><span class="No-Break">.</span></li>
+				<li>The subsequent splash screen will ask you about the configurations you would like to use. At this point, we don’t have any yet, so choose <strong class="bold">Use Burp defaults</strong>. As you <a id="_idIndexMarker035"/>progress through this book, you may wish to save configuration settings and load them from this splash screen in the future, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer021" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.17.jpg" alt="Figure 1.17 – Configuration options upon startup"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.17 – Configuration options upon startup</p>
+			<ol>
+				<li value="6">Finally, we are ready to<a id="_idTextAnchor057"/> <a id="_idTextAnchor058"/>click <span class="No-Break"><strong class="bold">Start Burp</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<h2 id="_idParaDest-33"><a id="_idTextAnchor059"/>How it works...</h2>
+			<p>Using<a id="_idIndexMarker036"/> either the plain JAR file or the Windows executable, you can launch Burp to start the proxy listener to capture HTTP traffic. Burp offers temporary or permanent project files so that you can save activities per<a id="_idTextAnchor060"/>f<a id="_idTextAnchor061"/>ormed in <span class="No-Break">the suite.</span></p>
+			<h1 id="_idParaDest-34"><a id="_idTextAnchor062"/>Listening for HTTP traffic using Burp</h1>
+			<p>Burp<a id="_idIndexMarker037"/> is described as an intercepting proxy. This means Burp sits between the user’s web browser and the application’s web server and intercepts or captures all the traffic flowing between them. This type of <a id="_idIndexMarker038"/>behavior is commonly referred to as a <span class="No-Break"><strong class="bold">proxy service</strong></span><span class="No-Break">.</span></p>
+			<p>Penetration testers use intercepting proxies to capture traffic flowing between a web browser and a web application for analysis and manipulation. For example, a tester can pause any HTTP request, thus allowing parameter tampering before the request is sent to the <span class="No-Break">web server.</span></p>
+			<p>Intercepting proxies, such as Burp, allow testers to intercept both HTTP requests and HTTP responses. This allows a tester to observe the behavior of the web application under different conditions. And, as we shall see, sometimes the behaviors are unintended, deviating from what the original <span class="No-Break">developer expected.</span></p>
+			<p>To see Burp Suite in action, you need to configure your Firefox browser’s <strong class="bold">Network Settings</strong> so that they point to your running instance of Burp. This enables Burp to capture all HTTP traffic that is flowing between your browser and the t<a id="_idTextAnchor063"/>a<a id="_idTextAnchor064"/>rget <span class="No-Break">web application.</span></p>
+			<h2 id="_idParaDest-35"><a id="_idTextAnchor065"/>Getting ready</h2>
+			<p>We will configure the Firefox browser to allow Burp to listen to all HTTP traffic flowing between the browser and the OWASP BWA VM. This will allow the proxy service within Burp to capture traffic for <span class="No-Break">testing purposes.</span></p>
+			<p>Instructions for this are available on PortSwigger at <a href="https://support.portswigger.net/customer/portal/articles/1783066-configuring-firefox-to-work-with-burp">https://support.portswigger.net/customer/portal/articles/1783066-configuring-firefox-to-work-with-burp</a>. We will step through this p<a id="_idTextAnchor066"/>r<a id="_idTextAnchor067"/>ocess in <span class="No-Break">this recipe.</span></p>
+			<h2 id="_idParaDest-36"><a id="_idTextAnchor068"/>How to do it...</h2>
+			<p>Follow these <a id="_idIndexMarker039"/>steps to start listening to all HTTP traffic <span class="No-Break">using Burp:</span></p>
+			<ol>
+				<li>Open the Firefox browser and go <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Options</strong></span><span class="No-Break">.</span></li>
+				<li>In the <strong class="bold">General</strong> tab, scroll down to the <strong class="bold">Network Proxy</strong> section and then <span class="No-Break">click </span><span class="No-Break"><strong class="bold">Settings</strong></span><span class="No-Break">.</span></li>
+				<li>In the <strong class="bold">Connection Settings</strong> window, select <strong class="bold">Manual proxy configuration</strong> and type in an IP address of <strong class="source-inline">127.0.0.1</strong> with the port set to <strong class="source-inline">8080</strong>. Select the <strong class="bold">Use this proxy server for all </strong><span class="No-Break"><strong class="bold">protocols</strong></span><span class="No-Break"> checkbox.</span></li>
+			</ol>
+			<p>Make sure the <strong class="bold">No proxy for</strong> text box is blank, as shown in the following screenshot, and then <span class="No-Break">click </span><span class="No-Break"><strong class="bold">OK</strong></span><span class="No-Break">:</span></p>
+			<div>
+				<div id="_idContainer022" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.18.jpg" alt="Figure 1.18 – Manually configuring the Firefox browser to send HTTP traffic to Burp"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.18 – Manually configuring the Firefox browser to send HTTP traffic to Burp</p>
+			<ol>
+				<li value="4">With the <a id="_idIndexMarker040"/>OWASP BWA VM running in the background and using Firefox to browse to the URL specific to your machine (that is, the IP address shown on the Linux VM in VirtualBox), click the reload button (the arrow in a circle) to see the traffic captured <span class="No-Break">in Burp.</span></li>
+				<li>If you don’t happen to see any traffic, check whether <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> is holding up the request. If the button labeled <strong class="bold">Intercept is on</strong> is depressed, as shown in the following screenshot, then click the button again to disable the interception. After doing so, the traffic should flow freely into Burp, <span class="No-Break">as follows:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer023" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.19.jpg" alt="Figure 1.19 – By default, Intercept is on"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.19 – By default, Intercept is on</p>
+			<p>In the following screenshot, the <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> button <span class="No-Break">is disabled:</span></p>
+			<div>
+				<div id="_idContainer024" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.20.jpg" alt="Figure 1.20 – Turning Intercept off to see traffic"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.20 – Turning Intercept off to see traffic</p>
+			<ol>
+				<li value="6">If everything <a id="_idIndexMarker041"/>is working properly, you will see traffic in your <strong class="bold">Target</strong> | <strong class="bold">Site map</strong> tab, similar to what is shown in the following screenshot. Your IP address will be different, of course, and you may have more items shown within your <strong class="bold">Site map</strong> area. Congratulations! You now have Burp listening to all of you<a id="_idTextAnchor069"/>r <span class="No-Break">browser traffic!</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer025" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.21.jpg" alt="Figure 1.21 – Confirmation of HTTP traff﻿ic flowing into Burp"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.21 – Confirmation of HTTP traff<a id="_idTextAnchor070"/>ic flowing into Burp</p>
+			<h2 id="_idParaDest-37"><a id="_idTextAnchor071"/>How it works...</h2>
+			<p>The Burp Proxy <a id="_idIndexMarker042"/>service is listening on <strong class="source-inline">127.0.0.1</strong> at port <strong class="source-inline">8080</strong>. Either of these settings can be changed so that you can listen on an alternative IP address or port number. However, for learning purposes, we will use the <span class="No-Break">default settings.</span></p>
+			<h2 id="_idParaDest-38"><a id="_idTextAnchor072"/>There’s more…</h2>
+			<p>As a simpler alternative, you can use the browser built into Burp. To access this, go to <strong class="bold">Proxy</strong> from the top menu, choose the <strong class="bold">Intercept</strong> sub-menu, and then click the <strong class="bold">Open </strong><span class="No-Break"><strong class="bold">browser</strong></span><span class="No-Break"> button:</span></p>
+			<div>
+				<div id="_idContainer026" class="IMG---Figure">
+					<img src="image/B21173_Figure_1.22.jpg" alt="Figure 1.22 – Using Burp’s built-in browser instead of using an external browser (for example, Firefox)"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 1.22 – Using Burp’s built-in browser instead of using an external browser (for example, Firefox)</p>
+		</div>
+	</body></html>

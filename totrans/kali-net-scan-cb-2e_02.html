@@ -1,0 +1,694 @@
+<html><head></head><body>
+        <section id="28FAO1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Reconnaissance</h1>
+            
+
+            <article>
+                
+<p class="p1">This chapter will include the following recipes:</p>
+<ul class="calibre18">
+<li class="calibre19">Using Google to find subdomains</li>
+<li class="calibre19">Finding e-mail addresses using theHarvester</li>
+<li class="calibre19">Enumerating DNS using the <kbd class="calibre16">host</kbd> command</li>
+<li class="calibre19">Enumerating DNS using <span>DNSRecon</span></li>
+<li class="calibre19">Enumerating DNS using the <kbd class="calibre16">dnsenum</kbd> command</li>
+</ul>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="29DRA1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Introduction</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In this chapter, we will begin the process of gathering information on our target.<span> </span>This begins with utilizing passive information-gathering techniques using public sources and moves into the active scanning of our target.<span> </span>At this point, it makes sense for us to discuss what our strategy is.<span> </span>Once the targets are determined, we will want to start collecting information on them.<span> </span>One of the key pieces of information is their domain. The<span> <strong class="calibre1">Domain Name System</strong></span> (<strong class="calibre1">DNS</strong>) is a system of databases used to look up IP address(es) for a domain or, given an IP address, provide the domain name associated with it.<span> </span>Identifying the domains and subdomains associated with the target will provide us with a better idea of the targets assets and organization.<span> </span>We start by using Google and other public sources to reveal what we can. This is called <strong class="calibre1">reconnaissance</strong> or <strong class="calibre1">passive information gathering</strong>.</p>
+<p class="calibre5">When we have completed finding what we can using public sources, we move into the active information-gathering phase.<span> </span>The delineation here is that moving forward, we will be physically interacting with the target's assets. We begin by actively querying the target<span>'</span>s DNS servers to uncover more information.<span> </span>Using this information, we can begin to narrow in on our target.<span> </span>The goal of this exercise is to uncover networks of the target suitable for further investigation.</p>
+<p class="calibre5">Next, in <a href="part0103.html#3279U1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 3</a>, <em class="calibre15">Discovery</em>, we perform discovery scanning to identify live hosts on the network(s). In the context of penetration testing, this is usually performed to identify potential targets for attack. The objective here is not to exhaust resources in gathering information about targets, but instead to merely find out where the targets are logically located. The final product of our discovery should be a list of IP addresses that we can then use for further analysis.</p>
+<p class="calibre5">After identifying IP addresses, we will then identify the open ports on these machines; this is covered in <a href="part0146.html#4B7I41-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 4</a>, <em class="calibre15">Port Scanning</em>.<span> </span> After identifying the open ports, we then want to identify the services and as many details about the service version, OS, and other details as we can; this is covered in <a href="part0189.html#5K7QA1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 5</a>, <em class="calibre15">Fingerprinting</em>.<span> </span> Using the information found here, we will look to uncover specific vulnerabilities on the target's assets; this is covered in <a href="part0255.html#7J5VE1-cf89710d791c4a3bb78ec273d9322426" target="_blank" class="calibre6">Chapter 6</a>, <em class="calibre15">Vulnerability Scanning</em>. The following diagram summarizes the aforementioned methodology:</p>
+<div class="p"><img class="image-border65" src="../images/00607.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2ACBS1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Using Google to find subdomains</h1>
+            
+
+            <article>
+                
+<p class="calibre5">A great deal of information can be gathered from publicly available sources.<span> </span>As penetration testers, we should take advantage of any methods to gather valuable information about our targets anonymously.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2BASE1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">All that is needed to perform this exercise is Internet access and a web browser.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2C9D01-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In this example, we will use the Google search engine; however, know that there are a number of search engines that can provide similar information and, in some cases, more or different data.<span> </span>The Google search engine provides a number of search operators that allow you to narrow your results when performing queries. A few that can come in particularly handy for the penetration tester are <kbd class="calibre16">site:</kbd>, <kbd class="calibre16">inurl:</kbd>, and <kbd class="calibre16">intitle:</kbd>.</p>
+<p class="calibre5">For our purposes (finding subdomains), we will use the <kbd class="calibre16">site:</kbd> search operator, as follows:</p>
+<ol class="calibre20">
+<li class="calibre19" value="1">Navigate to <a href="https://www.google.com" class="calibre6">https://www.google.com</a>, and we will search for sites that are part of the <kbd class="calibre16">google.com</kbd> domain.<span> </span> We do this by searching <kbd class="calibre16">site:google.com</kbd>, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone" src="../images/00609.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li class="calibre19" value="2">As you can see, Google finds about 2.9 billion results, but almost all of the results are of the subdomain <kbd class="calibre16">www.google.com</kbd>. So, our next step is to filter these out so we can continue to find unique subdomains.<span> </span>We do this by modifying our query <kbd class="calibre16">site:google.com -site:www.google.com</kbd>, as shown in the following screenshot:</li>
+</ol>
+<div class="p"><img class="alignnone1" src="../images/00611.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li class="calibre19" value="3">We find the additional subdomains of cloud.google.com, translate.google.com, gsuite.google.com, duo.google.com, domains.google.com, store.google.com, blog.google.com, firebase.google.com, on.google.com and developers.google.com.<span> </span>In some cases, you may need to repeat this process a number of times, excluding subdomains as you find them:</li>
+</ol>
+<p class="calibre27"><kbd class="calibre16">site:google.com -site:www.google.com -site:cloud.google.com -site:translate.google.com -site:gsuite.google.com -site:duo.google.com -site:domains.google.com -site:store.google.com -site:blog.google.com -site:firebase.google.com -site:on.google.com -site:developers.google.com</kbd></p>
+<div class="p"><img class="alignnone2" src="../images/00612.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2D7TI1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Google is a powerful tool with a wealth of knowledge.<span> </span>Learning how to use its search operators can prove very powerful and valuable for the penetration tester.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2E6E41-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Finding e-mail addresses using theHarvester</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Using publicly available information, we can also gather information on individuals belonging to our target organization.<span> </span>This type of passive information gathering could become very valuable for social engineering or deploying an attack.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2F4UM1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">theHarvester comes preinstalled on Kali Linux.<span> </span>If you are using a different Linux/Unix distribution, it can be downloaded and installed from <a href="https://github.com/laramies/theHarvester" class="calibre6">https://github.com/laramies/theHarvester</a>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2G3F81-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">theHarvester is an excellent tool for getting information on an organization from public sources.<span> </span>Using the tool, we can query Google, Bing, Twitter, and LinkedIn among other sources.<span> </span></p>
+<ol class="calibre20">
+<li class="calibre19" value="1">To see the help and options for theHarvester, simply open the Terminal and type the following command:</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        theharvester</strong>
+</pre>
+<div class="p"><img class="alignnone3" src="../images/00614.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li class="calibre19" value="2">In order to find e-mail addresses from <kbd class="calibre16">google.com</kbd> using the Google search engine, we'll use the following:</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        theharvester -d google.com -l 500 -b google</strong>
+</pre>
+<div class="p"><img class="alignnone4" src="../images/00617.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li class="calibre19" value="3">The command uses <kbd class="calibre16">-d</kbd> as the domain we want to search, <kbd class="calibre16">-l</kbd> is used to limit the number of results, and <kbd class="calibre16">-b</kbd> is used to define the data source.<span> </span>Additionally, we could use the <kbd class="calibre16">-f</kbd> flag to write the results to a file.</li>
+<li class="calibre19" value="4">theHarvester does not always return e-mail addresses.<span> </span>If we use LinkedIn as our data source, we can get a list of users.  However for this domain we do not receive any:</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        theharvester -d google.com -l 500 -b linkedin</strong>
+</pre>
+<div class="p"><img class="alignnone5" src="../images/00619.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li class="calibre19" value="5">We can also search against all data sources.<span> With this</span>, we will discover not just e-mails, but also hosts and virtual hosts.</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        theharvester -d google.com -l 500 -b all</strong>
+</pre>
+<div class="p"><img class="alignnone6" src="../images/00653.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">TheHarvester begins by querying all datasources then outputs its findings:</li>
+</ol>
+<div class="cdpalignleft"><img class="alignnone7" src="../images/00569.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2H1VQ1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">theHarvester is an excellent tool that queries publicly available data sources<span> </span>and provides information on the domain you pass to it.  This information includes subdomains, LinkedIn users and email addresses.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2I0GC1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Enumerating DNS using the host command</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The previous section covered how we could find subdomains using the publicly available Google search engine. While this is great, we should never assume that all subdomains can be found through such a method. The next few sections will cover finding subdomains using active discovery methods.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2IV0U1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To prepare for working with the <kbd class="calibre16">host</kbd> command, all you need is to open a Terminal from your Kali Linux distribution.</p>
+<div class="packt_infobox">The <kbd class="calibre28">host</kbd> command is a standard command for Unix, Linux, and macOS systems.</div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2JTHG1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Working with <kbd class="calibre16">host</kbd> command:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">DNS servers are address books; for this reason normally they will divulge at least some information regarding the domains they are the authority for. The <kbd class="calibre16">host</kbd> command is a utility that performs DNS lookups. So we can use the <kbd class="calibre16">host</kbd> command to investigate information about our target domain. We can use the <kbd class="calibre16">-a</kbd> flag to do a comprehensive look up or use the <kbd class="calibre16">-t</kbd> flag followed by the type to get specific:</li>
+</ol>
+<div class="p"><img class="alignnone8" src="../images/00466.jpeg"/></div>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">The following command will reveal the nameservers associated with <kbd class="calibre16">google.com</kbd>:</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        host -t ns google.com</strong>
+</pre>
+<div class="p"><img class="image-border47" src="../images/00468.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">The following command will reveal the mail server details for the domain:</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        host -t mx google.com</strong>
+</pre>
+<div class="p"><img class="image-border47" src="../images/00608.jpeg"/></div>
+<ol start="4" class="calibre20">
+<li value="4" class="calibre19">At a minimum now we should have DNS and mail servers responsible for <kbd class="calibre16">google.com</kbd>, but what else can we find associated with the domain <kbd class="calibre16">google.com</kbd>? In the previous exercise, we already found some web servers associated. Let’s take a closer look:</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        host google.com</strong>
+</pre>
+<div class="p"><img class="image-border47" src="../images/00321.jpeg"/></div>
+<ol start="5" class="calibre20">
+<li value="5" class="calibre19">What if we try something that doesn’t exist? What can we expect as a result?</li>
+</ol>
+<pre class="calibre24">
+<strong class="calibre1">        host madeupsub.google.com</strong>
+</pre>
+<div class="p"><img class="image-border66" src="../images/00411.jpeg"/></div>
+<ol start="6" class="calibre20">
+<li value="6" class="calibre19">We get an error stating that the subdomain was not found. Knowing this, we could test subdomains to see whether they exist. Some popular subdomain are mail, blog, ftp, dev, admin, wiki, and help. Of course, this is not a comprehensive list and there could be subdomains that are not common at at all.</li>
+<li value="7" class="calibre19">We can also perform zone transfers with the <kbd class="calibre16">host</kbd> command. In order to do this, we need the domain we are analyzing, along with the nameserver address. Keep in mind generally DNS is configured in such a way as to not allow transfers. Let's attempt to do a transfer of <kbd class="calibre16">google.com</kbd> using the nameserver we found earlier, <kbd class="calibre16">ns1.google.com</kbd>:</li>
+</ol>
+<div class="p"><img class="image-border47" src="../images/00477.jpeg"/></div>
+<ol start="8" class="calibre20">
+<li value="8" class="calibre19">Sometimes an organization may have a large number of nameservers. In these cases, it makes sense to automate this process.</li>
+<li value="9" class="calibre19">In the bash script that follows, we first generate a list of nameservers for a given domain, then we iterate over each nameserver, attempting a zone transfer:</li>
+</ol>
+<pre class="calibre24">
+        #!/bin/bash<br class="title-page-name"/><br class="title-page-name"/>        if [ ! $1 ]; then <br class="title-page-name"/>        echo "Usage: #./dns-find-transfer.sh &lt;domain&gt;"; <br class="title-page-name"/>        exit; <br class="title-page-name"/>        fi<br class="title-page-name"/><br class="title-page-name"/><br class="title-page-name"/>        for server in $(host -t ns $1 |cut -d" " -f4);do<br class="title-page-name"/>        printf $server | sed 's/.$//'<br class="title-page-name"/>        host -l $1 $server |grep "Address: " | cut -d: -f2 |<br class="title-page-name"/>         sed 's/...$//'<br class="title-page-name"/>        done
+</pre>
+<ol start="10" class="calibre20">
+<li value="10" class="calibre19">We can now run our script and view the results:</li>
+</ol>
+<div class="p"><img class="image-border47" src="../images/00556.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2KS221-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works...</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The <kbd class="calibre16">host</kbd> command is a simple utility that returns information about the host or IP address it is used to query.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2LQIK1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Enumerating DNS using DNSRecon</h1>
+            
+
+            <article>
+                
+<p class="calibre5">In the following sections, we will explore a couple of tools that allow us to conduct DNS reconnaissance. In effect, this means identifying our target organization's DNS servers and subsequently the DNS entries contained in them.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2MP361-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>DNSRecon</span> comes preinstalled on Kali Linux.<span> </span>If you are using a different Linux/Unix distribution, it can be downloaded and installed from <a href="https://github.com/darkoperator/dnsrecon" class="calibre6">https://github.com/darkoperator/dnsrecon</a>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2NNJO1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5"><span>DNSRecon</span> is a Python script written by Carlos Perez for conducting DNS reconnaissance.<span> </span>It can enumerate general DNS records, perform zone transfers, perform reverse lookups, and brute-force subdomains among other functions.<span> </span>It will even perform Google scanning, automating the process we discussed in the <em class="calibre15">Using Google to find subdomains</em> section.<span> </span>To see usage information for <kbd class="calibre16">dnsrecon</kbd>, run the following command from within the <kbd class="calibre16">/usr/share/dnsrecon</kbd> directory:</p>
+<pre class="calibre24">
+<strong class="calibre1">dnsrecon -h</strong>
+</pre>
+<div class="p"><img class="alignnone9" src="../images/00658.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2OM4A1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Standard DNS enumeration</h1>
+            
+
+            <article>
+                
+<p class="calibre5">A standard DNS enumeration should provide us with SOA, NS, A, AAAA, MX, and SRV records, as available.<span> </span>If we run <kbd class="calibre16">dnsrecon</kbd> without passing the type (<kbd class="calibre16">-t</kbd>) flag, it will run a standard enumeration.<span> </span>To pass the domain we want the scan to run against, we use the domain (<kbd class="calibre16">-d</kbd>) flag followed by our target domain. To run a standard enumeration against our target domain, <a href="http://google.com" class="calibre6">google.com</a>, run the following command:</p>
+<pre class="calibre24">
+<strong class="calibre1">dnsrecon -d google.com</strong>
+</pre>
+<div class="p"><img class="alignnone10" src="../images/00668.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2PKKS1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Reverse lookups</h1>
+            
+
+            <article>
+                
+<p class="calibre5">We can also use <kbd class="calibre16">dnsrecon</kbd> to<span> </span>perform a reverse lookup by providing it a range of IP addresses.<span> </span>We do this using the <span>range</span> (<kbd class="calibre16">-r</kbd>) flag, followed by the IP range we want it to perform lookups on, as in this example:</p>
+<pre class="calibre24">
+<strong class="calibre1">dnsrecon -r 216.239.34.00-216.239.34.50</strong>
+</pre>
+<div class="p"><img class="alignnone11" src="../images/00053.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2QJ5E1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Zone transfer</h1>
+            
+
+            <article>
+                
+<p class="calibre5">DNS zone transfers are a tool for domain name administrators to replicate their DNS databases across their organization's DNS servers.<span> </span>The problem that arises is that this can reveal a great deal of information about an organization's infrastructure.<span> </span>For this reason, typically, DNS servers are configured to not allow a zone transfer.<span> </span>To attempt a zone transfer using <kbd class="calibre16">dnsrecon</kbd>, we would use the <kbd class="calibre16">-a</kbd> flag (AXFR), or you can use the <kbd class="calibre16">-t</kbd> flag with type <kbd class="calibre16">axfr</kbd>. The<span> <kbd class="calibre16">axfr</kbd></span> type is the query type that denotes DNS zone transfer.<span> </span>The command to run a zone transfer would look like the following:</p>
+<pre class="calibre24">
+<strong class="calibre1">dnsrecon -d google.com -a</strong>
+</pre>
+<div class="p"><img class="alignnone12" src="../images/00120.jpeg"/></div>
+<p class="calibre5">As you can see, in our example the zone transfers fail, but it never hurts to try.<span> </span>Every now and then, you may come across a DNS server that has not been configured correctly to prevent this.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2RHM01-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">DNS servers by design take queries and provide address information.<span> </span>The <kbd class="calibre16">dnsrecon</kbd> script takes advantage of this function to enumerate a DNS server, revealing information about an organization's infrastructure.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2SG6I1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Enumerating DNS using the dnsenum command</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Similar to <kbd class="calibre16">dnsrecon</kbd>, <kbd class="calibre16">dnsenum</kbd> is a tool used for enumerating DNS information. The <kbd class="calibre16">dnsenum</kbd> script is a multithreaded Perl script written by Filip Waeytens for conducting DNS reconnaissance. It can be used to enumerate DNS information of a domain in order to find non-contiguous IP blocks. It not only helps discover non-contiguous IP blocks, but also provides several other types of information, such as the <em class="calibre15">A</em> record of the host's address, threaded nameservers, threaded MX record, and threaded <em class="calibre15">bind version</em>. </p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2TEN41-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Getting ready</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The <kbd class="calibre16">dnsenum</kbd> script comes preinstalled on Kali Linux. If you are using a different Linux/Unix distribution, it can be downloaded and installed from <a href="https://github.com/fwaeytens/dnsenum" class="calibre6">https://github.com/fwaeytens/dnsenum</a>.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2UD7M1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How to do it…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">To see usage information for the <kbd class="calibre16">dnsenum</kbd> command, run the following command from a Terminal:</p>
+<pre class="calibre24">
+<strong class="calibre1">dnsenum -h</strong>
+</pre>
+<div class="p"><img class="alignnone13" src="../images/00139.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="2VBO81-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Default settings</h1>
+            
+
+            <article>
+                
+<p class="calibre5">If we run <kbd class="calibre16">dnsenum</kbd> without any flags, it will be run with the default settings. Those default settings are the following:</p>
+<ul class="calibre18">
+<li class="calibre19"><kbd class="calibre16">thread 5</kbd> (as mentioned earlier, the script is multithreaded; this setting determines how many threads it will run with)</li>
+<li class="calibre19"><kbd class="calibre16">s 15</kbd> (this determines the maximum number of subdomains it will scrape from Google)</li>
+<li class="calibre19"><kbd class="calibre16">-w</kbd> (this flag tells the script to run <kbd class="calibre16">whois</kbd> queries)</li>
+</ul>
+<div class="p"><img class="alignnone14" src="../images/00039.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="30A8Q1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">Brute-force</h1>
+            
+
+            <article>
+                
+<p class="calibre5">Where the <kbd class="calibre16">dnsenum</kbd> command really shines is brute-forcing, which it does recursively. This means that when it identifies <kbd class="calibre16">subdomain.domain.com</kbd>, it will start brute-forcing <kbd class="calibre16">subdomain.subdomain.domain.com</kbd>. Obviously, this can take a while even though it is a multithreaded script.</p>
+<p class="calibre5">In the next example, we will use the <kbd class="calibre16">dnsenum</kbd> command to brute-force subdomains, but first, we need a list of subdomains for <kbd class="calibre16">dnsenum</kbd> to use. There is a very interesting project called <strong class="calibre1">dnspop</strong> that identifies top subdomains.</p>
+<p class="calibre5">The project can be found here at <a href="https://github.com/bitquark/dnspop" class="calibre6">https://github.com/bitquark/dnspop</a>. We do not need to download and install the Python script, as the results are also published at <a href="https://github.com/bitquark/dnspop/tree/master/results" class="calibre6">https://github.com/bitquark/dnspop/tree/master/results</a>. I have downloaded the list with the top 1,000 most popular subdomains and placed it in the <kbd class="calibre16">/usr/share/wordlists/subdomains/</kbd> directory.</p>
+<div class="packt_infobox">I created the subdomains directory, naming it <kbd class="calibre28">subdomains_popular_1000</kbd>.</div>
+<p class="calibre5">Now we have a list of names <kbd class="calibre16">dnsenum</kbd> can use to brute-force with. The command to brute-force subdomains uses the file (<kbd class="calibre16">-f</kbd>) flag followed by the file path/name and, if you want, the recursive (<kbd class="calibre16">-r</kbd>) flag to enumerate the subdomains recursively. The command looks like this:</p>
+<pre class="calibre24">
+<strong class="calibre1">dnsenum -f /usr/share/wordlists/subdomains/subdomains_popular_1000 -r google.com<br class="title-page-name"/></strong>
+</pre>
+<p class="calibre5">The aforementioned command does the following:</p>
+<ol class="calibre20">
+<li value="1" class="calibre19">First, the <kbd class="calibre16">dnsenum</kbd> command performs the default lookups:</li>
+</ol>
+<p class="cdpaligncenter"><img class="alignnone15" src="../images/00157.jpeg"/></p>
+<ol start="2" class="calibre20">
+<li value="2" class="calibre19">Next, <kbd class="calibre16">dnsenum</kbd> begins brute-forcing subdomains:</li>
+</ol>
+<div class="p"><img class="alignnone16" src="../images/00435.jpeg"/></div>
+<ol start="3" class="calibre20">
+<li value="3" class="calibre19">Once it has completed brute-forcing the subdomains, it will begin brute-forcing recursively:</li>
+</ol>
+<div class="p"><img class="alignnone17" src="../images/00509.jpeg"/></div>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    
+
+        <section id="318PC1-cf89710d791c4a3bb78ec273d9322426">
+
+            <header>
+                </header><h1 class="header-title" id="calibre_pb_0">How it works…</h1>
+            
+
+            <article>
+                
+<p class="calibre5">The <kbd class="calibre16">dnsenum</kbd> command has many options that you can use with it, and this script will collect information or perform the action based to the selected option(s). Once you have enumerated a DNS, use the <kbd class="calibre16">–o</kbd> or <kbd class="calibre16">--output &lt;file&gt;</kbd> option to write the output to an XML file.</p>
+
+
+            </article>
+
+            <footer class="calibre7">
+                
+            </footer>
+
+        </section>
+    </body></html>

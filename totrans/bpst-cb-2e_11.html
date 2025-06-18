@@ -1,0 +1,715 @@
+<html><head></head><body>
+		<div id="_idContainer636">
+			<h1 id="_idParaDest-258" class="chapter-number"><a id="_idTextAnchor639"/>11</h1>
+			<h1 id="_idParaDest-259"><a id="_idTextAnchor640"/>Implementing Advanced Topic Attacks</h1>
+			<p><a id="_idTextAnchor641"/>This chapter covers intermediate to advanced topics such as working with <strong class="bold">XML External Entity</strong> (<strong class="bold">XXE</strong>) injection, <strong class="bold">JSON Web Token</strong> (<strong class="bold">JWT</strong>) attacks, <strong class="bold">Server-Side Request Forgery</strong> (<strong class="bold">SSRF</strong>), <strong class="bold">Cross-Origin Resource Sharing</strong> (<strong class="bold">CORS</strong>) findings, and <strong class="bold">Java deserialization attacks</strong>, as well as testing GraphQL in Burp Suite. We’ll learn how to use Burp Suite and Burp Suite extensions to assist in making each of these types of <span class="No-Break">test easier.</span></p>
+			<p><a id="_idTextAnchor642"/>In this chapter, we will cover the <span class="No-Break">following recipes:</span></p>
+			<ul>
+				<li>Performing <span class="No-Break">XXE attacks</span></li>
+				<li>Working <span class="No-Break">with JWT</span></li>
+				<li>Using Burp Suite Collaborator to <span class="No-Break">determine SSRF</span></li>
+				<li><span class="No-Break">Testing CORS</span></li>
+				<li>Performing Java <span class="No-Break">deserialization attacks</span></li>
+				<li>Hacking GraphQL with <span class="No-Break">Burp Suite</span></li>
+			</ul>
+			<h1 id="_idParaDest-260"><a id="_idTextAnchor643"/>Technical requirements</h1>
+			<p>To complete the recipes in this chapter, you will need <span class="No-Break">the following:</span></p>
+			<ul>
+				<li>A PortSwigger <span class="No-Break">account (</span><a href="B21173_11.xhtml#_idTextAnchor639"><span class="No-Break">https://portswigger.net/</span></a><span class="No-Break">)</span></li>
+				<li>PortSwigger Web Security Academy Labs (<a href="">https://portswigger.net/web-security/all-labs</a>) access, which requires a <span class="No-Break">PortSwigger account</span></li>
+				<li>Burp Suite Proxy Community or <span class="No-Break">Professional (</span><a href="B21173_11.xhtml#_idTextAnchor704"><span class="No-Break">https://portswigger.net/burp/</span></a><span class="No-Break">)</span><a id="_idTextAnchor644"/></li>
+			</ul>
+			<h1 id="_idParaDest-261"><a id="_idTextAnchor645"/>Performing XXE attacks</h1>
+			<p>XXE is a vulnerability <a id="_idIndexMarker645"/>that targets applications parsing XML. Attackers can manipulate the XML input with arbitrary commands and send those commands as external entity references within the XML structure. The XML is then executed by a weakly configured parser, giving the attacker the <span class="No-Break">requested resource<a id="_idTextAnchor646"/>.</span><a id="_idTextAnchor647"/></p>
+			<h2 id="_idParaDest-262">Getting ready<a id="_idTextAnchor648"/></h2>
+			<p>Log in to your PortSwigger account. We will be using a PortSwigger lab – <em class="italic">Lab: Exploiting XXE using external entities to retrieve files</em> (<a href="B21173_11.xhtml#_idTextAnchor703">https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-retrieve-files</a>) – to exploit an XML parser vulnerability in our <span class="No-Break">target application.</span><a id="_idTextAnchor649"/></p>
+			<h2 id="_idParaDest-263"><a id="_idTextAnchor650"/>How to do it...</h2>
+			<ol>
+				<li>Log in, go to <em class="italic">Lab: Exploiting XXE using external entities to retrieve files</em>, and click the <strong class="bold">Access the lab</strong> button to start <span class="No-Break">your instance.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer567" class="IMG---Figure">
+					<img src="image/B21173_11_001.jpg" alt="Figure 11.1 – Lab lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.1 – Lab lesson</p>
+			<ol>
+				<li value="2">After your instance of the lab loads, use the Burp Suite browser to capture your traffic. Click around the site and view a product’s details by clicking the <strong class="bold">View </strong><span class="No-Break"><strong class="bold">details</strong></span><span class="No-Break"> button.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer568" class="IMG---Figure">
+					<img src="image/B21173_11_002.jpg" alt="Figure 11.2 – The View details button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.2 – The View details button</p>
+			<ol>
+				<li value="3">On the subsequent <a id="_idIndexMarker646"/>details page, under the description, click the <strong class="bold">Check </strong><span class="No-Break"><strong class="bold">stock</strong></span><span class="No-Break"> button.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer569" class="IMG---Figure">
+					<img src="image/B21173_11_003.jpg" alt="Figure 11.3 – The Check stock button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.3 – The Check stock button</p>
+			<ol>
+				<li value="4">Switch to the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and look for the <strong class="source-inline">POST</strong> request you just submitted to check the stock. Right-click and send the request <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Repeater</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer570" class="IMG---Figure">
+					<img src="image/B21173_11_004.jpg" alt="Figure 11.4 – Send to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.4 – Send to Repeater</p>
+			<ol>
+				<li value="5">In <strong class="bold">Repeater</strong>, add the <strong class="source-inline">DOCTYPE</strong> declaration<a id="_idIndexMarker647"/> between the XML declaration and the root element <span class="No-Break">called </span><span class="No-Break"><strong class="source-inline">stockCheck</strong></span><span class="No-Break">:</span><pre class="source-code">
+&lt;!DOCTYPE test [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; ]&gt;</pre></li>			</ol>
+			<p>Also, replace the number<a id="_idIndexMarker648"/> within the <strong class="source-inline">productId</strong> elements <span class="No-Break">with </span><span class="No-Break"><strong class="source-inline">&amp;xxe;</strong></span><span class="No-Break">:</span></p>
+			<div>
+				<div id="_idContainer571" class="IMG---Figure">
+					<img src="image/B21173_11_005.jpg" alt="Figure 11.5 – XXE injection point"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.5 – XXE injection point</p>
+			<ol>
+				<li value="6">Click the <strong class="bold">Send</strong> button. Note that the response retrieves and displays the local <strong class="source-inline">/etc/passwd</strong> <span class="No-Break">file content:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer572" class="IMG---Figure">
+					<img src="image/B21173_11_006.jpg" alt="Figure 11.6 – Attack result"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.6 – Attack result</p>
+			<h2 id="_idParaDest-264">Ho<a id="_idTextAnchor651"/><a id="_idTextAnchor652"/>w it works...</h2>
+			<p>In this recipe, the insecure XML parser<a id="_idIndexMarker649"/> receives the request within the XML for the <strong class="source-inline">/etc/passwd</strong> file residing on the server. Since there is no validation performed on the XML request due to a weakly configured parser, the resource is freely provided to <span class="No-Break">the attacker.</span></p>
+			<h1 id="_idParaDest-265"><a id="_idTextAnchor653"/>W<a id="_idTextAnchor654"/>orking with JWTs</h1>
+			<p>As more sites provide client<a id="_idIndexMarker650"/> API access, JWTs are commonly used for authentication. These tokens hold identity and claim information tied to the resources the user is granted access to on the target site. Web-penetration testers need to read these tokens and determine their strength. Fortunately, there are some handy plugins that make working with JWTs inside Burp Suite much easier. We will learn about these plugins in <span class="No-Break">this recipe.</span><a id="_idTextAnchor655"/></p>
+			<h2 id="_idParaDest-266"><a id="_idTextAnchor656"/>Getting ready</h2>
+			<p><a id="_idTextAnchor657"/>Log in to your PortSwigger account. We<a id="_idIndexMarker651"/> will be using <em class="italic">Lab: JWT authentication bypass via flawed signature verification</em> (<a href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification">https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification</a>) and the <strong class="bold">JWT Editor</strong> extension to exploit a signature vulnerability in our <span class="No-Break">target application.</span><a id="_idTextAnchor658"/></p>
+			<h2 id="_idParaDest-267"><a id="_idTextAnchor659"/>How to do it...</h2>
+			<ol>
+				<li>Switch to Burp Suite <strong class="bold">Extensions</strong> | <strong class="bold">BApp Store</strong> and install the <strong class="bold">JWT </strong><span class="No-Break"><strong class="bold">Editor</strong></span><span class="No-Break"> plugin:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer573" class="IMG---Figure">
+					<img src="image/B21173_11_007.jpg" alt="Figure 11.7 – The JWT Editor extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.7 – The JWT Editor extension</p>
+			<ol>
+				<li value="2">After you install the extension, notice you now have a new tab entitled <strong class="bold">JWT </strong><span class="No-Break"><strong class="bold">Editor Keys</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer574" class="IMG---Figure">
+					<img src="image/B21173_11_008.jpg" alt="Figure 11.8 – New tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.8 – New tab</p>
+			<ol>
+				<li value="3">Go to <em class="italic">Lab: JWT authentication bypass via unverified signature</em> and click the <strong class="bold">Access the lab</strong> button<a id="_idIndexMarker652"/> to start <span class="No-Break">your instance:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer575" class="IMG---Figure">
+					<img src="image/B21173_11_009.jpg" alt="Figure 11.9 – Lab lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.9 – Lab lesson</p>
+			<ol>
+				<li value="4">After your instance of the lab loads, go to <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong> | <strong class="bold">Open browser</strong> to use the Burp Suite browser to capture <span class="No-Break">your traffic.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer576" class="IMG---Figure">
+					<img src="image/B21173_11_010.jpg" alt="Figure 11.10 – Open the Burp Suite browser"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.10 – Open the Burp Suite browser</p>
+			<ol>
+				<li value="5">Log in to the application using the provided <span class="No-Break">credentials: </span><span class="No-Break"><strong class="source-inline">wiener</strong></span><span class="No-Break">/</span><span class="No-Break"><strong class="source-inline">peter</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer577" class="IMG---Figure">
+					<img src="image/B21173_11_011.jpg" alt="Figure 11.11 – Log in with the provided credentials"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.11 – Log in with the provided credentials</p>
+			<ol>
+				<li value="6">Switch to the Burp<a id="_idIndexMarker653"/> Suite <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab. Find the <strong class="source-inline">GET</strong> request with the URL <strong class="source-inline">/my-account</strong>. Right-click and click the <strong class="bold">Send to </strong><span class="No-Break"><strong class="bold">Repeater</strong></span><span class="No-Break"> option.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer578" class="IMG---Figure">
+					<img src="image/B21173_11_012.jpg" alt="Figure 11.12 – Send to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.12 – Send to Repeater</p>
+			<ol>
+				<li value="7">Switch to the <strong class="bold">Repeater</strong> tab and notice<a id="_idIndexMarker654"/> that you have a new tab entitled <strong class="bold">JSON </strong><span class="No-Break"><strong class="bold">Web Token</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer579" class="IMG---Figure">
+					<img src="image/B21173_11_013.jpg" alt="Figure 11.13 – Extension functionality in Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.13 – Extension functionality in Repeater</p>
+			<ol>
+				<li value="8">Click the <strong class="bold">JSON Web Token</strong> tab to reveal a debugger<a id="_idIndexMarker655"/> very similar to the one available at <a href="B21173_11.xhtml#_idTextAnchor701">https://jwt.io.</a> This plugin allows you to read the claims content and manipulate the encryption algorithm for various brute-force tests. In this attack, we will remove the signature from the token and send the JWT to see whether the application accepts or rejects <span class="No-Break">the request.</span></li>
+			</ol>
+			<p>To perform this attack, click the <strong class="bold">Attack</strong> button and select <strong class="bold">“none” </strong><span class="No-Break"><strong class="bold">Signing Algorithm</strong></span><span class="No-Break">.</span></p>
+			<div>
+				<div id="_idContainer580" class="IMG---Figure">
+					<img src="image/B21173_11_014.jpg" alt="Figure 11.14 – None algo attack"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.14 – None algo attack</p>
+			<ol>
+				<li value="9">Notice the <strong class="bold">Signature</strong> text area is now blank, the signature is missing after the last dot, and <strong class="source-inline">alg</strong> in the header<a id="_idIndexMarker656"/> is set <span class="No-Break">to </span><span class="No-Break"><strong class="source-inline">none</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer581" class="IMG---Figure">
+					<img src="image/B21173_11_015.jpg" alt="Figure 11.15 – Signature is removed"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.15 – Signature is removed</p>
+			<ol>
+				<li value="10">Inside the <strong class="bold">Payload</strong> text area, change <strong class="source-inline">wiener</strong> <span class="No-Break">to </span><span class="No-Break"><strong class="source-inline">administrator</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer582" class="IMG---Figure">
+					<img src="image/B21173_11_016.jpg" alt="Figure 11.16 – Escalate subject to administrator"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.16 – Escalate subject to administrator</p>
+			<ol>
+				<li value="11">Switch to the <strong class="bold">Raw</strong> tab and click<a id="_idIndexMarker657"/> the <strong class="bold">Send</strong> button to send the request to the application. Notice that the application accepts the request and you are logged in to the <span class="No-Break">administrator’s account.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer583" class="IMG---Figure">
+					<img src="image/B21173_11_017.jpg" alt="Figure 11.17 – Evidence of attack"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.17 – Evidence of attack</p>
+			<ol>
+				<li value="12">Change the <strong class="source-inline">GET</strong> request<a id="_idIndexMarker658"/> from <strong class="source-inline">/my-account</strong> to <strong class="source-inline">/admin/delete?username=carlos</strong> to solve <span class="No-Break">the puzzle:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer584" class="IMG---Figure">
+					<img src="image/B21173_11_018.jpg" alt="Figure 11.18 – Final attack to solve"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.18 – Final attack to solve</p>
+			<ol>
+				<li value="13">Send the request and see the congratulatory banner in <span class="No-Break">the browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer585" class="IMG---Figure">
+					<img src="image/B21173_11_019.jpg" alt="Figure 11.19 – Congratulatory banner"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.19 – Congratulatory banner</p>
+			<h2 id="_idParaDest-268">How i<a id="_idTextAnchor660"/><a id="_idTextAnchor661"/>t works...</h2>
+			<p>The <strong class="bold">JWT Editor</strong> extension helps testers to work with JWT tokens in an easier way by providing debugger tools conveniently available with the Burp Suite UI. Check out the other JWT labs available<a id="_idIndexMarker659"/> in the PortSwigger Web Security Academy to gain more experience with <span class="No-Break">the extension.</span></p>
+			<h1 id="_idParaDest-269">Usi<a id="_idTextAnchor662"/>n<a id="_idTextAnchor663"/>g Burp Suite Collaborator to determine SSRF</h1>
+			<p>SSRF is a vulnerability<a id="_idIndexMarker660"/> that allows an attacker to force<a id="_idIndexMarker661"/> applications to make unauthorized requests on the attacker’s behalf. These requests can be as simple as DNS queries or as maniacal as commands from an <span class="No-Break">attacker-controlled server.</span></p>
+			<p>In this recipe, we will use Burp Suite Collaborator to check open ports available for SSRF requests, and then we will use Burp Intruder to determine whether the application will perform DNS queries to the public Burp Suite Collaborator server through an <span class="No-Break">SSRF vulnerability.</span></p>
+			<h2 id="_idParaDest-270">G<a id="_idTextAnchor664"/>e<a id="_idTextAnchor665"/>tting ready</h2>
+			<p>Lo<a id="_idTextAnchor666"/>g in to your PortSwigger account. Using PortSwigger <em class="italic">Lab: Blind SSRF with out-of-band detection</em> (<a href="B21173_11.xhtml#_idTextAnchor696">https://portswigger.net/web-security/ssrf/blind/lab-out-of-band-detection</a>), we will see how to use Burp Suite Collaborator to identify an SSRF vulnerability in our <span class="No-Break">target application.</span></p>
+			<h2 id="_idParaDest-271">Ho<a id="_idTextAnchor667"/>w to do it...</h2>
+			<ol>
+				<li>Switch to the Burp<a id="_idIndexMarker662"/> Suite <strong class="bold">Collaborator</strong> tab. Click<a id="_idIndexMarker663"/> the <strong class="bold">Get </strong><span class="No-Break"><strong class="bold">started</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer586" class="IMG---Figure">
+					<img src="image/B21173_11_020.jpg" alt="Figure 11.20 – Start Collaborator"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.20 – Start Collaborator</p>
+			<ol>
+				<li value="2">Notice you may now copy <strong class="bold">Collaborator</strong> payloads to the clipboard and a table appears that displays any <span class="No-Break">captured calls.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer587" class="IMG---Figure">
+					<img src="image/B21173_11_021.jpg" alt="Figure 11.21 – The Collaborator table"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.21 – The Collaborator table</p>
+			<ol>
+				<li value="3">Log in, go to <em class="italic">Lab: Blind SSRF with out-of-band detection</em>, and start<a id="_idIndexMarker664"/> the instance<a id="_idIndexMarker665"/> by clicking <strong class="bold">Access </strong><span class="No-Break"><strong class="bold">the lab</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer588" class="IMG---Figure">
+					<img src="image/B21173_11_022.jpg" alt="Figure 11.22 – Lab lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.22 – Lab lesson</p>
+			<ol>
+				<li value="4">After your instance of the lab loads, use the Burp Suite browser to capture your traffic. Click around <span class="No-Break">the site.</span></li>
+				<li>Switch to the <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and find any<a id="_idIndexMarker666"/> request you made in the instance<a id="_idIndexMarker667"/> that contains a <strong class="source-inline">Referer</strong> header. Right-click and send the request <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Repeater</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer589" class="IMG---Figure">
+					<img src="image/B21173_11_023.jpg" alt="Figure 11.23 – Send to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.23 – Send to Repeater</p>
+			<ol>
+				<li value="6">Inside <strong class="bold">Repeater</strong>, highlight the value of the <strong class="source-inline">Referer</strong> header, leaving the protocol of <strong class="source-inline">https://</strong>. Right-click and select <strong class="bold">Insert Collaborator payload</strong>. This action will replace<a id="_idIndexMarker668"/> the current<a id="_idIndexMarker669"/> value of <strong class="source-inline">Referer</strong> with a <span class="No-Break">collaborator instance.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer590" class="IMG---Figure">
+					<img src="image/B21173_11_024.jpg" alt="Figure 11.24 – Insert Collaborator payload"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.24 – Insert Collaborator payload</p>
+			<p>The subdomain is randomized, so your collaborator value will differ from the one shown in the <span class="No-Break">following screenshot.</span></p>
+			<div>
+				<div id="_idContainer591" class="IMG---Figure">
+					<img src="image/B21173_11_025.jpg" alt="Figure 11.25 – Referer header"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.25 – Referer header</p>
+			<ol>
+				<li value="7">Inside <strong class="bold">Repeater</strong>, click the <strong class="bold">Send</strong> button. The response<a id="_idIndexMarker670"/> will look normal. Since<a id="_idIndexMarker671"/> this is a blind SSRF, we need to see whether any backend systems made calls to our <strong class="bold">Collaborator</strong> <span class="No-Break">server instance.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer592" class="IMG---Figure">
+					<img src="image/B21173_11_026.jpg" alt="Figure 11.26 – Response"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.26 – Response</p>
+			<ol>
+				<li value="8">Switch to the Burp<a id="_idIndexMarker672"/> Suite <strong class="bold">Collaborator</strong> client and click the <strong class="bold">Poll now</strong> button to see whether any SSRF<a id="_idIndexMarker673"/> attacks were successful. If any requests leaked outside of the network, those requests will appear in this table along with the specific protocol used. If any requests are shown in this table, you will need to report the SSRF vulnerability as a finding. As you can see from the results shown here, numerous DNS queries were made by the application on behalf of the attacker-provided payloads. This means the source IP addresses shown would be backend servers behind the <span class="No-Break">target application.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer593" class="IMG---Figure">
+					<img src="image/B21173_11_027.jpg" alt="Figure 11.27 – Poll shows interactions"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.27 – Poll shows interactions</p>
+			<ol>
+				<li value="9">Notice the<a id="_idIndexMarker674"/> congratulatory<a id="_idIndexMarker675"/> banner in <span class="No-Break">the browser.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer594" class="IMG---Figure">
+					<img src="image/B21173_11_028.jpg" alt="Figure 11.28 – Congratulatory ban﻿n﻿er"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.28 – Congratulatory ban<a id="_idTextAnchor668"/>n<a id="_idTextAnchor669"/>er</p>
+			<h2 id="_idParaDest-272"><a id="_idTextAnchor670"/>How it works...</h2>
+			<p>Network leaks and overly generous application parameters can allow an attacker to have an application make unauthorized calls via various protocols on the attacker’s behalf. In the case of this<a id="_idIndexMarker676"/> recipe, the application allows DNS queries to leak outside of the local machine<a id="_idIndexMarker677"/> and connect to <span class="No-Break">the inte<a id="_idTextAnchor671"/>r<a id="_idTextAnchor672"/>net.</span></p>
+			<h2 id="_idParaDest-273"><a id="_idTextAnchor673"/>See also</h2>
+			<p>For more information<a id="_idIndexMarker678"/> on SSRF attacks, see the PortSwigger blog entry <span class="No-Break">at </span><a href="B21173_11.xhtml#_idTextAnchor693"><span class="No-Break">https://portswigger.net/blog/cracking-the-lens-targeting-https-hidden-attack-su<span id="_idTextAnchor674"/>r<span id="_idTextAnchor675"/>face</span></a><span class="No-Break">.</span></p>
+			<h1 id="_idParaDest-274"><a id="_idTextAnchor676"/>Testing CORS</h1>
+			<p>An application implementing HTML5 <strong class="bold">Cross-Origin Resource Sharing</strong> (<strong class="bold">CORS</strong>) means the application<a id="_idIndexMarker679"/> will share browser information with another domain that resides at a different origin. By design, browser protections prevent external<a id="_idIndexMarker680"/> scripts from accessing information in the browser. This protection is known as <strong class="bold">Same-Origin Policy</strong> (<strong class="bold">SOP</strong>). However, CORS is a means of bypassing SOP permissively. If an application wants to share browser information with a completely different domain, it may do so with properly configured <span class="No-Break">CORS headers.</span></p>
+			<p>Web-penetration testers must ensure applications that handle AJAX calls (for example, HTML5) do not have misconfigured CORS headers. Let’s see how Burp Suite can help us identify <span class="No-Break">such misconfigu<a id="_idTextAnchor677"/>r<a id="_idTextAnchor678"/>ations.</span></p>
+			<h2 id="_idParaDest-275"><a id="_idTextAnchor679"/>Getting ready</h2>
+			<p>Log in to your PortSwigger account. Using <em class="italic">Lab: CORS vulnerability with basic origin reflection</em> (<a href="B21173_11.xhtml#_idTextAnchor690">https://portswigger.net/web-security/cors/lab-basic-origin-reflection-attack</a>), we will see how to identify a CORS vulnerability in our <span class="No-Break">target applic<a id="_idTextAnchor680"/><a id="_idTextAnchor681"/>ation.</span></p>
+			<h2 id="_idParaDest-276"><a id="_idTextAnchor682"/>How to do it...</h2>
+			<ol>
+				<li>Go to <em class="italic">Lab: CORS vulnerability with basic origin reflection</em> and click the <strong class="bold">Access the lab</strong> button to start <span class="No-Break">your instance.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer595" class="IMG---Figure">
+					<img src="image/B21173_11_029.jpg" alt="Figure 11.29 – Lab lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.29 – Lab lesson</p>
+			<ol>
+				<li value="2">After your instance<a id="_idIndexMarker681"/> of the lab loads, use the Burp Suite browser to capture your traffic. Log in to the application using the provided <span class="No-Break">credentials: </span><span class="No-Break"><strong class="source-inline">wiener</strong></span><span class="No-Break">/</span><span class="No-Break"><strong class="source-inline">peter</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer596" class="IMG---Figure">
+					<img src="image/B21173_11_030.jpg" alt="Figure 11.30 – Click the My account link"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.30 – Click the My account link</p>
+			<p>Use the supplied credentials to log in to <span class="No-Break">the application.</span></p>
+			<div>
+				<div id="_idContainer597" class="IMG---Figure">
+					<img src="image/B21173_11_031.jpg" alt="Figure 11.31 – Log in with the provided credentials"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.31 – Log in with the provided credentials</p>
+			<ol>
+				<li value="3">Switch to the Burp<a id="_idIndexMarker682"/> Suite <strong class="bold">Proxy</strong> | <strong class="bold">HTTP history</strong> tab and look for the <strong class="source-inline">GET</strong> <strong class="source-inline">/accountDetails</strong> request after login. Notice there is a CORS-related header in the response, allowing the sharing of <span class="No-Break">client secrets.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer598" class="IMG---Figure">
+					<img src="image/B21173_11_032.jpg" alt="Figure 11.32 – CORS header in response"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.32 – CORS header in response</p>
+			<p>Send the request <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Repeater</strong></span><span class="No-Break">:</span></p>
+			<div>
+				<div id="_idContainer599" class="IMG---Figure">
+					<img src="image/B21173_11_033.jpg" alt="Figure 11.33 – Send to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.33 – Send to Repeater</p>
+			<ol>
+				<li value="4">Let’s make a cross-origin<a id="_idIndexMarker683"/> call by adding the <strong class="source-inline">Origin</strong> header to the request from the <span class="No-Break"><strong class="source-inline">https://example.com</strong></span><span class="No-Break"> location:</span><pre class="source-code">
+Origin: https://example.com</pre></li>			</ol>
+			<p>It’s shown in the <span class="No-Break">following screenshot:</span></p>
+			<div>
+				<div id="_idContainer600" class="IMG---Figure">
+					<img src="image/B21173_11_034.jpg" alt="Figure 11.34 – Add the Origin header and site value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.34 – Add the Origin header and site value</p>
+			<ol>
+				<li value="5">While in <strong class="bold">Repeater</strong>, click <strong class="bold">Send</strong> and notice<a id="_idIndexMarker684"/> a new CORS-related header appears in <strong class="bold">Response</strong>. Now there are two CORS headers in <strong class="bold">Response</strong> and the value of <strong class="source-inline">Origin</strong> is reflected in <strong class="source-inline">Access-Control-Allow-Origin</strong>, allowing information to <span class="No-Break">be shared:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer601" class="IMG---Figure">
+					<img src="image/B21173_11_035.jpg" alt="Figure 11.35 – See what gets reflected in response"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.35 – See what gets reflected in response</p>
+			<ol>
+				<li value="6">Click the <strong class="bold">Go to exploit </strong><span class="No-Break"><strong class="bold">server</strong></span><span class="No-Break"> button:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer602" class="IMG---Figure">
+					<img src="image/B21173_11_036.jpg" alt="Figure 11.36 – Go to exploit server"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.36 – Go to exploit server</p>
+			<ol>
+				<li value="7">We need to create a <strong class="bold">Proof of Concept</strong> (<strong class="bold">PoC</strong>) to show how we can leverage<a id="_idIndexMarker685"/> this CORS vulnerability<a id="_idIndexMarker686"/> to show impact. Remove the <strong class="source-inline">Hello, world!</strong> message from the <strong class="bold">Body</strong> portion of <span class="No-Break">the PoC:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer603" class="IMG---Figure">
+					<img src="image/B21173_11_037.jpg" alt="Figure 11.37 – Body of PoC in exploit server"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.37 – Body of PoC in exploit server</p>
+			<ol>
+				<li value="8">Replace the <strong class="bold">Body</strong> text area with the following payload, and substitute <strong class="source-inline">&lt;YOUR-LAB-ID&gt;</strong> with the value <a id="_idIndexMarker687"/>of your lab instance along with the <strong class="source-inline">https://</strong> <span class="No-Break">in front:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer604" class="IMG---Figure">
+					<img src="image/B21173_11_038.jpg" alt="Figure 11.38 – Replace the value with your lab ID"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.38 – Replace the value with your lab ID</p>
+			<ol>
+				<li value="9">Click <strong class="bold">Store</strong> and <strong class="bold">Deliver to Victim</strong> in that order at <span class="No-Break">the bottom:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer605" class="IMG---Figure">
+					<img src="image/B21173_11_039.jpg" alt="Figure 11.39 – The Store and Deliver exploit to victim buttons"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.39 – The Store and Deliver exploit to victim buttons</p>
+			<ol>
+				<li value="10">Click on <strong class="bold">Access log</strong> to retrieve <a id="_idIndexMarker688"/>the API key of <span class="No-Break">your victim:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer606" class="IMG---Figure">
+					<img src="image/B21173_11_040.jpg" alt="Figure 11.40 – Click the Access log button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.40 – Click the Access log button</p>
+			<ol>
+				<li value="11">Look through the log until you find a different IP address and the API key of <span class="No-Break">your victim.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer607" class="IMG---Figure">
+					<img src="image/B21173_11_041.jpg" alt="Figure 11.41 – View the access log for the victim’s API key"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.41 – View the access log for the victim’s API key</p>
+			<ol>
+				<li value="12">Place the value of the stolen API key into the <strong class="bold">Submit solution</strong> box for <span class="No-Break">the solution:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer608" class="IMG---Figure">
+					<img src="image/B21173_11_042.jpg" alt="Figure 11.42 – Click the Submit solution button"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.42 – Click the Submit solution button</p>
+			<ol>
+				<li value="13">Note that your value will differ from the one <span class="No-Break">shown here.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer609" class="IMG---Figure">
+					<img src="image/B21173_11_043.jpg" alt="Figure 11.43 – Submit the API key as the solution"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.43 – Submit the API key as the solution</p>
+			<ol>
+				<li value="14">Notice the congratulatory banner in <span class="No-Break">the browser.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer610" class="IMG---Figure">
+					<img src="image/B21173_11_044.jpg" alt="Figure 11.44 – Congratulatory banner﻿"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.44 – Congratulatory banner<a id="_idTextAnchor683"/></p>
+			<h2 id="_idParaDest-277"><a id="_idTextAnchor684"/>How it works...</h2>
+			<p>In an AJAX request, most instances<a id="_idIndexMarker689"/> require a call out to an external URL not residing in the same domain. To permit the external domain to receive DOM information from the user’s browser session, CORS headers must be present, including <strong class="source-inline">Access-Control-Allow-Origin: &lt;name of </strong><span class="No-Break"><strong class="source-inline">cross domain&gt;<a id="_idTextAnchor685"/></strong></span><span class="No-Break">.</span><a id="_idTextAnchor686"/></p>
+			<h2 id="_idParaDest-278"><a id="_idTextAnchor687"/>See also</h2>
+			<p>For more information on misconfigured CORS headers, see this PortSwigger blog entry <span class="No-Break">at </span><a href="B21173_11.xhtml#_idTextAnchor687"><span class="No-Break">https://portswigger.net/blog/exploiting-cors-misconfigurations-for-bitcoins-and-bounties<span id="_idTextAnchor688"/></span></a><span class="No-Break">.</span><a id="_idTextAnchor689"/></p>
+			<h1 id="_idParaDest-279"><a id="_idTextAnchor690"/>Performing Java deserialization attacks</h1>
+			<p><strong class="bold">Serialization</strong> is a mechanism provided in various languages<a id="_idIndexMarker690"/> that allows the saving<a id="_idIndexMarker691"/> of an object’s state in binary format. It is used for speed and obfuscation. The turning of an object back from binary into an object is deserialization. In cases where user input is used within an object and that object is later serialized, it creates an attack vector for arbitrary code injection and possible remote code execution. We will look at a Burp Suite extension that will assist web-penetration testers in assessing applications for Java <span class="No-Break">deserialization vulnerabiliti<a id="_idTextAnchor691"/>e<a id="_idTextAnchor692"/>s.</span></p>
+			<h2 id="_idParaDest-280"><a id="_idTextAnchor693"/>Getting ready</h2>
+			<p>Login to your PortSwigger account. Using <em class="italic">Lab: Exploiting Java deserialization with Apache Commons</em> (<a href="B21173_11.xhtml#_idTextAnchor682">https://portswigger.net/web-security/deserialization/exploiting/lab-deserialization-exploiting-java-deserialization-with-apache-commons</a>) and a hand-crafted<a id="_idIndexMarker692"/> serialized code snippet, we will demonstrate how to use the <strong class="bold">Java Deserialization Scanner</strong> to assist in performing Java <span class="No-Break">deserialization attacks.</span></p>
+			<p>You will need to use an old Java version, such as JDK 7, along with the third-party JAR file for <strong class="source-inline">ysoserial</strong> to complete <span class="No-Break">this recipe.</span></p>
+			<p>Here are the Java SE 7 archive <span class="No-Break">downloads: </span><a href="B21173_11.xhtml#_idTextAnchor679"><span class="No-Break">https://www.oracle.com/java/technologies/javase/javase7-archive-downloads.html</span></a><span class="No-Break">:</span></p>
+			<ol>
+				<li>Select the download for your environment. For example, for Windows x64 you would download the <span class="No-Break"><strong class="source-inline">jdk-7u80-windows-x64.exe</strong></span><span class="No-Break"> file.</span></li>
+				<li>After download, double-click and follow the prompts <span class="No-Break">to install.</span></li>
+			</ol>
+			<p class="callout-heading">Note</p>
+			<p class="callout">Uninstall this from your system after you complete the recipe as it is a very insecure version <span class="No-Break">of Java.</span></p>
+			<ol>
+				<li value="3">Remember the location of the JDK 7 on your <span class="No-Break">local system.</span></li>
+			</ol>
+			<p>Here is the <strong class="source-inline">ysoserial</strong> JAR file <span class="No-Break">download: </span><span class="No-Break">https://github.com/frohoff/ysoserial/releases/tag/v0.0.6</span><span class="No-Break">:</span></p>
+			<ol>
+				<li>Select the <strong class="source-inline">ysoserial-all.jar</strong> file <span class="No-Break">for download.</span></li>
+				<li>Remember the location<a id="_idIndexMarker693"/> of the <strong class="source-inline">ysoserial-all.jar</strong> file on your <span class="No-Break">local sy<a id="_idTextAnchor694"/>s<a id="_idTextAnchor695"/>tem.</span></li>
+			</ol>
+			<h2 id="_idParaDest-281"><a id="_idTextAnchor696"/>How to do it...</h2>
+			<ol>
+				<li value="1">Switch to Burp Suite <strong class="bold">Extensions</strong> | <strong class="bold">BApp Store</strong> and install the <strong class="bold">Java Deserialization </strong><span class="No-Break"><strong class="bold">Scanner</strong></span><span class="No-Break"> plugin:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer611" class="IMG---Figure">
+					<img src="image/B21173_11_045.jpg" alt="Figure 11.45 – Add Java Deserialization Scanner extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.45 – Add Java Deserialization Scanner extension</p>
+			<ol>
+				<li value="2">Go to <em class="italic">Lab: Exploiting Java deserialization with Apache Commons</em> and click the <strong class="bold">Access the lab</strong> button to start <span class="No-Break">your instance:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer612" class="IMG---Figure">
+					<img src="image/B21173_11_046.jpg" alt="Figure 11.46 – Lab lesson"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.46 – Lab lesson</p>
+			<ol>
+				<li value="3">After your instance<a id="_idIndexMarker694"/> of the lab loads, use the Burp Suite browser to capture your traffic. Log in to the application using the <span class="No-Break">credentials </span><span class="No-Break"><strong class="source-inline">wiener</strong></span><span class="No-Break">/</span><span class="No-Break"><strong class="source-inline">peter</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer613" class="IMG---Figure">
+					<img src="image/B21173_11_047.jpg" alt="Figure 11.47 – Click on My account to log in"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.47 – Click on My account to log in</p>
+			<p>Use the supplied credentials to log in to <span class="No-Break">the application.</span></p>
+			<div>
+				<div id="_idContainer614" class="IMG---Figure">
+					<img src="image/B21173_11_048.jpg" alt="Figure 11.48 – Log in with the provided credentials"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.48 – Log in with the provided credentials</p>
+			<ol>
+				<li value="4">Switch to the Burp<a id="_idIndexMarker695"/> Suite <strong class="bold">Proxy</strong>| <strong class="bold">HTTP history</strong> tab and look for the request after login. Note the session cookie is using <span class="No-Break">Java serialization.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer615" class="IMG---Figure">
+					<img src="image/B21173_11_049.jpg" alt="Figure 11.49 – Notice the serialized cookie value"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.49 – Notice the serialized cookie value</p>
+			<ol>
+				<li value="5">Right-click, select <strong class="bold">Extensions</strong> and send<a id="_idIndexMarker696"/> the request to the <strong class="bold">Java Deserialization Scanner</strong> | <strong class="bold">Send request to DS – Manual </strong><span class="No-Break"><strong class="bold">testing</strong></span><span class="No-Break"> tab.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer616" class="IMG---Figure">
+					<img src="image/B21173_11_050.jpg" alt="Figure 11.50 – Send request to extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.50 – Send request to extension</p>
+			<ol>
+				<li value="6">Notice a new tab<a id="_idIndexMarker697"/> is available entitled <strong class="bold">Deserialization Scanner</strong> with our request present in the <strong class="bold">Manual testing</strong> tab. Highlight the serialized value and click the <strong class="bold">Set Insertion Point</strong> button. Notice the substitution markers, which look like dollar signs, surrounding our <span class="No-Break">serialized value.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer617" class="IMG---Figure">
+					<img src="image/B21173_11_051.jpg" alt="Figure 11.51 – Set the insertion point"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.51 – Set the insertion point</p>
+			<p>After setting our insertion<a id="_idIndexMarker698"/> point, look at the bottom panel and move the <strong class="bold">Encode using Base64</strong> option from the bottom-left panel to the right panel by clicking the <strong class="bold">Add</strong> button. Additionally, add the <strong class="bold">Encode using URL encoding</strong> option from the left panel to the <span class="No-Break">right panel.</span></p>
+			<div>
+				<div id="_idContainer618" class="IMG---Figure">
+					<img src="image/B21173_11_052.jpg" alt="Figure 11.52 – Add Base64 encoding and URL encoding"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.52 – Add Base64 encoding and URL encoding</p>
+			<ol>
+				<li value="7">Let’s send the request over to the <strong class="bold">Exploiting</strong> tab by right-clicking and selecting <strong class="bold">Send to </strong><span class="No-Break"><strong class="bold">Exploitation tab</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer619" class="IMG---Figure">
+					<img src="image/B21173_11_053.jpg" alt="Figure 11.53 – Send request to Exploitation tab"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.53 – Send request to Exploitation tab</p>
+			<ol>
+				<li value="8">To make the extension<a id="_idIndexMarker699"/> work for us, we need to configure the settings for the location of Java and the <strong class="source-inline">ysoserial</strong> JAR file within the <strong class="bold">Configurations</strong> tab (note your path values will be different from what is shown in this screenshot since you must use the paths for your <span class="No-Break">local system):</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer620" class="IMG---Figure">
+					<img src="image/B21173_11_054.jpg" alt="Figure 11.54 – Configure Java and ysoserial within the Deserialization Scanner Extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.54 – Configure Java and ysoserial within the Deserialization Scanner Extension</p>
+			<ol>
+				<li value="9">Switch to the <strong class="bold">Deserialization Scanner</strong> | <strong class="bold">Exploiting</strong> tab and ensure you still have the Base64 encoding button added at the bottom as well as the URL encoding button. Both of these<a id="_idIndexMarker700"/> encodings should be in the <span class="No-Break">bottom-right panel.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer621" class="IMG---Figure">
+					<img src="image/B21173_11_055.jpg" alt="Figure 11.55 – On the Exploiting tab, make sure that both encodings are on the right panel"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.55 – On the Exploiting tab, make sure that both encodings are on the right panel</p>
+			<ol>
+				<li value="10">Add the <strong class="source-inline">CommonsCollections4 'rm /home/carlos/morale.txt'</strong> command<a id="_idIndexMarker701"/> to the <strong class="source-inline">java -jar ysoserial</strong> <span class="No-Break">text area:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer622" class="IMG---Figure">
+					<img src="image/B21173_11_056.jpg" alt="Figure 11.56 – Set the gadget and command"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.56 – Set the gadget and command</p>
+			<ol>
+				<li value="11">You are now ready to build the payload. Generate the payload by clicking the <strong class="bold">Attack</strong> button at <span class="No-Break">the bottom.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer623" class="IMG---Figure">
+					<img src="image/B21173_11_057.jpg" alt="Figure 11.57 – Attack mode and payload created"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.57 – Attack mode and payload created</p>
+			<ol>
+				<li value="12">Send the modified<a id="_idIndexMarker702"/> request <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Repeater</strong></span><span class="No-Break">:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer624" class="IMG---Figure">
+					<img src="image/B21173_11_058.jpg" alt="Figure 11.58 – Send to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.58 – Send to Repeater</p>
+			<p>Click the <strong class="bold">Send</strong> button to solve <span class="No-Break">the lab:</span></p>
+			<div>
+				<div id="_idContainer625" class="IMG---Figure">
+					<img src="image/B21173_11_059.jpg" alt="Figure 11.59 – Response is 500 with exception"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.59 – Response is 500 with exception</p>
+			<p>Look more closely<a id="_idIndexMarker703"/> at the stacktrace returned in the 500 response. Notice there is a Java instantiation error. This message is proof of <span class="No-Break">our exploit.</span></p>
+			<div>
+				<div id="_idContainer626" class="IMG---Figure">
+					<img src="image/B21173_11_060.jpg" alt="Figure 11.60 – Details within the 500 response of the instantiation error"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.60 – Details within the 500 response of the instantiation error</p>
+			<ol>
+				<li value="13">Notice the congratulatory banner in <span class="No-Break">the browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer627" class="IMG---Figure">
+					<img src="image/B21173_11_061.jpg" alt="Figure 11.61 – Congratulatory banner"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.61 – Congratulatory banner</p>
+			<h2 id="_idParaDest-282">H<a id="_idTextAnchor697"/>o<a id="_idTextAnchor698"/>w it works...</h2>
+			<p>In cases where application code receives user input directly into an object without performing sanitization on such input, an attacker has the opportunity to provide arbitrary commands. The input<a id="_idIndexMarker704"/> is then serialized and run on the operating system where the application resides, creating a possible attack vector for remote <span class="No-Break">code execution.</span></p>
+			<h1 id="_idParaDest-283"><a id="_idTextAnchor699"/>H<a id="_idTextAnchor700"/>acking GraphQL using Burp Suite</h1>
+			<p>GraphQL is a very<a id="_idIndexMarker705"/> commonly used API<a id="_idIndexMarker706"/> query language. The main difference<a id="_idIndexMarker707"/> between using REST APIs and GraphQL is the structure of the call. REST API calls require multiple calls to accomplish a task, whereas GraphQL makes a single call containing the entire schema structure. The GraphQL parser determines which components of the schema require lookups<a id="_idIndexMarker708"/> or changes. In this recipe, we will learn how to leverage a Burp Suite extension called <strong class="bold">GraphQL Raider</strong> to read, mutate, and attack <span class="No-Break">GraphQL schemas.</span></p>
+			<h2 id="_idParaDest-284"><a id="_idTextAnchor701"/>Getting ready</h2>
+			<p>The <strong class="bold">GraphQL Raider</strong> extension can be found in <strong class="bold">BApp Store</strong>. We will download and install the extension within our Burp Suite instance. Then, we’ll see how to use the extension against <span class="No-Break">GraphQL endpoints.</span></p>
+			<h2 id="_idParaDest-285"><a id="_idTextAnchor702"/>How to do it...</h2>
+			<ol>
+				<li>Inside Burp<a id="_idIndexMarker709"/> Suite <strong class="bold">Extensions</strong> | <strong class="bold">BApp Store</strong>, select <strong class="bold">GraphQL Raider</strong> and click<a id="_idIndexMarker710"/> the <span class="No-Break"><strong class="bold">Install</strong></span><span class="No-Break"> button.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer628" class="IMG---Figure">
+					<img src="image/B21173_11_062.jpg" alt="Figure 11.62 – The GraphQL Raider extension"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.62 – The GraphQL Raider extension</p>
+			<ol>
+				<li value="2">We will use the free GraphQL endpoint with Spacex data available online. In <strong class="bold">Proxy</strong> | <strong class="bold">Intercept</strong>, click the <strong class="bold">Open browser</strong> button to open the Burp <span class="No-Break">Suite browser.</span></li>
+				<li>Browse to the following <span class="No-Break">URL: </span><a href="B21173_11.xhtml#_idTextAnchor676"><span class="No-Break">https://spacex-production.up.railway.app/</span></a><span class="No-Break">.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer629" class="IMG---Figure">
+					<img src="image/B21173_11_063.jpg" alt="Figure 11.63 – GraphQL application online"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.63 – GraphQL application online</p>
+			<ol>
+				<li value="4">Go ahead and perform<a id="_idIndexMarker711"/> the sample query by clicking<a id="_idIndexMarker712"/> the <strong class="bold">ExampleQuery</strong> button within the Burp <span class="No-Break">Suite browser:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer630" class="IMG---Figure">
+					<img src="image/B21173_11_064.jpg" alt="Figure 11.64 – Run ExampleQuery"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.64 – Run ExampleQuery</p>
+			<p>Look for <strong class="bold">Request</strong> and <strong class="bold">Response</strong> in the Burp Suite <strong class="bold">Proxy</strong> | <strong class="bold">HTTP </strong><span class="No-Break"><strong class="bold">history</strong></span><span class="No-Break"> table.</span></p>
+			<div>
+				<div id="_idContainer631" class="IMG---Figure">
+					<img src="image/B21173_11_065.jpg" alt="Figure 11.65 – See ExampleQuery in Burp Suite"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.65 – See ExampleQuery in Burp Suite</p>
+			<ol>
+				<li value="5">Right-click<a id="_idIndexMarker713"/> on <strong class="bold">Request</strong> and send<a id="_idIndexMarker714"/> it <span class="No-Break">to </span><span class="No-Break"><strong class="bold">Repeater</strong></span><span class="No-Break">.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer632" class="IMG---Figure">
+					<img src="image/B21173_11_066.jpg" alt="Figure 11.66 – Send to Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.66 – Send to Repeater</p>
+			<ol>
+				<li value="6">Inside <strong class="bold">Repeater</strong>, look for the <strong class="bold">GraphQL</strong> label or a downward-pointing<a id="_idIndexMarker715"/> caret just after<a id="_idIndexMarker716"/> the <strong class="bold">Pretty</strong>, <strong class="bold">Raw</strong>, and <strong class="bold">Hex</strong> labels. Notice the extension provides a clearer query to read along with variables and the <strong class="bold">Injection </strong><span class="No-Break"><strong class="bold">Points</strong></span><span class="No-Break"> tab.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer633" class="IMG---Figure">
+					<img src="image/B21173_11_067.jpg" alt="Figure 11.67 – Use the GraphQL extension within Repeater"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.67 – Use the GraphQL extension within Repeater</p>
+			<ol>
+				<li value="7">In the <strong class="bold">Repeater</strong> | <strong class="bold">GraphQL</strong> tab, replace <strong class="source-inline">ExampleQuery</strong> with the<a id="_idIndexMarker717"/> following <strong class="source-inline">IntrospectionQuery</strong> to see<a id="_idIndexMarker718"/> the <span class="No-Break">entire schema:</span><pre class="source-code">
+query IntrospectionQuery {__schema{queryType{name},mutationType{name},types{kind,name,description,fields(
+includeDeprecated:true){name,description,args{name,description,type{kind,name,ofType{kind,name,ofType{
+kind,name,ofType{,kind,name,ofType{kind,name,ofType{
+kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue},type{
+kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{
+kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},
+isDeprecated,deprecationReason},inputFields{
+name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType {kind,name,
+ofType{kind,name,ofType{kind,name,ofType {kind,name}}}}}}}},defaultValue},interfaces{kind,name,ofType{kind,name,ofType {
+kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},
+enumValues(includeDeprecated:true){name,description,isDeprecated,deprecationReason,},possibleTypes{kind,name,ofType{
+kind,name,ofType{kind,name,ofType{
+kind,name,ofType {kind,name,ofType{kind,name,ofType{kind,name,ofType{
+kind,name}}}}}}}}},directives{name,description,locations,args{name,description,type{
+kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{
+kind,name,ofType{kind,name,ofType {kind,name}}}}}}}},defaultValue}}}}</pre></li>				<li>Before clicking <strong class="bold">Send</strong>, return<a id="_idIndexMarker719"/> to the <strong class="bold">Raw</strong> tab inside <strong class="bold">Repeater</strong> and<a id="_idIndexMarker720"/> replace <strong class="source-inline">ExampleQuery</strong> with <strong class="source-inline">IntrospectionQuery</strong> for <strong class="source-inline">operationName</strong>. Note that if you do not make this change, the query will <span class="No-Break">not succeed.</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer634" class="IMG---Figure">
+					<img src="image/B21173_11_068.jpg" alt="Figure 11.68 – Change operationName to “IntrospectionQuery”"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.68 – Change operationName to “IntrospectionQuery”</p>
+			<ol>
+				<li value="9">Click <strong class="bold">Send</strong> and now<a id="_idIndexMarker721"/> you can see<a id="_idIndexMarker722"/> the <span class="No-Break">entire schema:</span></li>
+			</ol>
+			<div>
+				<div id="_idContainer635" class="IMG---Figure">
+					<img src="image/B21173_11_069.jpg" alt="Figure 11.69 – See the introspection query and results"/>
+				</div>
+			</div>
+			<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 11.69 – See the introspection query and results</p>
+			<h2 id="_idParaDest-286"><a id="_idTextAnchor703"/>How it works...</h2>
+			<p>Using the GraphQL extension allows you to craft queries and mutations inside Burp Suite to test for vulnerabilities<a id="_idIndexMarker723"/> against target applications supporting GraphQL. The extension provides <a id="_idIndexMarker724"/>a much clearer view of requests, in contrast to the standard HTTP <strong class="bold">Pretty</strong> or <strong class="bold">Raw</strong> <span class="No-Break">request view.</span></p>
+			<h2 id="_idParaDest-287"><a id="_idTextAnchor704"/>There’s more...</h2>
+			<p>GraphQL is a vast subject<a id="_idIndexMarker725"/> with many tutorials and supporting documentation. We recommend starting your research <span class="No-Break">here: </span><a href="B21173_11.xhtml#_idTextAnchor673"><span class="No-Break">https://graphql.org/</span></a><span class="No-Break">.</span></p>
+		</div>
+	</body></html>

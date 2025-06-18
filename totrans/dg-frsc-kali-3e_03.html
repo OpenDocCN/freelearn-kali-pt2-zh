@@ -1,0 +1,388 @@
+<html><head></head><body>
+<div id="sbo-rt-content"><div id="_idContainer036">
+<h1 class="chapter-number" id="_idParaDest-25"><a id="_idTextAnchor024"/>2</h1>
+<h1 id="_idParaDest-26"><a id="_idTextAnchor025"/>Introduction to Digital Forensics</h1>
+<p>This chapter introduces the various aspects of the science of digital forensics. It introduces you, particularly those of you who may be new to <strong class="bold">Digital Forensics and Incident Response</strong> (<strong class="bold">DFIR</strong>), to the basics, which we will build upon as we progress further into <span class="No-Break">the book.</span></p>
+<p>The topics we are going to cover in this <span class="No-Break">chapter are:</span></p>
+<ul>
+<li>What is <span class="No-Break">digital forensics?</span></li>
+<li>The need for blue and <span class="No-Break">purple teams</span></li>
+<li>Digital forensics methodologies <span class="No-Break">and frameworks</span></li>
+<li>Comparison of digital forensics <strong class="bold">operating </strong><span class="No-Break"><strong class="bold">systems</strong></span><span class="No-Break"> (</span><span class="No-Break"><strong class="bold">OSs</strong></span><span class="No-Break">)</span></li>
+<li>The need for multiple forensics tools in <span class="No-Break">digital investigations</span></li>
+<li>Comparison of commercial versus open source <span class="No-Break">forensic tools</span></li>
+</ul>
+<h1 id="_idParaDest-27"><a id="_idTextAnchor026"/><a id="_idTextAnchor027"/>What is digital forensics?</h1>
+<p>The first thing I’d like <a id="_idIndexMarker050"/>to cover in this chapter is an understanding of digital forensics and its proper practices and procedures. At some point, you may have come across several books, blogs, and even videos demonstrating various aspects of digital forensics and the different tools used. It is of great importance to understand that forensics itself is a science involving very well-documented best practices and methods to reveal whether something exists or <span class="No-Break">does not.</span></p>
+<p>Digital forensics involves the preservation, acquisition, documentation, analysis, and interpretation of evidence from various storage media types found. It is not limited to laptops, desktops, tablets, and mobile devices but also extends to data in transit, which is transmitted across public or <span class="No-Break">private networks.</span></p>
+<p>In most cases, digital forensics involves the discovery and/or recovery of data using various methods and tools available to the investigator. Digital forensics investigations include, but are not limited to, <span class="No-Break">the following:</span></p>
+<ul>
+<li><strong class="bold">Data recovery</strong>: Investigating<a id="_idIndexMarker051"/> and recovering data <a id="_idIndexMarker052"/>that may have been deleted, changed to different file extensions, and <span class="No-Break">even hidden.</span></li>
+<li><strong class="bold">Identity theft</strong>: Many<a id="_idIndexMarker053"/> fraudulent activities, ranging from stolen credit card usage to fake social media profiles, usually involve some sort of <span class="No-Break">identity theft.</span></li>
+<li><strong class="bold">Malware and ransomware investigations</strong>: To date, ransomware spread by Trojans and <a id="_idIndexMarker054"/>worms across networks and the internet are some of the biggest threats to companies, military organizations, and individuals. Malware can also be spread to and by mobile devices and <span class="No-Break">smart devices.</span></li>
+<li><strong class="bold">Network and internet investigations</strong>: Investigating <strong class="bold">Denial-of-Service </strong>(<strong class="bold">DoS</strong>) and <strong class="bold">Distributed DoS</strong> (<strong class="bold">DDoS</strong>) attacks <a id="_idIndexMarker055"/>and <a id="_idIndexMarker056"/>tracking<a id="_idIndexMarker057"/> down accessed devices, including printers <span class="No-Break">and files.</span></li>
+<li><strong class="bold">Email investigations</strong>: Investigating <a id="_idIndexMarker058"/>the source <a id="_idIndexMarker059"/>and IP (<strong class="bold">internet protocol</strong>) origins, attached content, and geolocation information can all <span class="No-Break">be investigated.</span></li>
+<li><strong class="bold">Corporate espionage</strong>: Many <a id="_idIndexMarker060"/>companies are moving away from print copies and toward cloud and traditional disk media. As such, a digital footprint is always left behind; should sensitive information be accessed <span class="No-Break">or transmitted?</span></li>
+<li><strong class="bold">Child pornography investigations</strong>: Sadly, the<a id="_idIndexMarker061"/> reality is that children are widely exploited on the internet and within the deep web. With the use of technology and highly-skilled forensic analysts, investigations can be carried out to bring down exploitation rings by analyzing internet<a id="_idIndexMarker062"/> traffic, browser history, payment transactions, email records, <span class="No-Break">and images.</span></li>
+</ul>
+<p>Next, we’ll look at the need for blue and purple teams and the skillsets required <span class="No-Break">for each.</span></p>
+<h1 id="_idParaDest-28"><a id="_idTextAnchor028"/>The need for blue and purple teams</h1>
+<p>As discussed in <a href="B19441_01.xhtml#_idTextAnchor015"><span class="No-Break"><em class="italic">Chapter 1</em></span></a>, <em class="italic">Red, Blue, and Purple Teaming Fundamentals</em>, blue teams are<a id="_idIndexMarker063"/> more concerned with DFIR, and purple teamers are those individuals who can operate and understand both the offensive and defensive sides <span class="No-Break">of cybersecurity.</span></p>
+<p>In recent times, and especially during the Covid-19 pandemic lockdowns, you may have read or noticed that there was a substantial increase in cyberattacks. A major contributing factor to these attacks will have been the lack of awareness training by employees at all levels who may have fallen victim to phishing attacks. There were numerous phishing campaigns during the lockdown period, which tricked and social-engineered users into either opening malicious emails or divulging personal or corporate information. This was done by threat actors using email subjects relating to Covid-19 outbreaks, health updates, and even through requests for help from the compromised (hacked) email accounts of friends and family who may have appeared to be stranded in countries under lockdown and were asking for financial assistance to get <span class="No-Break">back home.</span></p>
+<p>In the last year or two, there has also been an alarming increase in ransomware attacks from notorious ransomware<a id="_idIndexMarker064"/> and <strong class="bold">Advanced Persistence Threat</strong> (<strong class="bold">APT</strong>) groups, with ransomware being readily available for purchase on the dark web. ALPHV, Darkside, Revil, and BlackCat are just some of the most notorious ransomware and APT groups whose names generally strike fear into the hearts of any cybersecurity professional. These groups are known to compromise individuals and companies and then request that a ransom be paid, ranging from thousands to millions of dollars. Not only is data highly encrypted and lost, but many of these groups now attack the victims using DDoS attacks and also release exfiltrated data belonging to the victim on dark web blogs. We’ll delve a bit more into ransomware later on in <span class="No-Break">the book.</span></p>
+<p>Responding to an incident is one thing, as we (hopefully) may have a plan or formal procedures to adhere to, but if we don’t have the right mechanisms in place to even detect the incident, then we may be far worse off than initially thought. This is where the need for blue and purple teamers arises. Hackers, malware developers, APTs, and the like do not take time off and certainly do not care about the financial state of companies and economies. Ransomware has, in the past, proven to be very profitable in some cases, and it must be considered that at any given day or time, malware developers are working on new methods <span class="No-Break">of compromise.</span></p>
+<p>It is imperative that each organization have a blue team, if not a purple team, or at least outsource the talent and functions of a team if deciding against having one in-house. There are <a id="_idIndexMarker065"/>many <strong class="bold">Managed Security Services</strong> (<strong class="bold">MSS</strong>) companies out there that can perform all necessary monitoring and alerting systems. However, a company with one or two well-trained blue and/or purple teamers will always have the advantage where preparedness and response are concerned, as in-house teams tend to have the advantage of not just knowing the technical details of the company but also having an understanding of the organizational culture and the level of (and sometimes lack of) awareness of the staff and general human resources, which more often than not, may prove to be the weakest link within the organization as far as cybersecurity <span class="No-Break">is concerned.</span></p>
+<p>Having blue teamers <a id="_idIndexMarker066"/>conduct periodic cybersecurity awareness training is just as important as patching critical infrastructure devices, such as firewalls, routers, switches, and servers. Cybersecurity awareness is now something that must be considered just as much as physical safety awareness, as one small mistake could potentially bring an entire conglomerate to its knees and cost the organization millions of dollars. It helps a great deal if employees are aware of the general cybersecurity threats to the organization and themselves, and more so if they are made aware of specific threats to their organization and sector and educated on specific threat instances that may have occurred in the organization. This way, the blue teamers can create a cybersecurity awareness culture, where persons are more alert and understand the risks and impact of individual actions as far as the security of the organization and its data and assets <span class="No-Break">are concerned.</span></p>
+<p>To summarize the above statements, blue and purple teams are responsible for several critical roles within <a id="_idIndexMarker067"/>the <span class="No-Break">organization, including:</span></p>
+<ul>
+<li><span class="No-Break">Threat intelligence</span></li>
+<li><span class="No-Break">Threat hunting</span></li>
+<li><span class="No-Break">Incident response</span></li>
+<li>Monitoring and <span class="No-Break">event management</span></li>
+<li><span class="No-Break">Log reviews</span></li>
+<li>Vulnerability assessments (<span class="No-Break">red/purple team)</span></li>
+<li>Penetration testing (<span class="No-Break">red/purple team)</span></li>
+<li><span class="No-Break">Threat</span><span class="No-Break"><a id="_idIndexMarker068"/></span><span class="No-Break"> simulation</span></li>
+</ul>
+<p>In the next section, we’ll look at digital forensics methodologies and frameworks, which we can use as<a id="_idIndexMarker069"/> best-practice guidelines when performing evidence acquisitions and <span class="No-Break">forensic investigations.</span></p>
+<h1 id="_idParaDest-29"><a id="_idTextAnchor029"/>Digital forensics methodologies and frameworks</h1>
+<p>Keeping in mind<a id="_idIndexMarker070"/> that<a id="_idIndexMarker071"/> forensics is a science, digital forensics requires that you follow appropriate best practices and procedures in an effort to produce the same results time and time again, providing proof of evidence, preservation, and integrity, which can be replicated if called upon to <span class="No-Break">do so.</span></p>
+<p>Although many individuals may not be performing digital forensics to be used as evidence in a court of law, it is best to practice DFIR in such a way as it can be accepted and presented in a court of law. The main purpose of adhering to best practices set by organizations specializing in digital forensics and incident response is to maintain the integrity of the evidence for the duration of the investigation. In the event that the investigator’s work must be scrutinized and critiqued by another or an opposing party, the results found by the investigator must be able to be recreated, thereby proving the integrity of the investigation. The purpose of this is to ensure that your methods can be repeated and, if dissected or scrutinized, produce the same results time and again. The methodology used, including the procedures and findings of your investigation, should always allow for the maintenance of the data’s integrity, regardless of what tools <span class="No-Break">are used.</span></p>
+<p>The best practices demonstrated in this book ensure that the original evidence is not tampered with, or in cases of investigating devices and data in a live or production environment, show well-documented proof that the necessary steps were taken during the investigation to avoid unnecessary tampering with the evidence, thereby preserving the integrity of the evidence. For those completely new to investigations, I recommend familiarizing yourself with some of the various practices and methodologies available and widely practiced by the <span class="No-Break">professional community.</span></p>
+<p>As such, there <a id="_idIndexMarker072"/>exist <a id="_idIndexMarker073"/>several guidelines and methodologies that you should adopt, or at least follow, to ensure that examinations and investigations are <span class="No-Break">forensically sound.</span></p>
+<p>The best-practices <a id="_idIndexMarker074"/>documents mentioned in this <span class="No-Break">chapter are:</span></p>
+<ul>
+<li>The <strong class="bold">Association of Chief Police Officers</strong> (<strong class="bold">ACPO</strong>) <em class="italic">Good Practice Guide for </em><span class="No-Break"><em class="italic">Digital Evidence</em></span></li>
+<li>The <strong class="bold">Scientific Working Group on Digital Evidence</strong> (<strong class="bold">SWGDE</strong>) <span class="No-Break">Forensics Publications</span></li>
+</ul>
+<p>Although <a id="_idIndexMarker075"/>written in 2012, the ACPO, now functioning as the <strong class="bold">National Police Chiefs’ Council</strong> (<strong class="bold">NPCO</strong>), put forth a document in<a id="_idIndexMarker076"/> a PDF file called <em class="italic">Good Practice Guide for Digital Evidence</em>, which includes best practices when carrying out digital forensics investigations, particularly focusing on evidence acquisition. The ACPO <em class="italic">Good Practice Guide for Digital Evidence</em> was then adopted and adhered to by law enforcement agencies in England, Wales, and Northern Ireland and can be downloaded in its entirety <span class="No-Break">at </span><a href="https://www.npcc.police.uk/documents/crime/2014/Revised%20Good%20Practice%20Guide%20for%20Digital%20Evidence_Vers%205_Oct%202011_Website.pdf"><span class="No-Break">https://www.npcc.police.uk/documents/crime/2014/Revised%20Good%20Practice%20Guide%20for%20Digital%20Evidence_Vers%205_Oct%202011_Website.pdf</span></a><span class="No-Break">.</span></p>
+<p>Some useful topics provided by this <span class="No-Break">guide include:</span></p>
+<ul>
+<li>Digital <span class="No-Break">evidence locations</span></li>
+<li>Issues relating <span class="No-Break">to seizure</span></li>
+<li>Capturing <span class="No-Break">online evidence</span></li>
+<li>Data analysis <span class="No-Break">and interpretation</span></li>
+</ul>
+<p>Other useful and<a id="_idIndexMarker077"/> more<a id="_idIndexMarker078"/> recent document sets on best practices in digital forensics can be found on the SWGDE website. The SWGDE was founded in 1998 by the Federal Crime Laboratory Directors Group with major members and contributors, including the FBI, DEA, NASA, and the Department of Defense Computer Forensics Laboratory. Though this document details procedures and practices within a formal computer forensics laboratory setting, the practices can still be applied to non-laboratory investigations by those not currently in or with access to such <span class="No-Break">an environment.</span></p>
+<p>The previous editions of this book referred to the SWGDE documents published between 2006 and 2016. The older <em class="italic">SWGDE Best Practices</em> publication from 2006 is no longer on<a id="_idIndexMarker079"/> the SWGDW website, but it sheds light on many of the <span class="No-Break">topics, including:</span></p>
+<ul>
+<li>Evidence collection <span class="No-Break">and acquisition</span></li>
+<li>Investigating devices that are powered on and <span class="No-Break">powered off</span></li>
+<li><span class="No-Break">Evidence handling</span></li>
+<li>Analysis <span class="No-Break">and reporting</span></li>
+</ul>
+<p>This document is publicly available <span class="No-Break">at </span><a href="https://www.oas.org/juridico/spanish/cyb_best_pract.pdf"><span class="No-Break">https://www.oas.org/juridico/spanish/cyb_best_pract.pdf</span></a><span class="No-Break">.</span></p>
+<p>There have since been several updates, and all newer living documents can now be found on the <a id="_idIndexMarker080"/>updated SWGDE site at <a href="https://www.swgde.org/documents/published-by-committee/forensics">https://www.swgde.org/documents/published-by-committee/forensics</a>. There are over 35 publications available for free download, 17 of which were published between 2017 and 2022. I highly recommend downloading these documents as they<a id="_idIndexMarker081"/> are <a id="_idIndexMarker082"/>nothing short of magnificent for DFIR practitioners and are each <a id="_idTextAnchor030"/>approximately 10 pages <span class="No-Break">or less.</span></p>
+<p>The <em class="italic">SWGDE Best Practices</em> updated<a id="_idIndexMarker083"/> living documents, as they are referred to, contain excellent, well-researched, and modern publications for DFIR best practices <a id="_idIndexMarker084"/>on <span class="No-Break">the following:</span></p>
+<ul>
+<li><em class="italic">Vehicle Infotainment and Telematics </em><span class="No-Break"><em class="italic">Systems</em></span><span class="No-Break"> (2022)</span></li>
+<li><em class="italic">Drone </em><span class="No-Break"><em class="italic">Forensics</em></span><span class="No-Break"> (2022)</span></li>
+<li><em class="italic">Acquiring Online </em><span class="No-Break"><em class="italic">Content</em></span><span class="No-Break"> (2022)</span></li>
+<li><em class="italic">Digital Evidence Acquisition from Cloud Service </em><span class="No-Break"><em class="italic">Providers</em></span><span class="No-Break"> (2020)</span></li>
+<li><em class="italic">Mobile Evidence Collection and </em><span class="No-Break"><em class="italic">Preservation</em></span><span class="No-Break"> (2020)</span></li>
+<li><em class="italic">Digital Evidence </em><span class="No-Break"><em class="italic">Collection</em></span><span class="No-Break"> (2018)</span></li>
+<li><em class="italic">Computer Forensic </em><span class="No-Break"><em class="italic">Examination</em></span><span class="No-Break"> (2018)</span></li>
+<li><em class="italic">Computer Forensic </em><span class="No-Break"><em class="italic">Acquisition</em></span><span class="No-Break"> (2018)</span></li>
+</ul>
+<p>There are many other useful best <span class="No-Break">practices publications.</span></p>
+<p>Now that we <a id="_idIndexMarker085"/>are<a id="_idIndexMarker086"/> familiar with DFIR methodologies and best practices, let us now have a look at <span class="No-Break">DFIR frameworks.</span></p>
+<h2 id="_idParaDest-30"><a id="_idTextAnchor031"/>DFIR frameworks</h2>
+<p>The aforementioned <a id="_idIndexMarker087"/>best practice guides, although dated, can <a id="_idIndexMarker088"/>still be used in conjunction with one or more frameworks. Whatever the task, the goals should remain the same, with the integrity of evidence always preserved throughout the entire DFIR process of evidence collection, examination, analysis, <span class="No-Break">and reporting.</span></p>
+<p>There are several DFIR frameworks available, which, if applied and implemented by organizations of all sizes, can aid in the business continuity and disaster recovery processes as any worthy DFIR plan should. Here is a list of some DFIR frameworks that will be discussed in more detail in <a href="B19441_07.xhtml#_idTextAnchor120"><span class="No-Break"><em class="italic">Chapter 7</em></span></a>, <em class="italic">Incident Response, Data Acquisition, and DFIR Frameworks</em>. It may be a good idea to download these documents and keep them together as reference materials, which you should become familiar with as a DFIR practitioner (feel free to proceed to the next section and come back to <span class="No-Break">these later):</span></p>
+<ul>
+<li><em class="italic">ISO/IEC 27037:2021 Information technology — Security techniques — Guidelines for identification, collection, acquisition, and preservation of digital </em><span class="No-Break"><em class="italic">evidence</em></span><span class="No-Break">: </span><a href="https://www.iso.org/obp/ui/#iso:std:iso-iec:27037:ed-1:v1:en"><span class="No-Break">https://www.iso.org/obp/ui/<span id="_idTextAnchor032"/>#iso:std:iso-iec:27037:ed-1:v1:en</span></a></li>
+<li><em class="italic">NIST Special Publication (SP) 800-86 Guide to Integrating Forensic Techniques into Incident </em><span class="No-Break"><em class="italic">Response</em></span><span class="No-Break">: </span><a href="https://nvlpubs.nist.gov/nistpubs/legacy/sp/nistspecialpublication800-86.pdf"><span class="No-Break">https://nvlpubs.nist.gov/nistpubs/legacy/sp/nistspecialpublication800-86.pdf</span></a></li>
+<li><em class="italic">NIST Special Publication (SP) 800-61 Revision 2 Compu<a id="_idTextAnchor033"/>ter Security Incident Handling Guide</em>:  <a href="https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-61r2.pdf"><span class="No-Break">https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-61r2.pdf</span></a></li>
+<li><em class="italic">D4I - Digital forensics framework for reviewing and investigating </em><span class="No-Break"><em class="italic">cyber</em></span><span class="No-Break">: </span><a href="https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=929147"><span class="No-Break">https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=929147</span></a></li>
+<li><em class="italic">NISTIR 8428 Digital Forensics and Incident Response (DFIR) Framework for Operational Technology (OT)</em> (June <span class="No-Break">2022): </span><a href="https://nvlpubs.nist.gov/nistpubs/ir/2022/NIST.IR.8428.pdf"><span class="No-Break">https://nvlpubs.nist.gov/nistpubs/ir/2022/NIST.IR.8428.pdf</span></a></li>
+</ul>
+<p>Let’s now<a id="_idIndexMarker089"/> look <a id="_idIndexMarker090"/>at some forensic OSs and the differences between them in the <span class="No-Break">following section.</span></p>
+<h1 id="_idParaDest-31"><a id="_idTextAnchor034"/>Comparison of digital forensics operating systems</h1>
+<p>Just as there are <a id="_idIndexMarker091"/>several commercial tools available, there exist many open source tools available to investigators, amateurs, and professionals alike. Many of these tools are Linux based and can be found on several freely available forensic distributions, as we will discuss in <span class="No-Break">this section.</span></p>
+<p>The main question that usually arises when choosing tools is based on commercial versus open source. Whether you are using commercial tools or open source tools, the result should be the same, with the preservation and integrity of the original evidence being the <span class="No-Break">main priority.</span></p>
+<p class="callout-heading">Important note</p>
+<p class="callout">Budget is always an issue, and some commercial tools (as robust, accurate, and user-friendly as they might be) can cost thousands <span class="No-Break">of dollars.</span></p>
+<p>The open source tools are free to use under various open source licenses and should not be counted out just because they are not backed by enterprise developers <span class="No-Break">and researchers.</span></p>
+<p>Many open source tools are widely reviewed by the forensic community and may be open to more scrutiny, as they are available to the public and are built in <span class="No-Break">non-proprietary code.</span></p>
+<p>Though the focus of this book is on the forensic tools found in Kali Linux, which we will begin looking at toward the end of this section and onward, here are some of the more popular open source forensic distributions, or <span class="No-Break">distros, available.</span></p>
+<p>Each of the distros mentioned in the following sections is freely available at many locations, but for security reasons, we will provide the direct link from their homepages. The OSs featured in this section are not listed in any particular order and do not reflect any ratings, reviews, or even the author’s <span class="No-Break">personal preference.</span></p>
+<p>The forensic platforms we will be discussing in this <span class="No-Break">section are:</span></p>
+<ul>
+<li>DEFT <span class="No-Break">Linux 8</span></li>
+<li><strong class="bold">Computer Aided INvestigative Environment</strong> (<strong class="bold">CAINE</strong>) 12.4 Sidereal <a id="_idIndexMarker092"/>and CAINE <span class="No-Break">11 Wormhole</span></li>
+<li>CSI <span class="No-Break">Linux 2022.1</span></li>
+<li>Kali <span class="No-Break">Linux 2022.3</span></li>
+</ul>
+<p>In case you’re <a id="_idIndexMarker093"/>wondering, I use all of the platforms mentioned previously as live systems and virtual machines, and I also have dedicated machines for CSI Linux and Kali. Here’s a snip of my <strong class="bold">VirtualBox </strong><span class="No-Break"><strong class="bold">Manager</strong></span><span class="No-Break"> listing:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer014">
+<img alt="Figure 2.1: Listing of virtual machines in VirtualBox Manager" height="533" src="image/Figure_2.01_B19441.jpg" width="349"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.1: Listing <a id="_idTextAnchor035"/><a id="_idTextAnchor036"/><a id="_idTextAnchor037"/>of virtual machines in VirtualBox Manager</p>
+<h2 id="_idParaDest-32"><a id="_idTextAnchor038"/>Digital evidence and forensics toolkit Linux</h2>
+<p><strong class="bold">Digital Evidence and Forensics Toolkit</strong> (<strong class="bold">DEFT</strong>) Linux <a id="_idIndexMarker094"/>comes in a full version and a lighter<a id="_idIndexMarker095"/> version<a id="_idIndexMarker096"/> called <strong class="bold">DEFT Zero</strong>. For forensic purposes, you may wish to download the full version, as the Zero version does not support mobile forensics and <span class="No-Break">password-cracking features:</span></p>
+<ul>
+<li>Download <a id="_idIndexMarker097"/>page for DEFT Linux <span class="No-Break">8: </span><a href="https://archive.org/download/deft-8.2/deft-8.2.iso"><span class="No-Break">https://archive.org/download/deft-8.2/deft-8.2.iso</span></a></li>
+<li>Download<a id="_idIndexMarker098"/> page for DEFT Linux Z (<span class="No-Break">2018-2): </span><a href="https://sourceforge.net/projects/archiveos/files/d/deft/deftZ-2018-2.iso/download"><span class="No-Break">https://sourceforge.net/projects/archiveos/files/d/deft/deftZ-2018-2.iso/download</span></a><ul><li>Based on: <span class="No-Break">Ubuntu Desktop</span></li><li>Distribution type: Forensics and <span class="No-Break">incident response</span></li></ul></li>
+</ul>
+<p>Like the other distros mentioned in this list, DEFT, as shown in the following screenshot, is also a fully <a id="_idIndexMarker099"/>capable <strong class="bold">live response</strong> forensic tool that can be used on the go in situations where shutting down the machine is not possible and also allows for on-the-fly analysis of RAM and the swap file. Although a bit outdated, I personally still use DEFT 8.2 specifically for packet analysis <span class="No-Break">with Xplico:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer015">
+<img alt="Figure 2.2: DEFT Linux 8 boot menu" height="341" src="image/Figure_2.02_B19441.jpg" width="510"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.2: DEFT Linux 8 boot menu</p>
+<p>When booting from the DEFT Linux DVD, bootable flash, or other media, you are presented with various options, including the options to install DEFT Linux to the hard disk, use it as a live-response tool, or as an OS, by selecting the <strong class="bold">DEFT</strong> Linux 8 live option, as <span class="No-Break">shown here:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer016">
+<img alt="Figure 2.3: DEFT Linux menu" height="591" src="image/Figure_2.03_B19441.jpg" width="673"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.3: DEFT Linux menu</p>
+<p>In the<a id="_idIndexMarker100"/> previous<a id="_idIndexMarker101"/> screenshot, it can be seen that there are several forensic categories in DEFT Linux 8, such as <strong class="bold">Antimalware</strong>, <strong class="bold">Data Recovery</strong>, <strong class="bold">Hashing</strong>, <strong class="bold">Imaging</strong>, <strong class="bold">Mobile Forensics</strong>, <strong class="bold">Network Forensics</strong>, <strong class="bold">Password recovery</strong>, and <strong class="bold">Reporting tools</strong>. Within each category exist several tools created by various developers, giving the investigator quite a variety from which <span class="No-Break">to choose.</span></p>
+<p>DEFT contains many useful tools, and for comparative purposes, let’s look at the tools available in<a id="_idIndexMarker102"/> the <strong class="bold">Analysis</strong> menu <a id="_idIndexMarker103"/><span class="No-Break">of DEFT:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer017">
+<img alt="Figure 2.4: Forensic analysis tools in DEFT Linux" height="926" src="image/Figure_2.04_B19441.jpg" width="940"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US"><a id="_idTextAnchor039"/><a id="_idTextAnchor040"/><a id="_idTextAnchor041"/><a id="_idTextAnchor042"/>Figure 2.4: Forensic analysis tools in DEFT Linux</p>
+<h2 id="_idParaDest-33"><a id="_idTextAnchor043"/>Computer Aided INvestigative Environment (CAINE)</h2>
+<p>CAINE is a<a id="_idIndexMarker104"/> live-response<a id="_idIndexMarker105"/> bootable CD/DVD with options for booting in safe mode, text mode, as a live system, or in RAM, as shown as follows. It should be noted that the latest version, CAINE 12.4 (Sidereal), is not installable and is strictly a live-system OS only. If you wish to install CAINE, you can do so with CAINE 11 (Wormhole), although they can both be used as live systems for real-time acquisition and forensics, as seen in the <span class="No-Break">following screens.</span></p>
+<p><span class="No-Break"><em class="italic">Figure 2</em></span><em class="italic">.5</em> shows a screenshot of the CAINE 12.4 (Sidereal) boot screen menu, which allows you to choose between the different boot options in <span class="No-Break">CAINE 12.4:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer018">
+<img alt="Figure 2.5: The Caine 12.4 boot menu" height="532" src="image/Figure_2.05_B19441.jpg" width="746"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.5: The Caine 12.4 boot menu</p>
+<p><span class="No-Break"><em class="italic">Figure 2</em></span><em class="italic">.6</em> shows the CAINE 11 boot screen, which is almost identical to CAINE 12, as seen in <span class="No-Break"><em class="italic">Figure 2</em></span><span class="No-Break"><em class="italic">.5</em></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer019">
+<img alt="Figure 2.6: The Caine 11 boot menu" height="565" src="image/Figure_2.06_B19441.jpg" width="635"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.6: The Caine 11 boot menu</p>
+<p>The following<a id="_idIndexMarker106"/> is a<a id="_idIndexMarker107"/> summary of <span class="No-Break">CAINE details:</span></p>
+<ul>
+<li>Both CAINE 11 and 12 can be downloaded <span class="No-Break">at </span><a href="http://www.caine-live.net/"><span class="No-Break">http://www.caine-live.net/</span></a></li>
+<li>Based on: <span class="No-Break">GNU Linux</span></li>
+<li>Distribution type: Forensics and <span class="No-Break">incident response</span></li>
+</ul>
+<p>After selecting your boot option, one of the most noticeable features of CAINE is the easy way to find the write-blocker feature, seen and labeled as an <strong class="bold">UnBlock</strong> icon, as shown in the <span class="No-Break">following screenshot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer020">
+<img alt="Figure 2.7: CAINE 12 desktop interface" height="685" src="image/Figure_2.07_B19441.jpg" width="940"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.7: CAINE 12 desktop interface</p>
+<p>Activating <a id="_idIndexMarker108"/>this<a id="_idIndexMarker109"/> feature prevents the writing of data by the CAINE OS to the evidence machine or drive. This feature is incredibly useful if you do not have access to a hardware write-blocker, which we will look at in <a href="B19441_07.xhtml#_idTextAnchor120"><span class="No-Break"><em class="italic">Chapter 7</em></span></a><em class="italic">, Incident Response, Data Acquisitions, and </em><span class="No-Break"><em class="italic">DFIR Frameworks</em></span><span class="No-Break">.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer021">
+<img alt="Figure 2.8: CAINE write-blocker interface" height="409" src="image/Figure_2.08_B19441.jpg" width="793"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.8: CAINE write-blocker interface</p>
+<p><strong class="bold">Forensic tools</strong> is the <a id="_idIndexMarker110"/>first <a id="_idIndexMarker111"/>menu listed in CAINE. Like DEFT Linux, there are several categories in the menu, as seen in the following screenshot, with several of the more popular tools used in open source forensics. Besides the <a id="_idIndexMarker112"/>categories, there<a id="_idIndexMarker113"/> are direct links to some of the more well-known tools, such as <strong class="bold">Guymager</strong> and <strong class="bold">Autopsy</strong>, which will both be covered in detail in <span class="No-Break">later chapters:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer022">
+<img alt="Figure 2.9: Forensic tools available in CAINE 12" height="598" src="image/Figure_2.09_B19441.jpg" width="507"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.9: Forensic tools available in CAINE 12</p>
+<p>Let’s have a <a id="_idIndexMarker114"/>look at<a id="_idIndexMarker115"/> the tools within the <strong class="bold">Analysis</strong> menu in CAINE. There are far more <strong class="bold">Graphical User Interface</strong> (<strong class="bold">GUI</strong>) DFIR tools in <a id="_idIndexMarker116"/>CAINE than in DEFT, as <span class="No-Break">previously seen:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer023">
+<img alt="Figure 2.10: Analysis tools available in CAINE 12" height="755" src="image/Figure_2.10_B19441.jpg" width="674"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.10: Analysis tools available in CAINE 12</p>
+<p>We also have quite a variety of tools available in CAINE’s <strong class="bold">Memory </strong><span class="No-Break"><strong class="bold">forensics</strong></span><span class="No-Break"> menu:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer024">
+<img alt="Figure 2.11 – Memory forensics tools available in CAINE 12" height="147" src="image/Figure_2.11_B19441.jpg" width="374"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.11 – Memory forensics tools available in CAINE 12</p>
+<p>For a full list of the features and packages included in CAINE at the time of publishing, please <span class="No-Break">visit </span><a href="http://www.caine-live.net/page11/page11.xhtml"><span class="No-Break">http://www.caine-live.net/page11/page11.xhtml</span></a><span class="No-Break">.</span></p>
+<p>The latest version of CAINE 12.4 Sidereal can be downloaded at <a href="https://deb.parrot.sh/direct/parrot/iso/caine/caine12.4.iso">https://deb.parrot.sh/direct/parrot/iso/caine/caine12.4.iso</a> in ISO format and is approximately 3.9 GB <span class="No-Break">in size.</span></p>
+<p>As mentioned before, if you wish to use the installable CAINE 11 Wormhole, it can be downloaded <span class="No-Break">at </span><a href="https://deb.parrot.sh/direct/parrot/iso/caine/caine12.4.iso"><span class="No-Break">https://deb.parrot.sh/direct/parrot/iso/caine/caine12.4.iso</span></a><span class="No-Break">.</span></p>
+<p>For installation <a id="_idIndexMarker117"/>on a <a id="_idIndexMarker118"/>USB thumb drive, please ensure that the drive capacity is no less than 8 GB; however, a 16 GB drive is preferred. Automated creation of a bootable CAINE drive can be done using the Rufus tool, as shown in <a href="B19441_03.xhtml#_idTextAnchor058"><span class="No-Break"><em class="italic">Chapter 3</em></span></a>, <em class="italic">Installing </em><span class="No-Break"><em class="italic">Kali Linux</em></span><span class="No-Break">.</span></p>
+<h2 id="_idParaDest-34"><a id="_idTextAnchor044"/>CSI Linux</h2>
+<p>CSI Linux is<a id="_idIndexMarker119"/> relatively <a id="_idIndexMarker120"/>new to the scene and was developed by visionary <em class="italic">Jeremy Martin</em> and his amazing team, who have put together an incredibly robust forensic/blue teaming platform, which I often use just as much as Kali Linux. CSI Linux 2022.1 comes on virtual appliance installations for both VirtualBox and Kali Linux and can also be downloaded as a bootable image for<a id="_idIndexMarker121"/> live DFIR. There is also a plan to release a CSI Linux <strong class="bold">Security Information and Event Management</strong> (<strong class="bold">SIEM</strong>) in the <span class="No-Break">near future.</span></p>
+<p>CSI Linux 2022.1 can be downloaded directly <span class="No-Break">from </span><a href="https://csilinux.com/download"><span class="No-Break">https://csilinux.com/download</span></a><span class="No-Break">.</span></p>
+<p class="callout-heading">Helpful hint</p>
+<p class="callout">If using CSI Linux, both the username and the password <span class="No-Break">are </span><span class="No-Break"><strong class="source-inline">csi</strong></span><span class="No-Break">.</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer025">
+<img alt="Figure 2.12: CSI Linux login screen" height="612" src="image/Figure_2.12_B19441.jpg" width="940"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.12: CSI Linux login screen</p>
+<p>Much like DEFT, CAINE, and<a id="_idIndexMarker122"/> Kali, CSI Linux has<a id="_idIndexMarker123"/> a very user-friendly <span class="No-Break">desktop interface:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer026">
+<img alt="Figure 2.13: CSI Linux desktop interface" height="642" src="image/Figure_2.13_B19441.jpg" width="939"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.13: CSI Linux desktop interface</p>
+<p>Clicking on<a id="_idIndexMarker124"/> the <a id="_idIndexMarker125"/>CSI Linux menu button reveals an extensive list of categories, including the <strong class="bold">OSINT and Online Investigations</strong>, <strong class="bold">Dark Web</strong>, and <strong class="bold">Threat Intelligence</strong> categories, which is where CSI Linux really shines, in my opinion, as other platforms lack these <span class="No-Break">pre-installed tools:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer027">
+<img alt="Figure 2.14: CSI Linux Forensic tools" height="518" src="image/Figure_2.14_B19441.jpg" width="335"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.14: CSI Linux Forensic tools</p>
+<p>Again for<a id="_idIndexMarker126"/> comparative<a id="_idIndexMarker127"/> purposes, let’s have a look at the <strong class="bold">OSINT and Online Investigations</strong>, <strong class="bold">Dark Web</strong>, and <strong class="bold">Computer </strong><span class="No-Break"><strong class="bold">Forensics</strong></span><span class="No-Break"> menus.</span></p>
+<p>The <strong class="bold">OSINT and Online Investigations</strong> menu has several sub-menus with very useful tools for social media, email, phone, and social-engineering tools, all of which I <span class="No-Break">frequently use:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer028">
+<img alt="Figure 2.15: CSILinux OSINT and Online Investigations tools" height="492" src="image/Figure_2.15_B19441.jpg" width="680"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.15: CSILinux OSINT and Online Investigations tools</p>
+<p>The <strong class="bold">Dark Web</strong> investigation <a id="_idIndexMarker128"/>tools are also very popular<a id="_idIndexMarker129"/> in purple teaming as they are used by pen testers and DFIR <span class="No-Break">practitioners alike:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer029">
+<img alt="Figure 2.16: CSI Linux Dark Web investigation tools" height="503" src="image/Figure_2.16_B19441.jpg" width="611"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.16: CSI Linux Dark Web investigation tools</p>
+<p>The <strong class="bold">Computer Forensics</strong> and <strong class="bold">Incident Response</strong> menus are populated with an extensive <a id="_idIndexMarker130"/>list <a id="_idIndexMarker131"/>of updated and<a id="_idIndexMarker132"/> modern GUI and <strong class="bold">Command Line Interface</strong> (<strong class="bold">CLI</strong>) tools for conducting <span class="No-Break">full investigations:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer030">
+<img alt="Figure 2.17: CSI Linux Computer Forensics tool menu" height="505" src="image/Figure_2.17_B19441.jpg" width="596"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.17: CSI Linux Computer Forensics tool menu</p>
+<p>CSI Linux also <a id="_idIndexMarker133"/>has an<a id="_idIndexMarker134"/> impressive category listing for <strong class="bold">Incident Response</strong> tools, as seen in <span class="No-Break"><em class="italic">Figure 2</em></span><span class="No-Break"><em class="italic">.18</em></span><span class="No-Break">:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer031">
+<img alt="Figure 2.18: The CSI Linux Incident Response menu" height="511" src="image/Figure_2.18_B19441.jpg" width="666"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.18: The CSI Linux Incident Response menu</p>
+<p>I strongly<a id="_idIndexMarker135"/> suggest<a id="_idIndexMarker136"/> downloading and becoming acquainted with CSI Linux. Many of the tools we will be learning to use in this book are also installed in CSI Linux, thereby lessening the <span class="No-Break">learning curve.</span></p>
+<h2 id="_idParaDest-35"><a id="_idTextAnchor045"/>Kali Linux</h2>
+<p>Finally, we<a id="_idIndexMarker137"/> get to this lovely gem, Kali Linux, fully<a id="_idIndexMarker138"/> discussed in detail from its installation to advanced forensics usage in the next chapter and throughout <span class="No-Break">this book:</span></p>
+<ul>
+<li><span class="No-Break">Homepage: </span><a href="https://www.kali.org/"><span class="No-Break">https://www.kali.org/</span></a></li>
+<li>Based <span class="No-Break">on: Debian</span></li>
+<li>Distribution type: Penetration testing, forensics, <span class="No-Break">and anti-forensics</span></li>
+</ul>
+<p>Kali Linux was created as a penetration testing or pen-testing distro under the name BackTrack, which then evolved into Kali Linux in 2015, as mentioned in <a href="B19441_01.xhtml#_idTextAnchor015"><span class="No-Break"><em class="italic">Chapter 1</em></span></a>, <em class="italic">Red, Blue, and Purple Teaming Fundamentals</em>. This powerful tool is the definite tool of choice for penetration testers and security enthusiasts worldwide. As a <strong class="bold">Certified EC-Council Instructor</strong> (<strong class="bold">CEI</strong>) for the <strong class="bold">Certified Ethical Hacker</strong> (<strong class="bold">CEH</strong>) course, this OS is usually <a id="_idIndexMarker139"/>the <a id="_idIndexMarker140"/>star of the class due to its many impressive bundled security programs, ranging from scanning and reconnaissance tools to advanced exploitation tools and <span class="No-Break">reporting tools.</span></p>
+<p>Like the aforementioned tools, Kali Linux can be used as a live response forensic tool, as it contains many of the tools required for full investigations. Kali, however, can also be used as a complete OS, as it can be fully installed on a hard disk or flash drive and contains several tools for productivity and entertainment. It comes with many of the required drivers for successful use of hardware, graphics, and networking, and also runs smoothly on both 32-bit and 64-bit systems with minimal resources; it can also be installed on certain mobile <a id="_idIndexMarker141"/>devices, such <a id="_idIndexMarker142"/>as <strong class="bold">Nexus</strong> and <strong class="bold">OnePlus</strong>, and other phones <span class="No-Break">and tablets.</span></p>
+<p>Adding to its versatility, upon booting from a live CD/DVD or flash drive, the investigator has several options to choose from, including <strong class="bold">Live (forensic mode)</strong>, which leaves the evidence drive intact and does not tamper with it by also disabling any auto-mounting of flash drives and other storage media, maintaining the integrity of the original evidence throughout <span class="No-Break">the investigation.</span></p>
+<p>Again, Kali Linux is the ultimate purple teaming platform of choice, as it comes with pen testing and forensic tools all nicely bundled into one <span class="No-Break">fantastic package.</span></p>
+<p>When booting to Kali Linux from a DVD or flash drive, the user is first presented with options for a live environment and installation. Choosing the third option from the list carries us into <strong class="bold">Live (forensic mode)</strong>, as seen in the <span class="No-Break">following screenshot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer032">
+<img alt="Figure 2.19: The Kali Linux boot menu" height="404" src="image/Figure_2.19_B19441.jpg" width="510"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.19: The Kali Linux boot menu</p>
+<p>Once the <a id="_idIndexMarker143"/>Kali <strong class="bold">Live (forensic mode)</strong> option has <a id="_idIndexMarker144"/>booted, the investigator is presented with the exact same home screen as can be seen if using any of the GUIs in Kali, as shown in the <span class="No-Break">following screenshot:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer033">
+<img alt="Figure 2.20: The Kali Linux desktop interface" height="770" src="image/Figure_2.20_B19441.jpg" width="1288"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.20: The Kali Linux desktop interface</p>
+<p>Of course, Kali <a id="_idIndexMarker145"/>can also be installed as a full OS on <a id="_idIndexMarker146"/>a virtual machine or directly onto the hard drive, which will be covered in <a href="B19441_03.xhtml#_idTextAnchor058"><span class="No-Break"><em class="italic">Chapter 3</em></span></a>, <em class="italic">Installing Kali Linux</em>. Here’s a screen of my desktop with some Windows forensic’s tools, such as FTK Imager and the Autopsy GUI, installed <span class="No-Break">using Wine:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer034">
+<img alt="Figure 2.21: The Kali Linux customized desktop" height="674" src="image/Figure_2.21_B19441.jpg" width="803"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.21: The Kali Linux customized desktop</p>
+<p>The Kali menu can be found at the top left corner by clicking on <strong class="bold">Applications</strong>. This brings the user to the menu listing, which shows the forensics category lower down, as <strong class="bold">11 - Forensics</strong>. The following screenshot gives an idea of some of the <strong class="bold">Forensics</strong> tools available in <a id="_idIndexMarker147"/>Kali that<a id="_idIndexMarker148"/> we’ll be using later on in <span class="No-Break">the book:</span></p>
+<div>
+<div class="IMG---Figure" id="_idContainer035">
+<img alt="Figure 2.22 – The Kali Linux Forensics tools menu" height="657" src="image/Figure_2.22_B19441.jpg" width="603"/>
+</div>
+</div>
+<p class="IMG---Caption" lang="en-US" xml:lang="en-US">Figure 2.22 – The Kali Linux Forensics tools menu</p>
+<p>It should be<a id="_idIndexMarker149"/> noted that the tools listed are not the <a id="_idIndexMarker150"/>only tools available in Kali. Several other tools can be brought up via the terminal, as we’ll see in <span class="No-Break">later chapters.</span></p>
+<p>It’s also noteworthy that, when it is in forensic mode, not only does Kali not tamper with the original evidence drive, but it also does not write data to the swap file, where important data that was recently accessed and stored in memory <span class="No-Break">may reside.</span></p>
+<p>For a full list of the features and packages included in the Kali Linux OS at the time of publishing, please <span class="No-Break">visit </span><a href="https://www.kali.org/tools/"><span class="No-Break">https://www.kali.org/tools/</span></a><span class="No-Break">.</span></p>
+<p>Kali can operate as a live response forensic tool but can also be used as a full OS, just like Windows, macOS, and Android, as it contains several built-in tools for productivity and everyday use. The fact that Kali can be installed on a hard disk means that several other tools can be downloaded and updated regularly, giving continuous access to all IT security and forensic tools. This allows you to save progress as you use the tools and not have to worry too much about restarting your machine should you decide to use it as a <span class="No-Break">full OS.</span></p>
+<p>Using these open source OSs, such as Kali, gives us a range of tools to choose from and work with. Many tools exist for performing the same tasks within each category in the distros. This is good because our findings should be able to be replicated using different tools. This is especially useful in instances where the investigator’s work may be critiqued, and the<a id="_idIndexMarker151"/> integrity of the case and evidence <a id="_idIndexMarker152"/>questioned and scrutinized; using multiple tools correctly will yield consistent results. Let’s now look at <a id="_idTextAnchor046"/>why we may need to use more than one tool in investigations in the <span class="No-Break">next section.</span></p>
+<h1 id="_idParaDest-36"><a id="_idTextAnchor047"/>The need for multiple forensics tools in digital investigations</h1>
+<p>Preservation of <a id="_idIndexMarker153"/>evidence is of the utmost importance. Using commercial and open source tools correctly will yield results; however, for forensically sound results, it is sometimes best if more than one tool can be used to produce the <span class="No-Break">same results.</span></p>
+<p>Another reason to use multiple tools may simply be cost-effectiveness. Some of us may have a large budget to work with, while others may have a limited one or none at all. Commercial tools can be costly, especially due to research and development, testing, advertising, and other factors. Open source tools, while tested by the community, may not have the available resources and funding as with <span class="No-Break">commercial tools.</span></p>
+<p><em class="italic">So then, how do we know which tools </em><span class="No-Break"><em class="italic">to choose?</em></span></p>
+<p>Digital forensics is often quite time-consuming, which is one of the reasons you may wish to work with multiple forensic copies of the evidence. This way, you can use different tools simultaneously in an effort to speed up the investigation. While fast tools may be a good thing, we should also question the reliability and accuracy of <span class="No-Break">the tools.</span></p>
+<p>The <strong class="bold">National Institute of Standards and Technology</strong> (<strong class="bold">NIST</strong>) has developed a <strong class="bold">Computer Forensics Tool Testing</strong> (<strong class="bold">CFTT</strong>) program that tests digital forensic tools and makes all findings available to the public. Several tools are chosen based on their specific abilities and placed into testing categories, such as disk imaging, carving, and file recovery. Each category has a formal test plan and strategy for testing, along with a validation report, again <a id="_idIndexMarker154"/>available to <span class="No-Break">the public.</span></p>
+<p>More on the CFTT program can be found at <a href="https://www.cftt.nist.gov/disk_imaging.htm">https://www.cftt.nist.gov/disk_imaging.htm</a>. Testing and validation reports on many of the tools covered in this book can be found <span class="No-Break">at </span><a href="https://www.dhs.gov/science-and-technology/nist-cftt-reports"><span class="No-Break">https://www.dhs.gov/science-and-technology/nist-cftt-reports</span></a><span class="No-Break">.</span></p>
+<p>To re-enforce the importance of using multiple tools in maintaining the integrity of your investigations and findings, multiple tools will be demonstrated from <a href="B19441_07.xhtml#_idTextAnchor120"><span class="No-Break"><em class="italic">Chapter 7</em></span></a>,  <em class="italic">Incident Response, Data Acquisitions, and DFIR Frameworks</em>, onward within <span class="No-Break">this book.</span></p>
+<p>Thus far, we’ve covered open source tools. In the next section, I will discuss some popular commercial forensic <a id="_idTextAnchor048"/><a id="_idTextAnchor049"/>tools that you may come across if you are, or intend to be, a <span class="No-Break">DFIR professional.</span></p>
+<h2 id="_idParaDest-37"><a id="_idTextAnchor050"/>Commercial forensics tools</h2>
+<p>Even though we’ll<a id="_idIndexMarker155"/> be working with open source tools, I’d like to mention some of the more popular commercial tools that you may be interested in using or adding to your arsenal as a <span class="No-Break">forensic professional.</span></p>
+<h3>Belkasoft Evidence Centre X</h3>
+<p>Belkasoft <strong class="bold">Evidence Center</strong> (<strong class="bold">EC</strong>) X is an<a id="_idIndexMarker156"/> automated incident response and forensic tool that is<a id="_idIndexMarker157"/> capable of analyzing acquired images of memory dumps, virtual machines, cloud, mobile backups, and physical and <span class="No-Break">logical drives.</span></p>
+<p>Belkasoft EC X is also capable of searching for, recovering, and analyzing the following types <span class="No-Break">of artifacts:</span></p>
+<ul>
+<li><span class="No-Break">Office documents</span></li>
+<li>Browser activity <span class="No-Break">and information</span></li>
+<li><span class="No-Break">Email</span></li>
+<li>Social <span class="No-Break">media activity</span></li>
+<li><span class="No-Break">Mobile applications</span></li>
+<li>Messenger applications (WhatsApp and <span class="No-Break">Facebook Messenger)</span></li>
+<li><span class="No-Break">Cloud acquisitions</span></li>
+</ul>
+<p>More information on Belkasoft products can be found <span class="No-Break">at </span><a href="https://belkasoft.com/"><span class="No-Break">https://belkasoft.com/</span></a><span class="No-Break">.</span></p>
+<p>Belkasoft also has a free acquisition tool and Ram Capturer tool available along with a trial version of their EC, available <span class="No-Break">at </span><a href="https://belkasoft.com/get"><span class="No-Break">https://belkasoft.com/get</span></a><span class="No-Break">.</span></p>
+<h3>Exterro Forensic Toolkit (FTK)</h3>
+<p>Exterro <strong class="bold">Forensic Toolkit</strong> (<strong class="bold">FTK</strong>) has <a id="_idIndexMarker158"/>been <a id="_idIndexMarker159"/>around for some time and is used professionally by forensics investigators and law enforcement agencies worldwide. FTK also integrates with Belkasoft for a better experience. Some features of <span class="No-Break">FTK include:</span></p>
+<ul>
+<li>Fast processing with multi-core support using <span class="No-Break">four engines</span></li>
+<li>Ability to process large amounts <span class="No-Break">of data</span></li>
+<li>Indexing of data to allow faster and easier searching <span class="No-Break">and analysis</span></li>
+<li>Password cracking and <span class="No-Break">file decryption</span></li>
+<li><span class="No-Break">Automated analysis</span></li>
+<li>Ability to perform customized <span class="No-Break">data carving</span></li>
+<li>Advanced <span class="No-Break">data recovery</span></li>
+</ul>
+<p>More<a id="_idIndexMarker160"/> information <a id="_idIndexMarker161"/>on FTK can be found <span class="No-Break">at </span><a href="https://accessdata.com/products-services/forensic-toolkit-ftk"><span class="No-Break">https://accessdata.com/products-services/forensic-toolkit-ftk</span></a><span class="No-Break">.</span></p>
+<p>The trial version of FTK can be downloaded at <a href="https://go.exterro.com/exterro-software-demo">https://go.exterro.com/exterro-software-demo</a>. Exterro also has an image acquisition tool that is free to download and use and is available <span class="No-Break">at </span><a href="https://go.exterro.com/l/43312/2022-08-23/f7rylq"><span class="No-Break">https://go.exterro.com/l/43312/2022-08-23/f7rylq</span></a><span class="No-Break">.</span></p>
+<h3>OpenText EnCase Forensic</h3>
+<p>Previously <a id="_idIndexMarker162"/>known as <a id="_idIndexMarker163"/>Guidance EnCase Forensic and now known as OpenText EnCase Forensic, this tool has also been at the forefront for many years and has also been used internationally by professionals and law enforcement agents alike for almost two decades. Much like FTK, EnCase comes with several solutions for incident response, e-discovery, and endpoint and <span class="No-Break">mobile forensics.</span></p>
+<p>Apart from being a full digital forensics solution and suite, some of the other features of EnCase include <span class="No-Break">the following:</span></p>
+<ul>
+<li>Acquiring images from over 25 different types of mobile devices, including phones, tablets, and even <span class="No-Break">GPS devices.</span></li>
+<li>Support for Microsoft <span class="No-Break">Office 365.</span></li>
+<li>Evidence decryption using Check Point’s Full <span class="No-Break">Disk Encryption.</span></li>
+<li>Deep forensic and triage analysis. More information on EnCase can be found <span class="No-Break">at </span><a href="https://www.guidancesoftware.com/encase-forensic"><span class="No-Break">https://www.guidancesoftware.com/encase-forensic</span></a><span class="No-Break">.</span></li>
+</ul>
+<p>Now that we’ve covered some of the more popular commercial forensics tools, I’d like to briefly talk <a id="_idIndexMarker164"/>about<a id="_idIndexMarker165"/> anti-forensics, which you can research further in your <span class="No-Break">own time.</span></p>
+<h2 id="_idParaDest-38"><a id="_idTextAnchor051"/>Anti-forensics – threats to digital forensics</h2>
+<p>As much as we <a id="_idIndexMarker166"/>would like the tasks involved in digital forensics to be as easy as possible, we do encounter situations that make investigations, and life as a forensics investigator, not-so-simple and sometimes stressful. People wishing to hide information and cover their tracks, and those who have malicious intent or participate in cyber crimes, often employ various methods to try to foil the attempts of forensic investigators with the hope of hampering or <span class="No-Break">halting investigations.</span></p>
+<p>In recent times, we’ve seen several major digital breaches online, especially from 2011 onward. Many of these attacks allegedly came from or were claimed to be the work of infamous hacker groups, such as LulzSec, Anonymous, Lizard Squad, and many others, including individuals and hacktivists (people that hack for a specific cause or reason and are less concerned about doing time in prison). Some of these hacks and attacks not only brought down several major networks and agencies but also cost millions in damage, directly and indirectly; as a result, the loss of public confidence in the companies contributed to further increases <span class="No-Break">in damages.</span></p>
+<p>These daring, creative, and public attacks saw the emergence of many other new groups that learned from the mistakes of past breaches by Anonymous and others. Both social media and underground communication channels soon became the easiest forms of communication between like-minded hackers and hacktivists. With the internet and World Wide Web becoming easily accessible, this also saw competition not only between IPs but also private companies and corporations, which led to the creation of free wireless hotspots on almost every street with businesses, small <span class="No-Break">or large.</span></p>
+<p>The result of having internet access at just about every coffee shop enabled anyone with a smartphone, tablet, laptop, or other devices to acquire almost unauthenticated acces<a id="_idTextAnchor052"/>s to the internet. This gave them access to hacker sites and portals, along with the ability to download tools, upload malware, send infected emails, or even carry <span class="No-Break">out attacks.</span></p>
+<p>We should also c<a id="_idTextAnchor053"/>onsider the impact of encryption techniques on our investigations, which we <a id="_idIndexMarker167"/>will look <span class="No-Break">at next.</span></p>
+<h3>Encryption</h3>
+<p>Adding to this<a id="_idIndexMarker168"/> scenario is the availability of more <a id="_idIndexMarker169"/>user-friendly tools to aid in the masking of <strong class="bold">Publicly Identifiable Information</strong> (<strong class="bold">PII</strong>), or <a id="_idIndexMarker170"/>any information that would aid in the discovery of unveiling suspects involved in cyber-crimes during forensic investigations. Tools used for the encryption of data and anonymity, such as masking of IP addresses, are readily available to anyone, most of which are increasingly more and <span class="No-Break">more user-friendly.</span></p>
+<p>It should also be noted that many Wi-Fi hotspots themselves can be quite dangerous, as these can be easily set up to intercept personal data, such as login and password information, together with PII (such as social security numbers, date of birth info, and phone numbers) from any user that may connect to the Wi-Fi and enter <span class="No-Break">such information.</span></p>
+<p>The process of encryption provides confidentiality between communication parties and uses technology in very much the same way we use locks and keys to safeguard our personal and private belongings. For a lock to open, there must be a specific matching key. So too, in the digital world, data is encrypted or locked using an encryption algorithm and must use the same key to decrypt or unlock the data. There also exists another scenario where one key may be used to encrypt or lock the data and another used to decrypt the data. Two <a id="_idIndexMarker171"/>very popular <a id="_idIndexMarker172"/>encryption tools are <strong class="bold">TrueCrypt</strong> <span class="No-Break">and </span><span class="No-Break"><strong class="bold">VeraCrypt</strong></span><span class="No-Break">.</span></p>
+<p>These two encryption tools use very high encryption methods that keep data very confidential. The main barrier to forensics may be acquiring the decryption key to decrypt or <a id="_idIndexMarker173"/>unlock access to <span class="No-Break">the data.</span></p>
+<p class="callout-heading">Important note</p>
+<p class="callout">TrueCrypt and VeraCrypt not only encrypt files but also encrypt folders, partitions, and <span class="No-Break">entire drives!</span></p>
+<p>Added to the use of encryption tools, such as those mentioned h<a id="_idTextAnchor054"/><a id="_idTextAnchor055"/>ere, we should also consider the use of anonymity tools, such as those mentioned in the <span class="No-Break">next section.</span></p>
+<h3>Online and offline anonymity</h3>
+<p>Encryption, in<a id="_idIndexMarker174"/> particular, can<a id="_idIndexMarker175"/> make investigations rather difficult, but there is also the concept of anonymity, which adds to the complexity of maintaining the accuracy of the true sources found in investigations. Like encryption, there exist several free and open source tools for all OS platforms, such as Windows, MacOS, Linux, and Android, which attempt to (most often successfully) mask the hiding of someone’s digital footprint. This digital footprint usually identifies a<a id="_idIndexMarker176"/> device by its IP and <strong class="bold">Media Access Control</strong> (<strong class="bold">MAC</strong>) address. Without going into the network<a id="_idIndexMarker177"/> aspect of things, these two digital addresses can be compared to a person’s full name and home <span class="No-Break">address, respectively.</span></p>
+<p>Even though a person’s IP address can change according to their private network (home and work) and public network (internet) access, the MAC address remains <span class="No-Break">the same.</span></p>
+<p>However, various tools are also freely available to spoof or fake your IP and MAC addresses for the purpose of privacy and anonymity. Adding to that, users can use a system of routing their data through online servers and devices to make tracing the sources of the sent<a id="_idIndexMarker178"/> data<a id="_idIndexMarker179"/> quite difficult. This system is referred to as <strong class="bold">proxy chaining</strong> and<a id="_idIndexMarker180"/> does keep some of the user’s <span class="No-Break">identity hidden.</span></p>
+<p>A good example of this<a id="_idIndexMarker181"/> would be <strong class="bold">Tor Browser</strong>; it uses onion routing and several proxies worldwide to route or pass the data along from proxy to proxy, making the tracing of the source very difficult but not impossible. You can think of proxy chains as a relay race, but instead of having four people, one passing the baton to the next, the data is passed between hundreds of proxy <span class="No-Break">devices worldwide.</span></p>
+<p>Now you should have a basic understanding of anti-forensics and also understand the use of encryption and anonymity tools to hide or obscure information and data that may<a id="_idIndexMarker182"/> co<a id="_idTextAnchor056"/>mplicate<a id="_idIndexMarker183"/> DFIR investigations. Let’s summarize the topics we just covered and then move on to the <span class="No-Break">next chapter.</span></p>
+<h1 id="_idParaDest-39"><a id="_idTextAnchor057"/>Summary</h1>
+<p>We saw that digital forensics is still a relatively new field, although forensic science has been around for a very long time, as far back as the early 1900s. Although digital forensics may have only been on the scene since the early 2000s, as a science, we have certain best practices, procedures, standards, and frameworks, such as those created by the ACPO, SWGDE, and NIST, to adhere to. These maintain the accuracy and the integrity of both the findings and the actual evidence when carrying out investigations, whether as an amateur or professional digital <span class="No-Break">forensic investigator.</span></p>
+<p>Some of the commercial tools mentioned were Belkasoft EC X, FTK, and EnCase Forensics. Many of the open source tools available are made for Linux-based distributions and can be downloaded individually, but many are readily available within certain forensic and security OSs or distributions. Some of these distros are DEFT Linux, CAINE, CSI Linux, and of course, Kali Linux; all of these are freely available for download at the <span class="No-Break">links provided.</span></p>
+<p>I hope this introduction to digital forensics was informative and fun for you. Now that we have a foundation of forensics, let’s go deeper into Kali Linux, as we learn how to download, install, and update Kali in the next chapter. See you on the <span class="No-Break">next page!</span></p>
+</div>
+<div>
+<div class="Content" id="_idContainer037">
+</div>
+</div>
+</div></body></html>

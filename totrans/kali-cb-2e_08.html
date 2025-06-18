@@ -1,0 +1,721 @@
+<html><head></head><body>
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Wireless Specific Recipes</h1>
+                </header>
+            
+            <article>
+                
+<p>In this chapter, we will cover the following topics:</p>
+<ul>
+<li>Scanning for wireless networks</li>
+<li>Bypassing MAC-based authentication</li>
+<li>Breaking WEP encryption</li>
+<li>Obtaining WPA/WPA2 keys</li>
+<li>Exploiting guest access</li>
+<li>Rogue AP deployment</li>
+<li>Using wireless networks to scan and attack internal networks</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Introduction</h1>
+                </header>
+            
+            <article>
+                
+<p>Although all the previous chapters have created a basis for pen testing that works across the spectrum, wireless has its own set of tools that span the pen testing methodology.</p>
+<ul>
+<li class="mce-root">Scanning for <strong>Service Set Identifiers</strong> (<strong>SSIDs</strong>)</li>
+<li class="mce-root">Scanning for hidden SSIDs</li>
+<li class="mce-root">Determining security of target SSID</li>
+<li class="mce-root">Testing for MAC address authentication</li>
+<li class="mce-root">Cracking <strong><span class="_Tgc">Wired Equivalent Privacy</span></strong> (<strong>WEP</strong>)</li>
+<li class="mce-root">Cracking <strong>Wi-Fi Protected Access</strong> (<strong>WPA</strong>/<strong>WPA2</strong>)</li>
+<li class="mce-root">Exploiting guest access</li>
+<li class="mce-root">Rogue <strong>Access Point</strong> (<strong>AP</strong>) deployment</li>
+<li class="mce-root"><strong>Man-in-the-Middle</strong> (<strong>MITM</strong>) wireless attacks</li>
+<li class="mce-root">Using wireless networks to scan internal networks</li>
+<li class="mce-root">Using wireless as a vector for network related attacks</li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Scanning for wireless networks</h1>
+                </header>
+            
+            <article>
+                
+<p>Wireless networking is very popular due to its ease of use, reduction of cabling, and ease of deployment. Fortunately for us, the very same features that make it easy to use on a day-to-day setting also make it easy to monitor and to perform attacks from areas that do not rely on physical access to the network. Often the wireless signal bleeds into public areas, such as parking lots, adjacent office spaces, shopping malls, and more. Unless the wireless network administrator has taken great pains to limit the wireless coverage to only their facility, it is very likely that you can begin your wireless reconnaissance using a smart phone to identify a good location to set up your Kali Linux platform within the range.</p>
+<p>In this section, we will cover how to use <kbd>airodump-ng</kbd> to identify the available wireless SSIDs including those that are not set to advertise their presence. With the information gathered, we will then take a look at the different types of security that are in place, and the best ways to attempt to penetrate those layers of protection.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>Before you can use Kali Linux for wireless scanning, it is important to know which wireless chipset your wireless adapter is using, as only certain wireless chipsets are capable of being put into promiscuous or monitor mode. For a list of supported chipsets, check <a href="https://www.aircrack-ng.org/doku.php?id=compatibility_drivers">https://www.aircrack-ng.org/doku.php?id=compatibility_drivers</a>.</p>
+<p>In the event that your wireless adapter is not supported, there are many USB wireless adapters that can be added to an existing testing platform for minimal cost.</p>
+<p>Once you have determined that you have a supported wireless chipset, you will need to put <kbd>wlan0</kbd> into the monitor mode by doing the following:</p>
+<pre class="mce-root"><strong>root@kali:~/# ifconfig wlan0 down</strong><br/><strong>root@kali:~/# iwconfig wlan0 mode monitor</strong><br/><strong>root@kali:~/# ifconfig wlan0 up</strong><br/><strong>root@kali:~/# airmon-ng start wlan0</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>Once you have confirmed that all interfering processes have been stopped, you will use the following steps to start gathering information on available wireless networks:</p>
+<ol>
+<li>Create a directory for your results named <kbd>wireless</kbd>, and change your directory to it. This is where the output of the tools will be saved.</li>
+<li class="mce-root"><span>From the command line, type the following:</span></li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# airodump-ng -w KaliCookbook_8.1 wlan0mon</strong></pre>
+<ol start="3">
+<li class="mce-root">Allow this to run for a few minutes. During this time, you will begin to see information on wirel<span>ess networks that can be seen by your device, such as the following:</span></li>
+</ol>
+<div style="color: black;font-size: 1em" class="CDPAlignCenter CDPAlign"><img height="160" width="464" class="image-border" src="assets/8329ec84-f490-43c3-9006-8d694e0d8603.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Wireless networks seen from airodump-ng</div>
+<ol start="4">
+<li>Using the preceding information, you can learn the following:
+<ol>
+<li>We can see that there are a total of 5 ESSIDs, one of which is not broadcasting its ESSID.</li>
+<li><kbd>Kali_One</kbd> is showing <kbd>OPN</kbd> as its encryption type, meaning anyone can associate with this ESSID. This is commonly how guest wireless networks are seen.</li>
+<li><kbd>Kali_Two</kbd> and <kbd>Kali_Three</kbd> are showing <kbd>WEP</kbd> as their encryption type—but we don't know yet whether it is 40 bit or 104 bit WEP keys.</li>
+<li><kbd>Kali_Four</kbd> is showing as <kbd>WPA2</kbd>, and PSK for authentication (pre-shared key).</li>
+<li>If we look at the BSSID (MAC address) of the ESSIDs, we see that they are sequential. This is common for environments with centrally managed wireless networks and tells us that successfully connecting to one or more of these ESSIDs increases our likelihood of gaining access to the corporate network beyond.</li>
+</ol>
+</li>
+<li>From the same directory, list the files generated as a result of the scan. Having this information available to you without the need to continuously scan is important to minimize the amount of time you need to be actively scanning.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Bypassing MAC-based authentication</h1>
+                </header>
+            
+            <article>
+                
+<p>In the absence of a truly centralized authentication, or in the event that devices need to connect to a wireless network but are unable to provide authentication credentials, very frequently an open wireless network will be in place that will be configured to only allow specific MAC addresses to connect. This is frequently the case with older devices that were manufactured before it was common to secure wireless networks.</p>
+<p>Given how simple MAC authentication is to bypass, it is still used in a surprising number of locations due to the ease of implementation as well as the perception that this it is effective.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>In order to complete this recipe, you will need to follow the commands laid out in the previous section <em>Scanning for wireless networks</em>, placing your wireless network adapter into the monitor mode. </p>
+<p>You can confirm this by running the following:</p>
+<pre><strong>root@kali:~/wireless# iw dev</strong></pre>
+<p>Confirm that interface <kbd>wlan0mon</kbd> is set to <kbd>type monitor</kbd>:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="124" width="465" class="image-border" src="assets/8472ce92-85d2-4bcd-8fe7-167513c33c52.png"/></div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>The steps necessary for this recipe are as follows:</p>
+<ol>
+<li>Similar to the previous section, we will be using <kbd>airodump-ng</kbd> to gather more specific information. Since we know that the ESSID <kbd>Kali_One</kbd> is unauthenticated, we will look for that specific BSSID and for the devices connecting to it. Open a terminal session and start <kbd>airodump-ng</kbd> as follows:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless#  airodump-ng --bssid 68:86:A7:1D:6D:83 -w KaliCookbook_8.2 wlan0mon</strong></pre>
+<ol start="2">
+<li>As this runs, you will start to see the devices that are currently connecting to this BSSID, giving you a list of devices that are on the authorized MAC list:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="126" width="467" class="image-border" src="assets/5eeaf70c-5cc8-4b70-b576-122ff7ab8f54.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Devices connecting to a particular ESSID</div>
+<ol start="3">
+<li>Now that we have a MAC address that is on the authorized MAC list, we can use the <kbd>macchanger</kbd> utility to change the MAC address of our Kali Linux machine to match the preceding device.</li>
+<li>Open a new root terminal and disable <kbd>wlan0</kbd>, change the MAC address, and bring the interface backup:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# ifconfig wlan0mon down</strong><br/><strong>root@kali:~/wireless# macchanger -m 7A:DA:38:06:5B:B2 wlan0mon</strong><br/><strong>root@kali:~/wireless# ifconfig wlan0mon up</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="77" width="501" class="image-border" src="assets/cd4042dc-8e19-47c7-b89b-b3ba2cecf2e6.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Using macchanger to use different MAC address</div>
+<ol start="5">
+<li>Now, attempts to connect to this SSID should be successful. Using <kbd>NetworkManager</kbd>, attempt to connect to the <kbd>Kali_One</kbd> SSID, and confirm from the CLI:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="159" width="430" class="image-border" src="assets/1c9842d5-dd7d-4219-9212-f6cd0a388e1a.png"/></div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Breaking WEP encryption</h1>
+                </header>
+            
+            <article>
+                
+<p>Wireless administrators recognized that having open networks or networks that rely on MAC address authentication, presented an unacceptable level of risk and therefore over time, there have been many attempts to harden the authentication to wireless networks, each with their own limitations:</p>
+<ul>
+<li class="mce-root"><strong>Wired Equivalent Privacy</strong> (<strong>WEP</strong>) uses the RC4 encryption algorithm and combines the user-defined key with a 24 bit <strong>initialization vector</strong> (<strong>IV</strong>). Unfortunately, IV's are reused thus allowing for us to use tools like <kbd>aircrack-ng</kbd> to get the original key, giving us access to the target network as an authenticated endpoint.</li>
+<li class="mce-root"><strong>Wi-Fi Protected Access</strong> (<strong>WPA</strong>) comes in several different flavors and is much more secure than WEP. Because it can be used in a manner similar to WEP where a pre-shared key is used (WPA-PSK), tools such as fluxion can recover the pre-shared key, and where WPA2 is used with a central authentication source (commonly RADIUS), brute forcing becomes necessary with tools such as <kbd>hashcat</kbd> (covered in section <em>Obtaining WPA/WPA2 Keys</em>).</li>
+</ul>
+<div class="packt_tip">It is important to note that in order for us to be able to recover pre-shared keys, it is often necessary to monitor a large amount of network traffic in a PCAP file for analysis, so when placing your systems, keep in mind they will need to remain undisturbed for potentially quite some time.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>In order to complete this recipe, you will need to follow the commands laid out in the first recipe of this chapter, placing your wireless network adapter into the monitor mode. </p>
+<p>You can confirm this by running the following:</p>
+<pre><strong>root@kali:~/wireless# iw dev</strong></pre>
+<p>Confirm that the interface <kbd>wlan0mon</kbd> is set to <kbd>type monitor</kbd>:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="130" width="488" class="image-border" src="assets/0ff6f98e-3d9a-40d8-a2d4-578761faa932.png"/></div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>This is the process we will follow to find and expose WEP keys:</p>
+<ol>
+<li>Based on the scanning done in the section <em>Scanning for wireless networks</em>, we know that the SSID <kbd>Kali_Two</kbd> and <kbd>Kali_Three</kbd> are both running WEP on <kbd>channel 11</kbd>, and therefore will be our targets for this section.</li>
+<li>Using <kbd>airodump-ng</kbd>, we will start a dump of data from <kbd>Kali_Two</kbd> using the following command line:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# airodump-ng -c 11 --bssid 68:86:A7:1D:6D:84 -w KaliCookbook_8.3 wlan0</strong></pre>
+<ol start="3">
+<li>The argument for <kbd>-c</kbd> is the channel (<kbd>channel 11</kbd>) and BSSID is the MAC address of the AP (<kbd>68:86:A7:1D:6D:84</kbd>). We will write the <kbd>pcap</kbd> file to the same directory as in the previous sections and listen on <kbd>wlan0mon</kbd>.</li>
+</ol>
+<ol start="4">
+<li>Once initiated, it can take a very long time to gather enough data packets to expose the IV – often between 250,000 and 1,500,000 depending on the key length. You can see the progression in the progress indicator for <kbd>airodump-ng</kbd>, where we are watching the <kbd>#Data</kbd> column:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="104" width="514" class="image-border" src="assets/ecc66a60-1963-4f8b-90f0-9da806c90674.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Progress of airodump-ng</div>
+<div class="packt_tip">If you would like to run <kbd>aircrack-ng</kbd> using test files with known good dumps, there are many available, along with more in-depth details on advanced <kbd>aircrack-ng</kbd> at this address: <a href="https://www.aircrack-ng.org/doku.php?id=aircrack-ng">https://www.aircrack-ng.org/doku.php?id=aircrack-ng</a>.</div>
+<ol start="5">
+<li>Once you have gathered enough IV's to begin the cracking process, you will kick off the process with the following command:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# aircrack-ng -b 68:86:A7:1D:6D:84 KaliCookbook_8.3-01.cap</strong><br/><strong>Opening KaliCookbook_8.3.cap</strong><br/><strong> Read 563244 packets.</strong><br/><br/><strong># BSSID             ESSID      Encryption</strong><br/><br/><strong>1 68:86:A7:1D:6D:84            WEP (563244 IVs)</strong><br/><br/><strong>Choosing first network as target.</strong></pre>
+<ol start="6">
+<li>The process of cracking the WEP key will begin and be depending on the amount of data gathered, the key length used; this could take some time. Once complete, however, you will see a display like the following:</li>
+</ol>
+<pre style="padding-left: 60px"><strong> KEY FOUND! [ kali2 ] </strong><br/><strong> Probability: 100%</strong></pre>
+<p style="padding-left: 90px">In our case, the WEP key is <kbd>kali2</kbd>, and can now be used to connect directly to the wireless network as an authenticated end point.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Obtaining WPA/WPA2 keys</h1>
+                </header>
+            
+            <article>
+                
+<p>This section will walk you through the process of gathering WPA keys using two different methods:</p>
+<ul>
+<li>Social engineering through SSID manipulation and social engineering with fluxion</li>
+<li>Brute force cracking of gathered data using <kbd>hashcat<br/></kbd></li>
+</ul>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>In order to complete this recipe, you will need to follow the commands laid out in the section <em>Scanning for wireless networks</em> and place your wireless network adapter into the monitor mode. </p>
+<p>You can confirm this by running the following:</p>
+<pre><strong>root@kali:~/wireless# iw dev</strong></pre>
+<p>Confirm that the interface <kbd>wlan0mon</kbd> is set to <kbd>type monitor</kbd>:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="127" width="477" class="image-border" src="assets/ca9216d3-f8b3-42fe-afab-55a21927f963.png"/></div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>There are two ways in order to get the password for WPA protected networks; we will use fluxion in the following way:</p>
+<ol>
+<li>From the command line, ensure that your wireless adapter is in the monitor mode:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# iw dev</strong><br/><strong>        phy#0</strong><br/><strong>        Interface wlan0</strong><br/><strong>                ifindex 4</strong><br/><strong>                wdev 0x1</strong><br/><strong>                addr 6e:1d:0b:80:36:2b</strong><br/><strong>                type monitor</strong><br/><strong>                channel 13 (2472 MHz), width: 20 MHz (no HT), center1: 2472 MHz</strong><br/><strong>                txpower 20.00 dBm</strong></pre>
+<ol start="2">
+<li>From the command line, we will need to download fluxion from Git:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# git clone https://github.com/wi-fi-analyzer/fluxion</strong><br/><strong>Cloning into 'fluxion'...</strong><br/><strong>remote: Counting objects: 2646, done.</strong><br/><strong>remote: Total 2646 (delta 0), reused 0 (delta 0), pack-reused 2646</strong><br/><strong>Receiving objects: 100% (2646/2646), 26.13 MiB | 3.44 MiB/s, done.</strong><br/><strong>Resolving deltas: 100% (1444/1444), done.</strong><br/><strong>root@kali:~/wireless#</strong></pre>
+<ol start="3">
+<li>Navigate to the directory that is created (<kbd>fluxion/</kbd>) and run the following:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless/fluxion# ./fluxion.sh</strong></pre>
+<div class="packt_infobox">In the event that there are missing system dependencies, you can run the <kbd>./install/installer.sh</kbd> file to ensure that all necessary packages are installed.</div>
+<ol start="4">
+<li>Once all dependencies are met, you will be presented with the following:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign packt_figref"><img height="212" width="455" class="image-border" src="assets/2c4ff630-1b68-4bf0-829d-fb21f51eaca2.png"/></div>
+<div class="CDPAlignCenter CDPAlign packt_figref">Fluxion start</div>
+<ol start="5">
+<li>In the next screen, select your wireless adapter.</li>
+<li>Next, you will be asked to decide which channel to monitor. Since our target SSID is on <kbd>channel 11</kbd>, we will enter <kbd>11</kbd> and hit <em>Enter</em>.</li>
+<li>The next screen will cause an additional terminal window to pop up with the heading <kbd>Scanning Targets</kbd> followed by the channel we selected where fluxion will be scanning for networks. Allow this to run for a few minutes until you find the SSID you are looking to crack, then click on the <span class="packt_screen">X</span> in the upper right to close the scan and return to the fluxion application.</li>
+<li>You will now be presented with a list of SSIDs seen in the scanning session, and we will want to look for those with clients attached. Enter the number of the SSID from the list and press <em>Enter</em>.</li>
+<li>With the SSID selected, you will be given the option of how the SSID will be attacked. In this case, we will select option <kbd>[1] - FakeAP - Hostapd (Recommended)</kbd>, and press <em>Enter</em>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="284" width="381" class="image-border" src="assets/62aef4ca-7aff-4bf9-b23d-de2b68de5cae.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Selecting false portal method</div>
+<ol start="10">
+<li>You will now be prompted to enter the location of the previously recorded handshake sessions between clients and the AP. If you do not have any saved from previous attempts, simply press <em>Enter</em> and we will select the <kbd>aircrack-ng</kbd> option on the next screen.</li>
+</ol>
+<ol start="11">
+<li>When asked how to capture the handshake, enter <kbd>1</kbd> for the option to deauth all and press <em>Enter</em>.</li>
+<li>This will now launch two additional windows – in the lower right, you will see fluxion attempting to send deauth packets, and in the upper right, you will see the progress. When you see packets between the ESSID and a client, you can go back to the fluxion window, and select option <kbd>[1] Check handshake</kbd> and press <em>Enter</em>:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="561" width="738" class="image-border" src="assets/6a20432e-96e5-47ee-a0f7-08f87ea8f4bb.png"/></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref">Capturing client handshakes with fluxion</div>
+<div class="packt_figref packt_infobox"><br/>
+If you have not successfully captured a handshake, you will have the option to restart the process to capture one.</div>
+<ol start="13">
+<li class="mce-root">Fluxion will now look to see if it has an SSL certificate configured to use the login portal. In most cases, it is acceptable to select <kbd>Create a SSL certificate</kbd> and proceed:</li>
+</ol>
+<div class="mce-root CDPAlignCenter CDPAlign"><img style="color: black;font-family: 'Times New Roman', times, serif;font-size: 10pt" height="222" width="504" class="image-border" src="assets/59371f71-99a9-44c5-86af-deffa526b85e.png"/></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref">Certificate selection for captive portal</div>
+<ol start="14">
+<li class="mce-root"><span>The next screen will select</span> <kbd>1</kbd> <span>for</span> <kbd>Web Interface</kbd> <span>and proceed.</span></li>
+<li>The next screen will present you with many different options in terms of portals that can be presented to the user. We will enter <kbd>1</kbd> for <kbd>English</kbd> and continue.</li>
+</ol>
+<div class="packt_tip">Fluxion can be very heavily customized to present a portal that is nearly identical to the one that can be used with guest portals, and so on. This would require customizing the portals to fit your needs. To learn more about how this can be done, visit the fluxion Git repository at <a href="https://github.com/wi-fi-analyzer/fluxion">https://github.com/wi-fi-analyzer/fluxion</a>.</div>
+<ol start="16">
+<li>Fluxion will now launch a series of applications in separate terminals, showing the statistics of the processes it needs for the attack. It will launch a DHCP server, a rogue AP (named the same as the target SSID, but not WPA protected), a DNS server to force all DNS requests to go to the same IP address of the portal, as well as information on the SSID being generated. MDK3 is running to deauth any devices trying to connect to the original SSID, to force them to connect to ours:</li>
+</ol>
+<div class="mce-root CDPAlignCenter CDPAlign"><img style="color: black;font-family: 'Times New Roman', times, serif;font-size: 10pt" class="image-border" src="assets/2ec0d3c9-da98-4e11-9c60-735762191d87.png"/></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref">Progress of fluxion attack</div>
+<ol start="17">
+<li class="mce-root">Once a device has been forced to connect to our SSID, they will be redirected to the captive portal spawned by fluxion. Depending on the option you selected earlier or based on a customized portal generated by you, they will be redirected to a portal similar to the following:</li>
+</ol>
+<div class="mce-root CDPAlignCenter CDPAlign"><img style="color: black;font-family: 'Times New Roman', times, serif;font-size: 10pt" height="221" width="422" class="image-border" src="assets/13192534-c021-4e12-b6af-f6b899c3e039.png"/></div>
+<div class="mce-root CDPAlignCenter CDPAlign packt_figref"><span>Captive portal</span></div>
+<ol start="18">
+<li>When the user sees this screen, they will likely enter the WPA password for the original SSID (in our case, <kbd>Kali_Five</kbd>) and click <span class="packt_screen">Submit</span>. When they do so, fluxion will verify the password as being the pre-shared key, and if it is, the fluxion processes will stop, and you will see a screen similar to the following:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="286" width="328" class="image-border" src="assets/2bb3b8b0-9638-47f3-95a4-23014e5bcd95.png"/></div>
+<div class="CDPAlignCenter CDPAlign packt_figref">WPA password identified</div>
+<ol start="19">
+<li>If you don't feel that it is likely that a network user can be tricked into providing their credentials, you can also utilize <kbd>hashcat</kbd> to perform dictionary or brute force attacks against the WPA key. To do this, we will use the same data gathering process we used in the <em>Cracking WEP Encryption</em> section to gather data from the <kbd>Kali_Five</kbd> SSID:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# airodump-ng -c 11 --bssid OE:18:0A:36:E1:C0 -w KaliCookbook_8.4 wlan0</strong></pre>
+<ol start="20">
+<li>To speed the data collection process and to capture more handshakes, we will send 100 deauth attempts to the client connecting to our BSSID using the following command line:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# aireplay-ng --deauth 100 -a OE:18:0A:36:E1:C0 -c 38:59:F9:5F:80:A9 wlan0</strong></pre>
+<ol start="21">
+<li>Allow the <kbd>airodump-ng</kbd> terminal to continue in its own terminal.</li>
+<li>Kali Linux includes a large wordlist that can be used with <kbd>hashcat</kbd>. Hashcat is a versatile password brute-forcing tool that supports a tremendous number of formats. In a separate terminal, navigate to the following directory, and unzip the <kbd>rockyou.txt.gz</kbd> wordlist:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# cd /usr/share/wordlists<br/></strong><strong>root@kali:usr/share/wordlists# gunzip rockyou.txt.gz<br/></strong></pre>
+<div class="packt_infobox">At the time of this writing, <kbd>rockyou.txt</kbd> contained 14,344,392 different words.</div>
+<ol start="23">
+<li>Stop the <kbd>airodump-ng</kbd> process, and locate the <kbd>cap</kbd> file generated by <kbd>airodump</kbd>:</li>
+</ol>
+<div class="packt_figref CDPAlignCenter CDPAlign"><img height="129" width="513" class="image-border" src="assets/30af6f54-0eba-4d58-9745-c5065cfa5a8a.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Files generated during airodump-ng proces</div>
+<ol start="24">
+<li>The file format that is generated by <kbd>airodump-ng</kbd> is incorrect for use with <kbd>hashcat</kbd>, and Kali does not currently have the utility needed to convert <kbd>cap</kbd> files to <kbd>hccapx</kbd> format that is needed for use with <kbd>hashcat</kbd>. This leaves you with two different options:
+<ul>
+<li>You can download and compile the <kbd>cap2hccapx</kbd> utility from the GitHub repository at <a href="https://github.com/hashcat/hashcat-utils">https://github.com/hashcat/hashcat-utils</a></li>
+<li>You can upload the <kbd>cap</kbd> file to the online conversion tool located at <a href="https://hashcat.net/cap2hccapx/">https://hashcat.net/cap2hccapx/</a></li>
+</ul>
+</li>
+<li>Working on the premise that you have converted your <kbd>cap</kbd> file to <kbd>hccapx</kbd> format, using one of the preceding tools we will now run <kbd>hashcat</kbd> against this file using the <kbd>rockyou.txt</kbd> wordlist:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# hashcat -m 2500 -a 0 KaliCookbook_8.4-01.hccapx /usr/share/wordlists/rockyou.txt<br/></strong></pre>
+<div class="packt_infobox">This command line does the following:<br/>
+<kbd>-m 2500</kbd>: Tells <kbd>hashcat</kbd> to use the WPA hashing format<br/>
+<kbd>-a 0  </kbd>: Indicates we are doing a dictionary-based attack</div>
+<ol start="26">
+<li>Once <kbd>hashcat</kbd> has determined the WPA key from the <kbd>hccapx</kbd> file, it will return the results in the terminal window. As we found in the fluxion section, the WPA password is <kbd>wireless</kbd>:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="48" width="534" class="image-border" src="assets/c3810048-2f95-477e-9abb-af42cc14fe2f.png"/></div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Exploiting guest access</h1>
+                </header>
+            
+            <article>
+                
+<p>When guest access is offered, often it is on a shared network with the network you are attempting to infiltrate. There are several different types of wireless guest access offered, each has its own vulnerabilities:</p>
+<ol>
+<li>Pre-shared keys: These are generally WEP or WPA PSK's that are intended to keep unauthorized users or devices to a minimum. Unfortunately, these keys are generally known by many people and are very rarely changed.</li>
+</ol>
+<ol start="2">
+<li>Captive portal: The guests connect to a wireless network and are automatically redirected to a web page that prompts them for credentials. This may or may not be combined with a pre-shared key.</li>
+</ol>
+<p>The most common implementations of guest access include elements of recipes that we have done in previous sections but are stung together and very frequently are labeled as guest networks by their SSID.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>In order to complete this recipe, you will need to follow the commands laid out in section <em>Scanning for wireless networks</em>, placing your wireless network adapter into monitor mode. </p>
+<p>You can confirm this by running the following:</p>
+<pre><strong>root@kali:~/wireless# iw dev</strong></pre>
+<p>Confirm that the interface <kbd>wlan0mon</kbd> is set to <kbd>type monitor</kbd>:</p>
+<div class="CDPAlignCenter CDPAlign"><img height="129" width="484" class="image-border" src="assets/60818a2c-6fa6-46c6-b289-ea636a81c843.png"/></div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>To take advantage of environments with guest networks, we will us the following process:</p>
+<ol>
+<li>First, we need to see what networks are likely to be guest networks. Start by running <kbd>airodump-ng</kbd> as follows:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# airodump-ng -w KaliCookbook_8.5 wlan0mon</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="119" width="539" class="image-border" src="assets/e533b4b4-ce78-47a2-9325-d22ac5c81a4f.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Searching for guest networks</div>
+<ol start="2">
+<li>Based on the results of the <kbd>airodump-ng</kbd> run, we can see that ESSID <kbd>Kali_Guest</kbd> is visible and is protected with a shared WEP key, and ESSID <kbd>Kali_Guest1</kbd> is open.</li>
+<li>We will start with the open SSID since nearly all guest implementations use a guest portal and authenticated sessions are tracked by the MAC address of the device connecting to the guest network. To start gathering information on the nodes on this network, we start by running <kbd>airodump-ng</kbd> specifically on the BSSID for <kbd>Kali_Guest1</kbd>:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# airodump-ng --bssid 68:86:A7:1D:6D:83 -w KaliCookbook_8.5 wlan0mon</strong></pre>
+<ol start="4">
+<li>As we found in the previous sections, this will show us devices that are connected to this network. In this case, we are likely to see a higher number of devices than normal, as many devices will automatically connect to unauthenticated networks. Use the <kbd>macchanger</kbd> utility to mimic one of these devices to use their authenticated sessions:</li>
+</ol>
+<pre style="padding-left: 60px" class="mce-root"><strong>root@kali:~/wireless# ifconfig wlan0mon down</strong><br/><strong>root@kali:~/wireless# macchanger -m 7A:DA:38:06:5B:B2 wlan0mon</strong><br/><strong>root@kali:~/wireless# ifconfig wlan0mon up</strong></pre>
+<ol start="5">
+<li>To start cracking the WEP key for the SSID <kbd>Kali_Guest</kbd>, let's kick off <kbd>airodump-ng</kbd> to start gathering packets:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# airodump-ng -c 11 --bssid 68:86:A7:1D:6D:84 -w KaliCookbook_8.5 wlan0mon</strong></pre>
+<div class="CDPAlignCenter CDPAlign"><img height="112" width="537" class="image-border" src="assets/4462982f-e0e9-435b-a465-4346f444c217.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Gathering information to crack WEP key on guest network</div>
+<ol start="6">
+<li>As we did in the <em>Cracking WEP Encryption</em> section, we gather enough data packets to be able to extract the WEP key to get access to the guest network. Refer to section <em>Cracking WEP Encryption</em> (if WEP is used) or section <em>Cracking WPA/WPA2 Encryption</em> (if WPA is used) for more detailed steps on gaining access to these types of networks.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Rogue AP deployment</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">In this recipe, we will use <kbd>wifiphisher</kbd> to create a rogue, and capture username and passwords from a captive portal that simulates corporate portals.</p>
+<p>Since we have covered creating rogue APs and forcing deauthentications in section <em>Cracking WEP Encryption</em> (with <kbd>airodump-ng</kbd>/<kbd>aircrack-ng</kbd>) and <em>Obtaining WPA/WPA2 Keys</em> (with fluxion), this recipe will focus on the creation of access points that encourage open use and have the ability to gather credentials or deliver malicious payloads.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p class="mce-root">The tool used in this recipe is not included in the base installation of Kali Linux and must be installed from the command line with the following command:</p>
+<pre><strong>root@kali:~/wireless# apt-get install wifiphisher</strong></pre>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>To create a rogue access point with <kbd>wifiphisher</kbd>, the following process will be used:</p>
+<ol>
+<li>Once installed, we will launch <kbd>wifiphisher</kbd> with the following command that will disable <kbd>jamming</kbd> (<kbd>-nJ</kbd>) and create a SSID named <kbd>Free Wifi</kbd>:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# wifiphisher -nJ -e 'Corporate'</strong></pre>
+<ol start="2">
+<li>Once executed, you will be asked to make a selection as to the process that will be in place once a victim connects to our SSID:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img style="font-size: 1em" height="222" width="519" class="image-border" src="assets/5869b912-bf35-4269-baee-e564b2f0157d.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign"> wifiphisher phishing options</div>
+<ol start="3">
+<li>Select <kbd>Browser Connection Reset</kbd> by entering <kbd>1</kbd> and hitting <em>Enter</em>.</li>
+</ol>
+<ol start="4">
+<li>We have now created an open wireless SSID that appears as though it is a service that can be used for many different purposes. In this scenario, when connections are made to this SSID, the user's browser is automatically redirected to the HTTP server running on our Kali Linux system and the following page is displayed:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign packt_figref"><img height="214" width="431" class="image-border" src="assets/21d3a493-9348-4585-ab06-282568fcb7a1.png"/></div>
+<div class="CDPAlignCenter CDPAlign packt_figref"><span>Captive portal redirect, using the browser redirect template</span></div>
+<div class="packt_figref packt_tip"><br/>
+To add an additional layer of realism to any AP you set up, you can define the use of a WPA/WPA2 pre-shared key by adding the following to the command line: <kbd>-pK MyKeyHere</kbd>. This is particularly useful when combining the oath-login with the PSK of a shared network, like guest networks or corporate networks where the key is static, but well known.</div>
+<ol start="5">
+<li>Stop the running <kbd>wifiphisher</kbd> session by pressing <em>CTRL-C</em>, and once it has stopped, run the following from the command line:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# wifiphisher -nJ -e 'Free WiFi' -p oauth-login</strong></pre>
+<div class="packt_infobox">Unlike the previous step, we have defined the phishing template from the command line. Default and customized templates can be called from the command line, allowing for the generation of automated scripts to kick off new campaigns.</div>
+<ol start="6">
+<li>When you connect to this SSID, you will be redirected to a splash page that will appear to be asking for you to authenticate to this network using your Facebook credentials:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="316" width="303" class="image-border" src="assets/c4539b8b-4b1c-40dc-984d-3408030b5397.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Gathering facebook credentials with captive portal</div>
+<ol start="7">
+<li>Again terminating the previous session, we will now demonstrate the next example, by running the following:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# wifiphisher -nJ -e 'Asus' -p firmware-upgrade</strong></pre>
+<ol start="8">
+<li>Running this command will give you the ability to show a screen such as this, that prompts the user for the WPA password for the network they believe they are connected to (as opposed to our rogue network):</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="396" width="661" class="image-border" src="assets/9caf1cdf-8900-4c1d-844e-064b13e75df8.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Firmware upgrade captive portal example</div>
+<ol start="9">
+<li>Finally, terminating this session and launching <kbd>wifiphisher</kbd> with the following command will kick off a new SSID that will not only redirect them to our portal, but also give us the ability to convince the user to download the payload of our choice, under the guise of a plugin update:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# wifiphisher -nJ -e 'Guest' -p plugin-update</strong></pre>
+<ol start="10">
+<li>Unlike the other sessions we initiated, the plugin-update template allows us to define a payload to encourage the user to download and install, posing as an update for a browser plugin. After being launched, <kbd>wifiphisher</kbd> will require the path to the file you wish to define as the payload. Once you have provided that, it will redirect users to a page that looks very much like this:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="391" width="517" class="image-border" src="assets/5e6abe6f-159c-451e-97aa-5d20f10bfecd.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Plugin update phishing portal</div>
+<div class="packt_tip">Since <kbd>wifiphisher</kbd> uses configuration files for its templates, you can create your own portals as necessary. Review the documentation on the tool's homepage at <a href="https://wifiphisher.org/">https://wifiphisher.org/</a>.</div>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Using wireless networks to scan internal networks</h1>
+                </header>
+            
+            <article>
+                
+<p>Access to a network is the ultimate goal, and the use of wireless networking means that this access is likely easier to gain than through remote access/VPN or through physical access to a network port. Using the recipes in this section, it is highly likely that once you have gained access to the network, you will have done so with the credentials of an authorized user. The next question is: where can you go from here?</p>
+<p>In this recipe, we will use some of the tools that we have learned in preceding sections to help identify ways for us to extend the access we have gained so far.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">Getting ready</h1>
+                </header>
+            
+            <article>
+                
+<p>This recipe is built upon the assumption that you have already gained access to the target wireless network, and that you have IP connectivity, preferably through DHCP.</p>
+
+
+            </article>
+
+            
+        </section>
+    
+
+        <section>
+
+                            <header>
+                    <h1 class="header-title">How to do it...</h1>
+                </header>
+            
+            <article>
+                
+<p>Once connected to a wireless network, you can use the following process to identify additional targets and vulnerable systems:</p>
+<ol>
+<li>Based on the IP information you have gained so far, look to see if there are any discernible patterns in the network address schemes. An example of this is, you have been issued an IP address in one subnet, but infrastructure services such as DHCP and DNS reside in different subnets. Those subnets likely contain servers containing domain user information such as <strong>Active Directory</strong> (<strong>AD</strong>), <strong>Lightweight Directory Access Protocol</strong> (<strong>LDAP</strong>), centralized data repositories such as database servers, application servers, and so on. To view the information received in DHCP requests do the following:</li>
+</ol>
+<pre style="padding-left: 90px"><strong>root@kali:~/wireless# cat /var/lib/dhcp3/dhclient.leases</strong><br/><strong>lease {</strong><br/><strong>  interface "wlan0mon";</strong><br/><strong>  fixed-address 192.168.56.106;</strong><br/><strong>  option subnet-mask 255.255.255.0;</strong><br/><strong>  option dhcp-lease-time 86400;</strong><br/><strong>  option routers 192.168.56.1;</strong><br/><strong>  option dhcp-message-type 5;</strong><br/><strong>  option dhcp-server-identifier 192.168.56.10;</strong><br/><strong>  option domain-name-servers 192.168.56.10;</strong><br/><strong>  option dhcp-renewal-time 43200;</strong><br/><strong>  option dhcp-rebinding-time 75600;</strong><br/><strong>  option host-name "kalicookbook.local";</strong><br/><strong>  renew 0 2017/8/9 05:17:36;</strong><br/><strong>  rebind 0 2017/8/9 15:06:37;</strong><br/><strong>  expire 0 2017/8/9 18:06:37;</strong><br/><strong>}</strong></pre>
+<ol start="2">
+<li>In the preceding case, you can see that in the client network we received a DHCP address from the <kbd>192.168.56.0/24</kbd> network, and DNS and DHCP are located in the same network. In many cases, the user network and server network would be separate from each other, and that would have given us two possibilities:
+<ol>
+<li>The user environment is likely less secure, likely a better target to start in to gain credentials, and so on.</li>
+<li>The server environment is on a separate network and could have access controls in place such as firewalls, access control networks, and so on. Those controls are likely bound to services used by authenticated users, so credentials are likely a better place to start.</li>
+</ol>
+</li>
+<li>From the command line, run <kbd>zenmap</kbd>. The <kbd>zenmap</kbd> is a graphical frontend to <kbd>Nmap</kbd>, that makes the gathering and visualization of results easier. After launching <kbd>zenmap</kbd>, enter the following scan options and start the scan. The results should look similar to the following screen:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="251" width="423" class="image-border" src="assets/64eeb41b-d17a-4ef6-a67b-4060eda5e833.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Network hosts found with zenmap</div>
+<ol start="4">
+<li>Once complete, click on <span class="packt_screen">Hosts Viewer</span> to get a sorted, more detailed view of the services and applications running on the hosts in this environment. If we select <kbd>192.168.56.10</kbd> on the left, we can see that is it likely a Windows 2008 domain controller:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="320" width="443" class="image-border" src="assets/d89aa48b-2611-4958-939a-05a139c43437.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">Windows domain controller located with zenmap</div>
+<ol start="5">
+<li>With a good target located, let's re-open OpenVAS, the vulnerability scanning platform we set up in <a href="efecc8fd-4746-4428-9662-854d418bcba2.xhtml" target="_blank">Chapter 3,</a> <em>Vulnerability Analysis. </em>Start the OpenVAS server service from the command line by entering the following:</li>
+</ol>
+<pre style="padding-left: 60px"><strong>root@kali:~/wireless# openvas-start</strong></pre>
+<ol start="6">
+<li>Open a browser, navigate to the address of your OpenVAS installation, and kick off a new scan task:</li>
+</ol>
+<div class="CDPAlignCenter CDPAlign"><img height="289" width="553" class="image-border" src="assets/93509dc7-698e-4c2f-912e-d8602b9529b6.png"/></div>
+<div class="packt_figref CDPAlignCenter CDPAlign">New OpenVAS task: Quick Scan of 192.168.56.10</div>
+<ol start="7">
+<li>Once complete, review the results to determine if additional steps are necessary. For more detailed recipes on using OpenVAS and other vulnerability scanning tools, refer to <a href="efecc8fd-4746-4428-9662-854d418bcba2.xhtml" target="_blank">Chapter 3</a>, <em>Vulnerability Analysis</em>.</li>
+</ol>
+
+
+            </article>
+
+            
+        </section>
+    </body></html>
