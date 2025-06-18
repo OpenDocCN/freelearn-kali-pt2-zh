@@ -1954,11 +1954,13 @@
   id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 最后，您可以通过点击左上角的Maltego图标并选择**保存**选项，保存Maltego收集的信息。Maltego的关系映射功能可以帮助您分析信息，并了解一个组件是如何与另一个组件连接的。通过Maltego收集的信息，您可以确定公开可用的服务器、IP地址、员工的电子邮件地址、网页上的关联URL等。如您所见，使用像Maltego这样的工具可以帮助自动化从互联网上多个数据源收集各种类型的OSINT数据，这有助于道德黑客和渗透测试人员在侦察阶段减少投入的时间。接下来，您将学习如何使用Netcraft识别目标组织的外部攻击面、资产和技术。
 - en: Identifying infrastructure with Netcraft
   id: totrans-265
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 使用Netcraft识别基础设施
 - en: 'Netcraft enables ethical hackers and penetration testers to collected OSINT
     on a targeted organization to better understand the technologies, operating systems,
     applications and locations of their internet-facing devices. Netcraft provides
@@ -1966,26 +1968,31 @@
   id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: Netcraft使道德黑客和渗透测试人员能够收集关于目标组织的OSINT，更好地了解其互联网-facing设备的技术、操作系统、应用程序和位置。Netcraft提供以下数据类型：
 - en: Network and IP information
   id: totrans-267
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 网络和IP信息
 - en: IP geolocation information
   id: totrans-268
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: IP地理位置数据
 - en: Website technologies and applications
   id: totrans-269
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 网站技术和应用程序
 - en: 'To get started using Netcraft to profile a targeted organization/domain, please
     use the following instructions:'
   id: totrans-270
   prefs: []
   type: TYPE_NORMAL
+  zh: 要开始使用Netcraft来分析目标组织/域名，请使用以下说明：
 - en: 'Using a standard web browser, go to [https://sitereport.netcraft.com/](https://sitereport.netcraft.com/),
     then enter a targeted domain name within the domain field and click on **Look
     UP**, as shown below:'
@@ -1993,36 +2000,44 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用标准的网页浏览器，访问[https://sitereport.netcraft.com/](https://sitereport.netcraft.com/)，然后在域名字段中输入目标域名并点击**Look
+    UP**，如下所示：
 - en: '![](../media/file186.png)'
   id: totrans-272
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file186.png)'
 - en: 'After a few seconds, Netcraft will automatically display all information it
     knows about the targeted domain and its technologies, as shown below:'
   id: totrans-273
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 几秒钟后，Netcraft将自动显示它所知道的有关目标域名及其技术的所有信息，如下所示：
 - en: '![](../media/file187.png)'
   id: totrans-274
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file187.png)'
 - en: As shown in the preceding screenshot, ethical hackers and penetration testers
     to use the information to determine the owner of the domain name, the name servers,
     hosting company and public addresses of the target.
   id: totrans-275
   prefs: []
   type: TYPE_NORMAL
+  zh: 如前所示的截图所示，道德黑客和渗透测试人员可以使用这些信息来确定域名的所有者、名称服务器、托管公司和目标的公共地址。
 - en: 'Next, to determine the geolocation of the targeted organization, scroll-down
     to the **SSL**/**TLS** section, as shown below:'
   id: totrans-276
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，为了确定目标组织的地理位置，向下滚动到**SSL**/**TLS**部分，如下所示：
 - en: '![](../media/file188.png)'
   id: totrans-277
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file188.png)'
 - en: As shown in the preceding screenshot, Netcraft was able to collect and analyzed
     the information found within the digital certificate for the targeted domain,
     and provides the organization, state and country. Such information is useful for
@@ -2033,6 +2048,8 @@
   id: totrans-278
   prefs: []
   type: TYPE_NORMAL
+  zh: 如前所示的截图所示，Netcraft能够收集并分析目标域名数字证书中的信息，并提供组织、州和国家的信息。这些信息对于道德黑客在规划物理渗透测试时非常有用。此外，**Subject
+    Alternative Name**字段提供了允许使用该数字证书的附加子域名，这些数据帮助渗透测试人员识别目标所拥有的其他资产。
 - en: 'Next, the **Site Technology** section provides valuable information such as
     identifying the server-side and client-side technologies, this information is
     useful when planning a web application penetration test, as shown below:'
@@ -2040,10 +2057,12 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，**站点技术**部分提供了有价值的信息，如识别服务器端和客户端技术，当计划进行Web应用程序渗透测试时，这些信息非常有用，如下所示：
 - en: '![](../media/file189.png)'
   id: totrans-280
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file189.png)'
 - en: Having completed this exercise, you have gained the skills on how ethical hackers
     are able to leverage Netcraft to identify the public infrastructure of a targeted
     organization. Next, you will learn how to use Recon-ng to automate data collection
@@ -2051,11 +2070,13 @@
   id: totrans-281
   prefs: []
   type: TYPE_NORMAL
+  zh: 完成此练习后，你将掌握如何利用 Netcraft 辨识目标组织的公共基础设施，成为一名道德黑客。接下来，你将学习如何使用 Recon-ng 自动化数据收集和分析。
 - en: Using Recon-ng for data harvesting
   id: totrans-282
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 使用 Recon-ng 进行数据采集
 - en: '**Recon-ng** is an OSINT reconnaissance framework written in Python. The tool
     itself contains a lot of modules for additional capabilities, a database for storing
     OSINT, interactive help, and a menu system, similar to Metasploit. Recon-ng can
@@ -2066,12 +2087,16 @@
   id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Recon-ng** 是一个用 Python 编写的 OSINT 侦察框架。该工具本身包含许多模块以增强功能、存储 OSINT 的数据库、交互式帮助和菜单系统，类似于
+    Metasploit。Recon-ng 可以执行基于 Web 的信息收集技术，从多个在线数据源收集 OSINT，是任何有志成为道德黑客或渗透测试员的必备工具。要开始使用
+    Recon-ng 进行数据收集，请按照以下说明操作：'
 - en: 'Power-on the **Kali Linux** virtual machine and execute the following command
     within the **Terminal** to start Recon-ng:'
   id: totrans-284
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 启动 **Kali Linux** 虚拟机，并在 **Terminal** 中执行以下命令以启动 Recon-ng：
 - en: '[PRE10]'
   id: totrans-285
   prefs: []
@@ -2085,6 +2110,8 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: Recon-ng 使用各种模块，这些模块旨在从多个数据源收集和分析数据。默认情况下，Recon-ng 没有预安装任何模块，因此请使用以下命令从 Recon-ng
+    市场安装所有模块：
 - en: '[PRE11]'
   id: totrans-287
   prefs: []
@@ -2094,37 +2121,44 @@
   id: totrans-288
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了 Recon-ng 正在下载并设置模块：
 - en: '![](../media/file190.png)'
   id: totrans-289
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file190.png)'
 - en: 'After the modules are installed, Recon-ng will automatically reload the newly
     installed modules and there will be a lot of warning messages that are written
     in red, as shown below:'
   id: totrans-290
   prefs: []
   type: TYPE_NORMAL
+  zh: 安装模块后，Recon-ng 会自动重新加载新安装的模块，并且会显示大量以红色书写的警告信息，如下所示：
 - en: '![](../media/file191.png)'
   id: totrans-291
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file191.png)'
 - en: The preceding screenshot shows there are various Recon-ng modules which requires
     an **Application Programming Interface** (**API**) key to allow Recon-ng to retrieve
     OSINT from the data source.
   id: totrans-292
   prefs: []
   type: TYPE_NORMAL
+  zh: 上面的截图显示了多个 Recon-ng 模块，这些模块需要 **应用程序接口**（**API**）密钥，以允许 Recon-ng 从数据源获取 OSINT。
 - en: The `modules search` command is used to display all current modules with Recon-ng
     and their categories, such as Discovery, Exploitation, Import, Recon and Reporting.
   id: totrans-293
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '`modules search` 命令用于显示所有当前的 Recon-ng 模块及其分类，如发现、利用、导入、侦察和报告。'
 - en: 'Next, to view a list of supported API keys on Recon-ng, use the following commands:'
   id: totrans-294
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，要查看 Recon-ng 支持的 API 密钥列表，请使用以下命令：
 - en: '[PRE12]'
   id: totrans-295
   prefs: []
@@ -2135,10 +2169,12 @@
   id: totrans-296
   prefs: []
   type: TYPE_NORMAL
+  zh: 如下截图所示，密钥列表命令可以帮助我们查看支持的 API 密钥，并判断是否已在使用某个 API。
 - en: '![](../media/file192.png)'
   id: totrans-297
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file192.png)'
 - en: Next, to get a supported API key, simply go to the data source such as **BuiltWith**
     at [https://builtwith.com/](https://builtwith.com/) and create a free user account.
     Once account is created, login and go to **Tools** > **API Access** to find the
@@ -2148,30 +2184,38 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，要获取支持的 API 密钥，只需访问数据源，例如 **BuiltWith** [https://builtwith.com/](https://builtwith.com/)
+    并创建一个免费的用户帐户。账户创建后，登录并转到 **Tools** > **API Access**，即可找到 API 密钥。你可以根据需要为每个支持的模块获取多个
+    API 密钥。
 - en: 'Consider getting an API key from the following data sources:'
   id: totrans-299
   prefs: []
   type: TYPE_NORMAL
+  zh: 考虑从以下数据源获取 API 密钥：
 - en: Hunter - [https://hunter.io](https://hunter.io)
   id: totrans-300
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Hunter - [https://hunter.io](https://hunter.io)
 - en: Censys - [https://search.censys.io](https://search.censys.io)
   id: totrans-301
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Censys - [https://search.censys.io](https://search.censys.io)
 - en: VirusTotal - [https://www.virustotal.com](https://www.virustotal.com)
   id: totrans-302
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: VirusTotal - [https://www.virustotal.com](https://www.virustotal.com)
 - en: Shodan - [https://www.shodan.io/](https://www.shodan.io/)
   id: totrans-303
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Shodan - [https://www.shodan.io/](https://www.shodan.io/)
 - en: 'Once you’ve acquired your API keys, the next step it to add each API to their
     API-supported modules. Use the `keys add <API-module-name> <API key value>` command.
     For instance, the following commands are used to add an API key for the `builtwith_api`,
@@ -2180,6 +2224,7 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 一旦获得API密钥，下一步是将每个API添加到其支持的API模块中。使用`keys add <API-module-name> <API key value>`命令。例如，使用以下命令为`builtwith_api`添加API密钥，如下所示：
 - en: '[PRE13]'
   id: totrans-305
   prefs: []
@@ -2191,10 +2236,12 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 添加API密钥后，使用`keys list`命令验证密钥是否已成功添加，如下所示：
 - en: '![](../media/file193.png)'
   id: totrans-307
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file193.png)'
 - en: 'As an ethical hacker and penetration tester, you may be working on multiple
     projects at a time, Recon-ng enables you to create multiple, virtual workspaces
     to help you better manage the collection and analysis of data. To create a new
@@ -2203,6 +2250,7 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 作为一名道德黑客和渗透测试员，您可能同时处理多个项目，Recon-ng允许您创建多个虚拟工作空间，以帮助您更好地管理数据的收集和分析。要创建一个新的工作空间，请使用以下命令：
 - en: '[PRE14]'
   id: totrans-309
   prefs: []
@@ -2218,6 +2266,9 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 一旦创建了新的工作空间，Recon-ng将自动将您的工作环境从`default`切换到新工作空间。要查看Recon-ng中可用工作空间的列表，请使用`workspaces
+    list`命令。此外，`workspaces load <workspace-name>`命令允许您选择并在特定工作空间内工作，而`workspaces remove
+    <workspace-name>`命令则从Recon-ng中删除一个工作空间。
 - en: 'Next, the `modules search <keyword>` commands enables you to search for specific
     modules based on a keyword. For instance, use the `modules search whois` command
     to view all Recon-ng modules which contains the `whois` keyword, as shown below:'
@@ -2225,10 +2276,12 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，`modules search <keyword>`命令允许您根据关键词搜索特定的模块。例如，使用`modules search whois`命令查看所有包含`whois`关键词的Recon-ng模块，如下所示：
 - en: '![](../media/file194.png)'
   id: totrans-312
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file194.png)'
 - en: 'Next, to use a specific module within Recon-ng, use the `modules load <module-name>`
     command. For instance, to gather a list of **point-of-contacts** (**POCS**) for
     a targeted domain on the internet, use the following commands:'
@@ -2236,6 +2289,7 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，要在Recon-ng中使用特定模块，使用`modules load <module-name>`命令。例如，要收集目标域名的**point-of-contacts**（**POCS**）列表，可以使用以下命令：
 - en: '[PRE15]'
   id: totrans-314
   prefs: []
@@ -2246,16 +2300,19 @@
   id: totrans-315
   prefs: []
   type: TYPE_NORMAL
+  zh: 如下图所示，`info`命令打印了所选模块的描述和所需的选项：
 - en: '![](../media/file195.png)'
   id: totrans-316
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file195.png)'
 - en: 'To set the required options for the module, use the following commands to set
     `microsoft.com` as the **SOURCE** for our targeted domain:'
   id: totrans-317
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 要为模块设置所需的选项，使用以下命令将`microsoft.com`设置为我们的目标域名的**SOURCE**：
 - en: '[PRE16]'
   id: totrans-318
   prefs: []
@@ -2268,31 +2325,37 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 要在模块中取消设置某个值，请使用`options unset <parameter/value>`命令。确保执行`info`命令来验证该值是否已取消设置/删除。
 - en: 'Next, use the `run` command to execute the module, as shown below:'
   id: totrans-320
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用`run`命令执行该模块，如下所示：
 - en: '![](../media/file196.png)'
   id: totrans-321
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file196.png)'
 - en: 'Next, use the `back` command to exit a module and `modules search bing` command
     to for modules that can leverage the Bing search engine, as shown below:'
   id: totrans-322
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用`back`命令退出模块，并使用`modules search bing`命令搜索可以利用Bing搜索引擎的模块，如下所示：
 - en: '![](../media/file197.png)'
   id: totrans-323
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file197.png)'
 - en: 'Next, use the following command to load the `bing_domain_web` module, display
     its information, set the targeted domain and execute the module:'
   id: totrans-324
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用以下命令加载`bing_domain_web`模块，显示其信息，设置目标域名并执行该模块：
 - en: '[PRE17]'
   id: totrans-325
   prefs: []
@@ -2304,20 +2367,24 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 使用`show hosts`命令查看有关目标收集的子域名和主机名列表，如下所示：
 - en: '![](../media/file198.png)'
   id: totrans-327
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file198.png)'
 - en: 'Next, use the `show contacts` command to view a list of contact information
     that was collected, as shown below:'
   id: totrans-328
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用`show contacts`命令查看已收集的联系信息列表，如下所示：
 - en: '![](../media/file199.png)'
   id: totrans-329
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file199.png)'
 - en: The show command can be used with show [`companies`] [`credentials`] [`hosts`]
     [`locations`] [`ports`] [`pushpins`] [`vulnerabilities`] [`contacts`] [`domains`]
     [`leaks`] [`netblocks`] [`profiles`] [`repositories`] to view specific information
@@ -2328,16 +2395,21 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 可以使用show命令查看特定的信息，这些信息通过Recon-ng获得，命令格式如下：show [`companies`] [`credentials`]
+    [`hosts`] [`locations`] [`ports`] [`pushpins`] [`vulnerabilities`] [`contacts`]
+    [`domains`] [`leaks`] [`netblocks`] [`profiles`] [`repositories`]。此外，`dashboard`命令提供了Recon-ng所有活动的汇总，例如显示某个模块被执行的次数以及收集的数据量。
 - en: 'To view a summary of your activities within the `myfirstproject` workspace,
     use the `dashboard` command, as shown below:'
   id: totrans-331
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 要查看`myfirstproject`工作区内活动的总结，请使用`dashboard`命令，如下所示：
 - en: '![](../media/file200.png)'
   id: totrans-332
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file200.png)'
 - en: 'Next, collecting all the data can overwhelming to process and analyzed, however
     Recon-ng has various reporting modules to help us. Use the `modules search report`
     command to view a list of all reporting modules, as shown below:'
@@ -2345,16 +2417,19 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，收集所有数据可能会让人感到不知所措，然而Recon-ng有多种报告模块可以帮助我们。使用`modules search report`命令查看所有报告模块的列表，如下所示：
 - en: '![](../media/file201.png)'
   id: totrans-334
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file201.png)'
 - en: 'To generate an HTML-format report, use the following commands to set the required
     parameters and specify the output location for the final report:'
   id: totrans-335
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 要生成HTML格式的报告，请使用以下命令设置所需的参数，并指定最终报告的输出位置：
 - en: '[PRE18]'
   id: totrans-336
   prefs: []
@@ -2365,20 +2440,24 @@
   id: totrans-337
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图展示了如何在该模块上应用前述命令：
 - en: '![](../media/file202.png)'
   id: totrans-338
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file202.png)'
 - en: 'To view the report, simply go to the output directory such as `/home/kali/Desktop`
     and open the report HTML file using the web browser, as shown below:'
   id: totrans-339
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 要查看报告，只需进入输出目录（如`/home/kali/Desktop`），然后使用网页浏览器打开报告HTML文件，如下所示：
 - en: '![](../media/file203.png)'
   id: totrans-340
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file203.png)'
 - en: This report provides a very easy-to-understand summary of all the data that
     was collected using Recon-ng. The reporting module plays an excellent role in
     helping ethical hackers to correlate data about their target during the reconnaissance
@@ -2386,12 +2465,14 @@
   id: totrans-341
   prefs: []
   type: TYPE_NORMAL
+  zh: 该报告提供了一个非常易于理解的总结，展示了使用Recon-ng收集的所有数据。报告模块在帮助伦理黑客在侦察阶段关联目标数据方面发挥了极好的作用。
 - en: 'Next, to access the web interface of Recon-ng, use the following command on
     a new Terminal:'
   id: totrans-342
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，要访问Recon-ng的网页界面，请在新的终端中使用以下命令：
 - en: '[PRE19]'
   id: totrans-343
   prefs: []
@@ -2403,33 +2484,39 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 一旦工作区初始化完成，请在Kali Linux内打开网页浏览器并访问`http://127.0.0.1:5000/`，如下面所示：
 - en: '![](../media/file204.png)'
   id: totrans-345
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file204.png)'
 - en: As shown in the preceding screenshot, ethical hackers and penetration testers
     can improve their data collection and analysis using the web interface of Recon-ng.
   id: totrans-346
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 如上图所示，伦理黑客和渗透测试人员可以利用Recon-ng的网页界面来改进他们的数据收集和分析工作。
 - en: 'To learn more about Recon-ng and its features, please visit the official GitHub
     repository at: [https://github.com/lanmaster53/recon-ng](https://github.com/lanmaster53/recon-ng).'
   id: totrans-347
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 要了解更多关于Recon-ng及其功能的信息，请访问官方GitHub仓库：[https://github.com/lanmaster53/recon-ng](https://github.com/lanmaster53/recon-ng)。
 - en: Having completed this exercise, you’ve learnt how to leverage Recon-ng to efficiently
     collect and analysis OSINT from multiple data sources. Next, you will learn how
     to use theHarvester for data harvesting.
   id: totrans-348
   prefs: []
   type: TYPE_NORMAL
+  zh: 完成此练习后，您已经学会了如何利用Recon-ng高效地从多个数据源收集和分析OSINT。接下来，您将学习如何使用theHarvester进行数据收集。
 - en: Data collection with theHarvester
   id: totrans-349
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 使用theHarvester进行数据收集
 - en: 'Using a tool such as **theHarvester** enables to you efficiently collect OSINT
     to identify sub-domains and additional exposed assets of a targeted organization.
     To get started using theHarvester for data collection, please use the following
@@ -2437,18 +2524,21 @@
   id: totrans-350
   prefs: []
   type: TYPE_NORMAL
+  zh: 使用像**theHarvester**这样的工具可以高效地收集OSINT，以识别目标组织的子域名和其他暴露的资产。要开始使用theHarvester进行数据收集，请使用以下说明：
 - en: Firstly, power-on the **Kali Linux** virtual machine and ensure it has internet
     connectivity.
   id: totrans-351
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，启动**Kali Linux**虚拟机，并确保它具有互联网连接。
 - en: 'Next, open the **Terminal** and use the following command to display the menu
     for theHarvester:'
   id: totrans-352
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，打开**终端**，并使用以下命令显示theHarvester的菜单：
 - en: '[PRE20]'
   id: totrans-353
   prefs: []
@@ -2460,12 +2550,14 @@
   id: totrans-354
   prefs: []
   type: TYPE_NORMAL
+  zh: 上述命令显示了帮助菜单，并提供了各种语法的列表，以及如何使用它们从在线资源中获取 OSINT。此外，帮助菜单还提供了使用 `-b` 命令的各种数据源列表。
 - en: 'Next, to retrieve a list of sub-domains of a targeted domain, use the following
     commands:'
   id: totrans-355
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，要检索目标域的子域列表，请使用以下命令：
 - en: '[PRE21]'
   id: totrans-356
   prefs: []
@@ -2476,10 +2568,12 @@
   id: totrans-357
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了 theHarvester 成功收集到了目标域的多个子域：
 - en: '![](../media/file205.png)'
   id: totrans-358
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file205.png)'
 - en: 'To learn more about the features of theHarvester, please visit the official
     GitHub repository at: [https://github.com/laramies/theHarvester](https://github.com/laramies/theHarvester).
     Some sources require an API key to retrieve data from the online database, to
@@ -2488,6 +2582,8 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 要了解 theHarvester 的更多功能，请访问官方 GitHub 仓库：[https://github.com/laramies/theHarvester](https://github.com/laramies/theHarvester)。某些数据源需要
+    API 密钥才能从在线数据库中检索数据，要了解如何将 API 密钥添加到 theHarvester，请参阅：[https://github.com/laramies/theHarvester/wiki/Installation#api-keys](https://github.com/laramies/theHarvester/wiki/Installation#api-keys)。
 - en: Having completed this section, you have gained the skills needed to collect
     OSINT information on targeted organizations to identify how they are leaking data
     such as their internal infrastructure to anyone on the internet. In the next section,
@@ -2495,11 +2591,13 @@
   id: totrans-360
   prefs: []
   type: TYPE_NORMAL
+  zh: 完成这一部分后，你将掌握收集目标组织的开放源信息（OSINT）的技能，从而识别它们如何泄露数据，如它们的内部基础设施，向互联网上的任何人公开。在下一部分，你将学习如何收集员工的开放源信息。
 - en: Harvesting employees’ data
   id: totrans-361
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 收集员工数据
 - en: 'Around the world, employees of many organizations commonly leak and share too
     much information about themselves and their organization without realizing how
     a threat actor or adversary can collect and analyze such information to plan a
@@ -2510,36 +2608,43 @@
   id: totrans-362
   prefs: []
   type: TYPE_NORMAL
+  zh: 全球范围内，许多组织的员工通常会泄露并分享过多的个人和组织信息，而没有意识到威胁行为者或对手如何收集并分析这些信息，从而计划网络攻击或增强对组织和自身的威胁。你会发现，许多组织的领导层员工通常会在专业的社交网络平台上分享他们的联系信息，以下是一些常见的信息类型：
 - en: Full name and job title
   id: totrans-363
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 全名和职位
 - en: Company’s email address
   id: totrans-364
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 公司的电子邮件地址
 - en: Telephone number
   id: totrans-365
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 电话号码
 - en: Roles and responsibilities
   id: totrans-366
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 角色与职责
 - en: Recent projects with technical details
   id: totrans-367
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 最近的项目及其技术细节
 - en: Pictures of their employee badges
   id: totrans-368
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 员工徽章的照片
 - en: As a penetration tester, it's quite simple to create an account that will function
     as a sock puppet on a site such as LinkedIn, populate some false information on
     the account, such as information stating you're an employee who is working at
@@ -2554,11 +2659,13 @@
   id: totrans-369
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一名渗透测试员，在像 LinkedIn 这样的网站上创建一个账户，作为一个“傀儡”账户，实际上非常简单。你只需要在账户上填充一些虚假的信息，例如声明自己是另一分公司工作的员工，然后将目标组织的一些低级员工添加为联系人。这样，目标组织的其他员工就会注意到你的“傀儡”账户和他们有共同的联系人，这样可能会减少他们的怀疑。员工们有可能会自动接受你的连接/好友请求，因为他们会看到你是他们公司的一名员工。这为你与目标组织中的高层员工建立联系提供了一些杠杆作用，从而使你能够收集联系方式，计划各种社会工程学攻击，并确定你的攻击目标。
 - en: Working with Hunter
   id: totrans-370
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 使用 Hunter
 - en: 'Hunter is an online data source that harvests both employee and organizational
     data from public sources on the internet. As an ethical hacker and penetration
     tester, this is a must-have resource for gathering employees'' names, telephone
@@ -2567,28 +2674,33 @@
   id: totrans-371
   prefs: []
   type: TYPE_NORMAL
+  zh: Hunter 是一个在线数据源，从互联网上的公共来源收集员工和组织数据。作为道德黑客和渗透测试员，这是收集员工姓名、电话号码、电子邮件地址甚至职位名称的必备资源，尤其是在规划社交工程攻击时。要开始使用这个工具，请按照以下说明操作：
 - en: Firstly, you’ll need to register for a free account at [https://hunter.io/](https://hunter.io/)
     and complete the registration process.
   id: totrans-372
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，您需要在 [https://hunter.io/](https://hunter.io/) 注册一个免费账户并完成注册流程。
 - en: Once the registration process is completed, log-in to online platform using
     your user credentials.
   id: totrans-373
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 注册过程完成后，使用您的用户凭证登录在线平台。
 - en: 'Next, you’ll be presented with the **Domain Search** field, simply enter a
     targeted domain, as shown below:'
   id: totrans-374
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，您将看到 **域名搜索** 字段，只需输入一个目标域名，如下所示：
 - en: '![](../media/file206.png)'
   id: totrans-375
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file206.png)'
 - en: 'While entering a domain within the **Domain Search** field, Hunter will provide
     suggestions for your search, I’ve used `microsoft.com` as an example, as shown
     below:'
@@ -2596,10 +2708,12 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 当在 **域名搜索** 字段中输入一个域名时，Hunter 将提供搜索建议，我以 `microsoft.com` 为例，如下所示：
 - en: '![](../media/file207.png)'
   id: totrans-377
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file207.png)'
 - en: As shown in the preceding screenshot, Hunter can provide a list of employees'
     information, such as their names, email addresses, telephone numbers, and other
     sources of information. In addition, collecting email addresses for a targeted
@@ -2611,6 +2725,7 @@
   id: totrans-378
   prefs: []
   type: TYPE_NORMAL
+  zh: 如前面截图所示，Hunter 可以提供员工信息的列表，如员工的姓名、电子邮件地址、电话号码以及其他信息来源。此外，收集目标组织的电子邮件地址有助于确定员工电子邮件地址的格式。因此，如果攻击者或道德黑客知道员工的姓名，那么猜测员工的电子邮件地址会变得更容易，这些信息在规划社交工程、密码喷射和凭证填充攻击时非常有用。
 - en: To learn more about password spraying and credential stuffing attacks, please
     see [https://attack.mitre.org/techniques/T1110/003/](https://attack.mitre.org/techniques/T1110/003/)
     and [https://attack.mitre.org/techniques/T1110/004/](https://attack.mitre.org/techniques/T1110/004/).
@@ -2618,15 +2733,19 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 若要了解更多关于密码喷射和凭证填充攻击的信息，请参阅 [https://attack.mitre.org/techniques/T1110/003/](https://attack.mitre.org/techniques/T1110/003/)
+    和 [https://attack.mitre.org/techniques/T1110/004/](https://attack.mitre.org/techniques/T1110/004/)。
 - en: 'The following screenshot shows all the sources that Hunter used to collect
     the data for a specific person:'
   id: totrans-380
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了 Hunter 用于收集特定人物数据的所有来源：
 - en: '![](../media/file208.png)'
   id: totrans-381
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file208.png)'
 - en: While employees will provide their contact details on various online platforms,
     including their company's website, such information can be leveraged by a threat
     actor and a penetration tester to perform social engineering attacks against the
@@ -2634,11 +2753,13 @@
   id: totrans-382
   prefs: []
   type: TYPE_NORMAL
+  zh: 虽然员工会在各种在线平台上提供他们的联系信息，包括公司的网站，但这些信息可以被威胁行为者和渗透测试员用于对组织进行社交工程攻击。
 - en: Social media reconnaissance
   id: totrans-383
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 社交媒体侦察
 - en: 'Employees of an organization often leak too much information about themselves
     and their company. While many employees are very happy to be working in their
     organizations, sometimes, they share information that can be leveraged by threat
@@ -2650,30 +2771,35 @@
   id: totrans-384
   prefs: []
   type: TYPE_NORMAL
+  zh: 组织的员工常常泄露过多关于自己和公司的信息。虽然许多员工很高兴在他们的组织中工作，但有时他们会分享可以被威胁行为者利用的信息，从而增强他们对目标的攻击。作为一名有抱负的道德黑客和渗透测试员，从社交媒体平台收集和分析信息可以帮助发现那些隐私设置较弱、信息安全性较差的员工个人资料，并收集其个人资料中的敏感数据。以下是一些常见的泄露信息：
 - en: Employee contact information, such as telephone numbers and email addresses,
     which can be used during social engineering and account takeover attacks.
   id: totrans-385
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 员工的联系信息，如电话号码和电子邮件地址，这些信息可用于社交工程和账户接管攻击。
 - en: Sharing photos with their employee badges, which can be used by a threat actor
     to create a fake ID for impersonation for physical penetration testing.
   id: totrans-386
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 分享带有员工徽章的照片，这些照片可以被攻击者用来创建假身份进行物理渗透测试中的冒充。
 - en: Pictures of an employee's computing systems and desktop, which can inform a
     threat actor about the available device vendors and operating systems.
   id: totrans-387
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 员工计算机系统和桌面的图片，这些可以向攻击者透露可用的设备供应商和操作系统。
 - en: Projects that have been completed by the employee may contain specific technical
     details, which can allow a threat actor to profile the internal network infrastructure.
   id: totrans-388
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 员工已完成的项目可能包含特定的技术细节，这些细节可以让攻击者对内部网络基础设施进行分析。
 - en: These are just some of the many types of information that are commonly posted
     on social media platforms such as LinkedIn. As a penetration tester, you can create
     a sock puppet, impersonate someone on social media, and trick the employees of
@@ -2685,11 +2811,13 @@
   id: totrans-389
   prefs: []
   type: TYPE_NORMAL
+  zh: 这些只是一些常见的社交媒体平台（如LinkedIn）上发布的信息类型。作为渗透测试员，你可以创建一个虚拟身份，在社交媒体上冒充他人，并欺骗目标组织的员工执行某个动作或泄露敏感信息（社会工程学）。此外，想象一下执行物理渗透测试时，你可以打印一个假员工ID卡，并通过使用目标组织社交媒体页面上的信息，穿着像典型员工一样的服装。接下来的几个小节中，你将学习如何进行社交媒体侦察。
 - en: Automating with Sherlock
   id: totrans-390
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 使用Sherlock进行自动化
 - en: '**Sherlock** is an OSINT tool that helps penetration testers quickly determine
     whether their target has any social media accounts and which platforms the accounts
     may exist on. This tool supports over 200 social media websites, automates the
@@ -2698,12 +2826,14 @@
   id: totrans-391
   prefs: []
   type: TYPE_NORMAL
+  zh: '**Sherlock** 是一款OSINT工具，帮助渗透测试员快速确定目标是否有社交媒体账户，以及这些账户可能存在于哪些平台上。该工具支持200多个社交媒体网站，自动化检查每个站点的过程，并生成结果报告。要开始使用Sherlock进行社交媒体侦察，请按照以下说明操作：'
 - en: 'Power-on the **Kali Linux** virtual machine, open the **Terminal** and use
     the following commands to download **Sherlock** from its official GitHub repository:'
   id: totrans-392
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 启动**Kali Linux**虚拟机，打开**Terminal**并使用以下命令从其官方GitHub仓库下载**Sherlock**：
 - en: '[PRE22]'
   id: totrans-393
   prefs: []
@@ -2714,6 +2844,7 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用以下命令安装Sherlock所需的依赖项：
 - en: '[PRE23]'
   id: totrans-395
   prefs: []
@@ -2725,6 +2856,7 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 然后，使用以下命令在互联网上搜索目标组织的社交媒体存在，命令如下：
 - en: '[PRE24]'
   id: totrans-397
   prefs: []
@@ -2735,19 +2867,23 @@
   id: totrans-398
   prefs: []
   type: TYPE_NORMAL
+  zh: 请注意，使用了`--timeout`命令来指示Sherlock在任何社交媒体网站上停留的时间不超过5秒，如下所示：
 - en: '![](../media/file209.png)'
   id: totrans-399
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file209.png)'
 - en: 'When Sherlock completes the task, the results will be stored into a text file
     within the present working directory, as shown below:'
   id: totrans-400
   prefs: []
   type: TYPE_NORMAL
+  zh: 当Sherlock完成任务后，结果将存储在当前工作目录中的一个文本文件中，如下所示：
 - en: '![](../media/file210.png)'
   id: totrans-401
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file210.png)'
 - en: Be sure to check each site within the output file to ensure it is valid and
     provides meaningful information about your target. A penetration tester can use
     the information that's been collected to easily identify the social media accounts
@@ -2758,11 +2894,13 @@
   id: totrans-402
   prefs: []
   type: TYPE_NORMAL
+  zh: 请务必检查输出文件中的每个网站，以确保其有效并提供有关目标的有意义信息。渗透测试员可以利用收集到的信息轻松识别目标组织或用户拥有的社交媒体账户。这些信息还可以用于收集目标的进一步情报。完成这一部分后，你已经学会了如何通过Sherlock自动化收集数据的过程，寻找目标组织或个人的用户账户。
 - en: Summary
   id: totrans-403
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 总结
 - en: During this chapter, you have learnt how to apply various Google hacking techniques
     to perform advanced search and filtering to identify sensitive directories and
     exposed resources on the internet. In addition, you have gained the hands-on skills
@@ -2781,23 +2919,29 @@
   id: totrans-404
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本章中，您已经学习了如何应用各种 Google 黑客技术，执行高级搜索和过滤，以识别互联网中的敏感目录和暴露资源。此外，您还掌握了进行域名侦察的实践技能，收集和分析
+    DNS 记录，执行区域传输，并识别目标的子域名。更进一步，您学会了如何利用专业的互联网搜索引擎识别全球公司暴露的资产，并对 OSINT 如何帮助道德黑客和渗透测试员开发目标档案有了更深的理解。我相信，本章所提供的知识将为您提供宝贵的洞察力，支持您在动态的网络安全领域中成为一名道德黑客和渗透测试员的道路。愿这段新获得的理解为您的旅程赋能，让您能够自信地在行业中导航并产生重要影响。在下一章，*探索主动侦察*中，您将学习如何执行主动侦察技术，以识别活跃系统、开放端口和运行中的服务。
 - en: Further Reading
   id: totrans-405
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 深入阅读
 - en: Open source intelligence - [https://www.imperva.com/learn/application-security/open-source-intelligence-osint/](https://www.imperva.com/learn/application-security/open-source-intelligence-osint/)
   id: totrans-406
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 开源情报 - [https://www.imperva.com/learn/application-security/open-source-intelligence-osint/](https://www.imperva.com/learn/application-security/open-source-intelligence-osint/)
 - en: Top OSINT tools - [https://www.csoonline.com/article/567859/what-is-osint-top-open-source-intelligence-tools.html](https://www.csoonline.com/article/567859/what-is-osint-top-open-source-intelligence-tools.html)
   id: totrans-407
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 顶级 OSINT 工具 - [https://www.csoonline.com/article/567859/what-is-osint-top-open-source-intelligence-tools.html](https://www.csoonline.com/article/567859/what-is-osint-top-open-source-intelligence-tools.html)
 - en: What is Whois - [https://www.domaintools.com/support/what-is-whois-information-and-why-is-it-valuable/](https://www.domaintools.com/support/what-is-whois-information-and-why-is-it-valuable/)
   id: totrans-408
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 什么是 Whois - [https://www.domaintools.com/support/what-is-whois-information-and-why-is-it-valuable/](https://www.domaintools.com/support/what-is-whois-information-and-why-is-it-valuable/)
