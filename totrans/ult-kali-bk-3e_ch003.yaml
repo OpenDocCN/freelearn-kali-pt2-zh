@@ -1075,36 +1075,44 @@
   id: totrans-147
   prefs: []
   type: TYPE_NORMAL
+  zh: 如上图所示，预安装的工具都是按照执行伦理黑客和渗透测试练习的顺序进行分类的。例如，所有常用于侦察的工具可以轻松找到在**01 – 信息收集**类别中，而无线渗透测试工具则可以在**06
+    – 无线攻击**类别中找到。在本书中，你将主要使用 Linux 终端并学习许多命令。如果这是你第一次使用 Linux 和命令，不用担心，这将是一次全新的学习体验，并且在学习新技术、发展你的攻防安全技能、模拟真实的网络攻击的过程中，你将会玩得很开心。
 - en: 'Next, to disable IPv6 on Kali Linux, click on the Kali Linux icon on the top-left
     corner and select the **Settings Manager** icon, as shown below:'
   id: totrans-148
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，为了在 Kali Linux 上禁用 IPv6，点击左上角的 Kali Linux 图标，选择**设置管理器**图标，如下所示：
 - en: '![](../media/file31.png)'
   id: totrans-149
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file31.png)'
 - en: 'The **Settings** windows will appear, click on **Advanced Network Configuration**,
     as shown in the following screenshot:'
   id: totrans-150
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: '**设置**窗口将出现，点击**高级网络配置**，如下所示：'
 - en: '![](../media/file32.png)'
   id: totrans-151
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file32.png)'
 - en: 'Next, the **Network Connections** window will appear, select **Wired connection
     1** (vNIC 1) and click on the **gear** icon, as shown in the following screenshot:'
   id: totrans-152
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，**网络连接**窗口将出现，选择**有线连接 1**（vNIC 1），然后点击**齿轮**图标，如下图所示：
 - en: '![](../media/file33.png)'
   id: totrans-153
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file33.png)'
 - en: 'Next, the **Editing Wired connection 1** window appears, select the **IPv6
     Settings** tab, and change **Method** to **Disabled**, and click on **Save**,
     as shown in the following screenshot:'
@@ -1112,14 +1120,17 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，**编辑有线连接 1**窗口将出现，选择**IPv6 设置**标签，将**方法**更改为**禁用**，然后点击**保存**，如下所示：
 - en: '![](../media/file34.png)'
   id: totrans-155
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file34.png)'
 - en: You can close the **Network Connections** window and the **Settings** menu.
   id: totrans-156
   prefs: []
   type: TYPE_NORMAL
+  zh: 你可以关闭**网络连接**窗口和**设置**菜单。
 - en: Next, let’s determine whether our Kali Linux virtual machine is receiving an
     IP address on each of its network adapters that are connected to the internet,
     *PentestNet* and *RedTeamLab* networks.
@@ -1127,27 +1138,33 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，让我们确定 Kali Linux 虚拟机是否在每个连接到互联网的网络适配器上获取了 IP 地址，分别是 *PentestNet* 和 *RedTeamLab*
+    网络。
 - en: 'To open the **Linux Terminal**, click on the Kali Linux icon on the top-left
     corner and select **Terminal Emulator**, then execute `ip address` command as
     shown below:'
   id: totrans-158
   prefs: []
   type: TYPE_NORMAL
+  zh: 要打开**Linux 终端**，点击左上角的 Kali Linux 图标，选择**终端模拟器**，然后执行 `ip address` 命令，如下所示：
 - en: '![](../media/file35.png)'
   id: totrans-159
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file35.png)'
 - en: 'As shown in the preceding screenshot, there are 4 network adapters on the Kali
     Linux virtual machine:'
   id: totrans-160
   prefs: []
   type: TYPE_NORMAL
+  zh: 如上图所示，Kali Linux 虚拟机上有 4 个网络适配器：
 - en: '**lo** – This is the loopback network adapter which enables the operating system
     to communication with self-hosted applications and vice-versa.'
   id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**lo** – 这是回环网络适配器，允许操作系统与自托管的应用程序进行通信，反之亦然。'
 - en: '**eth0** – This network adapter is vNIC 1 based on our lab topology diagram
     and its network adapter 1 on the virtual machine settings that’s connected to
     the internet via the physical network. The **inet** address is the IP address
@@ -1156,6 +1173,8 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**eth0** – 根据我们的实验室拓扑图，这是 vNIC 1，并且在虚拟机设置中它的网络适配器 1 连接到互联网，通过物理网络实现连接。**inet**
+    地址是分配给该接口的 IP 地址。'
 - en: '**eth1** – This is vNIC 2 according to the lab topology diagram and it is network
     adapter 2 on the virtual machine setting that’s connected to the *PentestNet*
     network (`172.30.1.0/24`) environment.'
@@ -1163,6 +1182,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**eth1** – 根据实验室拓扑图，这是 vNIC 2，它是虚拟机设置中的网络适配器 2，连接到 *PentestNet* 网络（`172.30.1.0/24`）环境。'
 - en: '**eth3** – This is vNIC 3 according to the lab topology diagram and it is network
     3 on the virtual machine settings that’s connected to the *RedTeamLab* network
     (`192.168.42.0/24`) environment.'
@@ -1170,6 +1190,7 @@
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**eth3** – 根据实验室拓扑图，这是 vNIC 3，它是虚拟机设置中的网络适配器 3，连接到 *RedTeamLab* 网络（`192.168.42.0/24`）环境。'
 - en: 'Next, let’s internet connectivity and determine whether DNS resolution is working
     properly on our Kali Linux virtual machine. On the **Terminal**, use the following
     commands to send 4 **Internet Control Message Protocol** (**ICMP**) messages to
@@ -1178,6 +1199,8 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，让我们检查网络连接，并确认 DNS 解析是否在我们的 Kali Linux 虚拟机上正常工作。在 **终端** 中，使用以下命令向 `www.google.com`
+    发送 4 个 **Internet Control Message Protocol**（**ICMP**）消息：
 - en: '[PRE6]'
   id: totrans-166
   prefs: []
@@ -1189,31 +1212,37 @@
   id: totrans-167
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示 Kali Linux 操作系统成功地将主机名解析为 IP 地址，并成功连接到互联网上的 Google Web 服务器：
 - en: '![](../media/file36.png)'
   id: totrans-168
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file36.png)'
 - en: 'Lastly, to change the default password for the username: `kali`, use the `passwd`
     command as shown in the following screenshot:'
   id: totrans-169
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，要更改用户名为 `kali` 的默认密码，请使用 `passwd` 命令，如下图所示：
 - en: '![](../media/file37.png)'
   id: totrans-170
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file37.png)'
 - en: While entering passwords on the Linux terminal, they are invisible for security
     reasons.
   id: totrans-171
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 在 Linux 终端输入密码时，由于安全原因，密码是不可见的。
 - en: Part 4 – Updating repository sources and packages
   id: totrans-172
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 第四部分 - 更新仓库源和软件包
 - en: 'At times, a tool may not be working as expected, or even crash unexpectedly
     on us during a penetration test or security audit. Developers often release updates
     for their applications and software packages. These updates are intended to fix
@@ -1222,16 +1251,19 @@
   id: totrans-173
   prefs: []
   type: TYPE_NORMAL
+  zh: 有时，某些工具可能无法按预期工作，甚至在渗透测试或安全审计过程中意外崩溃。开发人员经常发布更新以修复应用程序和软件包中的错误，并向用户体验中添加新功能。让我们通过以下步骤学习如何更新源和软件包：
 - en: 'To update the local package repository list on Kali Linux, use the `sudo apt
     update` command as shown here:'
   id: totrans-174
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 要更新 Kali Linux 上的本地软件包仓库列表，请使用 `sudo apt update` 命令，如下所示：
 - en: '![](../media/file38.png)'
   id: totrans-175
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file38.png)'
 - en: By updating the package repository list on your Kali Linux machine, when you
     use the `sudo apt install <package-name>` command to install a new software package,
     Kali Linux will retrieve the latest version of the application and update from
@@ -1239,6 +1271,8 @@
   id: totrans-176
   prefs: []
   type: TYPE_NORMAL
+  zh: 通过更新 Kali Linux 机器上的软件包仓库列表，当您使用 `sudo apt install <package-name>` 命令安装新的软件包时，Kali
+    Linux 将从官方源获取该应用程序的最新版本并进行更新。
 - en: 'The `source.list` file does not always update properly. To ensure you have
     the right settings on your Kali Linux machine, please see the official documentation
     on Kali Linux repositories at: [https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/](https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/).'
@@ -1246,6 +1280,7 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: '`source.list` 文件并不总是能够正确更新。为了确保您的 Kali Linux 机器设置正确，请查看关于 Kali Linux 仓库的官方文档，网址为：[https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/](https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/)。'
 - en: '(Optional) To upgrade all the existing software packages on your Kali Linux
     machine to their latest versions, use the `sudo apt upgrade` command, as shown
     here:'
@@ -1253,16 +1288,20 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: （可选）要将您的 Kali Linux 机器上的所有现有软件包升级到最新版本，请使用 `sudo apt upgrade` 命令，如下所示：
 - en: '![](../media/file39.png)'
   id: totrans-179
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file39.png)'
 - en: If, during the upgrade process, you receive an error about Kali Linux being
     unable to perform the upgrade, use the `sudo apt update --fix-missing` command
     followed by `sudo apt upgrade` once more.
   id: totrans-180
   prefs: []
   type: TYPE_NORMAL
+  zh: 如果在升级过程中收到 Kali Linux 无法执行升级的错误信息，请使用 `sudo apt update --fix-missing` 命令，然后再次使用
+    `sudo apt upgrade`。
 - en: 'Next, the PimpMyKali script from Dewalt enables us to both fix and install
     very useful utilities and tools on our Kali Linux virtual machine. Please use
     the following commands by Dewalt:'
@@ -1270,6 +1309,8 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，Dewalt 提供的 PimpMyKali 脚本可以帮助我们修复和安装一些非常有用的实用工具和工具集到我们的 Kali Linux 虚拟机中。请使用
+    Dewalt 提供的以下命令：
 - en: '[PRE7]'
   id: totrans-182
   prefs: []
@@ -1280,10 +1321,12 @@
   id: totrans-183
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，PimpMyKali 命令行菜单会显示多个选项，输入 `N`，因为我们在新的虚拟机上运行此脚本，如下所示：
 - en: '![](../media/file40.png)'
   id: totrans-184
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file40.png)'
 - en: During the setup process, the script will ask whether you want to re-enable
     to ability to login with the *root* account on Kali Linux, this is a personal
     preference. I entered `N` (no) and hit enter to continue the process. Keep in
@@ -1291,6 +1334,7 @@
   id: totrans-185
   prefs: []
   type: TYPE_NORMAL
+  zh: 在设置过程中，脚本会询问是否重新启用以 `*root*` 账户登录 Kali Linux 的功能，这完全取决于个人偏好。我输入了 `N`（否）并按下回车键继续该过程。请记住，这个设置过程需要几分钟才能完成。
 - en: Lastly, after the setup process is completed, you will need to reboot the Kali
     Linux virtual machine to ensure all the configurations takes effect. You will
     find the power options at the top-right corner of the Kali Linux desktop interface.
@@ -1298,12 +1342,14 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，在设置过程完成后，你需要重新启动 Kali Linux 虚拟机以确保所有配置生效。你可以在 Kali Linux 桌面界面的右上角找到电源选项。
 - en: 'To learn more about Dewalt’s PimpMyKali script, please see the official GitHub
     repository at: [https://github.com/Dewalt-arch/pimpmykali](https://github.com/Dewalt-arch/pimpmykali).'
   id: totrans-187
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 若要了解更多关于 Dewalt 的 PimpMyKali 脚本的信息，请查看官方 GitHub 仓库：[https://github.com/Dewalt-arch/pimpmykali](https://github.com/Dewalt-arch/pimpmykali)。
 - en: Having completed this section, you have learned how to set up Kali Linux as
     a virtual machine, enable internet and other network connections for the virtual
     machine, and update the package repository source list. Next, you will learn how
@@ -1312,11 +1358,14 @@
   id: totrans-188
   prefs: []
   type: TYPE_NORMAL
+  zh: 完成本部分后，你已经学会了如何将 Kali Linux 设置为虚拟机，启用虚拟机的互联网和其他网络连接，并更新软件包仓库源列表。接下来，你将学习如何设置一个易受攻击的
+    Web 应用程序，并在本书的后续章节中探索 Web 应用程序渗透测试。
 - en: Setting up vulnerable web application
   id: totrans-189
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 设置易受攻击的 Web 应用程序
 - en: Learning how to simulate real-world cyberattacks using Kali Linux would not
     be complete without understanding how to discover and exploit vulnerabilities
     within web applications. The **Open Web Application Security Project** (**OWASP**)
@@ -1326,12 +1375,16 @@
   id: totrans-190
   prefs: []
   type: TYPE_NORMAL
+  zh: 学习如何使用 Kali Linux 模拟现实世界的网络攻击，如果没有了解如何发现和利用 Web 应用程序中的漏洞，学习过程是不完整的。**开放 Web
+    应用程序安全项目**（**OWASP**）是一个致力于通过软件（包括 Web 应用程序）提升安全性的组织。OWASP 以其 Web 应用程序中最关键的安全风险榜单——OWASP
+    Top 10 而闻名。
 - en: 'At the time of writing this book, the latest version of OWASP Top 10 is 2021\.
     More information can be found at: [https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/).'
   id: totrans-191
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 本书编写时，OWASP Top 10 的最新版本是 2021 年。更多信息请见：[https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/)。
 - en: 'As an aspiring ethical hacker and penetration tester, it''s important to understand
     how to identify and perform security testing on each category within the OWASP
     Top 10 list. OWASP created a few projects that allow learners to safely use their
@@ -1342,17 +1395,22 @@
   id: totrans-192
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个有抱负的道德黑客和渗透测试员，了解如何识别并对 OWASP Top 10 列表中的每个类别进行安全测试非常重要。OWASP 创建了一些项目，使学习者能够在安全环境中安全地使用他们的进攻性安全技能和技术，发现
+    Web 应用程序的漏洞并加以利用。在本部分中，我们将在 Kali Linux 上部署 OWASP Juice Shop 易受攻击的 Web 应用程序。要开始设置
+    OWASP Juice Shop Web 应用程序，请使用以下指令：
 - en: Firstly, power-on your **Kali Linux virtual machine** and log-in.
   id: totrans-193
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，启动你的 **Kali Linux 虚拟机** 并登录。
 - en: 'Next, open the **Terminal** and use the following commands to update the package
     repository list:'
   id: totrans-194
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，打开 **终端** 并使用以下命令更新软件包仓库列表：
 - en: '[PRE8]'
   id: totrans-195
   prefs: []
@@ -1364,6 +1422,7 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用以下命令在 Kali Linux 上安装 Docker 仓库源：
 - en: '[PRE9]'
   id: totrans-197
   prefs: []
@@ -1373,16 +1432,19 @@
   id: totrans-198
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了前述命令成功执行的情况：
 - en: '![](../media/file41.png)'
   id: totrans-199
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file41.png)'
 - en: 'Next, download and setup the **GNU Privacy Guard** (**GPG**) keys for Docker
     by using the following commands:'
   id: totrans-200
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用以下命令下载并设置 **GNU 隐私保护**（**GPG**）密钥以供 Docker 使用：
 - en: '[PRE10]'
   id: totrans-201
   prefs: []
@@ -1392,22 +1454,26 @@
   id: totrans-202
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了前述命令成功执行的情况：
 - en: '![](../media/file42.png)'
   id: totrans-203
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file42.png)'
 - en: 'To learn more on setting up Docker on Kali Linux, please see the official documentation
     at: [https://www.kali.org/docs/containers/installing-docker-on-kali/](https://www.kali.org/docs/containers/installing-docker-on-kali/).'
   id: totrans-204
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 若要了解更多有关在 Kali Linux 上设置 Docker 的信息，请查看官方文档：[https://www.kali.org/docs/containers/installing-docker-on-kali/](https://www.kali.org/docs/containers/installing-docker-on-kali/)。
 - en: 'Next, update the package repository list again and install Docker by using
     the following commands:'
   id: totrans-205
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，再次更新软件包仓库列表并使用以下命令安装 Docker：
 - en: '[PRE11]'
   id: totrans-206
   prefs: []
@@ -1419,12 +1485,14 @@
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 使用`docker version`命令测试 Docker 是否在 Kali Linux 上正确安装。
 - en: 'Next, use the installed Docker application to pull-down the **OWASP Juice Shop**
     container from the online Docker Hub repository:'
   id: totrans-208
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用已安装的 Docker 应用程序从在线 Docker Hub 仓库拉取**OWASP Juice Shop**容器：
 - en: '[PRE12]'
   id: totrans-209
   prefs: []
@@ -1435,16 +1503,19 @@
   id: totrans-210
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图展示了 OWASP Juice Shop Docker 容器的下载和设置过程：
 - en: '![](../media/file43.png)'
   id: totrans-211
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file43.png)'
 - en: 'Next, use the following commands to run the OWASP Juice Shop Docker container
     on port 3000:'
   id: totrans-212
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用以下命令在 3000 端口运行 OWASP Juice Shop Docker 容器：
 - en: '[PRE13]'
   id: totrans-213
   prefs: []
@@ -1454,15 +1525,18 @@
   id: totrans-214
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下代码片段展示了前面命令的执行：
 - en: '![](../media/file44.png)'
   id: totrans-215
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file44.png)'
 - en: To stop the Docker container from running, use the `CTRL + C` key combination.
   id: totrans-216
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 要停止运行的 Docker 容器，请使用`CTRL + C`快捷键组合。
 - en: 'Lastly, open the Firefox web browser on Kali Linux and go to `http://127.0.0.1:3000`
     to access and interact with OWASP Juice Shop web application, as shown in the
     following screenshot:'
@@ -1470,27 +1544,34 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，在 Kali Linux 上打开 Firefox 浏览器并访问`http://127.0.0.1:3000`，以访问并与 OWASP Juice
+    Shop 网络应用程序交互，如下图所示：
 - en: '![](../media/file45.png)'
   id: totrans-218
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file45.png)'
 - en: 'To learn more about OWASP Juice Shop vulnerable web application, please see
     the official documentation at: [https://owasp.org/www-project-juice-shop/](https://owasp.org/www-project-juice-shop/).'
   id: totrans-219
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 要了解更多有关 OWASP Juice Shop 脆弱网络应用程序的信息，请参见官方文档：[https://owasp.org/www-project-juice-shop/](https://owasp.org/www-project-juice-shop/)。
 - en: Having completed this exercise, you have learned how to set up Docker and OWASP
     Juice Shop on Kali Linux. Next, you will learn how to set up Metasploitable 2,
     a vulnerable Linux-based system in our lab environment.
   id: totrans-220
   prefs: []
   type: TYPE_NORMAL
+  zh: 完成此练习后，您已学会如何在 Kali Linux 上设置 Docker 和 OWASP Juice Shop。接下来，您将学习如何在我们的实验室环境中设置
+    Metasploitable 2，这是一种脆弱的基于 Linux 的系统。
 - en: Deploying Metasploitable 2 as a vulnerable machine
   id: totrans-221
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 将 Metasploitable 2 部署为脆弱机器
 - en: 'When building a penetration testing lab, it''s important to include vulnerable
     systems that will act as our targets. These systems contain intentional vulnerable
     services and applications enabling us to practice and build our skills to better
@@ -1502,22 +1583,28 @@
   id: totrans-222
   prefs: []
   type: TYPE_NORMAL
+  zh: 在构建渗透测试实验室时，重要的是包括一些脆弱的系统，它们将作为我们的攻击目标。这些系统包含故意设置的脆弱服务和应用程序，能够帮助我们练习并提高技能，更好地理解如何发现和利用漏洞。一台非常流行的脆弱机器被称为
+    Metasploitable 2。这个脆弱机器包含许多可以被利用的安全漏洞，非常适合学习道德黑客和渗透测试。为了开始在我们的实验室环境中设置 Metasploitable
+    2，请按照以下说明操作：
 - en: Part 1 – Deploying Metasploitable 2
   id: totrans-223
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 第 1 部分 – 部署 Metasploitable 2
 - en: 'The following steps will guide you to acquiring the Metasploitable 2 virtual
     machine and deploying it within Oracle VM VirtualBox Manager:'
   id: totrans-224
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下步骤将指导您获取 Metasploitable 2 虚拟机并在 Oracle VM VirtualBox 管理器中进行部署：
 - en: Firstly, on your host computer, go to [https://sourceforge.net/projects/metasploitable/files/Metasploitable2/](https://sourceforge.net/projects/metasploitable/files/Metasploitable2/)
     to download the **metasploitable-linux-2.0.0.zip** file onto your device.
   id: totrans-225
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，在主机计算机上，访问[https://sourceforge.net/projects/metasploitable/files/Metasploitable2/](https://sourceforge.net/projects/metasploitable/files/Metasploitable2/)下载**metasploitable-linux-2.0.0.zip**文件到您的设备。
 - en: Once the ZIP file has been downloaded, extract (unzip) its contents. The extracted
     files are the virtual hard disk and settings configuration files for the Metasploitable
     2 virtual machine.
@@ -1525,50 +1612,59 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 下载 ZIP 文件后，解压（解压缩）其内容。解压后的文件是 Metasploitable 2 虚拟机的虚拟硬盘和设置配置文件。
 - en: Next, let's create a virtual machine for Metasploitable 2, open **Oracle VM
     VirtualBox Manager** and click on **New**.
   id: totrans-227
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，我们创建一个用于 Metasploitable 2 的虚拟机，打开**Oracle VM VirtualBox 管理器**并点击**新建**。
 - en: When the **Create Virtual Machine** window appears, click on **Expert Mode**
     to change the configuration view.
   id: totrans-228
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 当**创建虚拟机**窗口出现时，点击**专家模式**以更改配置视图。
 - en: 'Next, use the following configurations for the virtual machine:'
   id: totrans-229
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用以下配置来设置虚拟机：
 - en: 'Name: Metasploitable 2'
   id: totrans-230
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 名称：Metasploitable 2
 - en: 'Type: Linux'
   id: totrans-231
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 类型：Linux
 - en: 'Version: Other Linux (64-bit)'
   id: totrans-232
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 版本：其他 Linux（64 位）
 - en: 'The following screenshot shows the preceding settings on the **Create Virtual
     Machine** window:'
   id: totrans-233
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图展示了**创建虚拟机**窗口中的前面设置：
 - en: '![](../media/file46.png)'
   id: totrans-234
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file46.png)'
 - en: 'Next, expand the **Hard Disk** category on **Create Virtual Machine** window,
     select **Use an Existing Virtual Hard Disk File** option, and then click on the
     folder icon on the right-side as shown below:'
@@ -1576,19 +1672,23 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，在**创建虚拟机**窗口中展开**硬盘**类别，选择**使用现有虚拟硬盘文件**选项，然后点击右侧的文件夹图标，如下所示：
 - en: '![](../media/file47.png)'
   id: totrans-236
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file47.png)'
 - en: 'Next, the **Hard Disk Selector** and click on **Add** as shown below:'
   id: totrans-237
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，点击**硬盘选择器**并点击**添加**，如下所示：
 - en: '![](../media/file48.png)'
   id: totrans-238
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file48.png)'
 - en: 'Next, a pop-up window will appear, use it navigate to the **Metasploitable
     2** extracted folder and its contents, select the **Metasploitable** VMDK file
     and click on **Open** as shown below:'
@@ -1596,10 +1696,12 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，将弹出一个窗口，使用它导航到**Metasploitable 2**提取文件夹及其内容，选择**Metasploitable** VMDK文件并点击**打开**，如下所示：
 - en: '![](../media/file49.png)'
   id: totrans-240
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file49.png)'
 - en: 'Next, you will automatically return to the **Hard Disk Selector** window where
     the **Metasploitable** disk file will be available, select it and click on **Choose**
     as shown below:'
@@ -1607,10 +1709,12 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，您将自动返回到**硬盘选择器**窗口，您将在其中看到**Metasploitable**磁盘文件，选择它并点击**选择**，如下所示：
 - en: '![](../media/file50.png)'
   id: totrans-242
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file50.png)'
 - en: 'Next, you’ll automatically return to the **Create Virtual Machine** window
     where you’ll see the **Metasploitable.vmdk** file is loaded as the existing virtual
     disk file, click on **Finish** as shown below:'
@@ -1618,72 +1722,86 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，您将自动返回到**创建虚拟机**窗口，在那里您将看到**Metasploitable.vmdk**文件被加载为现有的虚拟磁盘文件，点击**完成**，如下所示：
 - en: '![](../media/file51.png)'
   id: totrans-244
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file51.png)'
 - en: At this point, the Metasploitable 2 virtual machine is created and loaded within
     the Oracle VM VirtualBox Manager. Next, we will connect the Metasploitable 2 virtual
     machine to the *PentestNet* virtual network.
   id: totrans-245
   prefs: []
   type: TYPE_NORMAL
+  zh: 此时，Metasploitable 2虚拟机已经在Oracle VM VirtualBox管理器中创建并加载。接下来，我们将把Metasploitable
+    2虚拟机连接到*PentestNet*虚拟网络。
 - en: Part 2 – Configuring network settings
   id: totrans-246
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 第二部分 – 配置网络设置
 - en: Since our penetration testing lab topology contains more than one virtual network,
     the following steps will help ensure Kali Linux has end-to-end network connectivity
     with the Metasploitable 2 virtual machine.
   id: totrans-247
   prefs: []
   type: TYPE_NORMAL
+  zh: 由于我们的渗透测试实验室拓扑包含多个虚拟网络，以下步骤将帮助确保Kali Linux与Metasploitable 2虚拟机之间具有端到端的网络连接。
 - en: To configure the networking settings, select the newly created **Metasploitable
     2** virtual machine within **Oracle VM VirtualBox Manager** and click on **Settings**.
   id: totrans-248
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 要配置网络设置，请在**Oracle VM VirtualBox管理器**中选择新创建的**Metasploitable 2**虚拟机并点击**设置**。
 - en: 'Next, go to the **Network** section > select **Adapter 1** and use the following
     configurations:'
   id: totrans-249
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，进入**网络**部分 > 选择**适配器1**并使用以下配置：
 - en: Enable the network adapter
   id: totrans-250
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 启用网络适配器
 - en: 'Attached to: Internal Network'
   id: totrans-251
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 附加到：内部网络
 - en: 'Name: PentestNet (manually type it in the field)'
   id: totrans-252
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 名称：PentestNet（请手动在字段中输入）
 - en: 'Promiscuous Mode: Allow All'
   id: totrans-253
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 混杂模式：允许所有
 - en: 'The following screenshot shows the preceding configurations on **Adapter 1**,
     click **OK** to save:'
   id: totrans-254
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了**适配器1**的前述配置，点击**确定**保存：
 - en: '![](../media/file52.png)'
   id: totrans-255
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file52.png)'
 - en: 'Next, power on the **Metasploitable 2** virtual machine and login using username:
     `msfadmin` and password: `msfadmin`. Then use the `ip address` command to verify
     the virtual machine is receiving an IP address on the `172.30.1.0/24` network,
@@ -1692,33 +1810,40 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，启动**Metasploitable 2**虚拟机，并使用用户名：`msfadmin`和密码：`msfadmin`登录。然后使用`ip address`命令验证虚拟机是否在`172.30.1.0/24`网络上获取了IP地址，如下所示：
 - en: '![](../media/file53.png)'
   id: totrans-257
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file53.png)'
 - en: If your mouse cursor is stuck within a virtual machine, press the right CTRL
     key to detach the cursor.
   id: totrans-258
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 如果您的鼠标光标卡在虚拟机内，请按右Ctrl键释放光标。
 - en: Lastly, use the `sudo halt` command to power-off the Metasploitable 2 virtual
     machine.
   id: totrans-259
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，使用`sudo halt`命令关闭Metasploitable 2虚拟机。
 - en: Having completed this section, you have learnt how to setup Metasploitable 2
     as a vulnerable machine within our penetration testing lab. Next, you will learn
     how to build and deploy Metasploitable 3 using Vagrant.
   id: totrans-260
   prefs: []
   type: TYPE_NORMAL
+  zh: 完成本节后，您已经学会了如何将Metasploitable 2设置为我们渗透测试实验室中的易受攻击的机器。接下来，您将学习如何使用Vagrant构建和部署Metasploitable
+    3。
 - en: Building and deploying Metasploitable 3
   id: totrans-261
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 构建和部署Metasploitable 3
 - en: 'In this section, you will learn how to build and deploy Metasploitable 3, both
     the Windows server and Linux server versions. The Windows server version will
     be using a dual-homed network connection to both the *PentestNet* network (`172.30.1.0/24`)
@@ -1729,26 +1854,34 @@
   id: totrans-262
   prefs: []
   type: TYPE_NORMAL
+  zh: 在本节中，您将学习如何构建和部署 Metasploitable 3，包括 Windows 服务器版和 Linux 服务器版。Windows 服务器版将使用双网卡网络连接，分别连接到
+    *PentestNet* 网络（`172.30.1.0/24`）和 *HiddenNet* 网络（`10.11.12.0/24`）。这种设置将使我们能够在不同网络之间进行跳板和横向渗透。最后，Linux
+    服务器版将仅连接到 *HiddenNet* 网络（`10.11.12.0/24`）。下图显示了系统和网络之间的逻辑连接：
 - en: '![](../media/file54.png)'
   id: totrans-263
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file54.png)'
 - en: As shown in the preceding diagram, to access the Metasploitable 3 – Linux server,
     we will need to first compromise the Metasploitable 3 – Windows server via the
     *PentestNet* network, then pivot our attacks to the *HiddenNet* network.
   id: totrans-264
   prefs: []
   type: TYPE_NORMAL
+  zh: 如前所示，为了访问 Metasploitable 3 – Linux 服务器，我们首先需要通过 *PentestNet* 网络攻破 Metasploitable
+    3 – Windows 服务器，然后将攻击转向 *HiddenNet* 网络。
 - en: Part 1 - Building the Windows Server version
   id: totrans-265
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 第 1 部分 - 构建 Windows 服务器版
 - en: 'To get started building and deploying Metasploitable 3 – Windows version, please
     use the following instructions:'
   id: totrans-266
   prefs: []
   type: TYPE_NORMAL
+  zh: 要开始构建和部署 Metasploitable 3 – Windows 版本，请使用以下说明：
 - en: Firstly, you will need to download and install **Vagrant** on your host computer.
     Vagrant enables users to both build and maintain virtual machines and applications.
     On your host computer, go to [https://www.vagrantup.com/](https://www.vagrantup.com/)
@@ -1757,15 +1890,19 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 首先，您需要在主机计算机上下载并安装 **Vagrant**。Vagrant 使用户能够构建和维护虚拟机和应用程序。在您的主机计算机上，访问 [https://www.vagrantup.com/](https://www.vagrantup.com/)，并点击网页上的
+    **Download** 按钮。
 - en: 'Next, select and download **Vagrant AMD64 version 2.3.7** as shown below:'
   id: totrans-268
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，选择并下载 **Vagrant AMD64 版本 2.3.7**，如下所示：
 - en: '![](../media/file55.png)'
   id: totrans-269
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file55.png)'
 - en: After downloading the Vagrant software package, double-click on the installer
     package to start the installation process. After the installation is completed,
     you’ll be prompted to reboot your host computer to ensure the changes are effective.
@@ -1773,12 +1910,14 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 下载 Vagrant 软件包后，双击安装包以启动安装过程。安装完成后，系统会提示您重启主机计算机，以确保更改生效。
 - en: 'After your host computer reboots, open the Windows **Command Prompt** and use
     the following commands to reload and install additional plugins for Vagrant:'
   id: totrans-271
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 主机计算机重启后，打开 Windows **命令提示符**，并使用以下命令重新加载并安装 Vagrant 的其他插件：
 - en: '[PRE14]'
   id: totrans-272
   prefs: []
@@ -1788,16 +1927,19 @@
   id: totrans-273
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了前述命令的执行：
 - en: '![](../media/file56.png)'
   id: totrans-274
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file56.png)'
 - en: 'Next, use the following commands to load the Metasploitable 3 – Windows server
     version to your system using Vagrant:'
   id: totrans-275
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用以下命令将 Metasploitable 3 – Windows 服务器版本加载到您的系统中，使用 Vagrant：
 - en: '[PRE15]'
   id: totrans-276
   prefs: []
@@ -1809,19 +1951,23 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，选择选项 `1`，如图所示，使用 **VirtualBox** 作为首选虚拟化程序：
 - en: '![](../media/file57.png)'
   id: totrans-278
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file57.png)'
 - en: 'Vagrant will begin to download the virtual machine files for the Metasploitable
     – Windows version as shown here:'
   id: totrans-279
   prefs: []
   type: TYPE_NORMAL
+  zh: Vagrant 将开始下载 Metasploitable – Windows 版本的虚拟机文件，如下所示：
 - en: '![](../media/file58.png)'
   id: totrans-280
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file58.png)'
 - en: 'Next, change the current working directory to `.vagrant.d\boxes`, rename the
     `rapid7-VAGRANTSLASH-metasploitable3-win2k8` folder and initialize the build configurations
     for the Metasploitable 3 – Windows virtual machine using the following commands:'
@@ -1829,6 +1975,8 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，将当前工作目录更改为 `.vagrant.d\boxes`，重命名 `rapid7-VAGRANTSLASH-metasploitable3-win2k8`
+    文件夹，并使用以下命令初始化 Metasploitable 3 – Windows 虚拟机的构建配置：
 - en: '[PRE16]'
   id: totrans-282
   prefs: []
@@ -1838,16 +1986,19 @@
   id: totrans-283
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了前述命令成功执行的情况：
 - en: '![](../media/file59.png)'
   id: totrans-284
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file59.png)'
 - en: 'Next, use the following commands to start the build process of this virtual
     machine:'
   id: totrans-285
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，使用以下命令启动该虚拟机的构建过程：
 - en: '[PRE17]'
   id: totrans-286
   prefs: []
@@ -1857,19 +2008,23 @@
   id: totrans-287
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了前面命令的执行情况：
 - en: '![](../media/file60.png)'
   id: totrans-288
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file60.png)'
 - en: This process usually take a few minutes to complete.
   id: totrans-289
   prefs: []
   type: TYPE_NORMAL
+  zh: 这个过程通常需要几分钟才能完成。
 - en: If the `vagrant up` command give an error, execute it again.
   id: totrans-290
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 如果 `vagrant up` 命令出现错误，请重新执行该命令。
 - en: 'After the process is completed, open the **Oracle VM VirtualBox Manager**,
     you will find a newly created virtual machine named **boxes_default_*** is running.
     This is the Metasploitable 3 – Windows virtual machine, select it and click on
@@ -1878,10 +2033,13 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 过程完成后，打开**Oracle VM VirtualBox Manager**，您会发现一个新创建的虚拟机**boxes_default_***正在运行。这是Metasploitable
+    3 – Windows虚拟机，选择它并点击**显示**：
 - en: '![](../media/file61.png)'
   id: totrans-292
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file61.png)'
 - en: 'Once the virtual machine is detached, on the virtual machine menu bar, click
     on **Input** > **Keyboard** > **Insert** **Ctrl-Alt-Del**, as shown in the following
     screenshot:'
@@ -1889,31 +2047,37 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 一旦虚拟机被分离，在虚拟机菜单栏中，点击**输入** > **键盘** > **插入** **Ctrl-Alt-Del**，如下图所示：
 - en: '![](../media/file62.png)'
   id: totrans-294
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file62.png)'
 - en: 'Select the **Administrator** account and use the default password: `vagrant`
     to login, as shown below:'
   id: totrans-295
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 选择**Administrator**账户并使用默认密码：`vagrant`登录，如下所示：
 - en: '![](../media/file63.png)'
   id: totrans-296
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file63.png)'
 - en: Once you’re logged in, simply close all the windows that appear and do not activate
     the operating system.
   id: totrans-297
   prefs: []
   type: TYPE_NORMAL
+  zh: 登录后，简单地关闭所有出现的窗口，并不要激活操作系统。
 - en: Click on the **Start** icon on the bottom-left corner and select the **Shutdown**
     button to shutdown/turn-off the operating system.
   id: totrans-298
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 点击左下角的**开始**图标并选择**关闭**按钮以关闭/关闭操作系统。
 - en: 'Next, on the **Oracle VM VirtualBox Manager**, select the **Metasploitable
     3 – Windows** virtual machine and click on **Settings**. Then, select the **Network**
     category and use the following configurations for **Adapter 1**:'
@@ -1921,108 +2085,128 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，在**Oracle VM VirtualBox Manager**中，选择**Metasploitable 3 – Windows**虚拟机并点击**设置**。然后，选择**网络**类别并使用以下配置为**适配器1**：
 - en: Enable the network adapter
   id: totrans-300
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 启用网络适配器
 - en: 'Attached to: Internal Network'
   id: totrans-301
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 附加到：内部网络
 - en: 'Name: PentestNet (manually type it in the field)'
   id: totrans-302
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 名称：PentestNet（手动输入字段中）
 - en: 'Promiscuous Mode: Allow All'
   id: totrans-303
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 混杂模式：允许所有
 - en: 'The following screenshot shows the preceding configurations on **Adapter 1**:'
   id: totrans-304
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了**适配器1**的前述配置：
 - en: '![](../media/file64.png)'
   id: totrans-305
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file64.png)'
 - en: 'Next, select **Adapter 2** and use the following configurations:'
   id: totrans-306
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，选择**适配器2**并使用以下配置：
 - en: Enable the network adapter
   id: totrans-307
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 启用网络适配器
 - en: 'Attached to: Internal Network'
   id: totrans-308
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 附加到：内部网络
 - en: 'Name: HiddenNet (manually type it in the field)'
   id: totrans-309
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 名称：HiddenNet（手动输入字段中）
 - en: 'Promiscuous Mode: Allow All'
   id: totrans-310
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 混杂模式：允许所有
 - en: 'The following screenshot shows the preceding configurations on **Adapter 2**:'
   id: totrans-311
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了**适配器2**的前述配置：
 - en: '![](../media/file65.png)'
   id: totrans-312
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file65.png)'
 - en: To rename your virtual machine, **Settings** > **General** > **Basic** > **Name**
     option.
   id: totrans-313
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 若要重命名虚拟机，选择**设置** > **常规** > **基本** > **名称**选项。
 - en: Lastly, ensure Kali Linux has end-to-end connectivity with the Metasploitable
     3 – Windows virtual machine on the network.
   id: totrans-314
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，确保Kali Linux与Metasploitable 3 – Windows虚拟机在网络中具有端到端连接。
 - en: Next, you will deploy Metasploitable 3 – Linux virtual machine within the HiddenNet
     network.
   id: totrans-315
   prefs: []
   type: TYPE_NORMAL
+  zh: 接下来，您将在HiddenNet网络中部署Metasploitable 3 – Linux虚拟机。
 - en: Part 2 - Building the Linux server version
   id: totrans-316
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 第二部分 - 构建Linux服务器版本
 - en: 'To start setting up the Linux version of Metasploitable 3 within our lab environment,
     please use the following instructions:'
   id: totrans-317
   prefs: []
   type: TYPE_NORMAL
+  zh: 要在我们的实验室环境中开始设置Metasploitable 3的Linux版本，请使用以下说明：
 - en: 'On the Windows **Command Prompt**, use the following commands to load the Linux
     version of Metasploitable 3 on your host device using Vagrant:'
   id: totrans-318
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 在Windows **命令提示符**中，使用以下命令通过Vagrant加载Linux版本的Metasploitable 3到您的主机设备：
 - en: '[PRE18]'
   id: totrans-319
   prefs: []
@@ -2034,10 +2218,12 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，选择选项**1**并按回车键以下载Metasploitable 3 – Linux版本的虚拟机文件，如下所示：
 - en: '![](../media/file66.png)'
   id: totrans-321
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file66.png)'
 - en: 'Next, delete the **Vagrantfile** file, rename the **rapid7-VAGRANTSLASH-metasploitable3-ub1404**
     folder and initialize the build configurations for the Metasploitable 3 – Linux
     virtual machine using the following commands:'
@@ -2045,6 +2231,8 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，删除**Vagrantfile**文件，重命名**rapid7-VAGRANTSLASH-metasploitable3-ub1404**文件夹，并使用以下命令初始化Metasploitable
+    3 – Linux虚拟机的构建配置：
 - en: '[PRE19]'
   id: totrans-323
   prefs: []
@@ -2054,16 +2242,19 @@
   id: totrans-324
   prefs: []
   type: TYPE_NORMAL
+  zh: 下图显示了执行前述命令的过程：
 - en: '![](../media/file67.png)'
   id: totrans-325
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file67.png)'
 - en: You may need to open **Oracle VM Virtual Manager** before proceeding to the
     next step.
   id: totrans-326
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 您可能需要在继续下一步之前打开**Oracle VM Virtual Manager**。
 - en: 'Next, open **Windows Explorer** and go to `C:\Users\<userrname>\.vagrant.d\boxes\metasploitable3-ub1404\0.1.12-weekly\virtualbox`
     where you will find the complied virtual machine files. Right-click on the **box**
     file > **Open with** > **VirtualBox Manager** as shown below:'
@@ -2071,67 +2262,81 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，打开**Windows资源管理器**，然后前往`C:\Users\<userrname>\.vagrant.d\boxes\metasploitable3-ub1404\0.1.12-weekly\virtualbox`，在此文件夹下你会找到已编译的虚拟机文件。右键点击**box**文件
+    > **用…打开** > **VirtualBox 管理器**，如下所示：
 - en: '![](../media/file68.png)'
   id: totrans-328
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file68.png)'
 - en: 'Next, the **Import Virtual Appliance** window will appear, click on **Finish**
     as shown below:'
   id: totrans-329
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，**导入虚拟设备**窗口将出现，点击**完成**，如下所示：
 - en: '![](../media/file69.png)'
   id: totrans-330
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file69.png)'
 - en: 'Next, the **metasploitable3-ub1404** virtual machine will be imported on **Oracle
     VM VirtualBox Manager**. Select it and click on **Settings** as shown below:'
   id: totrans-331
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，**metasploitable3-ub1404**虚拟机将被导入到**Oracle VM VirtualBox 管理器**中。选择该虚拟机并点击**设置**，如下所示：
 - en: '![](../media/file70.png)'
   id: totrans-332
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file70.png)'
 - en: 'Next, select **Adapter 1** and use the following configurations:'
   id: totrans-333
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 接下来，选择**适配器 1**并使用以下配置：
 - en: Enable the network adapter
   id: totrans-334
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 启用网络适配器
 - en: 'Attached to: Internal Network'
   id: totrans-335
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 附加至：内部网络
 - en: 'Name: HiddenNet (manually type it in the field)'
   id: totrans-336
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 名称：HiddenNet（手动输入该名称）
 - en: 'Promiscuous Mode: Allow All'
   id: totrans-337
   prefs:
   - PREF_IND
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 混杂模式：允许所有
 - en: 'The following screenshot shows the preceding configurations on **Adapter 1**:'
   id: totrans-338
   prefs: []
   type: TYPE_NORMAL
+  zh: 以下截图显示了**适配器 1**上的前述配置：
 - en: '![](../media/file71.png)'
   id: totrans-339
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file71.png)'
 - en: 'Lastly, power-on the **metasplotable3-ub1404** virtual machine, login using
     username: vagrant and password: vagrant. Once you’re logded-in, use the ip address
     command to verify the virtual machine is receiving an IP address on the `10.11.12.0/24`
@@ -2140,15 +2345,19 @@
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
+  zh: 最后，启动**metasploitable3-ub1404**虚拟机，使用用户名：vagrant，密码：vagrant登录。登录后，使用 `ip address`
+    命令验证虚拟机是否在`10.11.12.0/24`网络上获取到IP地址，如下所示：
 - en: '![](../media/file72.png)'
   id: totrans-341
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file72.png)'
 - en: Use the `sudo halt` command to power-off the this virtual machine.
   id: totrans-342
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 使用`sudo halt`命令关闭该虚拟机。
 - en: Having completed this section, you have learned how to set up both versions
     of Metasploitable 3 within your lab environment. Metasploitable 3 contains newer
     vulnerabilities than its predecessor and will be fun to exploit in later sections
@@ -2156,11 +2365,13 @@
   id: totrans-343
   prefs: []
   type: TYPE_NORMAL
+  zh: 完成本节后，你已经学会了如何在实验环境中设置Metasploitable 3的两个版本。Metasploitable 3包含比其前身更多的新漏洞，后续章节将带你一起体验如何利用这些漏洞。
 - en: Summary
   id: totrans-344
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 概要
 - en: Having completed this chapter, you learned about the importance of building
     your very own penetration testing lab on your computer. You learned how to use
     hypervisors to virtualize the hardware resources on a system, which can then be
@@ -2177,18 +2388,24 @@
   id: totrans-345
   prefs: []
   type: TYPE_NORMAL
+  zh: 完成本章后，你已经了解了在你的电脑上搭建渗透测试实验室的重要性。你学习了如何使用虚拟机管理程序来虚拟化系统的硬件资源，这些资源可以同时被多个操作系统共享并运行在同一台系统上。此外，你还掌握了在虚拟化环境中部署和设置Kali
+    Linux、多个易受攻击的系统和Web应用程序的技能。我相信，本章所提供的知识将为你提供宝贵的洞察力，支持你成为一名伦理黑客和渗透测试员的职业道路。在下一章*设置高级黑客技术*中，你将为后续章节中的红队技术设置一个Active
+    Directory实验环境。
 - en: Further Reading
   id: totrans-346
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 进一步阅读
 - en: OWASP Top 10 - [https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/)
   id: totrans-347
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: OWASP Top 10 - [https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/)
 - en: Kali Linux Blog - [https://www.kali.org/blog/](https://www.kali.org/blog/)
   id: totrans-348
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Kali Linux 博客 - [https://www.kali.org/blog/](https://www.kali.org/blog/)

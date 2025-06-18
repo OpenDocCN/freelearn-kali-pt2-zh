@@ -1,11 +1,15 @@
 - en: 4 Passive Reconnaissace
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 4 被动侦察
 - en: Join our book community on Discord
+  id: totrans-1
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 加入我们的 Discord 书籍社区
 - en: '[https://packt.link/SecNet](https://packt.link/SecNet)![Qr code Description
     automatically generated](../media/file119.png)As an aspiring ethical hacker and
     penetration tester, it’s important to develop your skills and gain a solid understanding
@@ -28,43 +32,64 @@
     you will learn how to conceal your identity as an ethical hacker and penetration
     tester, and anonymize your internet-based traffic to improve your stealth and
     reduce your threat level.In this chapter, we will cover the following topics:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
+  zh: '[https://packt.link/SecNet](https://packt.link/SecNet)![Qr code Description
+    automatically generated](../media/file119.png)作为一名有抱负的道德黑客和渗透测试员，培养你的技能并深入了解对手如何有效地发现并收集目标组织的敏感信息，分析收集的数据以生成有意义的信息，进而为计划未来对目标的网络攻击提供支持是至关重要的。像许多有抱负的道德黑客一样，我们总是对入侵系统和网络感到兴奋，因为这是学习进攻性安全战术和技术的有趣部分。然而，培养对手的思维方式同样重要，这有助于更好地理解真实的威胁行为者如何规划对目标系统、网络或组织的攻击。对手使用各种侦察技术和程序来寻找和收集关于目标的数据，以便更好地理解目标系统是否在线、是否存在安全漏洞，以及哪些攻击途径和基础设施可用于向目标传递恶意负载。了解关于目标的更多信息可以改善对手的攻击计划。本章中，你将学习威胁行为者和道德黑客如何使用侦察技术来发现、收集和分析被目标组织泄露的敏感数据，以及这些数据如何导致未来的网络攻击。此外，你还将学习如何隐匿作为道德黑客和渗透测试员的身份，并匿名化你的互联网流量，从而提高隐蔽性并减少威胁级别。本章将涵盖以下内容：'
 - en: Importance of reconnaissance
+  id: totrans-3
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 侦察的重要性
 - en: Exploring passive reconnaissance
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 探索被动侦察
 - en: Creating a sock puppet
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 创建一个假身份
 - en: Anonymizing internet-based traffic
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 匿名化互联网流量
 - en: Let’s dive in!
+  id: totrans-7
   prefs: []
   type: TYPE_NORMAL
+  zh: 让我们开始吧！
 - en: Technical Requirements
+  id: totrans-8
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 技术要求
 - en: 'To follow along with the exercises in this chapter, please ensure that you
     have met the following hardware and software requirements:'
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
+  zh: 为了跟随本章的练习，请确保你已经满足以下硬件和软件要求：
 - en: Kali Linux - [https://www.kali.org/get-kali/](https://www.kali.org/get-kali/)
+  id: totrans-10
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Kali Linux - [https://www.kali.org/get-kali/](https://www.kali.org/get-kali/)
 - en: Importance of reconnaissance
+  id: totrans-11
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 侦察的重要性
 - en: 'Reconnaissance focuses on collecting as much data as possible on a target,
     then analyzing the collected data to create meaningful information that can be
     leveraged by an adversary or threat actor to identify the attack surface and security
@@ -91,36 +116,53 @@
     adversary were to discover these vulnerabilities, you can imagine the potential
     impact and damages that can be done.System information includes the following
     details:'
+  id: totrans-12
   prefs: []
   type: TYPE_NORMAL
+  zh: 侦察工作专注于收集尽可能多的目标数据，然后分析收集到的数据，生成有意义的信息，供对手或威胁行为者利用，以识别目标系统、网络或组织的攻击面和安全漏洞。对手使用各种侦察技术和工具收集关于目标的系统信息、网络信息和组织信息。在不了解目标及其弱点的情况下，创建如*漏洞利用*等武器将会非常困难，而这些武器可能会影响目标系统、网络或组织的机密性、完整性和/或可用性。系统信息为道德黑客提供了宝贵的洞察力，因为它让我们知道目标系统上运行的内容，例如主机操作系统及其版本。操作系统和版本信息帮助道德黑客研究已知的安全漏洞，并开发或获取具有潜在能力的漏洞利用工具，用于危及目标。例如，全球许多组织并不总是在其网络基础设施中运行最新版本的操作系统。尽管操作系统供应商不断推出新版本并向客户发布安全更新，但由于多种原因，并非每个人都安装最新的安全补丁或更新，甚至有些人不会升级到最新版本。这种情况为对手、道德黑客和渗透测试人员创造了许多可能性。假设你正在为一个目标组织进行内部网络渗透测试，并发现他们的服务器运行的是较旧版本的
+    Microsoft Windows Server，经过一些研究，你发现所有的服务器都存在*EternalBlue*和*PrintNightmare*这些严重的安全漏洞。如果一个真正的对手发现了这些漏洞，你可以想象可能带来的影响和损害。系统信息包括以下内容：
 - en: Identifying live hosts on a network
+  id: totrans-13
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 确定网络中的存活主机
 - en: Hostnames of devices
+  id: totrans-14
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 设备主机名
 - en: Operating system type and version
+  id: totrans-15
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 操作系统类型和版本
 - en: Running services and versions
+  id: totrans-16
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 运行中的服务及版本
 - en: Open service ports
+  id: totrans-17
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 开放的服务端口
 - en: Unauthenticated network shares
+  id: totrans-18
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 未认证的网络共享
 - en: Username and passwords
+  id: totrans-19
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 用户名和密码
 - en: 'Network information helps ethical hackers and penetration testers to identify
     whether the targeted organization is using any unsecure protocols, running vulnerable
     services and has any unintentional exposed service ports on critical systems.
@@ -129,29 +171,41 @@
     the intent to capture any sensitive data such as user credentials and password
     hashes which can be leveraged for gain unauthorized access to critical systems
     on the network.Network information includes the following details:'
+  id: totrans-20
   prefs: []
   type: TYPE_NORMAL
+  zh: 网络信息帮助道德黑客和渗透测试人员识别目标组织是否使用了任何不安全的协议、是否运行了易受攻击的服务，或是否有任何无意暴露的关键系统服务端口。例如，不安全的网络协议在传输前后不加密任何数据，因此，道德黑客可以拦截网络流量，意图捕获任何敏感数据，如用户凭据和密码哈希，这些信息可以被用于未授权访问网络中的关键系统。网络信息包括以下内容：
 - en: '**Domain Name System** (**DNS**) records'
+  id: totrans-21
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: '**域名系统** (**DNS**) 记录'
 - en: Domain names
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 域名
 - en: Sub-domain names
+  id: totrans-23
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 子域名
 - en: Firewall rules and policies
+  id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 防火墙规则和策略
 - en: IP addresses and network blocks
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Network protocols and services
+  id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -162,17 +216,21 @@
     helps the ethical hacker to focus their phishing emails to targeted persons with
     high-privileged user accounts.Organizational information includes the following
     details:'
+  id: totrans-27
   prefs: []
   type: TYPE_NORMAL
 - en: Employees’ details and contact information
+  id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Geo-location of the organizations and its remote offices
+  id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Employees’ role and profile
+  id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -192,6 +250,7 @@
     (**CTI**) on how the targeted organization is leaking sensitive data about themselves,
     and how it can be leveraged by a real attacker when planning a future attack.Reconnaissance
     is usually broken-down into the following categories:'
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: Passive – Passive reconnaissance techniques are used to ensure the ethical hacker
@@ -200,6 +259,7 @@
     from the internet about target. Passive information gathering helps the ethical
     hacker to improve stealth and reduce the likelihood of alerting or triggering
     any security sensors that notifies the target.
+  id: totrans-32
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -208,84 +268,108 @@
     through passive reconnaissance techniques. This technique involves sending specially-crafted
     probes over a network to the target to collect technical details such as operating
     system and running services.
+  id: totrans-33
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'According to the MITRE ATT&CK framework, the following are common reconnaissance
     techniques used by adversaries:'
+  id: totrans-34
   prefs: []
   type: TYPE_NORMAL
 - en: Active reconnaissance – This technique focuses on sending probes to the targeted
     systems and networks to collect sensitive information such as identifying the
     target’s network block information and discovering security vulnerabilities on
     applications and operating systems.
+  id: totrans-35
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 主动侦察 – 该技术专注于向目标系统和网络发送探测信号，收集敏感信息，例如识别目标的网络块信息，发现应用程序和操作系统中的安全漏洞。
 - en: Gather victim host information – This techniques helps the threat actor to collect
     information about the target’s hardware, software running on devices, firmware
     on device and system configurations.
+  id: totrans-36
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 收集受害者主机信息 – 该技术帮助威胁行为者收集关于目标硬件、设备上运行的软件、设备固件及系统配置的信息。
 - en: Gather victim identity information – This technique is used by threat actors
     to collect users’ credentials, email addresses, employees’ name and contact information
     from public data sources and leaked data.
+  id: totrans-37
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 收集受害者身份信息 – 恶意行为者使用此技术收集用户凭证、电子邮件地址、员工姓名和联系信息，这些信息来自公开数据源和泄露数据。
 - en: Gather victim network information – Threat actors uses this techniques to collect
     network-related information about their target’s network infrastructure such as
     domain registrar information, public DNS records, network topology details, IP
     addresses and network block details.
+  id: totrans-38
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 收集受害者网络信息 – 威胁行为者利用该技术收集目标网络基础设施的网络相关信息，如域名注册商信息、公共DNS记录、网络拓扑信息、IP地址和网络块信息。
 - en: Gather victim org information – Malicious actors uses this technique to collect
     information about the target’s geo-location, the service providers to the target,
     days and time of business operations and identify key personnel of the organization.
+  id: totrans-39
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 收集受害者组织信息 – 恶意行为者使用此技术收集关于目标的地理位置、服务提供商、商业运营的日期和时间，以及识别组织的关键人员。
 - en: Phishing for information – This technique is commonly used by malicious actors
     by sending phishing email messages to the targeted organization with the intention
     to trick victims into performing an action or revealing sensitive information
     that can be further leverage in a cyber-attack.
+  id: totrans-40
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 信息钓鱼 – 恶意行为者常通过向目标组织发送钓鱼电子邮件，试图欺骗受害者执行某些操作或透露敏感信息，这些信息可进一步在网络攻击中被利用。
 - en: Searched closed sources – Searching closed data sources involves looking through
     subscription-based services that provide information about threat intelligence
     and data leaks that contains sensitive information about breached data from organization.
+  id: totrans-41
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 搜索封闭的源数据 – 搜索封闭的数据源包括查阅基于订阅的服务，这些服务提供有关威胁情报和数据泄漏的信息，包含有关组织泄露数据的敏感信息。
 - en: Search open technical databases – These open technical databases contains publicly
     available information about people, organizations, and domain names. Such information
     can be leveraged by a threat actor when planning a cyber-attack on a target.
+  id: totrans-42
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 搜索开放的技术数据库 – 这些开放的技术数据库包含有关人员、组织和域名的公开信息。这些信息可被威胁行为者在规划网络攻击时利用。
 - en: Search open websites/domains – This technique involves searching social media
     platform, internet search engines and code repository websites for any publicly
     available information that can be used to identify security flaws and plan a cyber-attack
     on the target.
+  id: totrans-43
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 搜索开放网站/域名 – 该技术涉及通过社交媒体平台、互联网搜索引擎和代码仓库网站搜索任何公开可用的信息，这些信息可用于识别安全漏洞并计划针对目标的网络攻击。
 - en: Search victim-owned websites – Visiting the targeted owned-website may contain
     useful information such as contact details of employees, telephone numbers, email
     addresses, and identify high-profile employees and their roles. Such information
     can be leverage for spear-phishing attack campaigns.
+  id: totrans-44
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: 搜索受害者拥有的网站 – 访问目标拥有的网站可能包含有用的信息，如员工联系方式、电话号码、电子邮件地址，以及识别高层员工及其角色。这些信息可被用来开展鱼叉式钓鱼攻击。
 - en: The information collected during the reconnaissance phases helps the threat
     actor, ethical hacker and penetration tester to move onto the exploitation phases
     to gain access to a targeted system or network.
+  id: totrans-45
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: 在侦察阶段收集的信息帮助威胁行为者、道德黑客和渗透测试人员进入利用阶段，从而获得对目标系统或网络的访问权限。
 - en: 'Reconnaissance is commonly referred to as *footprinting*, which is to obtain
     specific information about the targeted organization from an attacker’s perspective.
     The information that''s collected can be used in various ways to gain access to
@@ -299,11 +383,15 @@
     target, we can consider footprinting to be a subset of the reconnaissance phase.The
     following diagram shows how linkage between information gathering, reconnaissance,
     and footprinting:'
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
+  zh: 侦察通常被称为*足迹收集*，即从攻击者的角度获取目标组织的特定信息。收集到的信息可以通过多种方式用于获取目标系统、网络或组织的访问权限。足迹收集让道德黑客和渗透测试员能够更好地了解目标基础设施的安全态势，快速识别目标系统和网络中的安全漏洞，创建组织的网络图，并将关注点缩小到具体的IP地址、域名以及需要信息的设备类型。足迹收集是侦察阶段的一部分；然而，由于足迹收集可以提供更具体的目标信息，我们可以将其视为侦察阶段的一个子集。下图展示了信息收集、侦察与足迹收集之间的联系：
 - en: '![](../media/file120.png)'
+  id: totrans-47
   prefs: []
   type: TYPE_IMG
+  zh: '![](../media/file120.png)'
 - en: As an aspiring ethical hacker and penetration tester, using the same **Tactics,
     Techniques and Procedures** (**TTPs**) for reconnaissance helps you to better
     understand how a real attacker is able to identify the attack surface of a targeted
@@ -313,12 +401,16 @@
     will be able to better simulate a real-world cyber-attack on your target and gain
     the insights needed to provide recommendations on improving the cyber defenses,
     reducing the attack surface and improve the security posture of the organization.
+  id: totrans-48
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一个有抱负的道德黑客和渗透测试员，使用相同的**战术、技术和程序**（**TTPs**）进行侦察有助于你更好地理解真实攻击者是如何识别目标组织的攻击面，收集并分析公开可用的数据以识别安全漏洞，并利用收集的数据来改善他们的攻击计划。通过使用与真实对手相同的侦察TTPs，你将能够更好地模拟针对目标的真实网络攻击，并获得所需的见解，为改进网络防御、减少攻击面以及提高组织安全态势提供建议。
 - en: Exploring Passive reconnaissance
+  id: totrans-49
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 探索被动侦察
 - en: 'Passive reconnaissance focuses on collecting information without directly connecting
     or interacting with the target. This method reduces the threat level of the ethical
     hacker and penetration tester, whereby reducing the likelihood of triggering any
@@ -341,34 +433,48 @@
     exposed systems, unsecure web portals and resources which are owned by the targeted
     organization.The following are common internet search engines used by ethical
     hackers:'
+  id: totrans-50
   prefs: []
   type: TYPE_NORMAL
+  zh: 被动侦察侧重于收集信息，而不直接与目标进行连接或互动。这种方法降低了道德黑客和渗透测试者的威胁级别，从而减少了触发任何警报的可能性，警报会通知目标有人正在收集有关他们、他们的系统和网络基础设施的信息。随着时间的推移，全球各地的人们每天都会上传和创建更多的数据。无论是有人上传自己的照片、制作有趣的营销视频，还是发布有关新产品和服务的信息，互联网都在存储大量的数据，网络犯罪分子可以收集并仔细分析这些数据，以更好地了解他们的目标并改进其网络操作。如前所述，道德黑客和渗透测试者使用与真正威胁行为者相同的战术、技术和程序（TTPs），以高效地发现组织如何泄露关于自身的数据，以及恶意行为者如何利用收集到的数据来识别和危及其目标的安全漏洞。例如，互联网搜索引擎的设计目的是对互联网上的每个网页进行索引（爬取）并分析，以改善搜索结果，并为用户提供更准确的信息，帮助用户轻松找到网站服务器的主机名或互联网上某个资源的**统一资源定位符**（**URL**）。对手和道德黑客也使用各种互联网搜索引擎来发现无意中暴露的系统、不安全的网页门户和资源，这些资源属于目标组织。以下是道德黑客常用的互联网搜索引擎：
 - en: Google - [https://www.google.com/](https://www.google.com/)
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Google - [https://www.google.com/](https://www.google.com/)
 - en: Yahoo! - [https://www.yahoo.com/](https://www.yahoo.com/)
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Yahoo! - [https://www.yahoo.com/](https://www.yahoo.com/)
 - en: Bing - [https://www.bing.com/](https://www.bing.com/)
+  id: totrans-53
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Bing - [https://www.bing.com/](https://www.bing.com/)
 - en: DuckDuckGo - [https://duckduckgo.com/](https://duckduckgo.com/)
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: DuckDuckGo - [https://duckduckgo.com/](https://duckduckgo.com/)
 - en: Yandex - [https://yandex.com/](https://yandex.com/)
+  id: totrans-55
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
+  zh: Yandex - [https://yandex.com/](https://yandex.com/)
 - en: The Yandex internet search engine is Russian-based and provides better search
     results for resources within the Asia and Europe regions. DuckDuckGo is a privacy-focused
     internet search engine which does not store the user’s searches or tracking details.
+  id: totrans-56
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
+  zh: Yandex互联网搜索引擎是俄罗斯基于的，提供亚洲和欧洲地区更好的资源搜索结果。DuckDuckGo是一个注重隐私的互联网搜索引擎，不会存储用户的搜索或跟踪详情。
 - en: As an aspiring ethical hacker, it’s recommended to use at least two different
     internet search engines when performing research on your target. For instance,
     one internet search engine may provide better results that’s aligned towards your
@@ -379,12 +485,16 @@
     ethical hackers and penetration testers uses passive reconnaissance to identify
     sensitive information and security vulnerabilities on targets, let’s take a deep
     dive into exploring open source intelligence.
+  id: totrans-57
   prefs: []
   type: TYPE_NORMAL
+  zh: 作为一名有志的伦理黑客，建议在进行目标研究时使用至少两种不同的互联网搜索引擎。例如，一种搜索引擎可能提供更符合目标的结果，而另一种搜索引擎可能提供较少敏感的结果。然而，在侦察阶段，收集所有信息是至关重要的，然后分析收集到的数据，以确定哪些信息是有用的，并帮助你建立目标的资料。为了更好地理解对手、伦理黑客和渗透测试人员如何使用被动侦察来识别目标上的敏感信息和安全漏洞，让我们深入探索开放源代码情报。
 - en: Open source intelligence
+  id: totrans-58
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
+  zh: 开放源代码情报
 - en: '**Open Source Intelligence** (**OSINT**) is commonly referred to as the collection
     and analysis of publicly available information from multiple data sources to better
     understand the attack surface such as the security vulnerabilities on a targeted
@@ -422,8 +532,10 @@
     for the operating system and applications on the computers.While there’s a lot
     of sensitive information which can be found on social media platforms, there are
     addition OSINT data sources, such as the following:'
+  id: totrans-59
   prefs: []
   type: TYPE_NORMAL
+  zh: '**开源情报**（**OSINT**）通常指从多个数据源收集和分析公开可得的信息，以更好地了解攻击面，例如目标组织的安全漏洞。此外，OSINT还帮助道德黑客和渗透测试人员识别目标如何泄露敏感数据，这些数据可以被威胁行为者利用来提升其网络攻击和威胁。随着越来越多的组织在互联网上创建在线存在，从启动虚拟服务器到在云计算服务提供商的基础设施上托管其Web应用程序，许多公司正在利用社交媒体平台提高意识并与新客户和现有客户分享信息。社交媒体平台使得世界各地的人们可以通过数字媒介分享更新、图片和视频，然而，有时人们会在不意识到潜在风险的情况下泄露关于自己或其组织的敏感信息，如果这些信息被网络犯罪分子利用，可能会带来严重后果。例如，一名员工分享了一张自己在工作站上的数字照片，然而图片的背景显示了桌面上的一些机密文件、员工的ID徽章以及计算机显示器上的一些应用程序。如果威胁行为者针对该公司，攻击者将通过被动侦察来识别目标组织的社交媒体存在，如其LinkedIn、Facebook、Instagram和Twitter页面。有时，组织会在社交媒体上发布新职位空缺的招聘信息，并列出潜在候选人的技术要求。威胁行为者可以利用职位发布中找到的技术细节来确定组织网络中运行的技术和应用程序。此外，威胁行为者还可以识别过去和现在员工的社交媒体账户，以确定是否有人上传了包含敏感细节的图片。社交媒体平台为用户提供了许多隐私功能，然而，并非每个人都会花额外的时间确保其在线资料是私密的，并且仅对受信任的联系人可见。如果威胁行为者能够找到隐私设置不安全的员工社交媒体账户，并且这些员工的图片完全公开，攻击者可以简单地查找包含员工ID徽章的图片，这些图片可以用来制作假徽章，从而非法进入公司的设施，甚至确定员工计算机上运行的应用程序。识别目标系统上的应用程序有助于威胁行为者研究操作系统和计算机应用程序的安全漏洞。虽然在社交媒体平台上可以找到大量敏感信息，但也有其他的OSINT数据源，如以下内容：'
 - en: Online forums – There are many online forums and discussions boards such as
     **Stack Overflow** ([https://stackoverflow.com/](https://stackoverflow.com/))
     which are commonly used by the tech community to help and share ideas with each
@@ -436,6 +548,7 @@
     the application version, error logs and host operating system for a server. The
     threat actor can leverage this information to research known security vulnerabilities
     for the application and operating system.
+  id: totrans-60
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -445,6 +558,7 @@
     resources and sensitive URLs of targeted organizations. For instance, both threat
     actors and cybersecurity professionals can use *Google Dorking* techniques to
     perform advanced Google searches.
+  id: totrans-61
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -453,6 +567,7 @@
     Threat actors can collect and analyze the information found on public databases
     to plan social engineering attacks on the employees of a targeted organization
     to gain a foothold into their network infrastructure.
+  id: totrans-62
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -462,6 +577,7 @@
     internet is archived and it’s retrievable by anyone, including threat actors and
     ethical hackers. The Internet Archive helps threat actors identify legacy web
     applications and plugins on the targeted web server for any security vulnerabilities.
+  id: totrans-63
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -472,6 +588,7 @@
     not pay an additional fee to safeguard their **Personally Identifiable Information**
     (**PII**), a threat actor can use the owner’s personal information to plan future
     cyber operations such as social engineering attacks.
+  id: totrans-64
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -480,6 +597,7 @@
     business registration and so on. For instance, many of these agencies are acquiring
     an online presence on the internet, and threat actors can easily access the public
     records to identify the geo-location of targeted companies.
+  id: totrans-65
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -489,6 +607,7 @@
     a threat actor can easily view their online code projects to determine the applications
     that are running within the targeted organization and whether any security vulnerabilities
     exists within the code that can be exploited to gain a foothold on the network.
+  id: totrans-66
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -498,6 +617,7 @@
     to determine the geolocation of a targeted organization, and its **Street View**
     feature identify whether there are any nearby carparks and physical access to
     the compound.
+  id: totrans-67
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -515,9 +635,11 @@
     organizations reduce their data leakages and prevent future cyber-attacks and
     threats.The following diagram shows a visual mind-map for collecting OSINT from
     various online data sources:'
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file121.png)'
+  id: totrans-69
   prefs: []
   type: TYPE_IMG
 - en: As shown in the preceding diagram, there are many data sources which are commonly
@@ -527,16 +649,19 @@
     ethical hackers and penetration testers uses the same techniques and skills with
     a good moral compass to help organizations identify hidden security vulnerabilities
     and implement countermeasures to prevent a real cyber-attack.
+  id: totrans-70
   prefs: []
   type: TYPE_NORMAL
 - en: Keep in mind, it’s important to validate the accuracy of the information collected
     from OSINT. Sometimes, an online data source may not provide the most up-to-date
     information about a target and this can lead to planning a cyber-attack or developing
     an exploit based on outdated information.
+  id: totrans-71
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: How much data should be collected
+  id: totrans-72
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -569,37 +694,46 @@
     (**YOGA**) mind-map helps ethical hackers and penetration testers to better visualize
     how one data point can easily lead to another and displays the type of the information
     that can be collected from each data point, as shown below:'
+  id: totrans-73
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file122.png)'
+  id: totrans-74
   prefs: []
   type: TYPE_IMG
 - en: As shown in the preceding screenshot, if an ethical hacker uses the targeted
     domain name as a starting point, YOGA provides a map showing the next data points
     and sources for information gathering.
+  id: totrans-75
   prefs: []
   type: TYPE_NORMAL
 - en: 'To learn more about YOGA, please see: [https://yoga.myosint.training/](https://yoga.myosint.training/).'
+  id: totrans-76
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'The analyzed data is converted into meaningful information to determine the
     following:'
+  id: totrans-77
   prefs: []
   type: TYPE_NORMAL
 - en: What is the accuracy of the collected data?
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Was the data found from credible sources?
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Is the collected data factual or is it subjective?
+  id: totrans-80
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Was enough data collected to understand the target or more is needed?
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -620,9 +754,11 @@
     and how OSINT can be leveraged by ethical hackers and penetration testers to identify
     security flaws on a targeted system, network and organization. In the next section,
     you will learn how to conceal your online identity as an aspiring ethical hacker.
+  id: totrans-82
   prefs: []
   type: TYPE_NORMAL
 - en: Creating a sock puppet
+  id: totrans-83
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -640,10 +776,12 @@
     media website, no one knows the true identity of the account owner. Therefore,
     the hacker can pretend to be an employee or a mutual friend of their target to
     gather data about the organization.
+  id: totrans-84
   prefs: []
   type: TYPE_NORMAL
 - en: Never use personal accounts for work-related activities, such as OSINT operations,
     investigations, ethical hacking, or penetration testing.
+  id: totrans-85
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -662,17 +800,21 @@
     a security assessment.When creating a sock puppet, ensure the profile looks very
     legitimate and believable to anyone who views it. The following are some resources
     for creating a sock puppet:'
+  id: totrans-86
   prefs: []
   type: TYPE_NORMAL
 - en: Fake Name Generator - [https://www.fakenamegenerator.com/](https://www.fakenamegenerator.com/)
+  id: totrans-87
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: This Person Does Not Exist - [https://www.thispersondoesnotexist.com/](https://www.thispersondoesnotexist.com/)
+  id: totrans-88
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Proxy credit card - [https://privacy.com/](https://privacy.com/)
+  id: totrans-89
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -695,11 +837,13 @@
     to perform a transaction on. This prevents you from revealing your true identity
     through your credit card number on the e-commerce websites.The following are some
     guidelines when creating a sock puppet:'
+  id: totrans-90
   prefs: []
   type: TYPE_NORMAL
 - en: Whenever you’re creating a social media account, ensure you do not use your
     real IP address. Considering using the free internet service at a local coffee
     shop.
+  id: totrans-91
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -707,11 +851,13 @@
     (**VPNs**) or **The Onion Router** (**TOR**) services as many social media platforms
     are able to detect your origin traffic is being proxy through a VPN or TOR, and
     will require additional identity verification during the account creation process.
+  id: totrans-92
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Your sock puppet account should look like a normal person to avoid any red flags
     of being identified as a fake account.
+  id: totrans-93
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -719,26 +865,31 @@
     are many free email services such as **Proton Mail** ([https://proton.me/](https://proton.me/))
     which provide additional layers of privacy. However, you can create a vanilla
     (basic) email address on Gmail, Outlook, and even Yahoo Mail.
+  id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: After the sock puppet profile is created, ensure you frequently share updates,
     statuses, pictures, interact and connect with others on the platform.
+  id: totrans-95
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Do not use another person’s picture as your sock puppet profile picture. Reverse
     image search can be used to identify whether a picture is fake or being misused
     online.
+  id: totrans-96
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Having completed this section, you have understood the fundamentals and importance
     of using a sock puppet when performing reconnaissance on a target. In the next
     section, you will learn how to anonymize your internet-based traffic.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: Anonymizing internet-based traffic
+  id: totrans-98
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -755,25 +906,31 @@
     it performs and will contain a record of all source IP addresses, including yours.The
     following are common techniques that are used by penetration testers to anonymize
     their traffic:'
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: '**Virtual Private Network** (**VPN**)'
+  id: totrans-100
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**Proxychains**'
+  id: totrans-101
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**The Onion Router** (**TOR**)'
+  id: totrans-102
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: In the following sub-sections, you will discover the benefits of using each
     of these technologies as a penetration tester.
+  id: totrans-103
   prefs: []
   type: TYPE_NORMAL
 - en: Virtual Private Network (VPN)
+  id: totrans-104
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -795,52 +952,63 @@
     can have all your network traffic exit in the USA, Russia, and Brazil, and so
     on, masking and anonymizing your identity and origin. The following diagram shows
     a simple representation of using online VPN servers:'
+  id: totrans-105
   prefs: []
   type: TYPE_NORMAL
 - en: '![G:\.shortcut-targets-by-id\1CmOHjwHtAmAazfQWf4vwF3iXF6hLABBW\Packt Projects\09
     - Reconnaissance for Ethical Hackers\Chapter 03\Diagrams\3.7.png](../media/file123.png)'
+  id: totrans-106
   prefs: []
   type: TYPE_IMG
 - en: 'The following are some notable points to consider when using a VPN to anonymize
     your network traffic to the internet:'
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: Using a commercial VPN service provider requires a paid subscription.
+  id: totrans-108
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Ensure your VPN service provider does not keep logs or sell users data to third
     party data brokers on the internet.
+  id: totrans-109
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Ensure the VPN service providers allows unlimited or unmetered bandwidth for
     users.
+  id: totrans-110
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Ensure the VPN service provider has support and a VPN client for your operating
     system.
+  id: totrans-111
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: You can host your own VPN server on a cloud service provider on the internet.
+  id: totrans-112
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: When using a VPN, ensure your DNS traffic is not leaking as it will reveal your
     geolocation. Consider using **DNS Leak Test** ([https://www.dnsleaktest.com/](https://www.dnsleaktest.com/))
     to verify whether your DNS messages are leaking outside your VPN tunnel.
+  id: totrans-113
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: When using a VPN, consider disabling IPv6 communication on your operating system.
+  id: totrans-114
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'OpenVPN enables anyone to host their own VPN access server as a self-hosting
     solution or on the cloud. The OpenVPN Access Server enables up to 2 devices for
     free. To learn more about OpenVPN Access Server, please see: [https://openvpn.net/access-server/](https://openvpn.net/access-server/).'
+  id: totrans-115
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -848,9 +1016,11 @@
     you do a lot of research and testing to determine which solution works best for
     you. Next, you will learn how to use Proxychains to anonymize your traffic to
     the internet.
+  id: totrans-116
   prefs: []
   type: TYPE_NORMAL
 - en: Proxychains
+  id: totrans-117
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -866,21 +1036,26 @@
     between multiple proxy servers when sending traffic to a targeted system, network
     or the internet. Proxychains allow a penetration tester to configure various types
     of proxies, such as the following:'
+  id: totrans-118
   prefs: []
   type: TYPE_NORMAL
 - en: HTTP
+  id: totrans-119
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: HTTPS
+  id: totrans-120
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: SOCKS4
+  id: totrans-121
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: SOCKS5
+  id: totrans-122
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -891,10 +1066,12 @@
     but it does provide anonymity for your network traffic and prevents your real
     IP address from being exposed to the target.The following diagram shows the flow
     of traffic during the proxy chaining effect:'
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
 - en: '![G:\.shortcut-targets-by-id\1CmOHjwHtAmAazfQWf4vwF3iXF6hLABBW\Packt Projects\09
     - Reconnaissance for Ethical Hackers\Chapter 03\Diagrams\3.8.png](../media/file124.png)'
+  id: totrans-124
   prefs: []
   type: TYPE_IMG
 - en: Where does a penetration tester obtain a list of proxy servers? This is a common
@@ -903,62 +1080,77 @@
     Azure and **Amazon Web Services** (**AWS**). Additionally, you can obtain proxy
     servers from paid services such as VPN service providers and perform a Google
     search, such as *free proxy server list*, to find freely available proxy servers.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: You can use a website such as [https://spys.one/en/](https://spys.one/en/),
     to obtain a list of free proxy servers. However, keep in mind that these servers
     may not always be online or available. Therefore, it’s recommended to use multiple
     proxy servers.
+  id: totrans-126
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'To get started setting up proxychains, please use the following instructions:'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: Open **Oracle VM VirtualBox Manager** and power-on the **Kali Linux** virtual
     machine.
+  id: totrans-128
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: 'Login to the **Kali Linux** virtual machine, then open the **Terminal** and
     use the following commands to update the local filename database and search for
     the `proxychains4` configuration file:'
+  id: totrans-129
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE0]'
+  id: totrans-130
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE0]'
 - en: 'The following screenshot shows the location of the proxychains4.conf file:'
+  id: totrans-131
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file125.png)'
+  id: totrans-132
   prefs: []
   type: TYPE_IMG
 - en: Next, either on your host operating system or Kali Linux, open the web browser
     and go to [https://spys.one/en/](https://spys.one/en/) for a list of proxy servers.
     Ensure you choose a few proxy servers from the website.
+  id: totrans-133
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: 'After choosing a few proxy servers from the previous step, you will need to
     modify the `proxychains4.conf` file to use the proxy servers. Use the following
     command to open the `proxychains4.conf` file with the Nano command-line text editor:'
+  id: totrans-134
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE1]'
+  id: totrans-135
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE1]'
 - en: 'Next, the contents of the `proxychains4.conf` file will appear on the Terminal,
     scroll-down using the directional keys on your keyboard to the line that contains
     `#dynamic_chain` and remove the `#` character from the start of the line. Then,
     insert a `#` character at the start of the `strict_chain`, as shown in the following
     screenshot:'
+  id: totrans-136
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '![](../media/file126.png)'
+  id: totrans-137
   prefs: []
   type: TYPE_IMG
 - en: As shown in the preceding screenshot, removing the `#` character at the start
@@ -967,51 +1159,64 @@
     uncommenting `dynamic_chain`, the proxychains application will chain all the proxy
     servers within a predefined list. By commenting `strict_chain`, proxychains will
     not use this method of proxy.
+  id: totrans-138
   prefs: []
   type: TYPE_NORMAL
 - en: 'Next, scroll-down to the end of the `proxychains4.conf` file and insert a comment
     (`#`) at the start of the `socks4 127.0.0.1 9050` to disable the TOR proxy option.
     Then, insert each additional proxy server on a new line at the end of the **ProxyList**,
     as shown below:'
+  id: totrans-139
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '![](../media/file127.png)'
+  id: totrans-140
   prefs: []
   type: TYPE_IMG
 - en: Next, to save the configuration file, press `CTRL + X` on your keyboard, then
     `Y` to confirm the filename and hit `Enter` to save and exit to the Terminal.
+  id: totrans-141
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: 'Before using Proxychains, use the following commands to retrieve your real
     public IPv4 address:'
+  id: totrans-142
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE2]'
+  id: totrans-143
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE2]'
 - en: 'To use Proxychains, use the following commands to launch a Firefox web browsing
     session that will route all internet-based traffic through the list of proxy servers:'
+  id: totrans-144
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE3]'
+  id: totrans-145
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE3]'
 - en: The `proxychains4 -f <configuration file>` command enables us to select a specific
     configuration file to use.
+  id: totrans-146
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'Next, once the Firefox application opens on Kali Linux, go to [https://ifconfig.co/](https://ifconfig.co/)
     to verify the public IP address and geolocation that’s seen by devices on the
     internet, as shown below:'
+  id: totrans-147
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '![](../media/file128.png)'
+  id: totrans-148
   prefs: []
   type: TYPE_IMG
 - en: 'As shown in the preceding screenshot, the public IP address is the last proxy
@@ -1019,28 +1224,36 @@
     here is different from your real public address from step 8.In addition, you can
     use the following commands to download and view the `ifconfig.co` webpage with
     the new public address:'
+  id: totrans-149
   prefs: []
   type: TYPE_NORMAL
 - en: '[PRE4]'
+  id: totrans-150
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE4]'
 - en: 'The following screenshot shows the public IP addresses with and without using
     Proxychains:'
+  id: totrans-151
   prefs: []
   type: TYPE_NORMAL
 - en: '![C:\Users\Glen\AppData\Local\Temp\SNAGHTML718659e.PNG](../media/file129.png)'
+  id: totrans-152
   prefs: []
   type: TYPE_IMG
 - en: Lastly, whenever you want to use Proxychains, ensure you check whether the proxy
     servers are online and use the commands shown in step 9.
+  id: totrans-153
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: Next, you will learn how to route your internet-based traffic through the dark
     web using TOR.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
 - en: The Onion Router (TOR)
+  id: totrans-155
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1064,139 +1277,180 @@
     as each TOR-node only knows about the previous and next-node when forwarding packets
     within the TOR network.The following diagram shows the chaining effect in the
     TOR network:'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: '![G:\.shortcut-targets-by-id\1CmOHjwHtAmAazfQWf4vwF3iXF6hLABBW\Packt Projects\09
     - Reconnaissance for Ethical Hackers\Chapter 03\Diagrams\3.14.png](../media/file130.png)'
+  id: totrans-157
   prefs: []
   type: TYPE_IMG
 - en: 'To get started with setting up TOR services and TOR Browser on Kali Linux,
     please use the following instructions:'
+  id: totrans-158
   prefs: []
   type: TYPE_NORMAL
 - en: Open **Oracle VM VirtualBox Manager** and power-on the **Kali Linux** virtual
     machine.
+  id: totrans-159
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: 'Next, after logging-in to Kali Linux, open the **Terminal** and use the following
     commands to update the software package repository list:'
+  id: totrans-160
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE5]'
+  id: totrans-161
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE5]'
 - en: 'Next, install **TOR** and **TOR Browser** on Kali Linux with the following
     commands:'
+  id: totrans-162
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE6]'
+  id: totrans-163
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE6]'
 - en: 'Next, launch the **TOR Browser** application with the following commands:'
+  id: totrans-164
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE7]'
+  id: totrans-165
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE7]'
 - en: 'Once the **TOR Browser** appears, click on **Connect** to establish a connection
     between the TOR Browser and the TOR network, as shown in the following screenshot:'
+  id: totrans-166
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '![](../media/file131.png)'
+  id: totrans-167
   prefs: []
   type: TYPE_IMG
 - en: 'Once the connection is established to the TOR network, go to [https://ifconfig.co/](https://ifconfig.co/)
     to determine if the traffic from the TOR Browser is being routed over the TOR
     network, as shown below:'
+  id: totrans-168
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '![](../media/file132.png)'
+  id: totrans-169
   prefs: []
   type: TYPE_IMG
 - en: If you choose to visit a web address with the `.onion` extension, you are doing
     so at your own risk. Ensure you do not download anything, trust anything or anyone
     on the dark web.
+  id: totrans-170
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: Next, close the **TOR Browser** to terminal the connection and the application.
+  id: totrans-171
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: 'The TOR Browser will only route traffic from itself through the TOR network
     and not from any other application on Kali Linux. To route traffic from any application
     on Kali Linux through the TOR network, please use the following configurations:'
+  id: totrans-172
   prefs: []
   type: TYPE_NORMAL
 - en: 'On **Kali Linux**, open the **Terminal** and use the following commands to
     open the `proxychains4.conf` file:'
+  id: totrans-173
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE8]'
+  id: totrans-174
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE8]'
 - en: 'Once the `proxychains4.conf` file is open, uncomment the `socks4 127.0.0.1
     9050` line and comment all other proxy servers within the **ProxyList** as shown
     below:'
+  id: totrans-175
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '![](../media/file133.png)'
+  id: totrans-176
   prefs: []
   type: TYPE_IMG
 - en: Next, to save the configuration file, press `CTRL + X` on your keyboard, then
     `Y` to confirm the filename and hit `Enter` to save and exit to the Terminal.
+  id: totrans-177
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: 'Next, start the TOR service on Kali Linux with the following commands:'
+  id: totrans-178
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE9]'
+  id: totrans-179
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE9]'
 - en: 'The following screenshot shows the TOR service is running (active):'
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file134.png)'
+  id: totrans-181
   prefs: []
   type: TYPE_IMG
 - en: 'Next, use the following commands to launch an application while routing all
     its internet-based traffic through the TOR network:'
+  id: totrans-182
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE10]'
+  id: totrans-183
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE10]'
 - en: 'The following screenshot shows the internet-based traffic from the Firefox
     application is being routed through the TOR network:'
+  id: totrans-184
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file135.png)'
+  id: totrans-185
   prefs: []
   type: TYPE_IMG
 - en: 'Lastly, use the following commands to stop the TOR service on Kali Linux:'
+  id: totrans-186
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '[PRE11]'
+  id: totrans-187
   prefs: []
   type: TYPE_PRE
+  zh: '[PRE11]'
 - en: Having completed this section, you’ve learnt about various methods to anonymize
     your internet-based traffic while learning how to use proxychains and TOR services
     on Kali Linux.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: Summary
+  id: totrans-189
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -1216,21 +1470,26 @@
     *Exploring Open Source Intelligence*, you will gain the practical skills needed
     to efficiently harvest and analyze publicly available information to create intelligence
     on a target.
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
 - en: Further Reading
+  id: totrans-191
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: MITRE ATT&CK Reconnaissance - [https://attack.mitre.org/tactics/TA0043/](https://attack.mitre.org/tactics/TA0043/)
+  id: totrans-192
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: OSINT lifecycle - [https://www.sans.org/blog/what-is-open-source-intelligence/](https://www.sans.org/blog/what-is-open-source-intelligence/)
+  id: totrans-193
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: OSINT Framework - [https://osintframework.com/](https://osintframework.com/)
+  id: totrans-194
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
