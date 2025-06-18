@@ -1,0 +1,1324 @@
+- en: '6'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Understanding File Systems and Storage
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: It takes a lot more than just technical know-how to be a digital forensic investigator.
+    There’s a lot of research, processes, and analytics that also go into the case
+    itself. Consider a scenario where you need to build a house. Sure, we need wood,
+    nails, cement, metal, glass, and all other raw materials, but we also require
+    skilled laborers and contractors to construct the structure and piece it together.
+    Apart from the materials, tools, and resources, we will have also done our research
+    to ensure that we understand what is needed for this to be a successful project.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For instance, we will have had to obtain permits to build, perform soil analysis,
+    consider the weather, and then choose to specify types of materials based on the
+    weather, location, soil type, and so on. It goes without saying that there must
+    be an understanding of fundamental concepts in the field to efficiently carry
+    out the task. In the same way, we need to understand the file systems, **operating
+    systems** (**OSs**), data types, and locations, as well as a thorough understanding
+    of methods and procedures for preserving data, storage media, and general evidence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will learn about the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The history of storage media
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: File systems and operating systems
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Data types and states
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Volatile and non-volatile data and the order of volatility
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The importance of RAM, the paging file, and the cache in DFIR
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: History and types of storage media
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The aim of any investigation is to prove whether something previously existed,
+    currently exists, or took place. In laptops, desktops, mobile devices, and smart
+    devices, data must be stored somewhere, even if it’s just temporarily. Most of
+    us may be familiar with **hard disk drives** (**HDDs**) within laptops, desktops,
+    mobile devices, and so on, but we also need to focus on removable and portable
+    storage devices regardless of age, as they may still be used. These include DVDs,
+    portable drives, thumb or flash drives, **secure digital** (**SD**) and microSD
+    cards, older media such as CDs and floppies, and many other media types.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We should also consider that many portable storage devices, such as flash drives,
+    come in many interesting shapes and sizes as novelty items and may not take the
+    usual shape of the ordinary rectangular-shaped drive. Another issue to consider
+    is that many of these storage media devices have changed in size over the years
+    and may be smaller, usually because of evolving technology.
+  prefs: []
+  type: TYPE_NORMAL
+- en: IBM and the history of storage media
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'There can never be a story, journal, book, or even discussion on the history
+    of hard drives and storage media without mentioning three letters: IBM. We’re
+    all familiar with this well-known tech giant, but we might not all be familiar
+    with some of its great achievements.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**International Business Machines** (**IBM**) has been around for quite some
+    time. Known as the **Computing-Tabulating-Recording** (**CTR**) Company back in
+    the early 1900s, IBM is better known for building the very first HDD, the first
+    PC, along with its servers, desktops, and laptops.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Between 1956 and 1957, IBM made major inroads with the development and release
+    of the 305 **Random Access Method of Accounting and Control** (**RAMAC**), which
+    utilized the first disk storage technology. This revolutionary technology weighed
+    in at approximately one ton and was roughly 16 square feet in size. The disk space
+    capacity of this behemoth; however, was only 5 MB (megabytes, yes, I said megabytes)
+    in size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although 5 MB by today’s standard is roughly the size of a high-definition photo
+    taken with a mobile device, all things considered, this really was a monumental
+    achievement for its time. Before IBM’s invention, data was stored on punch cards
+    that could amount to as many as millions of cards just to hold a few megabytes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A major issue faced back then with the introduction of this digital storage
+    was the size of the device. Transportation by plane and truck may not have been
+    an option for many; the space to store this would also have been an issue.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As technology progressed, IBM announced a much more portable computer in 1975,
+    released as the IBM 5100 Portable Computer. In the 1980s, specifically 1981, we
+    saw the birth of the IBM Personal Computer. Weighing in at much less than its
+    predecessor, this portable computer also had a much more affordable price tag
+    of between $8,000 and $20,000.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It wasn’t until 1981 when IBM released the first personal computer, that the
+    portability of computers became an actual reality. With a price tag of $1,565,
+    owners were afforded a keyboard and mouse, with options for a monitor, printer,
+    and floppy drives. Apart from the floppy drives, this was the standard for today’s
+    personal computers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Along with this newer and more portable technology, there were also improvements
+    in data storage media over the years, which saw advancements from magnetic tape
+    storage to floppy disks and diskettes, CDs, DVDs, Blu-ray Discs, and, of course,
+    mechanical and **solid-state** **drives** (**SSDs**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Removable storage media
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Continuing with our topic of storage media, I’d first like to start by discussing
+    removable storage media, as it played a role just as important as that of fixed
+    storage media in today’s world.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Magnetic tape drives
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Introduced by IBM in the 1950s, **magnetic tape** was an easy and very fast
+    way to store data at a speed equal to its processing time. The IBM 726 magnetic
+    tape reader and recorder was one of the first devices to offer this storage, with
+    a capacity or tape density of 100 bits per linear inch of tape. An inch of tape
+    should give an indicator of the size of the tape, which was wound on a large wheel,
+    similar to an old film roll movie tape.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With magnetic tape media, data is written across the width of the magnetic-coated
+    plastic strip in frames separated by gaps consisting of blocks. Magnetic tape
+    is still very much used today, and like many other storage media types, it has
+    significantly decreased in size while increasing capacity and speed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To give an idea of how far magnetic tape storage has come as of 2017, IBM has
+    developed newer tape storage media with a tape density of 200 **gigabits per second**
+    (**Gps**) per inch on a single cartridge, which can record up to 333 **gigabytes**
+    (**GB**) of data. These cartridges (for older folks like myself) are the size
+    of a cassette tape or (for the younger ones) not much smaller than the average
+    smartphone, which fits in your hand.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Floppy disks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The floppy disk, introduced yet again by IBM, was first seen along with its
+    floppy disk drive in 1971\. Although mainframe computers back then already had
+    hard drives and magnetic tape storage media, there was the need for a simple and
+    cheaper means of saving and passing on software and instructions to the mainframes,
+    previously done using the much slower punch cards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At the core of the floppy disk was a small magnetic disk which, although far
+    more portable than magnetic tape storage and HDDs at the time, stored much less
+    than other media we’ve mentioned.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The evolution of the ﬂoppy disk
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'This is how floppy disk evolved in size and capacity over the years:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Size: 8-inch**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Year introduced: 1971'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum capacity: 80 **kilobytes** (**KB**)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Size: 5.25-inch**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Year introduced: 1976'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum capacity: 360 KB'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Size: 3.5-inch**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Year introduced: 1984'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum capacity: 1.2 **megabytes** (**MB**)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: In 1986, the capacity of the floppy was increased to 1.44 MB, which remained
+    as such until it was discontinued by Sony (the last remaining manufacturer of
+    the floppy) in 2011.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Optical storage media
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Optical storage media is so called because of how data is written to the various
+    media types involving the use of different types of lasers on the surface of the
+    disk itself.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although it may be somewhat difficult to distinguish various optical disks in
+    the event that there are no default labels on them, they do have slightly varying
+    differences in color and hue due to the size of lasers used in writing data to
+    them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compact disks
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '**Compact disks** (**CDs**) are made of pits and land noticeable as bumps on
+    the underside of the disk, coated with a thin layer of aluminum that results in
+    a reflective surface. Data is written in concentric circles further split up into
+    sectors of 512 bytes, each known as tracks on the CD from the inside to the outside
+    (or edge) of the disk:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Diameter: 120 **millimeters** (**mm**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Type of laser used to write data: 780 **nanometers** (**nm**) infrared laser'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum capacity of a CD: 650–700 MB'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'There are two broad categories of CDs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Compact Disk – Read-Only Memory (CD-ROM)**: This disk comes with data on
+    it in the form of programs, games, music, and so on, and can only be read from
+    a **Compact Disk Recordable** (**CD-R**). Data can be written to this disk, but
+    only once.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Compact Disk – ReWritable (CD-RW)**: Data can be written to this disk many
+    times.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Digital versatile discs
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '**Digital versatile discs** (**DVDs**), although the same size in diameter,
+    can store much more data than CDs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Diameter**: 120 mm (same as a CD)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Type of laser used to write data**: 650 nm red laser'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Maximum capacity of a DVD**: 4.7 GB and 15.9 GB (dual-layer DVD)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The various types of DVDs are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**DVD – Read-Only Memory (DVD-ROM)**: This DVD comes with data already written
+    to it, much like a CD-ROM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DVD – Recordable (DVD-R)**: Data can be written once to the DVD.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DVD + Recordable (DVD+R)**: Data can be written once to the DVD. DVD+Rs utilize
+    more advanced error detection and management technology.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DVD – ReWritable (DVD-RW)**: Data can be written to the DVD several times.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DVD – Recordable Dual Layer (DVD-R DL)**: This type of DVD contains dual
+    layers resulting in higher storage capacities between 7.95 GB on a DVD-9 disk
+    and 15.9 GB on a DVD-18 disk.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DVD – Recordable Dual Layer (DVD+R DL)**: Same as the DVD- R DL, but has
+    been argued to be the more efficient format, resulting in fewer errors.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DVD – Random-Access Memory (DVD-RAM)**: Mainly used in video recording equipment
+    due to its resiliency (lasting up to two decades) and the ability to rewrite data
+    onto it. This disk is more expensive than other DVD formats and is also not compatible
+    with many common DVD drives and players.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Blu-ray Disc
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The current standard for removable disk media, the Blu-ray Disc gets its name
+    from the color of the laser used to read from and write to the disk. Due to the
+    high-capacity storage of Blu-ray Discs, **high-definition** (**HD**) content can
+    easily be stored on Blu-ray Discs without loss of quality:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Diameter**: 120 mm (same as a CD and DVD)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Type of laser used to write data**: 405 nm blue laser'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Maximum capacity of a DVD**: 25 GB and 50 GB (dual-layer Blu-ray)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Data Transfer**: up to 72 **megabits per** **second** (**Mbps**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Both capacities of Blu-ray Discs also come in rewriteable and recordable formats:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**BD-RE**: Blu-ray Disc Rewritable'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**BD-RE DL**: Blu-ray Disc Rewritable Dual-layer (50 GB)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**BD-R**: Blu-ray Disc Recordable'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**BD-R DL**: Blu-ray Disc Recordable Dual-layer (50 GB)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Flash storage media
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Flash memory is so named because the data is written to and erased using electrical
+    charges. You may have perhaps heard someone say that they’ve had to flash their
+    mobile device. This is quite similar to erasing flash storage media on smartphones
+    and smart devices, except devices with OSs such as Android and iOS require a much
+    more extensive procedure for flashing and reinstalling their OSs. However, the
+    end result is very much the same in that the memory and storage areas are reset
+    or wiped.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Flash storage chips come in two types, known as **NOT AND** (**NAND**) and NOR
+    flash memory, and are responsible for high-speed and high-capacity storage of
+    data on flash storage media. They are newer types of **electrically erasable programmable
+    read-only memory** (**EEPROM**) chips that can wipe blocks of data or the entire
+    drive, rather than just one byte at a time, as with the slower EEPROM. This type
+    of flash memory chip is non-volatile, meaning that the data is still stored on
+    the chip even after power to the chip is lost. Data is erased when specific instructions
+    are sent to the chip in the form of electrical signals via a method known as in-circuit
+    writing, which alters the data accordingly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following photo shows one of my old 1 GB (left) flash drives and a newer
+    32 GB flash drive with its NAND chips exposed (right). Notice that even though
+    the chips are similar in size, the one on the right has 32 times the data capacity,
+    as they were manufactured over a decade apart:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.1 – NAND chips on flash drive boards](image/Figure_6.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.1 – NAND chips on flash drive boards
+  prefs: []
+  type: TYPE_NORMAL
+- en: Flash media storage has so far become the ultimate in portability, with many
+    types ranging from the size of your thumb to the size of the nail on your little
+    finger. The lifespan of flash storage all depends on the usage, as they all have
+    an average read-write usage, sometimes displayed on the packaging of the device.
+    The read-write speeds are also some of the fastest at this point, which is why
+    HDDs have moved away from the traditional mechanical disk mechanism to a solid-state
+    one. SSDs will be discussed later in this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: With flash storage media capacities ranging from 2 GB to 1 **terabyte** (**TB**)
+    and more particularly on SD, microSD, and flash drives, these can now act as very
+    fast removable drives with OSs installed on them and can even be partitioned using
+    various tools. So yes, indeed, Kali Linux most certainly can be installed onto
+    a flash drive, SD, or microSD card (and be made bootable) with as little as 8
+    GB of storage space.
+  prefs: []
+  type: TYPE_NORMAL
+- en: USB ﬂash drives
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The **Universal Serial Bus** (**USB**) port or interface, released in 1995,
+    has become the standard for all devices, replacing older devices that would have
+    connected to specific parallel ports on a computer. It’s quite common to see almost
+    any device or peripherals connected to a computer via a USB connection, including
+    mice, keyboards, flash drives, printers, scanners, cameras, mobile devices, and
+    just about every other device.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This table shows the evolution of the USB port:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **USB version** | **Released year** | **Data** **transfer speed** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| USB 1.0 and 1.1 | 1995 | 12 Mbps |'
+  prefs: []
+  type: TYPE_TB
+- en: '| USB 2.0 | 2000 | 480 Mbps |'
+  prefs: []
+  type: TYPE_TB
+- en: '| USB 3.0 | 2008 | 5 Gbps |'
+  prefs: []
+  type: TYPE_TB
+- en: '| USB 3.1 | 2013 | 10 Gbps |'
+  prefs: []
+  type: TYPE_TB
+- en: USB flash drives come in all shapes and sizes today, from the standard rectangular
+    shape to every shape imaginable. USB flash drives use NAND EEPROM chips to store
+    their data, and today are available in various versions that define the read/write
+    speeds of the flash drive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following picture shows various flash drives ranging from oldest to newest,
+    left to right. The first three drives are all USB 2.1; however, the first two
+    are 8 GB flash drives, and the third, which is significantly smaller, is a 32
+    GB flash drive. The fourth drive (Corsair) is a 64 GB USB 3.1 drive:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.2 – Flash drive sizes](image/Figure_6.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.2 – Flash drive sizes
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important note
+  prefs: []
+  type: TYPE_NORMAL
+- en: I should give special mention to the elephant in the room here, the novelty
+    flash drive, which can easily pass as a keychain or toy, and may actually pose
+    a threat to organizations that do not allow employees to bring to work or leave
+    with flash drives due to the sensitive nature of the data within the organization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Flash memory cards
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Like flash drives, flash memory cards (or memory cards, as they are fondly referred
+    to) also use NAND flash memory, which, as we previously learned, is non-volatile,
+    solid-state memory. However, unlike USB flash drives, these cards do not come
+    with a USB interface and must be used with either an adapter or a memory card
+    reader.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Over the years and decades even, we’ve had several formats of memory cards grace
+    our desktops, laptops, mobiles, and other devices, including cameras, MP3 players,
+    and even toys. Although I’ll only cover some of the more popular cards of today,
+    it is important that you are at least familiar with memory cards and are also
+    able to identify them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following are flash memory card types:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Memory Stick PRO Duo** (**MSPD**) (a proprietary card developed by Sony)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SD
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: MicroSD
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Compact** **Flash** (**CF**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**MultiMedia** **Card** (**MMC**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**xD-Picture** (**xD**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Smart** **Media** (**SM**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Of the aforementioned types, I’ve opted to show three from my collection in
+    the following photo. The card at the top is a Samsung SD card. SD cards typically
+    have a sliding lock to the side, used to prevent data from being overwritten.
+    To the middle and bottom, I have two Sony Memory Stick PRO Duo cards, which may
+    be rare at this point in time but are fully functional:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.3 – SD card and PRO Duo card comparison](image/Figure_6.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.3 – SD card and PRO Duo card comparison
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’d like to do a brief comparison of the PRO Duo cards, the SD card, and the
+    microSD card shown in *Figure 6**.4*. Developed at least a decade apart, the older
+    PRO Duo cards are larger, with a capacity of 2 GB and 4 GB, respectively. Although
+    not seen on the SD card in *Figure 6**.3*, its capacity is 1 GB, again showing
+    that with the evolution of technology, smaller chips are able to hold far more
+    data than their predecessors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To drive this point home, let’s look at the photo in *Figure 6**.4* (although
+    a bit blurry due to the zoom from my camera) to get a close-up of the two microSD
+    cards. The microSD card to the left has a capacity of 64 GB and is specified as
+    a Class 10 U1 card. The Samsung microSD card to the right is a whopping 512 GB,
+    Class 10, U3 card, which is as small as a fingernail! Still, microSD cards are
+    being developed with even larger capacities of 1 TB and larger:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.4 – MicroSD card comparison](image/Figure_6.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.4 – MicroSD card comparison
+  prefs: []
+  type: TYPE_NORMAL
+- en: The various classes of microSD cards identify their read/write speeds and suggested
+    uses. I do suggest getting a Class 10 microSD card if purchasing one, as the C10
+    is much faster than the other classes (2, 4, and 6) and supports constant HD and
+    even 4K video recording.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s have a look at the four Class speed ratings:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Class (C)** | **Minimum Write** **Speed (MBps)** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C2 | 2 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C4 | 4 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C6 | 6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| C10 | 10 |'
+  prefs: []
+  type: TYPE_TB
+- en: There is also an **Ultra-High Speed** (**UHS**) class, recognizable by the U
+    symbol on microSD cards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **UHS (****U) Class** | **Minimum Write** **Speed (MBps)** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| U1 | 10 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| U3 | 30 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'To cater to large files, especially for 4K and 8K video footage, there is also
+    a Video Speed Class rating:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Video** **Speed Class** | **Minimum Write** **Speed (MBps)** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| V6 | 6 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| V10 | 10 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| V30 | 30 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| V60 | 60 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| V90 | 90 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'As mentioned previously, flash memory cards require card readers, which connect
+    to laptops, desktops, and other media players using USB ports. The photo in *Figure
+    6**.5* shows one of my many card readers, which supports CF, Memory Stick PRO
+    Duo, SD, and even the SM cards, and the newer card reader in *Figure 6**.6* is
+    an SD and microSD card reader with a USB and Type-C slot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.5 – SD card, CF, and PRO Duo card reader](image/Figure_6.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.5 – SD card, CF, and PRO Duo card reader
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.6 – USB 3.0 and Type C SD card and microSD card reader](image/Figure_6.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.6 – USB 3.0 and Type C SD card and microSD card reader
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hard disk drives
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Now that we’ve had a good look at non-volatile storage, including tape storage
+    and flash storage, let’s go a bit deeper into the world of HDDs, which serve as
+    fixed storage media. I’ll try to keep things simple and short by focusing mainly
+    on the knowledge necessary for forensics investigators.
+  prefs: []
+  type: TYPE_NORMAL
+- en: HDD technology has certainly come a long way from the monstrous storage devices
+    first seen in IBM mainframes and is now more compact, faster, and more affordable,
+    with capacities in the terabytes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although the newer solid-state drives use the same type of memory found in flash
+    memory devices, they are still a bit costly when compared to mechanical drives.
+    This perhaps may be one of the contributing factors when wondering why older mechanical
+    drive technology is still being used. Mechanical drives consist of moving parts,
+    including platters, an actuator arm, and a very powerful magnet. Although it is
+    very common to still find these mechanical HDDs in today’s laptops and hard drives,
+    they are much slower than the newer solid-state drives, which have no moving parts
+    and look very similar to the chipset of a USB flash drive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In your forensics investigations and adventures, you may come across or be presented
+    with older HDDs that can have different interfaces and use different cable technologies
+    to connect to motherboards. Let’s have a look, shall we?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Integrated Drive Electronics HDDs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Many of the first PCs in the mid-1980s were outfitted with hard drives that
+    used **Parallel Advanced Technology Attachment** (**PATA**) and **Integrated Drive
+    Electronics** (**IDE**) technology. As with all older devices back then, parallel
+    transmission (sending multiple bits simultaneously but slowly) was the order of
+    the day, allowing for very limited throughput. An easy way to identify older IDE
+    drives is to simply have a look at the interface where the data and power cables
+    connect to the drive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'These older drives, as seen in the following photo, have four pins for power,
+    which connect to a Molex connector, separated by eight pins used to set the device
+    as a master or slave device, and then 40 pins for the IDE data cable, which transmits
+    the data to the motherboard:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.7 – 3.5-inch IDE hard drive](image/Figure_6.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.7 – 3.5-inch IDE hard drive
+  prefs: []
+  type: TYPE_NORMAL
+- en: In 1994, advancements in technology led to the release of **Enhanced Integrated
+    Drive Electronics** (**EIDE**), which saw an increase in the number of pins for
+    the data cable from 40 to 80, also increasing the transmission speeds from 4 Mbps
+    to a possible 133 Mbps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: IDE/EIDE was still, however, limited to a maximum of four IDE/EIDE drives per
+    computer, as the jumper pins on the drive only allowed for two primary and two
+    secondary drives, set in a master and slave configuration. Consideration also
+    had to be given to the fact that CD-ROM and RW devices and DVD-ROM and RW devices
+    were also using IDE/EIDE technology at that time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Serial Advanced Technology Attachment HDDs
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In 2002, Seagate released an HDD technology called **Serial Advanced Technology
+    Attachment** (**SATA**), which used serial transmission instead of a slower parallel
+    transmission. Whereas PATA drives speeds of 33/66/133 Mbps, SATA drives boasted
+    speeds of 150/300/600 Mbps. This meant that the lowest SATA transmission speed
+    of 150 Mbps was faster than the highest PATA speed of 133 Mbps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The connector interfaces of the SATA drives were also different, but it was
+    common at the time to see SATA drives with connectors for both SATA and PATA power
+    cables for backward compatibility.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SATA data cables are much thinner than PATA cables, as they only contain seven
+    wires connecting to seven pins. SATA devices use one cable per drive, unlike PATA
+    devices, which connect two drives on one IDE/EIDE cable connected in a master/slave
+    configuration.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'SATA continues to be standard today for drive technology for both desktops
+    and laptops and has had several revisions, as listed here. Speeds listed are in
+    MBps and not Mbps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**SATA 1**: 150 MBps'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SATA 2**: 300 MBps'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SATA 3**: 600 MBps'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following photo shows two 2.5-inch laptop drives. The drive to the left
+    is a much older IDE drive, and the one to the right is a modern SATA drive:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.8 – 2.5-inch IDE (left) and SATA](image/Figure_6.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.8 – 2.5-inch IDE (left) and SATA
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following photo shows two SATA laptop 2.5-inch drives. The one to the left
+    is damaged and has been opened for us to see the circular platter in the middle
+    with the actuator arm at the top, slightly positioned over the platter. At the
+    end of the actuator arm is a read/write head, which reads and writes data to the
+    platter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The drive to the right in the photo is a hybrid drive or a **Solid-State Hybrid
+    Drive** (**SSHD**). This is a mechanical drive like the one to the left, but it
+    also has flash memory in it to allow for faster access to the data on the platters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.9 – Platters and actuator arm, which are housed in mechanical hard
+    drives](image/Figure_6.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.9 – Platters and actuator arm, which are housed in mechanical hard
+    drives
+  prefs: []
+  type: TYPE_NORMAL
+- en: Solid-state drives
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As briefly mentioned, SSDs are non-volatile storage media and use NAND flash
+    memory in an array to hold data. SSDs have been around for quite some time; however,
+    mainstream use has been greatly hampered by the high cost of the drive. Samsung
+    first released a 32 GB SSD with a PATA interface in 1996, followed by SanDisk’s
+    32 GB SSD, but with a SATA interface.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although SSD drives use flash memory, the materials used are more high-end than
+    that found in flash drives, which makes them highly preferable for use as a hard
+    drive, but again, this contributes to the very high cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Some advantages come from the fact that there are no moving parts in an SSD.
+    No moving parts make the SSD more durable in the event of a fall or swift foot
+    to the PC tower, as there are no platters or actuator arms to be scratched or
+    struck. Also, the faster read/write speeds and access times greatly reduce the
+    time taken for the device to boot or start and even give an enhanced experience
+    when using resource-intensive software and games.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As far as digital forensics go, SSDs are still a relatively new technology that
+    will be constantly improved upon for some time to come. It’s important to remember
+    that you are not dealing with a mechanical drive and to remember that data on
+    an SSD, much like a flash drive or memory card, can be lost or wiped within minutes
+    or even seconds. Although traditional tools can be used to image and recover data
+    from SSDs, I strongly suggest researching any SSD drive before performing any
+    forensic activities to get a better understanding of its workings and complexities,
+    such as de-chipping and wear-leveling algorithms. De-chipping is a method of reading
+    data from memory chips and wear-leveling involves techniques used to preserve
+    or extend the lifespan of an SSD.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s a photo of a 250 GB SSD:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![ Figure 6.10 – SSD](image/Figure_6.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.10 – SSD
+  prefs: []
+  type: TYPE_NORMAL
+- en: Take note of the pin layout interface for the SSD connector (left side), which
+    connects to a **Peripheral Component Interconnect Express** (**PCIe**) interface
+    on the board instead of the usual SATA connectors. This connector in the previous
+    photo is an M.2 **Non-Volatile Memory express** (**NVMe**) SSD connector type,
+    but there are other types as well. When performing forensic acquisitions on SSDs
+    that may require the use of a USB adapter, be sure to know which connector you
+    are working with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Types of SSD interface types include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: M.2 NVMe (up to 32 Gb/s bandwidth)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: M.2 SATA (up to 6 Gb/s bandwidth)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: mSATA (up to 6 Gb/s bandwidth)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We’re now up to speed on different types of HDDs and their differences. Let’s
+    move on to file systems and OSs that can be installed on the drive types we’ve
+    just read about.
+  prefs: []
+  type: TYPE_NORMAL
+- en: File systems and operating systems
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we’ve covered the physical aspects of drives, let’s get logical! Any
+    and every type of storage media needs to be formatted with a particular file system.
+    The file system chosen will also determine which OS can be installed on the medium,
+    along with file and partition sizes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A simple way to think of this is to imagine a blank sheet of paper as any type
+    of new or wiped storage media. We can put several types of information on this
+    piece of paper, but we’ll first want to organize or prepare the sheet of paper
+    in a way that makes our data easy to understand, access, and even store. We can
+    choose to write on it, from left to right, in sentences and paragraphs in English,
+    or we can perhaps create tables using rows and columns. We can even use printed
+    slides to display our data or use images, graphs, and flowcharts. Additionally,
+    we can format your storage media to best suit the data that will be stored and
+    used.
+  prefs: []
+  type: TYPE_NORMAL
+- en: File systems ensure that the data is organized in such a way that it can be
+    easily recognized and indexed. Consider the storage space within a filing cabinet
+    with multiple compartments. Some may be used specifically for storing files in
+    alphabetical order, others in chronological order, and some compartments for stationery
+    supplies, miscellaneous, and even random items. Although all used for storing
+    different items, they can all be labeled and easily recognized and organized in
+    such a way that the contents of each compartment can be easily accessed or even
+    removed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To install any OS on a hard drive or removable storage media, the device must
+    first be formatted and prepared for the OS by choosing the appropriate file system.
+    Windows, macOS, Android, Kali, and so on, all have file systems that organize
+    the storage medium so that the OS can be successfully installed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Some of the more popular OSs and their file systems are included in the following
+    sections.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Microsoft Windows
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Here are some brief features of the Microsoft Windows OS:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'File system: **New Technology File** **System** (**NTFS**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Supported versions: Windows 11, 8, 7, Vista, XP, 2000, NT, and Windows Server
+    2022, 2019, 2016, 2012, and 2008'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum volume size: 8 **petabytes** (**PB**) on newer versions of Microsoft
+    Server (2019 and newer) and Windows 10 version 1709 and newer. Older versions
+    support up to 256 TB'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum supported file size: 256 TB (depending on cluster size)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'NTFS features: Compression, **Encrypted File System** (**EFS**), disk quotas'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Info
+  prefs: []
+  type: TYPE_NORMAL
+- en: Older versions of Microsoft Windows supported the **File Allocation Table**
+    (**FAT**) file system by default. Newer versions of Windows also support FAT and
+    FAT32, but with drive size limitations (8 TB) and file size limitations (4 GB).
+    **Extensible File Allocation Table** (**exFAT**) was created to remove the limitations
+    of FAT32 but may not be as widely supported as FAT32.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Macintosh (macOS)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Here are some brief features of the **Macintosh** **OS** (**macOS**):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'File system: **Hierarchical File** **System** (**HFS+**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Supported versions: macOS up until version 10'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum volume size: 2 TB'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum supported file size: 2 GB'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Apple has since advanced to a newer 64-bit files system called **Apple File
+    System** (**APFS**), which replaces HFS+ and is optimized specifically for SSDs
+    and iOS devices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are some brief features of the APFS:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Supported versions: macOS 10.13 (and newer) and iOS 10.3 and newer'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum supported file size: 8 **exbibytes** (**EiB**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Linux
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Here are some brief features of the Linux File System:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'File system: **Fourth Extended File System** (**ext4**). Several file systems
+    are available for Linux, but I recommend this one if you are uncertain as to which
+    should be used.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Supported versions: Red Hat, Kali, Ubuntu, and so on.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum volume size: 1 EiB.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maximum supported file size: 16 **tebibytes** (**TiB**).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Important note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Many open source OS distros are based on Linux, including Kali Linux and Android,
+    and so they use the ext2/ext3/ext4 filesystems. They are also able to use the
+    FAT32 filesystem. FAT32 can be used across any platform, including older versions
+    of Windows, Macintosh, and Linux, and is supported by almost any device with a
+    USB port.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the purpose of **Digital Forensics and Incident Response** (**DFIR**) it
+    is important to know about the file systems and their differences that we read
+    about. Once a file system is chosen (either by the drive manufacturer or user),
+    data can then be stored on the media. Let’s now look at different data types and
+    states in the next section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data types and states
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Firstly, there’s **data in transit**, also called **data in motion**. These
+    simply describe data on the move, perhaps traversing across the network between
+    devices or even between storage media, actively moving between locations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then there’s **data in use**. Data in this state is currently being accessed
+    by a user or processed by a CPU. When data is accessed or used, it’s pulled from
+    the hard drive and temporarily stored in RAM, which is much faster than the hard
+    drive (particularly mechanical drives), and stored there for as long as the user
+    accesses it and there is power to the device.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When data is not in motion, transit, or in use, it is described as **data at
+    rest**. In this state, the data rests or resides on non-volatile media, such as
+    hard drives, optical media, flash drives, and memory cards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we know about the formal terms for describing data states, we will
+    learn about metadata and slack space next.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Metadata
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Metadata is simply data about data. Take an item such as a laptop stored in
+    a warehouse, for example. Somewhere in the warehouse (and possibly in other locations
+    such as the cloud), there may be several pieces of information that can be referred
+    to as data about the laptop, or even laptop metadata, such as the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Location of the laptop within the warehouse
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Laptop brand and model
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Manufacture date
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Warranty dates and information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hardware and software specs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Color and size
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Slack space
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Clusters are the smallest amount of disk space or allocation units on storage
+    media that store data. When formatting drives, we need to define the size of these
+    allocation units, or we can use the default cluster size of 4 KB. This is where
+    slack space comes in.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Slack space is the empty and unused space within clusters that contain data
+    but are not filled with data. To fully understand this, we first need to understand
+    the default cluster sizes specified by OSs. A drive formatted using NTFS (for
+    Windows) has a default cluster size of 4 KB. Let’s say that you’ve saved a text
+    file to your disk with a file size of 3 KB. This means that you still have 1 KB
+    of unused or slack space within that cluster.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Slack space is of particular interest to a forensic investigator as data can
+    be easily hidden in slack space. Luckily, we have several tools available, such
+    as the Sleuth Kit and Autopsy, within Kali Linux to help investigate slack space
+    and find hidden files.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Be sure to familiarize yourself with the terms metadata and slack space, as
+    they will constantly be referred to throughout your investigations. Feel free
+    to also make notes on these and other terms as we progress throughout the chapter
+    for easy reference. Let’s now move on to get an understanding of the volatile
+    and non-volatile nature of different types of memory and also look at the order
+    of volatility in DFIR investigations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Volatile and non-volatile data and the order of volatility
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this section, we look at why data is lost when power to the volatile memory
+    is lost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data can exist if the media it is stored on can store the data. Hard drives
+    (mechanical and solid-state), flash drives, and memory cards are all **non-volatile
+    storage** media. Although SSDs offer and continue to make drastic improvements
+    in data access times, RAM (typically referred to only as memory) thus far remains
+    the faster type of memory inside devices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'RAM, however, is **volatile memory**. Unlike non-volatile memory found in hard
+    drives and flash drives, data stored in RAM is kept there temporarily, only for
+    as long as there is an electrical current being provided to the chips. There are
+    two types of RAM that we need to be aware of: **Static RAM** (**SRAM**) and **Dynamic**
+    **RAM** (**DRAM**).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: SRAM is superior to DRAM but is far costlier than DRAM because of the extensive
+    materials used in building the chips. SRAM is also physically much larger than
+    DRAM. SRAM can be found in the CPU cache (L1 or Level 1) and on some chips on
+    the motherboard (L2/L3), although in very small sizes (KB) due to the cost and
+    physical size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although DRAM is slower, it is much cheaper and remains one of the reasons for
+    its use as the main memory in devices. What makes RAM volatile is its components,
+    such as transistors and capacitors. Some of you may already be familiar with this
+    topic from certification courses such as A+, but for the benefit of all of you,
+    allow me to go into a bit more detail.
+  prefs: []
+  type: TYPE_NORMAL
+- en: DRAM uses capacitors, which store electrical charges temporarily as part of
+    a refresh circuit. The chips need to be constantly refreshed to hold the data
+    while being accessed. However, between refreshes, a wait state is created, which
+    makes DRAM slower when compared to SRAM as it uses transistors instead of capacitors,
+    which do not have wait states.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Over the decades, there have been many types of DRAM or memory sticks in slightly
+    varying sizes and increased pins with which to contact the motherboard. Some of
+    the RAM types in order of age are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Extended Data Output RAM (EDO RAM)**: One of the earlier types of DRAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Synchronous Dynamic RAM (SDRAM)**: This was the first form of RAM to synchronize
+    itself with the CPU clock speed. It has a maximum transfer rate of 133 **megatransfers**
+    or **millions of transfers per second** (**MT/s**). It is labeled PC100, PC133,
+    and PC166.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DDR-SDRAM/DDR 1 (Double Data Rate - SDRAM)**: Effectively doubled the transfer
+    rate of SD RAM. Maximum transfer rate of 400 MT/s.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DDR2**: Maximum transfer rate of 800 MT/s.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DDR3**: Consumes up to a third less power than DDR2\. Maximum transfer rate
+    of 1600 MT/s.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DDR4**: Maximum transfer rate of 4400 MT/s (**DDR4-4400**).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'In today’s laptops and desktops, one might mainly come across DDR3 and DDR4,
+    but it may not be uncommon to run into a legacy machine with DDR2 or (miraculously)
+    DDR1\. The following photo shows different RAM **Dual Inline Memory Modules**
+    (**DIMM**) types from top to bottom, SDRAM (top), DDR1, DDR2, and lastly DDR3:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.11 – Types of RAM](image/Figure_6.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.11 – Types of RAM
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Laptops also use DDR RAM but are available in a more compact size called **Small
+    Outline DIMM** (**SODIMM**) modules.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve looked at the evolution of RAM and its various types of form
+    factors, let’s look at the importance of RAM and learn about the uses of the paging
+    file and RAM cache in the next section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The importance of RAM, the paging file, and cache in DFIR
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: OSs can use a portion of the hard disk as an extension of RAM. This is referred
+    to as virtual memory and is usually a good idea if a computer or laptop has limited
+    RAM. Although the hard drive is much slower than the RAM, the swap file or paging
+    file on the disk can store files and programs that are being accessed less, leaving
+    the RAM available to store data that is frequently accessed. This process involves
+    the OS swapping pages of data less frequently used and moving data to the dedicated
+    paging file area on the hard drive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In forensics investigations, the paging file is very important to us. Although
+    not as volatile as RAM itself due to being stored on the hard disk, it is a hidden
+    file in Windows called **pagefile.sys**, and should always be inspected using
+    tools of your choice, as this file may reveal passwords for encrypted areas, information
+    from sites visited, documents opened, logged-in users, printed items, and so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data on mechanical drives is stored in a fragmented manner; however, the advantage
+    of the paging or swap file is that the data can be stored in a contiguous manner,
+    one piece after the next, allowing for faster access times.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is recommended that the size of the paging file is set to 1.5 times the amount
+    of memory and be stored on a separate drive if possible, not just a separate partition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note on Pagefile.sys
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pagefile.sys** can be found in the **HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session
+    Manager\Memory Management** Windows registry path.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope the importance of the paging file and cache was well received, as acquiring
+    and analysis of the paging file in any DFIR investigation is crucial. Feel free
+    to review the chapter and make notes on all the terms covered before proceeding
+    to the next chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we took the time to cover some of the basics of non-volatile
+    storage media, which stores data even after there is no power supplied to the
+    medium. Non-volatile media includes different types of HDDs, such as mechanical
+    and solid-state PATA and SATA drives, flash drives, and memory cards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Newer storage media devices, including SSDs, use a special type of flash memory
+    called NAND flash to store data. This flash memory is far faster and more durable
+    than traditional mechanical drives, as the devices contain no moving parts; however,
+    they are still quite costly for now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We also looked at various file systems associated with various OSs and saw that
+    the smallest allocation of data is called a cluster, which can reside in slack
+    space. Slack space is unused space within a cluster in which data can be hidden.
+    Data itself has different states and can be at rest, in motion, or in use. Regardless
+    of the state of the data, there always resides some information about the data
+    itself, called metadata.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Any data accessed by the user or OS is temporarily stored in volatile memory
+    or RAM. Although data can be stored for lengthy periods on non-volatile memory,
+    it is lost when electrical charges to volatile memory (RAM) are also lost. An
+    area of the hard disk called the paging file can act as virtual RAM, allowing
+    the computer to think it has more RAM than actually installed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I do encourage you to do more research and expand your knowledge on these topics,
+    allowing you to gain more understanding of what was covered.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s now move on to the next chapter, where we’ll learn about investigative
+    procedures and best practices for incident response, such as acquiring volatile
+    data and procedures for working with and analyzing live machines.
+  prefs: []
+  type: TYPE_NORMAL

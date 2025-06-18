@@ -1,0 +1,1658 @@
+- en: 2 Building a Penetration Testing Lab
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Join our book community on Discord
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[https://packt.link/SecNet](https://packt.link/SecNet)![Qr code Description
+    automatically generated](../media/file6.png)As an aspiring ethical hacker and
+    penetration tester, it’s important it is quite important when testing exploits,
+    payloads, or practicing your hacking skills that you do not disrupt or cause any
+    sort of harm or damage to another person''s systems or network infrastructure,
+    such as that of your organization. While there are many online tutorials, videos,
+    and training materials you can read and view to gain knowledge, working in the
+    field of penetration testing means to continuously enhancing your offensive security
+    skills. Many people can speak about hacking and explain the methodology quite
+    clearly but don''t know how to perform an attack. When learning about penetration
+    testing, it''s very important to understand the theory and how to use your skills
+    to apply them to a simulating real-world cyber-attack.During this chapter, you
+    will learn how to design and build a virtualized penetration testing lab environment
+    on your personal computer and leverage virtualization technologies to reduce the
+    cost and need of acquiring multiple physical systems and devices. In addition,
+    you’ll learn how to setup virtually isolated networks to ensure you do not accidentally
+    target systems you do not own. Furthermore, you will setup Kali Linux as the attacker
+    machine and vulnerable systems as your targets. It’s important to always remember,
+    when practicing offensive security skills such as ethical hacking and penetration
+    testing, it should always be performed on systems and networks you own, as these
+    security testing are usually intrusive and has the potential to cause damages
+    to systems. To put simply, hacking systems you do not own is illegal.In this chapter,
+    we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding the lab overview and technologies
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Setting up a hypervisor and virtual networks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Setting up and working with Kali Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Setting up vulnerable web application
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Deploying Metasploitable 2 as a vulnerable machine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Building and deploying Metasploitable 3
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s dive in!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To follow along with the exercises in this chapter, please ensure that you
+    have met the following hardware and software requirements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Oracle VM VirtualBox - [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Oracle VM VirtualBox Extension Pack - [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Kali Linux - [https://www.kali.org/get-kali/](https://www.kali.org/get-kali/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Vagrant - [https://www.vagrantup.com/](https://www.vagrantup.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OWASP Juice Shop - [https://owasp.org/www-project-juice-shop/](https://owasp.org/www-project-juice-shop/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Metasploitable 2 - [https://sourceforge.net/projects/metasploitable/files/Metasploitable2/](https://sourceforge.net/projects/metasploitable/files/Metasploitable2/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Metasploitable 3 - [https://app.vagrantup.com/rapid7](https://app.vagrantup.com/rapid7)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding the lab overview and technologies
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Building a penetration testing lab enables you create an environment that’s
+    safe for you to practice and enhance your offensive security skills, scale the
+    environment to add new vulnerable systems and remove older legacy systems that
+    you may no longer needed, and even create additional virtual networks to pivot
+    you attacks from one network to another.The concept of creating your very own
+    virtualized penetration testing lab allows you to maximize the computing resources
+    on your existing computer, without the need to purchase online lab time from various
+    service providers or even buy additional computers and devices. Overall, you''ll
+    be saving a lot of money as opposed to buying physical computers and networking
+    equipment such as routers and switches.As a cybersecurity lecturer and professional,
+    I have noticed that many people who are starting their journeys in the field of
+    information technology (IT) usually think that a physical lab infrastructure is
+    needed based on their field of study. To some extent, this is true, but as technology
+    advances, many downsides are associated with building a physical lab to practice
+    your skills. The following are some of the disadvantages of a physical lab:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Physical space is required to store the servers and networking appliances that
+    are needed.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The power consumption per device will result in an overall high rate of financial
+    expenditure.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The cost of building/purchasing each physical device is high, whether it's a
+    network appliance or a server.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'These are just some of the concerns many students and aspiring IT professionals
+    have. In many cases, a beginner usually has a single computer such as a desktop
+    or a laptop computer. Being able to use the virtualization technologies that have
+    emerged as a response to these downsides has opened a multitude of doors in the
+    field of IT. This has enabled many people and organizations to optimize and manage
+    their hardware resources more efficiently.In the world of virtualization, a hypervisor
+    is a special application that allows a user to virtualize operating systems that
+    utilizes the hardware resources on their system so that these hardware resources
+    can be shared with another virtualized operating system or an application. This
+    allows you to install more than one operating system on top of your existing computer’s
+    operating system. Imagine that you are running Microsoft Windows 11 as your main
+    operating system, this is commonly referred to as the *host operating system*,
+    but you wish to run a Linux-based operating system at the same time on the same
+    computer. You can achieve this by using a hypervisor. Hence, we are going to use
+    virtualization to ensure we can build a cost-effective penetration testing lab
+    environment.When designing a penetration testing lab environment, we’ll need the
+    following components:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Hypervisor** – The hypervisor is an application which enables us to virtualize
+    operating systems and allow them to run on any hardware. We can use a hypervisor
+    to create multiple virtual machines which can running simultaneously on our computer.
+    There are many hypervisor applications, we’ll be using **Oracle VM VirtualBox**
+    as our preferred application because it’s free and easy to use.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Attacker machine** – The attacker machine will be used to create and launch
+    various types of cyber-attacks and threats to identify and exploit security vulnerabilities
+    on targeted systems. For the attacker machine, we’ll be using Kali Linux.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Vulnerable machines** – Without any vulnerable systems, our lab environment
+    will not be complete. We’ll setup vulnerable systems such as Metasploitable 2
+    which is a Linux-based operating system with hosted web applications, and Metasploitable
+    3 with its Windows- and Linux-based server versions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Vulnerable web application** – This will help you better understand how threat
+    actors are able to discover and exploit security weaknesses within web applications.
+    We’ll setup the **Open Web Application Security Project** (**OWASP**) **Juice
+    Shop** web application on Kali Linux.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Internet access** – Internet connectivity will be setup on the Kali Linux
+    virtual machine. This will be a convenience for easily downloading additional
+    applications, tools and software packages.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following diagram shows the network topology for our virtualize penetration
+    testing lab environment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As shown in the preceding diagram, there are 4 network zones, these are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The internet for accessing online resources and is directly connected to the
+    Kali Linux virtual machine.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**PentestNet** environment which contains 2 vulnerable machines that’s on the
+    `172.30.1.0/24` network and it’s also directly connected to Kali Linux.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**RedTeamLab** environment that contains an **Active Directory** (**AD**) infrastructure
+    with a Windows Server and 2 clients that’s on the `192.168.42.0/24` network, and
+    it’s directly connected to Kali Linux.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**HiddenNet** environment which contains a single vulnerable host that’s on
+    the `10.11.12.0/24` network and it’s reachable via the *PentestNet* network only.
+    Therefore, we’ll need to compromise a host on the *PentestNet* environment and
+    determine whether there’s a way to pivot our attacks.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following diagram provides more technical details to gain a better understanding
+    on where specific IP networks are assigned on our lab environment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding diagram, the Kali Linux virtual machine will be assigned
+    3 network adapters, these are commonly referred to as **virtual Network Interface
+    Cards** (**vNICs**) on hypervisors. These vNICs enables us to access the internet
+    using a bridged connection, the *PentestNet* environment on `172.30.1.0/24` and
+    the *RedTeamLab* environment on `192.168.42.0/24`. This lab design is perfect
+    for learning how to perform *lateral movement* between systems, pivoting from
+    one network to another, and compromising an AD environment.Now that you have an
+    idea of the virtual lab environment, as well as the systems and technologies which
+    we are going to be working with throughout this book, let’s get started with setting
+    up the hypervisor and virtual networks up next.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting up a hypervisor and virtual networks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'There are many hypervisors from various vendors in the information technology
+    industry, however, Oracle VM VirtualBox is a free and simple-to-use hypervisor
+    that has all the essential features as commercial (paid) products. In this section,
+    you will learn how to setup Oracle VM VirtualBox and create virtual networks on
+    your computer.Before getting started, the following are important factors and
+    requirements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ensure the computer’s processor supports virtualization features such as **VT-x**/**AMD-V**.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ensure the virtualization feature is enabled on your processor via the BIOS/UEFI.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you’re unsure how to access the BIOS/UEFI on your computer, please check
+    the manual of device or the vendor’s website on specific instructions.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Let’s get started!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 1 – Setting up the hypervisor
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'As previously mentioned, there are many hypervisors in the industry, and we’ll
+    be using Oracle VM VirtualBox throughout this book. However, if you wish to use
+    another hypervisor, ensure you configure it using the systems and network designs.To
+    get started with this exercise, please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Firstly, on your host computer, go to [https://www.virtualbox.org/wiki/Downloads](https://www.virtualbox.org/wiki/Downloads)
+    and choose the **Oracle VirtualBox Platform Package** that is suitable for your
+    host operating system as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file9.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, you’ll need to download the **Oracle VM VirtualBox Extension Pack** application.
+    This enables additional functionality on the **VirtualBox Manager** application,
+    such as creating the virtually isolated networks on the host computer. On the
+    same download page, scroll-down a bit to find the download link as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file10.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, install the **Oracle VirtualBox Platform Package** that was downloaded
+    during step 1\. During the installation, use the default configurations. Once
+    the application is installed on your host computer, the **VirtualBox Manager**
+    interface will appear as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file11.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, close the **Oracle VM VirtualBox Manager** application as it’s not needed
+    at this time.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, to install the **Oracle VM VirtualBox Extension Pack**, simply right-click
+    on the software package and choose **Open with** > **VirtualBox Manager** as shown
+    below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file12.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The **VirtualBox License** window will appear, ensure you read and click on
+    **I Agree** to accept the agreement to proceed with its installation as shown
+    below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file13.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once the installation is completed, you can close the **VirtualBox Manager**
+    application until it’s needed later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 2 – Creating virtually isolated networks
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'When creating a penetration testing lab environment, you must not accidentally
+    scan or unleash a malicious payload on systems and networks that you own, such
+    as those on the internet.To get started setting up the virtually isolated networks,
+    please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, on your Windows host computer, open the **Command Prompt**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, use the following commands to change the present working directory to
+    `C:\Program Files\Oracle\VirtualBox` :'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, using the **vboxmanage** application, create a virtual **Dynamic Host
+    Configuration Protocol** (**DHCP**) server for the virtual *PentestNet* network
+    using the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following snippet shows the preceding commands executed on the **Command
+    Prompt**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file14.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Upon executing the preceding commands, the **vboxmanage** application creates
+    a DHCP server that will automatically assign IP address within the range from
+    `172.30.1.1` – `172.30.1.254` to any systems that are connected to the *PentestNet*
+    network on the hypervisor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use the `vboxmanage list dhcpservers` command to view all DHCP servers
+    and their configurations that are enabled on your host computer via VirtualBox.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Next, use the following commands to create a new DHCP server for the *HiddenNet*
+    network:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following snippet shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file15.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: When the preceding commands are executed, it will create another virtual DHCP
+    server that will automatically assigned IP addresses within the range from `10.11.12.1`
+    – `10.11.12.20` to any virtual machines that are connected to the *HiddenNet*
+    network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, create another DHCP server and virtual network that will be assigned
+    to the *RedTeamLab* network by using the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following snippet shows the execution of the preceding commands to create
+    another virtual DHCP server:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file16.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Unlike the previous steps, the commands used to create the *RedTeamLab* network
+    was modified to specific a **Domain Name System** (**DNS**) server address to
+    virtual machines that are connecting to this virtual network. The DNS server address
+    will be useful when setting up the AD lab environment.At this point, both the
+    hypervisor and virtual networks are configured. Next, you will learn how to deploy
+    and setup Kali Linux as a virtual machine within our lab environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting up and working with Kali Linux
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Kali Linux is one of the most popular Linux distributions within the cybersecurity
+    industry as it contains over 300 pre-installed software packages that are designed
+    for mostly offensive security assessments. Ethical hackers and penetration testers
+    commonly used Kali Linux to perform reconnaissance, scanning, enumeration, exploitation
+    and even post-exploitation techniques on targeted systems and networks. While
+    many folks usually think Kali Linux is designed only for offensive security professionals
+    such as penetration testers, it’s commonly used by system administrators and even
+    network security professionals within the technology industry to test their security
+    controls and systems for security vulnerabilities.However, Kali Linux is built
+    on the Debian flavor of Linux and being a free operating system, it has gained
+    a lot of attention over the years by cybersecurity professionals in the industry.
+    Kali Linux has a lot of features and tools that make a penetration tester's or
+    security engineer's job a bit easier when they're working. There are many tools,
+    scripts, and frameworks for accomplishing various tasks, such as gathering information
+    on targets, performing network scanning, vulnerability discovery, and even exploitation,
+    to name just a few.In this section, you will learn how to set up Kali Linux as
+    a virtual machine, establish network connectivity to the internet and to our virtually
+    isolated networks, and learn the basics of Kali Linux.Let's get started!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 1 – Deploying Kali Linux as a virtual machine
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'There are many types of deployment models for Kali Linux, from performing a
+    bare-metal installation directly on hardware to installing it on Android devices.
+    To keep our lab setup process simple and easy to follow, you will learn how to
+    set up Kali Linux as a virtual machine within the Oracle VM VirtualBox application.
+    This method ensures you can be up and running very quickly. To get started with
+    this exercise, please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Firstly, go to the official Kali Linux website at [https://www.kali.org/get-kali/](https://www.kali.org/get-kali/)
+    and click on **Virtual Machines** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file17.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, click on **VirtualBox 64** to download the VirtualBox image of Kali Linux
+    2023.2 as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file18.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The download file a compressed folder with the .7z extension.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, to extract the contents from the compressed folder, you will to download
+    and install the **7-Zip** application from [https://www.7-zip.org/download.html](https://www.7-zip.org/download.html).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, open the **7-Zip File Manager** application, navigate to the directory
+    with the Kali Linux compressed folder, select the file and click on **Extract**
+    as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file19.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, the file extraction window will appear, click on **OK** to proceed as
+    shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file20.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The extraction process will begin and takes a few seconds or minutes to complete.
+    After the extraction is completed, you will see a new folder within the **7-Zip
+    File Manager** application. This means the contents was successfully extracted
+    and you can now close the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, open **Windows Explorer** and go to the directory that has the extracted
+    contents. There you will see 2 files, right-click on the **VirtualBox Machine
+    Definition** file and select **Open with** > **VirtualBox Manager** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file21.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The **Oracle VM VirtualBox Manager** application will automatically open, import
+    the Kali Linux virtual machine as shown below:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file22.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Before powering-on the Kali Linux virtual machine, there’s a few customization
+    that needs to be done on the virtual machine settings up next.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 2 – Customizing Kali Linux and its network adapters
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The following instructions will guide you to customizing the Kali Linux virtual
+    machine environment and ensure it’s aligned to our virtualize penetration testing
+    lab topology. In addition, you will learn how to attach each vNIC (network adapter)
+    to the internet, *PentestNet* and *RedTeamLab* virtual networks.To get started
+    customizing the Kali Linux virtual environment, please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Firstly, ensure the **Nested VT-x/AMD-V** virtualization feature is accessible
+    between the virtual machine and the processor on your computer, we will need to
+    execute the following commands within the Windows **Command Prompt**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Important Note
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The `VBoxManage.exe list vms` command enables us to view a list of all the virtual
+    machines, their names and IDs within Oracle VM VirtualBox Manager.
+  prefs:
+  - PREF_BQ
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Next, using the name of the newly imported Kali Linux virtual machine, use
+    the following commands to enable the **Nested VT-x/AMD-V** feature on the virtual
+    machine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Ensure you substitute the of your Kali Linux virtual machine (shown in *step
+    1*) with the name displayed within the quotation marks, as shown here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file23.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, on Oracle **VM VirtualBox Manager**, select the **Kali Linux virtual
+    machine** and click on **Settings** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file24.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To adjust the amount of memory (RAM) allocated to this virtual machine, go
+    to **System** > **Motherboard** > **Base Memory**, as shown here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file25.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: It’s recommended to never assign memory within the yellow and red zones of the
+    Base Memory scale. Kali Linux can run efficiently on 2 GB of memory; however,
+    if your system has more than 8GB available, then consider allocating 4 GB to the
+    Kali Linux virtual machine.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Additionally, within the **System** > **Processor** tab, you can modify the
+    number of virtual CPU cores that are allocated to this virtual machine. Using
+    between 1 – 2 cores is sufficient; however, you can assign more depending on the
+    available hardware resources on your computer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, let’s connect the **Kali Linux virtual machine** to your physical network
+    to access the internet. Within the **Settings** menu of Kali Linux, select the
+    **Network** category > **Adapter 1** and use the following configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enable the network adapter
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: **Bridged Adapter**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: Use the drop-down menu to select your physical network adapter that’s
+    connected to your physical network with internet access.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations applied to Adapter
+    1 (vNIC 1):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file26.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, let’s assign **Adapter 2** (vNIC 2) to the *PentestNet* network. Select
+    the **Adapter 2** tab and use the following configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enable the network adapter
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: **Internal Network**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: Manually enter `PentesNet` within the field'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promiscuous Mode: **Allow All**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations applied to Adapter
+    2 (vNIC 2):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file27.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Lastly, let’s assign **Adapter 3** (vNIC 3) to the *RedTeamLab* network. Select
+    the **Adapter 3** tab and use the following configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enable the network adapter
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: **Internal Network**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: Manually enter `RedTeamLab` within the field'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promiscuous Mode: **Allow All**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations applied to Adapter
+    3 (vNIC 3):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file28.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: After configuring the network settings on **Adapter 3**, click on **OK** to
+    save the settings of the Kali Linux virtual machine.At this point, we have configured
+    all 3 virtual network adapters on the Kali Linux virtual machine. One adapter
+    is provides connectivity to the internet via the physical adapter on your host
+    computer, and the other 2 virtual adapters are connected to the virtual networks
+    (*PentestNet* and *RedTeamLab*).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 3 – Getting started with Kali Linux
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Many first-time users are always excited to log-in to their first attacker
+    machine, especially a machine that’s designed to help ethical hackers and penetration
+    testers to discover and exploited security vulnerabilities on targeted systems
+    and networks. The following instructions will help you get started with Kali Linux:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, open **Oracle VM VirtualBox Manager**, select the **Kali Linux virtual
+    machine** and click on **Start** to power-on.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, a log-in prompt will appear, use the detail user credentials, username:
+    `kali` and password: `kali` to login to the desktop:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file29.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If your Kali Linux desktop view does not scale to match the resolution of your
+    monitor, simply toggle with the view option at the top of the **VirtualBox menu
+    bar** > **View** > **Auto-resize Guest Display**.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Once you’ve logged-in to the Kali Linux operating system, to view a list of
+    available tools, click on the Kali Linux icon on the top-left corner on the desktop,
+    as shown here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file30.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding screenshot, the pre-installed tools are all categorized
+    based on the sequential order of performing ethical hacking and penetration testing
+    exercises. For instance, all the tools that are commonly used for reconnaissance
+    can be easily found within the **01 – Information Gathering** category, while
+    wireless penetration testing tools are found within the **06 – Wireless Attacks**
+    category. Throughout this book, you will mostly be working with the Linux Terminal
+    and learning many commands along the way. Don’t worry if this is your first time
+    working Linux and commands, it will be new learning experience and fun working
+    with new technologies and developing your offensive security skills to simulate
+    real-world cyber-attacks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, to disable IPv6 on Kali Linux, click on the Kali Linux icon on the top-left
+    corner and select the **Settings Manager** icon, as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file31.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The **Settings** windows will appear, click on **Advanced Network Configuration**,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file32.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, the **Network Connections** window will appear, select **Wired connection
+    1** (vNIC 1) and click on the **gear** icon, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file33.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, the **Editing Wired connection 1** window appears, select the **IPv6
+    Settings** tab, and change **Method** to **Disabled**, and click on **Save**,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file34.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: You can close the **Network Connections** window and the **Settings** menu.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, let’s determine whether our Kali Linux virtual machine is receiving an
+    IP address on each of its network adapters that are connected to the internet,
+    *PentestNet* and *RedTeamLab* networks.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To open the **Linux Terminal**, click on the Kali Linux icon on the top-left
+    corner and select **Terminal Emulator**, then execute `ip address` command as
+    shown below:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file35.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As shown in the preceding screenshot, there are 4 network adapters on the Kali
+    Linux virtual machine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**lo** – This is the loopback network adapter which enables the operating system
+    to communication with self-hosted applications and vice-versa.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**eth0** – This network adapter is vNIC 1 based on our lab topology diagram
+    and its network adapter 1 on the virtual machine settings that’s connected to
+    the internet via the physical network. The **inet** address is the IP address
+    that’s allocated to the interface.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**eth1** – This is vNIC 2 according to the lab topology diagram and it is network
+    adapter 2 on the virtual machine setting that’s connected to the *PentestNet*
+    network (`172.30.1.0/24`) environment.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**eth3** – This is vNIC 3 according to the lab topology diagram and it is network
+    3 on the virtual machine settings that’s connected to the *RedTeamLab* network
+    (`192.168.42.0/24`) environment.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Next, let’s internet connectivity and determine whether DNS resolution is working
+    properly on our Kali Linux virtual machine. On the **Terminal**, use the following
+    commands to send 4 **Internet Control Message Protocol** (**ICMP**) messages to
+    `www.google.com`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the Kali Linux operating system was able to
+    resolve the hostname to an IP address and successfully reach Google’s web server
+    on the internet:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file36.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Lastly, to change the default password for the username: `kali`, use the `passwd`
+    command as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file37.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: While entering passwords on the Linux terminal, they are invisible for security
+    reasons.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Part 4 – Updating repository sources and packages
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'At times, a tool may not be working as expected, or even crash unexpectedly
+    on us during a penetration test or security audit. Developers often release updates
+    for their applications and software packages. These updates are intended to fix
+    bugs and add new features to the user experience. Let''s learn how to update sources
+    and packages by following these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To update the local package repository list on Kali Linux, use the `sudo apt
+    update` command as shown here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file38.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: By updating the package repository list on your Kali Linux machine, when you
+    use the `sudo apt install <package-name>` command to install a new software package,
+    Kali Linux will retrieve the latest version of the application and update from
+    the official sources.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The `source.list` file does not always update properly. To ensure you have
+    the right settings on your Kali Linux machine, please see the official documentation
+    on Kali Linux repositories at: [https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/](https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '(Optional) To upgrade all the existing software packages on your Kali Linux
+    machine to their latest versions, use the `sudo apt upgrade` command, as shown
+    here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file39.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If, during the upgrade process, you receive an error about Kali Linux being
+    unable to perform the upgrade, use the `sudo apt update --fix-missing` command
+    followed by `sudo apt upgrade` once more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, the PimpMyKali script from Dewalt enables us to both fix and install
+    very useful utilities and tools on our Kali Linux virtual machine. Please use
+    the following commands by Dewalt:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, the PimpMyKali command-line menu will appear with many options, enter
+    `N` since we are running this script on a new virtual machine, as shown here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file40.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: During the setup process, the script will ask whether you want to re-enable
+    to ability to login with the *root* account on Kali Linux, this is a personal
+    preference. I entered `N` (no) and hit enter to continue the process. Keep in
+    mind, this setup process a few minutes to complete.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lastly, after the setup process is completed, you will need to reboot the Kali
+    Linux virtual machine to ensure all the configurations takes effect. You will
+    find the power options at the top-right corner of the Kali Linux desktop interface.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To learn more about Dewalt’s PimpMyKali script, please see the official GitHub
+    repository at: [https://github.com/Dewalt-arch/pimpmykali](https://github.com/Dewalt-arch/pimpmykali).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Having completed this section, you have learned how to set up Kali Linux as
+    a virtual machine, enable internet and other network connections for the virtual
+    machine, and update the package repository source list. Next, you will learn how
+    to setup a vulnerable web application to explore web application penetration testing
+    in later sections of this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting up vulnerable web application
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Learning how to simulate real-world cyberattacks using Kali Linux would not
+    be complete without understanding how to discover and exploit vulnerabilities
+    within web applications. The **Open Web Application Security Project** (**OWASP**)
+    is an organization that focuses on improving security through software, including
+    web applications. OWASP is known for its OWASP Top 10 list of most critical security
+    risks within web applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At the time of writing this book, the latest version of OWASP Top 10 is 2021\.
+    More information can be found at: [https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'As an aspiring ethical hacker and penetration tester, it''s important to understand
+    how to identify and perform security testing on each category within the OWASP
+    Top 10 list. OWASP created a few projects that allow learners to safely use their
+    offensive security skills and techniques in a safe environment to discover web
+    application vulnerabilities and exploit them. In this section, we''ll be deploying
+    the OWASP Juice Shop vulnerable web application on Kali Linux.To get started with
+    setting up OWASP Juice Shop web application, please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, power-on your **Kali Linux virtual machine** and log-in.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, open the **Terminal** and use the following commands to update the package
+    repository list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, install the Docker repository source on Kali Linux with the following
+    commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the successful execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file41.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, download and setup the **GNU Privacy Guard** (**GPG**) keys for Docker
+    by using the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the successful execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file42.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To learn more on setting up Docker on Kali Linux, please see the official documentation
+    at: [https://www.kali.org/docs/containers/installing-docker-on-kali/](https://www.kali.org/docs/containers/installing-docker-on-kali/).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Next, update the package repository list again and install Docker by using
+    the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Use the `docker version` command to test whether Docker is installed correctly
+    on Kali Linux.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Next, use the installed Docker application to pull-down the **OWASP Juice Shop**
+    container from the online Docker Hub repository:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the download and setup process of the OWASP
+    Juice Shop docker container:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file43.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, use the following commands to run the OWASP Juice Shop Docker container
+    on port 3000:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following snippet shows the execution of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file44.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: To stop the Docker container from running, use the `CTRL + C` key combination.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Lastly, open the Firefox web browser on Kali Linux and go to `http://127.0.0.1:3000`
+    to access and interact with OWASP Juice Shop web application, as shown in the
+    following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file45.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To learn more about OWASP Juice Shop vulnerable web application, please see
+    the official documentation at: [https://owasp.org/www-project-juice-shop/](https://owasp.org/www-project-juice-shop/).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Having completed this exercise, you have learned how to set up Docker and OWASP
+    Juice Shop on Kali Linux. Next, you will learn how to set up Metasploitable 2,
+    a vulnerable Linux-based system in our lab environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Deploying Metasploitable 2 as a vulnerable machine
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'When building a penetration testing lab, it''s important to include vulnerable
+    systems that will act as our targets. These systems contain intentional vulnerable
+    services and applications enabling us to practice and build our skills to better
+    understand how to discover and exploit vulnerabilities. A very popular vulnerable
+    machine is known as Metasploitable 2\. This vulnerable machine contains a lot
+    of security vulnerabilities that can be exploited and is good for learning about
+    ethical hacking and penetration testing.To get started setting up Metasploitable
+    2 within our lab environment, please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 1 – Deploying Metasploitable 2
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to acquiring the Metasploitable 2 virtual
+    machine and deploying it within Oracle VM VirtualBox Manager:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, on your host computer, go to [https://sourceforge.net/projects/metasploitable/files/Metasploitable2/](https://sourceforge.net/projects/metasploitable/files/Metasploitable2/)
+    to download the **metasploitable-linux-2.0.0.zip** file onto your device.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once the ZIP file has been downloaded, extract (unzip) its contents. The extracted
+    files are the virtual hard disk and settings configuration files for the Metasploitable
+    2 virtual machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, let's create a virtual machine for Metasploitable 2, open **Oracle VM
+    VirtualBox Manager** and click on **New**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When the **Create Virtual Machine** window appears, click on **Expert Mode**
+    to change the configuration view.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, use the following configurations for the virtual machine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Name: Metasploitable 2'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Type: Linux'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Version: Other Linux (64-bit)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding settings on the **Create Virtual
+    Machine** window:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file46.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, expand the **Hard Disk** category on **Create Virtual Machine** window,
+    select **Use an Existing Virtual Hard Disk File** option, and then click on the
+    folder icon on the right-side as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file47.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, the **Hard Disk Selector** and click on **Add** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file48.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, a pop-up window will appear, use it navigate to the **Metasploitable
+    2** extracted folder and its contents, select the **Metasploitable** VMDK file
+    and click on **Open** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file49.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, you will automatically return to the **Hard Disk Selector** window where
+    the **Metasploitable** disk file will be available, select it and click on **Choose**
+    as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file50.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, you’ll automatically return to the **Create Virtual Machine** window
+    where you’ll see the **Metasploitable.vmdk** file is loaded as the existing virtual
+    disk file, click on **Finish** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file51.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: At this point, the Metasploitable 2 virtual machine is created and loaded within
+    the Oracle VM VirtualBox Manager. Next, we will connect the Metasploitable 2 virtual
+    machine to the *PentestNet* virtual network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 2 – Configuring network settings
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Since our penetration testing lab topology contains more than one virtual network,
+    the following steps will help ensure Kali Linux has end-to-end network connectivity
+    with the Metasploitable 2 virtual machine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To configure the networking settings, select the newly created **Metasploitable
+    2** virtual machine within **Oracle VM VirtualBox Manager** and click on **Settings**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, go to the **Network** section > select **Adapter 1** and use the following
+    configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enable the network adapter
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: Internal Network'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: PentestNet (manually type it in the field)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promiscuous Mode: Allow All'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations on **Adapter 1**,
+    click **OK** to save:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file52.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, power on the **Metasploitable 2** virtual machine and login using username:
+    `msfadmin` and password: `msfadmin`. Then use the `ip address` command to verify
+    the virtual machine is receiving an IP address on the `172.30.1.0/24` network,
+    as shown here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file53.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If your mouse cursor is stuck within a virtual machine, press the right CTRL
+    key to detach the cursor.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Lastly, use the `sudo halt` command to power-off the Metasploitable 2 virtual
+    machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Having completed this section, you have learnt how to setup Metasploitable 2
+    as a vulnerable machine within our penetration testing lab. Next, you will learn
+    how to build and deploy Metasploitable 3 using Vagrant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Building and deploying Metasploitable 3
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In this section, you will learn how to build and deploy Metasploitable 3, both
+    the Windows server and Linux server versions. The Windows server version will
+    be using a dual-homed network connection to both the *PentestNet* network (`172.30.1.0/24`)
+    and *HiddenNet* network (`10.11.12.0/24`). This setup will enable us to perform
+    pivoting and lateral movement between different networks. Lastly, the Linux server
+    version will be connected to the *HiddenNet* network (`10.11.12.0/24`) only.The
+    following diagram shows the logical connections between systems and networks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file54.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding diagram, to access the Metasploitable 3 – Linux server,
+    we will need to first compromise the Metasploitable 3 – Windows server via the
+    *PentestNet* network, then pivot our attacks to the *HiddenNet* network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 1 - Building the Windows Server version
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'To get started building and deploying Metasploitable 3 – Windows version, please
+    use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, you will need to download and install **Vagrant** on your host computer.
+    Vagrant enables users to both build and maintain virtual machines and applications.
+    On your host computer, go to [https://www.vagrantup.com/](https://www.vagrantup.com/)
+    and click on **Download** button on the web page.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, select and download **Vagrant AMD64 version 2.3.7** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file55.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: After downloading the Vagrant software package, double-click on the installer
+    package to start the installation process. After the installation is completed,
+    you’ll be prompted to reboot your host computer to ensure the changes are effective.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After your host computer reboots, open the Windows **Command Prompt** and use
+    the following commands to reload and install additional plugins for Vagrant:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshots the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file56.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, use the following commands to load the Metasploitable 3 – Windows server
+    version to your system using Vagrant:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, select option `1` to use **VirtualBox** as the preferred hypervisor as
+    shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file57.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Vagrant will begin to download the virtual machine files for the Metasploitable
+    – Windows version as shown here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file58.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, change the current working directory to `.vagrant.d\boxes`, rename the
+    `rapid7-VAGRANTSLASH-metasploitable3-win2k8` folder and initialize the build configurations
+    for the Metasploitable 3 – Windows virtual machine using the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the successful execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file59.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, use the following commands to start the build process of this virtual
+    machine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file60.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: This process usually take a few minutes to complete.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the `vagrant up` command give an error, execute it again.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'After the process is completed, open the **Oracle VM VirtualBox Manager**,
+    you will find a newly created virtual machine named **boxes_default_*** is running.
+    This is the Metasploitable 3 – Windows virtual machine, select it and click on
+    **Show**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file61.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the virtual machine is detached, on the virtual machine menu bar, click
+    on **Input** > **Keyboard** > **Insert** **Ctrl-Alt-Del**, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file62.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Select the **Administrator** account and use the default password: `vagrant`
+    to login, as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file63.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once you’re logged in, simply close all the windows that appear and do not activate
+    the operating system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on the **Start** icon on the bottom-left corner and select the **Shutdown**
+    button to shutdown/turn-off the operating system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, on the **Oracle VM VirtualBox Manager**, select the **Metasploitable
+    3 – Windows** virtual machine and click on **Settings**. Then, select the **Network**
+    category and use the following configurations for **Adapter 1**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enable the network adapter
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: Internal Network'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: PentestNet (manually type it in the field)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promiscuous Mode: Allow All'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations on **Adapter 1**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file64.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, select **Adapter 2** and use the following configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enable the network adapter
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: Internal Network'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: HiddenNet (manually type it in the field)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promiscuous Mode: Allow All'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations on **Adapter 2**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file65.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: To rename your virtual machine, **Settings** > **General** > **Basic** > **Name**
+    option.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Lastly, ensure Kali Linux has end-to-end connectivity with the Metasploitable
+    3 – Windows virtual machine on the network.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, you will deploy Metasploitable 3 – Linux virtual machine within the HiddenNet
+    network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 2 - Building the Linux server version
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'To start setting up the Linux version of Metasploitable 3 within our lab environment,
+    please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On the Windows **Command Prompt**, use the following commands to load the Linux
+    version of Metasploitable 3 on your host device using Vagrant:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, choose option **1** and hit Enter to download the virtual machine files
+    for Metasploitable 3 – Linux version as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file66.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, delete the **Vagrantfile** file, rename the **rapid7-VAGRANTSLASH-metasploitable3-ub1404**
+    folder and initialize the build configurations for the Metasploitable 3 – Linux
+    virtual machine using the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file67.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: You may need to open **Oracle VM Virtual Manager** before proceeding to the
+    next step.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Next, open **Windows Explorer** and go to `C:\Users\<userrname>\.vagrant.d\boxes\metasploitable3-ub1404\0.1.12-weekly\virtualbox`
+    where you will find the complied virtual machine files. Right-click on the **box**
+    file > **Open with** > **VirtualBox Manager** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file68.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, the **Import Virtual Appliance** window will appear, click on **Finish**
+    as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file69.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, the **metasploitable3-ub1404** virtual machine will be imported on **Oracle
+    VM VirtualBox Manager**. Select it and click on **Settings** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file70.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, select **Adapter 1** and use the following configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enable the network adapter
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: Internal Network'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: HiddenNet (manually type it in the field)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promiscuous Mode: Allow All'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations on **Adapter 1**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file71.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Lastly, power-on the **metasplotable3-ub1404** virtual machine, login using
+    username: vagrant and password: vagrant. Once you’re logded-in, use the ip address
+    command to verify the virtual machine is receiving an IP address on the `10.11.12.0/24`
+    network as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file72.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Use the `sudo halt` command to power-off the this virtual machine.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Having completed this section, you have learned how to set up both versions
+    of Metasploitable 3 within your lab environment. Metasploitable 3 contains newer
+    vulnerabilities than its predecessor and will be fun to exploit in later sections
+    of this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Having completed this chapter, you learned about the importance of building
+    your very own penetration testing lab on your computer. You learned how to use
+    hypervisors to virtualize the hardware resources on a system, which can then be
+    shared with multiple operating systems that are running at the same time on the
+    same system. In addition, you have gained the skills on setting up and deploying
+    Kali Linux, multiple vulnerable systems and web application within a virtualized
+    environment.I trust that the knowledge presented in this chapter has provided
+    you with valuable insights, supporting your path towards becoming an ethical hacker
+    and penetration tester in the dynamic field of cybersecurity. May this newfound
+    understanding empower you in your journey, allowing you to navigate the industry
+    with confidence and make a significant impact. In the next chapter, *Setting up
+    for advanced hacking techniques*, you will setup an Active Directory lab environment
+    for performing red teaming techniques in later chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further Reading
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: OWASP Top 10 - [https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Kali Linux Blog - [https://www.kali.org/blog/](https://www.kali.org/blog/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

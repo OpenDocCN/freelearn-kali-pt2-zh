@@ -1,0 +1,968 @@
+- en: '16'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Network Forensic Analysis Tools
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Here we are. Our final chapter. I believe in the concept of finishing strong,
+    so let’s keep pace by continuing our DFIR journey with some **Network Forensic
+    Analysis Tools** (**NFAT**), which I think you’ll find quite useful.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ve done quite a bit of acquisition and analysis thus far including hard drive,
+    storage, RAM and swap file analysis, malware analysis, and even a bit of network
+    packet analysis for the purpose of acquiring, documenting, and analyzing evidence
+    in the hope of finding or recovering artifacts. But let’s go a step further into
+    analyzing packets, protocols, and network communication, as they may also be useful
+    artifacts that can aid us in our DFIR investigations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On recognizing that some incidents and crimes occur online over the internet
+    or even the **Local Area Network** (**LAN**), capturing and analyzing network
+    traffic should be an essential part of our investigative process in discovering
+    artifacts that may help us better understand the incident, point to sources of
+    origin, and even in some cases, assist in extending the scope of the investigation
+    if it is suspected that the incident may not be an isolated one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we’ll cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating **packet capture** (**PCAP**) files using Wireshark
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Packet analysis using NetworkMiner
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Packet analysis using PcapXray
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Online PCAP analysis using [packettotal.com](http://packettotal.com)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Online PCAP analysis using [apackets.com](http://apackets.com)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Reporting and presentation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Capturing packets using Wireshark
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Wireshark** is a very popular and well-known tool used for network and packet
+    analysis and troubleshooting. It comes pre-installed in Kali and is relatively
+    straightforward to use once you have an idea of filters, protocols, and color
+    codes.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you’re new to the Wireshark protocol analyzer and packet analysis, you can
+    find some great tutorials online, including the official documentation at [https://www.wireshark.org/docs/wsug_html_chunked/ChapterCapture.xhtml](https://www.wireshark.org/docs/wsug_html_chunked/ChapterCapture.xhtml).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'First, let’s see what our network interfaces are and then begin using Wireshark:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We’ll need to specify our interface when capturing packets after starting Wireshark.
+    To get information on your interfaces in Kali Linux, open a Terminal and type
+    **ifconfig**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.1 – ifconfig output](image/Figure_16.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.1 – ifconfig output
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding screen capture, the **ifconfig** command displays the output
+    for two interfaces. The interface I’ll be using is my Ethernet interface, listed
+    as **eth0**, and there is also the loopback interface listed as **lo**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Please note
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you’re using a wireless NIC to capture interfaces, it will be listed as **wlan0**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we know which of our interfaces we’ll be using to capture packets and
+    sniff the network with, we can start Wireshark by typing **sudo wireshark** in
+    the Terminal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You can also run Wireshark by clicking on **Applications** | **09-Sniffing
+    & Spoofing** | **Wireshark**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.2 – Finding Wireshark within the Sniffing & Spoofing menu](image/Figure_16.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.2 – Finding Wireshark within the Sniffing & Spoofing menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: After starting Wireshark, as mentioned previously, we’ll need to select an interface
+    to begin capturing packets on. In this instance, my **eth0** interface is highlighted,
+    but be sure to select the interface you will be working with to capture packets.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.3 – Wireshark interfaces](image/Figure_16.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.3 – Wireshark interfaces
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the interface is selected, we can begin the packet capture process by
+    either clicking on the *blue shark fin* icon or by clicking on **Capture** | **Start**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.4 – Starting the packet capture process in Wireshark](image/Figure_16.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.4 – Starting the packet capture process in Wireshark
+  prefs: []
+  type: TYPE_NORMAL
+- en: The packet capture process automatically begins after clicking on the **Start**
+    button to start capturing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.5 – Wireshark displaying traffic on eth0](image/Figure_16.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.5 – Wireshark displaying traffic on eth0
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding screenshot, we can see that Wireshark organizes the display
+    into three sections, with the main section at the top containing rows populated
+    with **Source**, **Destination**, **Protocol**, and other information, all color
+    coded.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To stop the capture, click on the *stop* button at the top (the red square
+    icon):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.6 – Wireshark stop capture button](image/Figure_16.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.6 – Wireshark stop capture button
+  prefs: []
+  type: TYPE_NORMAL
+- en: Be sure to save the packet capture file by clicking on **File** | **Save As**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.7 – Saving traffic within a pcapng file](image/Figure_16.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.7 – Saving traffic within a pcapng file
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can also use specific Wireshark filters to sort the data, thereby presenting
+    a logical and simpler view of the packets.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Wireshark filters
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can view a list of all Wireshark filters at [https://www.networkdatapedia.com/single-post/2019/01/29/Top-10-Wireshark-Filters](https://www.networkdatapedia.com/single-post/2019/01/29/Top-10-Wireshark-Filters).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To set a filter for packets with a particular source or destination IP address,
+    we use the **ip.addr==a.b.c.d** format, as shown in the following example:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following figure shows the output of the preceding **ip.addr** filter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.8 – The ip.addr Wireshark filter output](image/Figure_16.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.8 – The ip.addr Wireshark filter output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To set a filter for a specific TCP port, we can use the **tcp.port==** filter,
+    as shown in this example:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following figure shows the output of the preceding **tcp.port** filter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.9 – The tcp.port filter](image/Figure_16.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.9 – The tcp.port filter
+  prefs: []
+  type: TYPE_NORMAL
+- en: To set a filter that searches for a specific word, string, or even user, use
+    the **frame contains** filter. For example, I visited a website ([www.malware-traffic-analysis.net](http://www.malware-traffic-analysis.net))
+    that hosts sample PCAP files of malware infections and downloaded a sample PCAP
+    file. To search for the word *malware*, I’ll use the **frame contains** **malware**
+    filter.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The following figure shows the output of the **frame contains** **malware**
+    filter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.10 – The frame contains malware filter output](image/Figure_16.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.10 – The frame contains malware filter output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To set a filter for viewing a conversation between two IPs, we use the **ip.addr==a.b.c.d
+    && ip.addr==w.x.y.z** format, as shown in the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following figure shows the output of the preceding filter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.11 – Packet exchange between devices](image/Figure_16.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.11 – Packet exchange between devices
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can find more information on Wireshark filters here: [https://wiki.wireshark.org/DisplayFilters](https://wiki.wireshark.org/DisplayFilters).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Wireshark can definitely take some time to learn, but I assure you that
+    it is very useful not just for our DFIR purposes as an NFAT but also as a network
+    troubleshooting tool. Let’s move on to a similar tool that presents the findings
+    of packet analysis in a format that is much easier to read.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Packet analysis using NetworkMiner
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Analyzing captured data from Wireshark can be a bit of a challenge to people
+    who may be new to the protocol analyzer, as it requires knowledge of protocols,
+    filters, and the ability to follow data streams (all of which becomes easier with
+    practice).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**NetworkMiner** is an easy-to-use packet capture viewer that some users may
+    find easier to use for **.packet** capture (PCAP) analysis, as it extracts and
+    sorts the found data into categories of hosts (with operating system fingerprinting),
+    files, images, messages, sessions, and more by parsing the PCAP file.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: NetworkMiner comes in a free as well as a paid professional version, and can
+    be installed on Windows and Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will now download NetworkMiner, which will be installed using Wine, and
+    then analyze a sample PCAP file:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can visit the official website for NetworkMiner at this link: [https://www.netresec.com/?page=NetworkMiner](https://www.netresec.com/?page=NetworkMiner).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You can also download the installation file at [https://www.netresec.com/?download=NetworkMiner](https://www.netresec.com/?download=NetworkMiner).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the file has been downloaded, right-click on the file and select the **Extract
+    Here** option. This extracts the **NetworkMiner_2-7-3** folder. Open the folder
+    to view the extracted contents.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.12 – Extracted NetworkMiner files](image/Figure_16.12_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.12 – Extracted NetworkMiner files
+  prefs: []
+  type: TYPE_NORMAL
+- en: Running NetworkMiner is very simple, as we have already installed Wine. Simply
+    double-click on **NetworkMiner.exe** to open the program.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.13 – NetworkMiner interface within Wine in Kali Linux](image/Figure_16.13_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.13 – NetworkMiner interface within Wine in Kali Linux
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To view further documentation and videos, and get access to sample PCAP files,
+    visit this link: [https://www.netresec.com/?page=Resources](https://www.netresec.com/?page=Resources).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For this analysis, we’ll be using the PCAP from [https://wiki.wireshark.org/uploads/__moin_import__/attachments/SampleCaptures/http_with_jpegs.cap.gz](https://wiki.wireshark.org/uploads/__moin_import__/attachments/SampleCaptures/http_with_jpegs.cap.gz),
+    which you can download and save to your Kali machine. This file was previously
+    downloaded back in [*Chapter 15*](B19441_15.xhtml#_idTextAnchor251), *Packet Capture
+    Analysis with Xplico*, for use with Xplico, so you may already have it in your
+    **Downloads** folder.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I’ve decided to use this file so that we can view the differences in findings
+    between Xplico and NetworkMiner for comparison.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ve already downloaded and extracted the file to my **Downloads** folder. In
+    the NetworkMiner program, click on **File** and **Open** and browse to the **http_witp_jpegs.cap**
+    file in the **Downloads** folder (or wherever you may have downloaded the file
+    to). Click on the PCAP file and then click **Open**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.14 – Browsing to the sample file in Kali](image/Figure_16.14_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.14 – Browsing to the sample file in Kali
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After clicking on **Open**, NetworkMiner loads and analyzes the file and automatically
+    categorizes the findings for us, as seen here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.15 – Analyzed and categorized findings of the sample PCAP file](image/Figure_16.15_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.15 – Analyzed and categorized findings of the sample PCAP file
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At first glance, we are presented with information about devices in the **Hosts**
+    tab. The **.pcap** files contain several hits per category:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Hosts** – **4**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Files** – **11**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Images** – **5**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Messages** – **0**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Credentials** – **8**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Sessions** – **19**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DNS** – **0**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Parameters** – **257**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the **Hosts** tab, details for each host can be seen by clicking on the expand
+    (**+**) button next to the IP address. Let’s expand the second IP address (**10.1.1.1**)
+    to view the details. We can also expand the other items, such as **OS**, **Outgoing
+    sessions**, and **Host Details**, to see all the information that NetworkMiner
+    has automatically parsed for us.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.16 – Hosts tab findings](image/Figure_16.16_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.16 – Hosts tab findings
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding screenshot, we can see details such as MAC address, NIC manufacturer,
+    OS (Linux), open ports, outgoing sessions to servers, and even the host details,
+    which tells us that the system is an Apache web server on Red Hat Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s click on the **Files** tab next. We can see several entries and file types
+    (**html**, **xapc**, and **jpeg**).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.17 – Files tab list](image/Figure_16.17_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.17 – Files tab list
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can also open these links and view files. Right-click on the **index.xhtml**
+    file and select **Open**. This opens the **.xhtml** file in the browser. You can
+    also do this for other files, such as the **.****jpeg** files.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on the **Images** tab. In this scenario, NetworkMiner has found **5**
+    images with previews. You may also right-click on the image and choose **Open
+    Image** to view the image.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.18 – Images tab](image/Figure_16.18_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.18 – Images tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the **Messages** tab, there are three messages that show the source and destination
+    hosts, as well as the sender and recipient of the message/email if we scroll to
+    the right.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the **Credentials** tab, we find some very interesting artifacts. This tab
+    shows client and server IPs, OS type, protocol, and any associated usernames and
+    passwords that may have been used in that session, which are most likely unencrypted
+    plain-text passwords.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The **Sessions** tab shows the sessions between devices at the time of the packet
+    capture.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The **Keywords** tab/section allows the investigator to enter individual keywords
+    (string or hex format) or add keywords from a text file to search for, within
+    the list of results. If using keywords, you may have to start over by specifying
+    a keyword list or file and then re-opening the **.pcap** file in NetworkMiner.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As we can see, NetworkMiner is a powerful packet capture analyzer that makes
+    the analysis much easier for investigators and networking personnel by automatically
+    parsing and categorizing the information found in the **.****pcap** file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’m sure that many of you found NetworkMiner to be much simpler to use than
+    Wireshark when performing packet analysis, as the findings are displayed in a
+    simpler and easier-to-read format. Keep in mind that NetworkMiner has limitations
+    for its free version, which is why we need to know about multiple NFAT tools.
+    Let’s move on to another tool, called PcapXray.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Packet capture analysis with PcapXray
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Much like NetworkMiner, **PcapXray** is another powerful and comprehensive packet
+    capture analysis tool. Some of the main features of this tool are the identification
+    of malicious traffic, covert communication, web, and even Tor traffic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will now install and configure PcapXray within Kali Linux and then begin
+    analyzing a packet capture file:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s install PcapXray by cloning it from GitHub by typing the following command
+    in the Terminal:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: As usual, I’ve changed my directory to the desktop. When cloning PcapXray to
+    your desktop, this will take some time, as the file is 115 MB in size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.19 – Cloning PcapXray into Kali](image/Figure_16.19_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.19 – Cloning PcapXray into Kali
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, we need to install **graphviz** by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following figure shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.20 – Installing graphviz](image/Figure_16.20_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.20 – Installing graphviz
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Install **python3-pil.imagetk** by running the following command in the Terminal:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following figure shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.21 – Installing python3-pil.imagetk](image/Figure_16.21_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.21 – Installing python3-pil.imagetk
+  prefs: []
+  type: TYPE_NORMAL
+- en: We should now be able to see a PcapXray folder with the files required to start
+    the application. Use the **ls** command to list and show the folders, and then
+    change to the **PcapXray** folder using the **cd** **PcapXray** command.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.22 – Switching to the PcapXray directory](image/Figure_16.22_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.22 – Switching to the PcapXray directory
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The last step before we run PcapXray will be to install all requirements for
+    the application by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: This may take some time, as it will download **pyshark**, **stem**, **pyvis**,
+    and other required components.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.23 – Installing additional PcapXray requirements](image/Figure_16.23_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.23 – Installing additional PcapXray requirements
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'While still within the **PcapXray** directory, we can now start the PcapXray
+    GUI by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: '![Figure 16.24 – Starting PcapXray within the Terminal](image/Figure_16.24_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.24 – Starting PcapXray within the Terminal
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s first download a file to analyze from [https://www.malware-traffic-analysis.net/2019/07/19/index.xhtml](https://www.malware-traffic-analysis.net/2019/07/19/index.xhtml)
+    named **2019-07-19-traffic-analysis-exercise.pcap**. Click on the filename to
+    download it and then extract it so that we can begin the analysis. When prompted
+    for a password, type the word **infected**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We can now get back to the PcapXray GUI and browse to the extracted **.pcap**
+    file and specify an output directory, as seen here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.25 – PcapXray file upload interface](image/Figure_16.25_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.25 – PcapXray file upload interface
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on the **Analyze!** Button, which will then take a while to perform the
+    analysis. You should then be able to click on the **Visualize!** button when it
+    becomes available.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.26 – Automated PcapXray analysis results](image/Figure_16.26_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.26 – Automated PcapXray analysis results
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although a bit hard to see in the preceding screenshot, it does an analysis
+    of the traffic between the source and destinations. Click on the **InteractiveMagic!**
+    button to see a different view of the devices and their relation to each other.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.27 – PcapXray InteractiveMagic view](image/Figure_16.27_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.27 – PcapXray InteractiveMagic view
+  prefs: []
+  type: TYPE_NORMAL
+- en: These views can help pinpoint which devices were in communication with each
+    other, whether legitimately or covertly, and help with incident analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can also narrow down our view by clicking on the **All** button in the menu
+    above the traffic visualization and choosing which type of traffic we’d like to
+    view.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.28 – PcapXray All Traffic view](image/Figure_16.28_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.28 – PcapXray All Traffic view
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on **Malicious** and then click on the **Visualize!** button again.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.29 – Malicious traffic communications](image/Figure_16.29_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.29 – Malicious traffic communications
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here, we can see traffic labeled as **Malicious** and the IP and gateway addresses
+    associated with the communicating devices. If we change the traffic view to HTTPS
+    and then click on the **Visualize!** button again, we can also see the HTTPS web
+    traffic, and thereby, begin putting together or recreating the scenario between
+    the malware, devices, and web traffic at the time of capture.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s now move on to PCAP analysis using online tools. Let’s start with [packettotal.com](http://packettotal.com).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Online PCAP analysis using packettotal.com
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Let’s now have a look at a unique online resource for automated PCAP analysis
+    that is freely available to us. This will be done using [www.packettotal.com](http://www.packettotal.com).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.30 – PacketTotal file upload interface](image/Figure_16.30_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.30 – PacketTotal file upload interface
+  prefs: []
+  type: TYPE_NORMAL
+- en: PacketTotal is completely free, with a simple user interface that allows the
+    user to either drag their PCAP file into the upload area or click on the **Upload**
+    button to upload and automatically analyze the **.pcap** file. The only restriction
+    is a limit of 50 MB on **.pcap** file uploads.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will now download a sample packet capture file and then upload that file
+    to PacketTotal for automated analysis:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Download the sample file for analysis at [https://mega.nz/file/6FciHZhY#bF1M-9kwmWLgUfQ_uq2_9k1DICIUkeY4lrT58X8XVXs](https://mega.nz/file/6FciHZhY#bF1M-9kwmWLgUfQ_uq2_9k1DICIUkeY4lrT58X8XVXs).
+    The file is named **Testing for** **SQL injection.pcap**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on the **Upload** button, browse to the downloaded file, and then click
+    on **Open**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.31 – PacketTotal PCAP file upload status](image/Figure_16.31_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.31 – PacketTotal PCAP file upload status
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’ll have to click on **I’m not a robot** to continue before clicking on the
+    **Analyze** button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.32 – PacketTotal reCAPTCHA verification](image/Figure_16.32_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.32 – PacketTotal reCAPTCHA verification
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the analysis is complete, PacketTotal gives a very detailed view of the
+    traffic captured. Notice the categories at the top (**Malicious Activity**, **Suspicious
+    Activity**, **Connections**, and various protocols). The **Suspicious Activity**
+    page is first displayed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.33 – PacketTotal Suspicious Activity tab](image/Figure_16.33_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.33 – PacketTotal Suspicious Activity tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can see that **HTTP::SQL_Injection_Attacker** and **HTTP::SQL_Injection_Victim**
+    alerts were immediately detected!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on **Connections** next.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Here, we see the **Connection ID** along with **Sender** and **Target** IPs
+    to get more information on the **192.168.0.107** IP address.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.34 – PacketTotal Connections tab](image/Figure_16.34_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.34 – PacketTotal Connections tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lastly, let us click on **Strange Activity**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.35 – PacketTotal Strange Activity tab](image/Figure_16.35_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.35 – PacketTotal Strange Activity tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: Feel free to continue your analysis on PacketTotal and the other tools using
+    the freely available PCAP files at [https://www.malware-traffic-analysis.net/index.xhtml](https://www.malware-traffic-analysis.net/index.xhtml)
+    and [https://www.malware-traffic-analysis.net/training-exercises.xhtml](https://www.malware-traffic-analysis.net/training-exercises.xhtml).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Let’s move on to our final tool of the chapter and the book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Online PCAP analysis using apackets.com
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'For our final exercise, let’s look at another online packet analysis tool,
+    available at [https://apackets.com/](https://apackets.com/). So, let’s get started
+    with the exercise:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s download a sample file from [https://www.malware-traffic-analysis.net/2022/06/07/index.xhtml](https://www.malware-traffic-analysis.net/2022/06/07/index.xhtml).
+    The name of this file is **Emotet-epoch5-infection-with-Cobalt-Strike-.pcap**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.36 – A-Packets file upload interface](image/Figure_16.36_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.36 – A-Packets file upload interface
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on the **From Device** button and browse to the downloaded sample file
+    to be uploaded for analysis.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.37 – A-Packets file upload status](image/Figure_16.37_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.37 – A-Packets file upload status
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once A-Packets has automatically processed and analyzed our **.pcap** file,
+    a very detailed and categorized breakdown of the findings will be presented, as
+    seen in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.38 – A-Packets analyzed findings](image/Figure_16.38_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.38 – A-Packets analyzed findings
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we scroll down a bit, we should see results for even more findings, including
+    DNS and DHCP protocols and even Ethernet devices used in communications:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.39 – More A-Packets analyzed findings](image/Figure_16.39_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.39 – More A-Packets analyzed findings
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you look at the menu to the left of the page, you will notice several tabs,
+    some of which may have numbers next to each tab. These indicate the number of
+    findings per item.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As an example, let’s click on the **Connections** tab, which displays all connections
+    to the local machine on which the packets were captured, as seen here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.40 – A-Packets Connections tab findings](image/Figure_16.40_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.40 – A-Packets Connections tab findings
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you scroll down a bit, you will be presented with a geographical view of
+    communicating devices:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 16.41 – A-Packets Connections tab communications map](image/Figure_16.41_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.41 – A-Packets Connections tab communications map
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, let’s click on the **Open Ports** tab to view the **45** findings discovered
+    by A-Packets, as seen here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.42 – A-Packets Open Ports tab findings](image/Figure_16.42_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.42 – A-Packets Open Ports tab findings
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding screenshot, we can see open ports for various IP addresses
+    involved in this communication.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s move on to the **Servers** tab to view server communication findings:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.43 – A-Packets Servers tab](image/Figure_16.43_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.43 – A-Packets Servers tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the **Servers** tab, we can see DNS information. Let’s take a deeper dive
+    into the DNS findings by clicking on the **DNS** tab within the left menu:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 16.44 – A-Packets DNS tab findings](image/Figure_16.44_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 16.44 – A-Packets DNS tab findings
+  prefs: []
+  type: TYPE_NORMAL
+- en: Viewing the DNS findings in the preceding screenshot, we can see that many non-existent
+    domains populate the list of DNS entries, which may indicate suspicious web activity
+    and communications and should be investigated further.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you can see, the [apackets.com](http://apackets.com) website gives us a very
+    detailed analysis of packet captures, and although an online NFAT, it should be
+    part of your network DFIR arsenal. Let’s move on to a brief section on reporting
+    and presentation to wrap things up.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reporting and presentation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Everyone may have their own style when creating and presenting reports. However,
+    the general format is one of a typical analysis report in PDF format. Headings
+    are typically structured as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Title
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Table of contents
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Investigator and case details
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scope of works
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Executive summary
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical findings
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Appendices
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Although again a personal preference, it is customary to include all findings,
+    documentation, and screenshots for full disclosure. Handing over all media containing
+    acquired the evidence, documentation, and findings to the client is also a very
+    common practice to ensure confidentiality.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Congratulations! You made it to the end of this book, or rather, the DFIR journey
+    with me, as this was our last chapter together! You’re now capable of creating
+    your own PCAP files using Wireshark and you can also choose a tool or, as I do,
+    use all tools from this chapter to gather as much information as possible when
+    performing network forensics using Wireshark, NetworkMiner, PcapXray, PacketTotal,
+    and A-Packets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope you enjoyed this book and find it useful in your DFIR investigations.
+    Should you have any questions or need advice, feel free to add me on LinkedIn
+    at [https://tt.linkedin.com/in/shiva-parasram-87a66564](https://tt.linkedin.com/in/shiva-parasram-87a66564).
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1540 @@
+- en: Getting Started
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following recipes will be covered in this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Configuring a security lab with VMware Player (Windows)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Configuring a security lab with VMware Fusion (macOS)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Ubuntu Server
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Metasploitable2
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Windows Server
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Increasing the Windows attack surface
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Kali Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using text editors (Vim and GNU nano)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Keeping Kali updated
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Managing Kali services
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Configuring and using SSH
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Nessus on Kali Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This first chapter covers the basics of setting up and configuring a virtual
+    security lab, which can be used to practice most of the scenarios and exercises
+    addressed throughout this book. Topics addressed in this chapter include the installation
+    of the virtualization software, the installation of various systems in the virtual
+    environment, and the configuration of some of the tools that will be used in the
+    exercises.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Configuring a security lab with VMware Player (Windows)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: You can run a virtual security lab on a Windows PC with relatively few available
+    resources by installing VMware Player on your Windows workstation. You can get
+    VMware Player for free or get the more functional alternative, VMware Player Plus,
+    for a low cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To download and install VMware Player on the Windows system, follow these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To install VMware Player on your Windows workstation, you will first need to
+    download the software. The download for the free version of VMware Workstation
+    Player can be found at [https://my.vmware.com/web/vmware/free](https://my.vmware.com/web/vmware/free).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On this page, scroll down to the VMware Workstation Player link and click on
+    Download.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On page that opens up, select the Windows 64-bit installation package and then
+    click on Download.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: There are installation packages available for Linux 64-bit systems as well.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Follow these steps to setup the virtual environment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the software package has been downloaded, you should find it in your default
+    download directory. Double-click on the executable file in this directory to start
+    the installation process. Once started, it is as easy as following the on-screen
+    instructions to complete the installation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After the installation is complete, you should be able to start VMware Player
+    using the desktop icon, the quick launch icon, or from All Programs. Once it''s
+    loaded, you will see the virtual machine library. This library will not yet contain
+    any virtual machines, but they will be populated as you create them in the left-hand
+    side of the screen, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00406.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once you have opened VMware Workstation Player, you can select Create a New
+    Virtual Machine to get started. This will initialize a very easy-to-use virtual
+    machine installation wizard:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00173.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The first task you need to perform in the installation wizard is to define the
+    installation media. You can choose to install it directly from your host machine's
+    optical drive, or you can use an ISO image file. ISOs will be used for most of
+    the installations discussed in this section, and the place you can get them from
+    will be mentioned in each specific recipe.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For now, we will assume that we browsed to an existing ISO file and clicked
+    on Next. VMware Workstation Player will attempt to determine the operating system
+    of the ISO file you selected. In some cases, it cannot and will ask you what operating
+    system you are installing. In this example, we will choose Debian 8.x and click
+    on Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00174.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'You then need to assign a name for the virtual machine. The virtual machine
+    name is merely an arbitrary value that serves as a label to identify and distinguish
+    it from other VMs in your library. Since a security lab is often classified by
+    a diversity of operating systems, it can be useful to indicate the operating system
+    as part of the virtual machine''s name:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00175.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The next screen requests a value for the maximum size of the installation.
+    The virtual machine will only consume hard drive space as required, but it will
+    not exceed the value specified here. You should be aware of the minimum required
+    disk space for your operating system and budget appropriately. Additionally, you
+    can also define whether the virtual machine will be contained within a single
+    file or spread across multiple files, as seen in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00177.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once you are done with specifying the disk capacity, you will see the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00578.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The final step provides a summary of the configurations. You can either select
+    the Finish button to finalize the creation of the virtual machine or select the
+    Customize Hardware… button to manipulate more advanced configurations. Have a
+    look at the following screenshot for the advanced configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00636.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The advanced configuration settings give you full control over shared resources,
+    virtual hardware configurations, and networking. Most of the default configurations
+    should be sufficient for your security lab, but if changes need to be made at
+    a later time, these configurations can be readdressed by accessing the virtual
+    machine settings. When you are done with setting up the advanced configuration,
+    you will see something similar to the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00089.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: After the installation wizard has finished, you should see the new virtual machine
+    listed in your virtual machine library. From here, it can now be launched by pressing
+    the Play virtual machine button. Multiple virtual machines can be run simultaneously
+    by opening multiple instances of VMware Workstation Player and a unique VM in
+    each instance.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: VMware creates a virtualized environment in which resources from a single hosting
+    system can be shared to create an entire network environment. Virtualization software
+    such as VMware has made it significantly easier and cheaper to build a security
+    lab for personal, independent study.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Configuring a security lab with VMware Fusion (macOS)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: You can also run a virtual security lab on macOS with relative ease by installing
+    VMware Fusion on your Mac. VMware Fusion does require a license that has to be
+    purchased, but it is very reasonably priced.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To install VMware Player on your Mac, you will first need to download the software.
+    To download the free trial or purchase the software, go to [https://www.vmware.com/products/fusion/](https://www.vmware.com/products/fusion/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'These steps will help you to set up the virtual environment in the macOS:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the software package has been downloaded, you should find it in your default
+    download directory. Run the `.dmg` installation file and then follow the on-screen
+    instructions to install it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once the installation is complete, you can launch VMware Fusion either from
+    the dock or within the `Applications` directory in Finder. Once it''s loaded,
+    you will see the Virtual Machine Library window. This library will not yet contain
+    any virtual machines, but they will be populated as you create them in the left-hand
+    side of the screen. The following screenshot shows the Virtual Machine Library
+    window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00217.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To get started, click on the Add button in the top-left corner of the screen
+    and then click on New. This will start the virtual machine installation wizard.
+    The installation wizard is a very simple guided process to set up your virtual
+    machine, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00105.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The first step requests that you select your installation method. VMware Fusion
+    gives you options to install from a disc or image (ISO file) and offers several
+    techniques to migrate existing systems to a new virtual machine. For all of the
+    virtual machines discussed in this section, select the first option.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After selecting the first option, Install from disc or image, you will be prompted
+    to select the installation disc or image to be used. If nothing is populated automatically,
+    or if the automatically populated option is not the image you want to install,
+    click on the Use another disc or disc image... button. This should open up Finder,
+    and it will allow you to browse to the image you would like to use. The place
+    where you can get specific system image files will be discussed in subsequent
+    recipes in this chapter. You may be directed to a screen with a Use Easy Install
+    option. If so, just uncheck the Use Easy Install option and click on Continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00178.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Finally, we are directed to the Finish window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00461.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After you have selected the image file you wish to use, click on the Continue
+    button, and you will be brought to the summary screen. This will provide an overview
+    of the configurations you selected. If you wish to make changes to these settings,
+    click on the Customize Settings button. Otherwise, click on the Finish button
+    to create the virtual machine. When you click on it, you will be requested to
+    save the file(s) associated with the virtual machine. The name you use to save
+    it will be the name of the virtual machine and will be displayed in your Virtual
+    Machine Library, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00181.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: As you add more virtual machines, you will see them included in the Virtual
+    Machine Library in the left-hand side of the screen. After selecting a particular
+    virtual machine, you can launch it by clicking on the Start Up button at the top.
+    Additionally, you can use the Settings button to modify configurations or use
+    the Snapshots button to save the virtual machine at various moments in time. You
+    can run multiple virtual machines simultaneously by starting each one independently
+    from the library.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Using VMware Fusion within the macOS operating system, you can create a virtualized
+    lab environment in order to create an entire network environment on an Apple host
+    machine. Virtualization software such as VMware has made it significantly easier
+    and cheaper to build a security lab for personal, independent study.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Ubuntu Server
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Ubuntu Server is an easy-to-use Linux distribution that can be used to host
+    network services and/or vulnerable software for testing in a security lab. Feel
+    free to use other Linux distributions if you prefer; however, Ubuntu is a good
+    choice for beginners because there are a lot of reference materials and resources
+    publicly available.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Prior to installing Ubuntu Server in VMware, you will need to download the image
+    disc (ISO file). This file can be downloaded from Ubuntu's website at [http://www.ubuntu.com/server](http://www.ubuntu.com/server). 
+    For the purposes of this book, we will be using Ubuntu 16.10.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Now the virtual machine is ready, but first, we need to install Ubuntu on the
+    VM. Follow along to install Ubuntu on the VM:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After the image file has been loaded and the virtual machine has been booted
+    from it, you will see the default Ubuntu menu, shown in the following screenshot.
+    This includes multiple installation and diagnostic options. The menu can be navigated
+    to with the keyboard. For a standard installation, ensure that the Install Ubuntu
+    Server option is highlighted, and press the *Enter* key:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00473.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Press the *F6* key and check the following options: acpi=off, noapic, and nolapic. 
+    Once this is done, click on Install Ubuntu Server:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00184.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When the installation process begins, you will be asked a series of questions
+    to define the configurations of the system. The first two options request that
+    you specify your language and country of residence. After answering these questions,
+    you will be required to define your keyboard layout configuration, as shown in
+    the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00185.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: There are multiple options available to define the keyboard layout. One option
+    is detection, in which you will be prompted to press a series of keys that will
+    allow Ubuntu to detect the keyboard layout you are using. You can use keyboard
+    detection by clicking on Yes. Alternatively, you can select your keyboard layout
+    manually by clicking on No. This process is streamlined by defaulting to the most
+    likely choice based on your country and language.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After you have defined your keyboard layout, you are requested to enter a hostname
+    for the system. If you will be joining the system to a domain, ensure that the
+    hostname is unique. Next, you will be asked for the full name of the new user
+    and a username. Unlike the full name of the user, the username should consist
+    of a single string of lowercase letters. Numbers can also be included in the username,
+    but they cannot be the first character. Have a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00187.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After you have provided the username of the new account, you will be requested
+    to provide a password. Ensure that the password is something you can remember
+    as you may later need to access this system to modify configurations. Have a look
+    at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00188.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After supplying a password, you will be asked to decide whether the home directories
+    for each user should be encrypted. While this offers an additional layer of security,
+    it is not essential in a lab environment as the systems will not be holding any
+    actual sensitive data. You will next be asked to configure the system clock, as
+    shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00189.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Even though your system is on an internal IP address, it will attempt to determine
+    the public IP address through which it is routing out and will use this information
+    to guess your appropriate time zone. If the guess provided by Ubuntu is correct,
+    select Yes; if not, select No to manually choose the time zone. After the time
+    zone is selected, you will be asked to define the disk partition configurations,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00192.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If you have no reason to select differently, it is recommended you choose the
+    default selection. It is unlikely that you will need to perform any manual partitioning
+    in a security lab as each virtual machine will usually be using a single dedicated
+    partition. After selecting the partitioning method, you will be asked to select
+    the disk. Unless you have added additional disks to the virtual machine, you should
+    only see the following option here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00194.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After selecting the disk, you will be asked to review the configurations. Verify
+    that everything is correct and then confirm the installation. You will then be
+    asked for the amount of the volume group to use for guided partitioning. This
+    should be the full amount you specified for the drive, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00528.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Prior to the installation process, you will be asked to configure your HTTP
+    proxy. For the purposes of this book, a separate proxy is unnecessary, and you
+    can leave this field blank:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00197.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'You will then be asked how you want to manage upgrades on the system. Use the
+    No automatic updates selection:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00199.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Finally, you will be asked whether you want to install any software on the
+    operating system, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00200.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To select any given software, use the spacebar. To increase the attack surface,
+    I have included multiple services, only excluding virtual hosting and additional
+    manual package selection. Once you have selected your desired software packages,
+    press the *Enter* key to complete the process. You will be asked some questions
+    about the software you selected to install. Just follow the prompts; for most
+    cases, the default selections will be fine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00201.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once the software is installed, you will be asked whether you want to install
+    the GRUB bootloader on the hard disk. Select Yes, and your installation is complete.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Ubuntu Server has no GUI and is exclusively command-line driven. To use it effectively,
+  prefs: []
+  type: TYPE_NORMAL
+- en: I recommended you use SSH. To configure and use SSH, refer to the *Configuring
+    and*
+  prefs: []
+  type: TYPE_NORMAL
+- en: '*using SSH* recipe later in this chapter.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Metasploitable2
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Metasploitable2** is an intentionally vulnerable Linux distribution and is
+    also a highly effective security training tool. It comes fully loaded with a large
+    number of vulnerable network services and also includes several vulnerable web
+    applications.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Prior to installing Metasploitable2 in your virtual security lab, you will
+    need to download it from the Web. There are many mirrors and torrents available
+    for this. One relatively easy method to acquire Metasploitable2 is to download
+    it from SourceForge from this URL: [http://sourceforge.net/projects/metasploitable/files/Metasploitable2/](http://sourceforge.net/projects/metasploitable/files/Metasploitable2/).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Installing Metasploitable2 is likely to be one of the easiest installations
+    that you will perform in your security lab. This is because it is already prepared
+    as a VMware virtual machine when it is downloaded from SourceForge.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the ZIP file has been downloaded, you can easily extract its contents
+    on Windows or macOS by double-clicking on it in Explorer or Finder, respectively.
+    Have a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00202.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once extracted, the ZIP file will return a directory with five additional files
+    inside. Included among these files is the VMware VMX file. To use Metasploitable2
+    in VMware, just click on the File drop-down menu and click on Open. Then, browse
+    to the directory created from the ZIP extraction process, and open `Metasploitable.vmx`,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00203.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the VMX file has been opened, it should be included in your virtual machine
+    library. Select it from the library and click on Run to start the VM and get the
+    following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00205.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: After the VM loads, the splash screen will appear and request login credentials.
+    The default credentials are `msfadmin` for both the username and password. This
+    machine can also be accessed via SSH, as addressed in the *Configuring and using
+    SSH* recipe later in this recipe.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Metasploitable was built with the idea of security testing education in mind.
+    This is a highly effective tool, but it must be handled with care. The Metasploitable
+    system should never be exposed to any untrusted networks. It should never be assigned
+    a publicly routable IP address, and port forwarding should not be used to make
+    services accessible over the **Network Address Translation** (**NAT**) interface.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Windows Server
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Having a Windows operating system in your testing lab is critical to learning
+    security skills as it is the most prominent operating system environment used
+    in production systems. In the scenarios provided, an installation of Windows XP
+    **Service Pack 2** (**SP2**) is used. Since Windows XP is an older operating system,
+    there are many flaws and vulnerabilities that can be exploited in a test environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To complete the tasks discussed in this recipe and some of the exercises later
+    in this book, you will need to acquire a copy of a Windows operating system. If
+    possible, Windows XP SP2 should be used because it was the operating system used
+    while writing this book. One of the reasons this operating system was selected
+    is because it is no longer supported by Microsoft and can be acquired with relative
+    ease and at little to no cost. However, because it is no longer supported, you
+    will need to purchase it from a third-party vendor or acquire it by other means.
+    I'll leave the acquisition of this product up to you.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s install Windows XP on the VM:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: After booting from the Windows XP image file, a blue menu screen will load,
+    which will ask you a series of questions to guide you through the installation
+    process. Initially, you will be asked to define the partition that the operating
+    system will be installed to. Unless you have made custom changes to your virtual
+    machine, you should only see a single option here. You can then select either
+    a quick or full-disk format. Either option should be sufficient for the virtual
+    machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once you have answered these preliminary questions, you will be provided with
+    a series of questions regarding operating system configurations. Then, you will
+    be directed to the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00207.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: First, you will be asked to provide a Name and Organization. The name is assigned
+    to the initial account that was created, but the organization name is merely included
+    for metadata purposes and has no effect on the performance of the operating system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, you will be requested to provide the Computer name and Administrator
+    password, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00210.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If you will be adding the system to a domain, it is recommended you use a unique
+    computer name. The admin password should be one that you will remember as you
+    will need to log in to this system to test or configure changes. You will then
+    be asked to set the date, time, and time zone. These will likely be automatically
+    populated, but ensure that they are correct as misconfiguring the date and time
+    can affect system performance. Have a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00618.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After configuring the time and date, you will be asked to assign the system
+    to either a workgroup or domain. Most of the exercises discussed within this book
+    can be performed with either configuration. However, there are a few remote SMB
+    auditing tasks, which will be discussed, that require that the system be domain
+    joined. The following screenshot shows the Help protect your PC window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00628.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: After the installation process has been completed, you will be prompted to help
+    protect your PC with automatic updates. The default selection for this is to enable
+    automatic updates. However, because we want to increase the number of testing
+    opportunities available to us, we will select the Not right now option.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Windows XP SP2 is an excellent addition to any beginner's security lab. Since
+    it is an older operating system, it offers a large number of vulnerabilities that
+    can be tested and exploited. However, as one becomes more skilled in the art of
+    penetration testing, it is important to begin to further polish your skills by
+    introducing newer and more secure operating systems such as Windows 7.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Increasing the Windows attack surface
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To further increase the availability of the attack surface on the Windows operating
+    system, it is important to add vulnerable software and enable or disable certain
+    integrated components.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Prior to modifying the configurations in Windows to increase the attack surface,
+    you will need to have the operating system installed on one of your virtual machines.
+    If this has not been done already, refer to the previous recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Now, follow these steps to make Windows XP more vulnerable:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enabling remote services, especially unpatched remote services, is usually
+    an effective way of introducing some vulnerabilities into a system. First, you''ll
+    want to enable **Simple Network Management Protocol** (**SNMP**) on your Windows
+    system. To do this, open the Start menu in the bottom-left corner and then click
+    on Control Panel. Double-click on the Add or Remove Programs icon, and then click
+    on the Add/Remove Windows Components link on the left-hand side of the screen
+    to get the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00218.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'From here, you will see a list of components that can be enabled or disabled
+    on the operating system. Scroll down to Management and Monitoring Tools and double-click
+    on it to open the options contained within, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00219.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once opened, ensure that both checkboxes, Simple Network Management Protocol
+    and WMI SNMP Provider, are checked. This will allow remote SNMP queries to be
+    performed on the system. After clicking on OK, the installation of these services
+    will begin. This installation will require the Windows XP image disc, which VMware
+    likely removed after the virtual machine was imaged. If this is the case, you
+    will receive a popup requesting you to insert the disc, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00223.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To use the disc image, access the virtual machine settings. Ensure that the
+    virtual optical media drive is enabled, then browse to the ISO file in your host
+    filesystem to add the disc:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00226.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the disc is detected, the installation of SNMP services will be completed
+    automatically. The Windows Components Wizard window should notify you when the
+    installation is complete. In addition to adding services, you should also remove
+    some default services included in the operating system. To do this, open Control
+    Panel again and double-click on the Security Center icon. Scroll to the bottom
+    of the page, click on the link for Windows Firewall, and ensure that this feature
+    is turned off, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00676.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: After you have turned off the Windows Firewall feature, click on OK to return
+    to the previous menu. Scroll to the bottom once again, click on the Automatic
+    Updates link, and ensure that it is also turned off.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The enabling of functional services and disabling of security services on an
+    operating system drastically increases the risk of compromise. By increasing the
+    number of vulnerabilities present on the operating system, we also increase the
+    number of opportunities available to learn attack patterns and exploitation. This
+    particular recipe only addressed the manipulation of integrated components in
+    Windows to increase the attack surface. However, it can also be useful to install
+    various third-party software packages that have known vulnerabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Vulnerable software packages can be found at the following URLs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[http://www.exploit-db.com/](http://www.exploit-db.com/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[http://www.oldversion.com/](http://www.oldversion.com/)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Kali Linux** is known as one of the best hacking distributions, providing
+    an entire arsenal of penetration testing tools. The developers recently released
+    Kali Linux 2016.2, which solidified their efforts in making it a rolling distribution.
+    Different desktop environments have been released alongside GNOME in this release,
+    such as e17, LXDE, Xfce, MATE, and KDE. Kali Linux will be kept updated with the
+    latest improvements and tools by weekly updated ISOs. For the purposes of this
+    book, we will be using Kali Linux 2016.2 with GNOME as our development environment
+    for many of the scanning scripts that will be discussed throughout this book.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Prior to installing Kali Linux in your virtual security testing lab, you will
+    need to acquire
+  prefs: []
+  type: TYPE_NORMAL
+- en: the ISO file (image file) from a trusted source. The Kali Linux ISO can be downloaded
+    at [http://www.kali.org/downloads/](http://www.kali.org/downloads/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'These steps will guide you to install Kali Linux on the VM:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After selecting the Kali Linux ISO file, you will be asked what operating system
+    you are installing. Currently Kali Linux is built on Debian 8.x. Choose this and
+    click on Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00229.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'You will see a finish screen, but let''s customize the settings first. Kali
+    Linux requires at least 15 GB of hard disk space and a minimum of 512 MB RAM:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00233.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After booting from the Kali Linux image file, you will be presented with the
+    initial boot menu. Here, scroll down to the sixth option, Install, and press the *Enter* key
+    to start the installation process:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00234.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once it has started, you will be guided through a series of questions to complete
+    the installation process. Initially, you will be asked to provide your location
+    (country) and language. You will then be provided with an option to manually select
+    your keyboard configuration or use a guided detection process.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The next step will request that you provide a hostname for the system. If the
+    system will be joined to a domain, ensure that the hostname is unique, as shown
+    in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00236.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, you will need to set the password for the root account. It is recommended
+    that this be a fairly complex password that will not be easily compromised. Have
+    a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00238.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, you will be asked to provide the time zone you are located in. The system
+    will use IP geolocation to provide its best guess of your location. If this is
+    not correct, manually select the correct time zone:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00240.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'For setting up your disk partition, using the default method and partitioning
+    scheme should be sufficient for lab purposes:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00243.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'It is recommended that you use a mirror to ensure that your software in Kali
+    Linux is kept up to date:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00106.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, you will be asked to provide an HTTP proxy address. An external HTTP
+    proxy is not required for any of the exercises addressed in this book, so this
+    can be left blank:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00117.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Finally, choose Yes to install the GRUB boot loader and then press the *Enter* key
+    to complete the installation process. When the system loads, you can log in with
+    the root account and the password provided during the installation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00129.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Kali Linux is a Debian Linux distribution that has a large number of preinstalled,
+    third-party penetration tools. While all of these tools could be acquired and
+    installed independently, the organization and implementation that Kali Linux provides
+    makes it a useful tool for any serious penetration tester.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using text editors (Vim and GNU nano)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Text editors will be frequently used to create or modify existing files in the
+    filesystem. You should use a text editor anytime you want to create a custom script
+    in Kali. You should also use a text editor anytime you want to modify a configuration
+    file or existing penetration testing tool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are no additional steps that must be taken prior to using the text editor
+    tools in Kali Linux. Both Vim and GNU nano are integrated tools and come preinstalled
+    on the operating system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Working with Linux editors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To create a file using the Vim text editor in Kali, use the `vim` command followed
+    by the name of the file to be created or modified:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00252.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the `vim` command is used to create a file named `vim_demo.txt`.
+    Since no file currently exists in the active directory by that name, Vim automatically
+    creates a new file and opens an empty text editor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To start entering text into the editor, press the *I* key or the *Insert* button.
+    Then, start entering the desired text, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00255.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, only a single line was added to the text file. However,
+    in most cases, you will most likely use multiple lines when creating a new file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once finished, press the *Esc* key to exit insert mode and enter command mode
+    in Vim. Then, type `:wq` and press the *Enter* key to save. You can then verify
+    that the file exists and verify its contents using the following bash commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00542.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The `ls` command can be used to view the contents of the current directory.
+    Here, you can see that the `vim_demo.txt` file was created. The `cat` command
+    can be used to read and display the contents of the file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'An alternative text editor that can also be used is GNU nano. The basic usage
+    of GNU nano is very similar to Vim. To get started, use the `nano` command, followed
+    by the name of the file to be created or modified:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00545.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the `nano` command is used to open a file called `nano_demo.txt`.
+    Since no file currently exists with that name, a new file is created.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Unlike Vim, there is no separate command and writing mode. Instead, writing
+    to the file can be done automatically, and commands are executed by pressing the
+    *Ctrl* button in conjunction with a particular letter key. A list of these commands
+    can be seen at the bottom of the text editor interface at all times:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00547.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, a single line was written to the `nano_demo.txt` file.
+    To close the editor, you can use *Ctrl* + *X*. You will then be prompted to either
+    save the file with `y` or not save it with `n`. You will be asked to confirm the
+    filename to be written to. By default, this will be populated with the name that
+    was provided when the `nano` command was executed. However, this value can be
+    changed and the contents of the file saved to a different filename, as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00548.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once you're done, the `ls` and `cat` commands can be used again to verify that
+    the file was written to the directory and to verify the contents of the file,
+    respectively.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The intention of this recipe was to discuss the basic use of each of these editors
+    to write and manipulate files. However, it is important to note that these are
+    both very robust text editors that have a large number of other capabilities for
+    file editing. For more information on the usage of either, access the man pages
+    with the `man` command followed by the name of the specific text editor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Text editors are nothing more than command-line-driven word-processing tools.
+    Each of these tools and all of their associated functions can be executed without
+    the use of any graphical interface. Without any graphical component, these tools
+    require very little overhead and are extremely fast. As such, they are highly
+    effective for quickly modifying files or handling them over a remote Terminal
+    interface, such as SSH or Telnet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Keeping Kali updated
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we have Kali Linux installed, we will want to keep it updated with
+    the latest tools, patches, and improvements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Prior to modifying the Kali Linux configuration, you will need to have installed
+    the operating system on a virtual machine. If you haven't already done this, refer
+    to the *Installing Kali Linux* recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Kali Linux should be ready and configured after installation, but we should
+    check anyway. Kali uses a package manager called `apt-get`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first thing we want to do is check the sources `apt-get` will use to look
+    for updates. Navigate to the `/etc/apt/` directory; there you should see a file
+    named `sources.list`. If the file doesn’t exist, it's okay; we will create it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Run the following command from the Terminal. If the file exists, it will open;
+    if not, it will create it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00551.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, let''s add the following sources to the file if they don’t already exist. Make
+    sure that you do not add any additional sources as they may break your Kali installation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Your file should look like the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00554.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the file matches what we previously stated, save and close it. Now we
+    will run a few commands. These commands should be run periodically to keep your
+    system updated. The `-y` flag appended to `apt-get upgrade` and `apt-get dist-upgrade`
+    tells the command to assume *yes* when prompted:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00558.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: It may take the commands a while to execute, so feel free to get your caffeine
+    fix while you are waiting. Reboot Kali Linux, and the procedure is done. You will
+    want to run the previous commands periodically to keep your system up to date.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Using a Kali Linux rolling update provides you with the latest package versions
+    of your applications and testing tools, rather than needing to wait for the next
+    static version of the operating system to be rolled out. Kali Linux comes pre-bundled
+    with `apt-get`, this is the same package manager used by Ubuntu, and is what Kali
+    Linux uses to keeping your distribution up to date.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Managing Kali services
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Having certain services start automatically can be useful in Kali Linux. For
+    example, let's say I want to be able to SSH (covered in the *Configuring and using
+    SSH* recipe) to my Kali Linux distribution. By default, the SSH server does not
+    start in Kali, so I would need to log in to the virtual machine, open a Terminal,
+    and run the command to start the service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Prior to modifying the Kali Linux configuration, you will need to have installed
+    the operating system on a virtual machine. If you have not already done this,
+    refer to the *Installing Kali Linux* recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Working with Kali Linux:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We begin by logging in to our Kali Linux distribution and opening a Terminal
+    window. Type in the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00560.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'More than likely, it is already installed, and you will see a message like
+    this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00561.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'So now that we know it is installed, let us see whether the service is running. 
+    From the Terminal, type this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00562.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If the SSH server is not running, you will see something like this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00565.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Type *Ctrl* + *C* to get back to the prompt. Now let''s start the service and
+    check the status again by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00567.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'You should now see something like the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00570.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'So now, the service is running. Great, but if we reboot, we will see that the
+    service does not start automatically. To get the service to start every time we
+    boot, we need to make a few configuration changes. Kali Linux puts in extra measures
+    to make sure you do not have services starting automatically.  Specifically, it
+    has a service whitelist and blacklist file. So to get SSH to start at boot, we
+    will need to remove the SSH service from the blacklist. To do this, open a Terminal
+    window and type the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00574.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Navigate down to the section labeled `List of blacklisted init scripts` and
+    find `ssh`. Now, we will just add a `#` symbol to the beginning of that line,
+    save the file, and exit. The file should look similar to the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00577.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now that we have removed the blacklist policy, all we need to do is enable
+    SSH at boot. To do this, run the following commands from your Terminal:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00579.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: That's it! Now when you reboot, the service will begin automatically. You can
+    use this same procedure to start other services automatically at boot time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `rc.local` file is executed after all the normal Linux services have started. It
+    can be used to start services you want available after you boot your machine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Configuring and using SSH
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Dealing with multiple virtual machines simultaneously can become tedious, time-consuming,
+    and frustrating. To reduce the requirement of jumping from one VMware screen to
+    the next and to increase the ease of communication between your virtual systems,
+    it is very helpful to have SSH configured and enabled on each of them. This recipe
+    will discuss how you can use SSH on each of your Linux virtual machines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use SSH on your virtual machines, you must first have an SSH client installed
+    on your host system. An SSH client is integrated into most Linux and macOS systems
+    and can be accessed from a Terminal interface. If you are using a Windows host,
+    you will need to download and install a Windows Terminal services client. One
+    that is free and easy to use is PuTTY.
+  prefs: []
+  type: TYPE_NORMAL
+- en: PuTTY can be downloaded from [http://www.putty.org/](http://www.putty.org/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Follow along to configure the SSH client (we are using PuTTY) on the Kali Linix:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will initially need to enable SSH directly from the Terminal in the graphical
+    desktop interface. This command will need to be run directly within the virtual
+    machine client. With the exception of the Windows XP virtual machine, all of the
+    other virtual machines in the lab are Linux distributions and should natively
+    support SSH. If you followed along in the *Managing Kali Services* recipe, the
+    SSH service should already be running. If not, the technique to enable this is
+    the same in nearly all Linux distributions and is shown as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00580.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The `/etc/init.d/ssh start` command will start the service. You will need to
+    prepend `sudo` to this command if you are not logged in as root.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If an error is received, it is possible that the SSH daemon has not been installed
+    on the device. If this is the case, the `apt-get install ssh` command can be used
+    to install the SSH daemon. Then, `ifconfig` can be used to acquire the IP address
+    of the system, which will be used to establish the SSH connection.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once activated, it is possible to access the VMware guest system using SSH from
+    your host system. To do this, minimize the virtual machine and open your host's
+    SSH client.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If you are using macOS or Linux for your host system, the client can be called
+    directly from the Terminal. Alternatively, if you are running your VMs on a Windows
+    host, you will need to use a Terminal emulator such as PuTTY. In the following
+    example, an SSH session is established by supplying the IP address of the Kali
+    virtual machine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00582.jpeg)Downloading the example code'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can download the example code files for all Packt books you have purchased
+    from your account at [http://www.packtpub.com](http://www.packtpub.com). If you
+    purchased this book elsewhere, you can visit [http://www.packtpub.com/support](http://www.packtpub.com/support)
+    and register to have the files e-mailed directly to you.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the connection configurations have been set, click on the Open button
+    to launch the session. We will then be prompted for the username and password.
+    We should enter the credentials for the system that we are connecting to. Once
+    the authentication process is completed, we will be granted remote Terminal access
+    to the system, as seen in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00586.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'It is possible to avoid having to authenticate every time by providing your
+    public key in the `authorized_keys` file on the remote host. The process to do
+    this is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](../images/00588.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once you have done this, you should be able to connect to SSH without having
+    to supply the password for authentication:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00589.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: SSH establishes an encrypted communication channel between the client and server.
+    This channel can be used to provide remote management services and to securely
+    transfer files with **Secure Copy** (**scp**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Nessus on Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nessus is a highly functional vulnerability scanner that can be installed on
+    the Kali Linux platform. This recipe will discuss the process to install, enable,
+    and activate the Nessus service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Prior to attempting to install the Nessus vulnerability scanner on Kali Linux,
+    you will need to obtain a plugin feed activation code. This activation code is
+    necessary to acquire the audit plugins used by Nessus to evaluate networked systems.
+    If you are going to be using Nessus at home or exclusively within your lab, you
+    can acquire a *home feed key* for free. Alternatively, if you are going to be
+    using Nessus to audit production systems, you will need to acquire a *professional
+    feed key*. In either case, you can acquire this activation code at [http://www.tenable.com/products/nessus/nessus-plugins/obtain-an-activation-code](http://www.tenable.com/products/nessus/nessus-plugins/obtain-an-activation-code).
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To install Nessus on the system, follow these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you have acquired your plugin feed activation code, you will need to download
+    the Nessus installation package, available at [https://www.tenable.com/products/nessus/select-your-operating-system](http://www.tenable.com/products/nessus/select-your-operating-system).
+    The following screenshot displays a list of the various platforms that Nessus
+    can run on and their corresponding installation packages:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00592.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Select the appropriate installation package for the architecture of the operating
+    system that you have installed. Once you have selected it, read and agree to the
+    subscription agreement provided by Tenable. Your system will then download the
+    installation package. Click on Save File, and then browse to the location you
+    would like to save it to:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00593.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, I have saved the installation package to the root
+    directory. Once it''s downloaded, you can complete the installation from the command
+    line. This can be done over SSH or via a Terminal on the graphical desktop in
+    the following manner:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00595.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Use the `ls` command to verify that the installation package is in the current
+    directory. You should see it listed in the response. You can then use the **debian
+    package manager** (**dpkg**) tool to install the service.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The `-i` argument tells the package manager to install the specified package.
+    Once the installation is complete, the service can be started with the command,
+    `/etc/init.d/nessusd start`. Nessus runs completely from a web interface and can
+    easily be accessed from other machines. If you want to manage Nessus from your
+    Kali system, you can access it via your web browser at `https://127.0.0.1:8834/`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Alternatively, you can access it from a remote system (such as your host operating
+    system) via a web browser using the IP address of the Kali Linux virtual machine.
+    In the example provided, the appropriate URL to access the Nessus service from
+    the host operating system is `https://172.16.36.244:8834`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00597.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By default, a self-signed SSL certificate is used by the Nessus service, so
+    you will receive an untrusted connection warning. For security lab usage, you
+    can disregard this warning and proceed. This can be done by expanding the I Understand
+    the Risks option, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00599.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When you expand this option, you can click on the Add Exception button. This
+    will prevent you from having to deal with this warning every time you try to access
+    the service. After adding the service as an exception, you will receive a welcome
+    screen. From here, click on the Get Started button. This will take you to the
+    following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00601.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The first configurations that have to be set are the administrator''s user
+    account and associated password. These credentials will be used to log in and
+    use the Nessus service. After entering the new username and password, click on
+    Next to continue; you will see the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00602.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'You will then need to enter your plugin feed activation code. If you do not
+    have an activation code, refer back to the *Getting ready* section of this recipe.
+    Finally, after you have entered your activation code, you will be returned to
+    the login page and asked to enter your username and password. Here, you need to
+    enter the same credentials that you created during the installation process. The
+    following is the default screen that Nessus will load each time you access the
+    URL in future:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00603.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Once installed properly, the Nessus vulnerability scanner should be accessible
+    from the host system and all of the virtual machines that have a graphic web browser
+    installed. This is due to the fact that the Nessus service is hosted on the TCP
+    port `8834` and both the host and all other virtual systems have network interfaces
+    sitting in the same private IP space.
+  prefs: []
+  type: TYPE_NORMAL

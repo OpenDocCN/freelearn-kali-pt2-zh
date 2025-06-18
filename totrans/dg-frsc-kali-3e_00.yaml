@@ -1,0 +1,300 @@
+- en: Preface
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this third edition of this book, you’ll find that the theory and methodologies
+    have remained mostly the same with updates on general technical information, best
+    practices, and frameworks, as the procedures and documentation are standard throughout
+    the field; however, you’ll find that the technical chapters contain new labs using
+    new examples. I’ve also included a few completely new chapters that go deeper
+    into artifact analysis, automated data recovery, malware, and network analysis,
+    showcasing several tools with practical exercises that even beginners will find
+    easy to follow. We even utilize Wine, which will allow us to install very popular
+    (**Digital Forensics and Incident Response**) (**DFIR**) tools built for the Windows
+    platform (such as Autopsy 4) within Kali Linux. This book is quite useful for
+    Red Teamers and penetration testers who wish to learn about or enhance their DFIR
+    and Blue Teaming skillsets to become Purple Teamers by combining their penetration
+    testing skills with the digital forensics and incident response skills that will
+    be taught throughout this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Who this book is for
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The third edition of this book was carefully structured to be easily understood
+    by individuals at all levels, from beginners and digital forensics novices to
+    incident response professionals alike, as the first six chapters serve to get
+    you acquainted with the technologies used and also guide you through setting up
+    Kali Linux, before delving into forensic analysis, data recovery, malware analysis,
+    automated DFIR analysis, and network forensics investigations. Red teamers and
+    penetration testers wanting to learn Blue Teaming skillsets to become Purple Teamers
+    may also find the contents of this book very useful.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What this book covers
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '[*Chapter 1*](B19441_01.xhtml#_idTextAnchor015), *Red, Blue, and Purple Teaming
+    Fundamentals*, informs you about the different types of cyber security teams to
+    which penetration testers and forensic investigators belong, and the skillsets
+    required.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 2*](B19441_02.xhtml#_idTextAnchor024), *Introduction to Digital Forensics*,
+    introduces you to the world of digital forensics and forensic methodology, and
+    also introduces you to various forensic operating systems.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 3*](B19441_03.xhtml#_idTextAnchor058), *Installing Kali Linux*, covers
+    the various methods that can be used to install Kali Linux as a virtual machine
+    or as a standalone operating system, which can also be run from a flash drive
+    or SD card.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 4*](B19441_04.xhtml#_idTextAnchor072), *Additional Kali Installations
+    and Post-Installation Tasks*, builds upon the Kali installation and guides you
+    through performing additional installations and post-installation tasks such as
+    enabling a root user and updating Kali Linux.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 5*](B19441_05.xhtml#_idTextAnchor085), *Installing Wine in Kali Linux*,
+    shows the versatility of Linux systems, where you will learn how to install and
+    use forensic tools designed to be used in the Windows platform, in a Kali Linux
+    system using Wine.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 6*](B19441_06.xhtml#_idTextAnchor093), *Understanding File Systems
+    and Storage Media*, dives into the realm of operating systems and the various
+    formats for file storage, including secret hiding places not seen by the end user,
+    or even the operating system. We also inspect data about data, known as metadata,
+    and look at its volatility.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 7*](B19441_07.xhtml#_idTextAnchor120), *Incident Response, Data Acquisitions,
+    and DFIR Frameworks*, asks what happens when an incident is reported or detected.
+    Who are the first responders and what are the procedures for maintaining the integrity
+    of the evidence? In this chapter, we look at best practices, procedures, and frameworks
+    for data acquisition and evidence collection.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 8*](B19441_08.xhtml#_idTextAnchor147), *Evidence Acquisition Tools*,
+    builds on the theory behind data acquisitions and best practices and teaches you
+    to use industry-recognized tools such as DC3DD, DD, Guymager, FTK Imager, and
+    RAM Capturer to perform data and image acquisition while preserving evidence integrity.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 9*](B19441_09.xhtml#_idTextAnchor179), *File Recovery and Data Carving
+    Tools*, introduces the investigative side of digital forensics by using various
+    tools such as Magic Rescue, Scalpel, **Bulk_Extractor**, **scrounge_ntfs**, and
+    **recoverjpeg** to carve and recover data and artifacts from forensically acquired
+    images and media.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 10*](B19441_10.xhtml#_idTextAnchor191), *Memory Forensics and Analysis
+    with Volatility 3*, takes us into the analysis of memory artifacts and demonstrates
+    the importance of preserving volatile evidence such as the contents of the RAM
+    and the paging file.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 11*](B19441_11.xhtml#_idTextAnchor211), *Artifact, Malware, and Ransomware
+    Analysis*, carries us much deeper into artifact analysis using p0f, swap_digger,
+    and mimipenguin, and, thereafter, demonstrates how to perform malware and ransomware
+    analysis using pdf-parser, **hybrid-analysis.com**, and Volatility.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 12*](B19441_12.xhtml#_idTextAnchor225), *Autopsy Forensic Browser*,
+    showcases automated file recovery and analysis within Kali Linux using a single
+    tool.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 13*](B19441_13.xhtml#_idTextAnchor234), *Performing a Full DFIR Analysis
+    with the Autopsy 4 GUI*, dives much deeper into automated file carving, data recovery,
+    and analysis using one of the most powerful and free forensic tools, which takes
+    forensic abilities and investigations to a professional level, catering for all
+    aspects of full digital forensics investigations, from hashing to reporting.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 14*](B19441_14.xhtml#_idTextAnchor243), *Network Discovery Tools*,
+    showcases network scanning and reconnaissance tools such as netdiscover, nmap,
+    and Shodan, which, although not specifically designed for use as forensic tools,
+    are useful in providing additional information when performing incident response.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 15*](B19441_15.xhtml#_idTextAnchor251), *Packet Capture Analysis
+    with Xplico*, gives an insightful use of automated packet analysis using one tool
+    for investigating network and internet traffic.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 16*](B19441_16.xhtml#_idTextAnchor262), *Network Forensic Analysis
+    Tools*, ends the book by demonstrating how to capture and analyze packets using
+    a variety of tools and websites including Wireshark, NetworkMiner, [packettotal.com](http://packettotal.com),
+    and [apackets.com](http://apackets.com).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To get the most out of this book
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Although we have tried our best to explain all concepts and technologies in
+    this book, it may be beneficial if you have prior knowledge of downloading and
+    installing software and are at least familiar with basic computer and networking
+    concepts such as RAM, CPU, virtualization, and network ports.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Software/hardware covered in** **the book** | **Operating** **system requirements**
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Kali 2022.x and later | Minimum specs: A PC or laptop with 8 GB RAM, 250
+    GB free hard drive space, and a Ryzen 7 or i5 CPURecommended specs: 16 GB RAM,
+    250 GB free hard drive space, and a Ryzen 7 or i7 CPU |'
+  prefs: []
+  type: TYPE_TB
+- en: '**If you are using the digital version of this book, we advise you to type
+    the code yourself or access the code from the book’s GitHub repository (a link
+    is available in the next section). Doing so will help you avoid any potential
+    errors related to the copying and pasting** **of code.**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Download the example code files
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: You can download the example code files for this book from GitHub at [https://github.com/PacktPublishing/Digital-Forensics-with-Kali-Linux-Third-Edition](https://github.com/PacktPublishing/Digital-Forensics-with-Kali-Linux-Third-Edition).
+    If there’s an update to the code, it will be updated in the GitHub repository.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We also have other code bundles from our rich catalog of books and videos available
+    at [https://github.com/PacktPublishing/](https://github.com/PacktPublishing/).
+    Check them out!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Download the color images
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We also provide a PDF file that has color images of the screenshots and diagrams
+    used in this book. You can download it here: [https://packt.link/vLuYi](https://packt.link/vLuYi).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conventions used
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are a number of text conventions used throughout this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Code in text**: Indicates code words in text, database table names, folder
+    names, filenames, file extensions, pathnames, dummy URLs, user input, and Twitter
+    handles. Here is an example: “Power on your Pi and Kali will boot. Again, the
+    default username and password are both **kali** (in lowercase).”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Any command-line input or output is written as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Bold**: Indicates a new term, an important word, or words that you see onscreen.
+    For instance, words in menus or dialog boxes appear in **bold**. Here is an example:
+    “You can view some of the forensics tools by clicking on **Applications** | **11-Forensics**
+    on the main Kali menu.”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tips or important notes
+  prefs: []
+  type: TYPE_NORMAL
+- en: Appear like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Get in touch
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Feedback from our readers is always welcome.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**General feedback**: If you have questions about any aspect of this book,
+    email us at [customercare@packtpub.com](mailto:customercare@packtpub.com) and
+    mention the book title in the subject of your message.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Errata**: Although we have taken every care to ensure the accuracy of our
+    content, mistakes do happen. If you have found a mistake in this book, we would
+    be grateful if you would report this to us. Please visit [www.packtpub.com/support/errata](http://www.packtpub.com/support/errata)
+    and fill in the form.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Piracy**: If you come across any illegal copies of our works in any form
+    on the internet, we would be grateful if you would provide us with the location
+    address or website name. Please contact us at [copyright@packt.com](mailto:copyright@packt.com)
+    with a link to the material.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**If you are interested in becoming an author**: If there is a topic that you
+    have expertise in and you are interested in either writing or contributing to
+    a book, please visit [authors.packtpub.com](http://authors.packtpub.com).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Share Your Thoughts
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Once you’ve read *Digital Forensics with Kali Linux*, we’d love to hear your
+    thoughts! Please [click here to go straight to the Amazon review page](https://packt.link/r/1-837-63515-3)
+    for this book and share your feedback.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your review is important to us and the tech community and will help us make
+    sure we’re delivering excellent quality content.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Download a free PDF copy of this book
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Thanks for purchasing this book!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Do you like to read on the go but are unable to carry your print books everywhere?     Is your eBook purchase not compatible with the device of your choice?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Don’t worry, now with every Packt book you get a DRM-free PDF version of that
+    book at no cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Read anywhere, any place, on any device. Search, copy, and paste code from your
+    favorite technical books directly into your application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The perks don’t stop there, you can get exclusive access to discounts, newsletters,
+    and great free content in your inbox daily
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Follow these simple steps to get the benefits:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scan the QR code or visit the link below
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](image/B19441_QR_Free_PDF.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[https://packt.link/free-ebook/9781837635153](https://packt.link/free-ebook/9781837635153)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Submit your proof of purchase
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: That’s it! We’ll send your free PDF and other benefits to your email directly
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

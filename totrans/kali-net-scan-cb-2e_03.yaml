@@ -1,0 +1,2540 @@
+- en: Discovery
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'This chapter will include the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Scapy to perform host discovery (layers 2/3/4)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Nmap to perform host discovery (layers 2/3/4)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using ARPing to perform host discovery (layer 2)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using netdiscover to perform host discovery (layer 2)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Metasploit to perform host discovery (layer 2)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using ICMP to perform host discovery
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using fping to perform host discovery
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using hping3 to perform host discovery (layers 3/4)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Discovery scanning** is the process of identifying live hosts on a network.
+    In the context of'
+  prefs: []
+  type: TYPE_NORMAL
+- en: penetration testing, this is usually performed to identify potential targets
+    for attack. The
+  prefs: []
+  type: TYPE_NORMAL
+- en: objective here is not to exhaust resources in gathering information about targets,
+    but instead, to merely find out where the targets are logically located. The final
+    product of our discovery should be a list of IP addresses that we can then use
+    for further analysis. In this chapter, we will discuss how to discover hosts on
+    a network by using protocols operating at layer 2, layer 3, and layer 4 of the
+    OSI model.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Knowing the OSI model
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Prior to addressing each of the scanning techniques specifically, we should
+    address a few underlying principles. The **Open Systems Interconnection** (**OSI**)
+    model is an **International Organization for Standardization** (**ISO**) standard
+    that defines how networked systems communicate. This model is divided into seven
+    layers that define how application content can be sent by one system and/or received
+    by another. The upper layers (5-7) of the OSI model primarily function to interact
+    with the user, whereas the lower layers (1-4) deal with encoding, formatting,
+    and transmission. These layers consist of the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **OSI model** | **Layer description** | **Protocols** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Layer 7: Application | This layer involves the application software that
+    is sending and receiving data | HTTP, FTP, and Telnet |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Layer 6: Presentation | This layer defines how data is formatted or organized
+    | ASCII, JPEG, PDF, PNG, and DOCX |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Layer 5: Session | This layer involves application session control, management,
+    synchronization, and termination | NetBIOS, PPTP, RPC, and SOCKS |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Layer 4: Transport | This layer involves end-to-end communication services
+    | TCP and UDP |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Layer 3: Network | This layer involves logical system addressing | IPv4,
+    IPv6, ICMP, and IPSec |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Layer 2: Data link | This layer involves physical system addressing | ARP
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Layer 1: Physical | This layer involves the data stream that is passed over
+    the wire |  |'
+  prefs: []
+  type: TYPE_TB
+- en: The lower layers of the OSI model are largely used to ensure that network traffic
+    successfully arrives at its intended destination. Many of the commonly used protocols
+    at these lower layers necessitate a response from the destination system and,
+    as such, can be leveraged by potential attackers to identify live systems. Techniques
+    discussed in the remainder of this section will leverage protocols used in layers
+    2, 3, and 4 to discover live network systems. Prior to addressing each of the
+    specific recipes, we will briefly discuss the protocols used and how they can
+    be leveraged for discovery.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The pros and cons of layer 2 discovery with ARP are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pros**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Very fast
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Highly reliable
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Cons**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cannot discover remote systems (non-routable protocol)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Layer 2 discovery scanning is performed using **Address Resolution Protocol**
+    (**ARP**) traffic. ARP is a layer 2 protocol that primarily serves the function
+    of translating logical layer 3 IP addresses to physical layer 2 MAC addresses.
+    When a system needs to locate the physical address that corresponds to a destination
+    IP address, it will broadcast an ARP request packet on the local network segment.
+    This ARP request simply asks the entire network, "Who has this IP address?" The
+    system with the specified IP address will then directly respond to the inquiring
+    system with an ARP reply that contains its layer 2 MAC address. The inquiring
+    system will update its ARP cache, which is a temporary record of IP address and
+    MAC address associations, and will then initiate its communications with the host.
+    ARP can be useful in discovering live hosts on a network, because it does not
+    employ any form of identification or authorization prior to responding to requests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a result of this, it is possible and even trivial for an intruder to connect
+    to a local network and enumerate live hosts. This can be performed by sending
+    a series of ARP requests for a comprehensive list of IP addresses and then recording
+    a list of queried IP addresses for which responses were received. ARP discovery
+    has both advantages and disadvantages. It is useful in discovery scanning because
+    it is the fastest and most reliable discovery protocol. Unfortunately, it is also
+    a non-routable protocol and can only be used to discover hosts on the local subnet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The pros and cons of layer 3 discovery with ICMP are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pros**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Can discover remote systems (routable protocol)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Still relatively fast
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Cons**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Slower than ARP discovery
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Often filtered by firewalls
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Layer 3 discovery is probably the most commonly known and used discovery technique
+    among network administrators and technicians. The famous ping command-line utility,
+    which is found natively on both Windows and *nix systems, uses layer 3 discovery.
+    This form of discovery makes use of Internet Control Message Protocol (ICMP).
+    While ICMP has several functions, one that can be particularly useful to identify
+    live systems is the use of echo request and echo response messages. An ICMP echo
+    request is the technical equivalent of one system asking another system, "Are
+    you there?" An ICMP echo response is how the receiving system can answer, "Yes
+    I am." To determine whether a host exists at a particular IP address, a system
+    can send an ICMP echo request to that address. If there is a host with that IP
+    address and everything works as desired, the host will then return an ICMP echo
+    reply. This protocol can be leveraged in the host discovery by performing this
+    sequence in a loop for a comprehensive list of IP addresses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The output would consist of a list of only the IP addresses for which a reply
+    was received. Layer 3 discovery is effective because it uses a routable protocol
+    to identify live hosts. However, there are also certain disadvantages associated
+    with its use. ICMP discovery is not as fast as ARP discovery. Also, ICMP discovery
+    is not as reliable as ARP discovery, as some hosts are intentionally configured
+    to not respond to ICMP traffic, and firewalls are frequently configured to drop
+    ICMP traffic. Nonetheless, it is a fast and commonly used approach to discovering
+    potential targets on a remote address range.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Layer 4 discovery is highly effective because publicly routable systems are
+    usually only in the public IP space, as they host networked services that are
+    available over **Transmission Control Protocol** (**TCP**) or **User Datagram
+    Protocol** (**UDP**). In poorly secured environments, a reply can often be solicited
+    from a remote server by sending nearly any UDP or TCP request to its IP address.
+    However, if stateful filtering is employed, it may be possible to only solicit
+    a response from a remote service with a SYN request directed to a port address
+    associated with a live service. Even in highly secure environments with advanced
+    filtering, discovery is possible in most cases if the right request is supplied.
+    However, with 65,536 possible port addresses for both UDP and TCP services, a
+    fully comprehensive discovery process can be very time consuming. The best approach
+    to layer 4 discovery with both TCP and UDP techniques is to find the right balance
+    between thoroughness and expediency.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The pros and cons of layer 4 discovery with TCP are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pros**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Can discover remote systems (routable protocol)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: More reliable than ICMP (filters are less common or selectively implemented)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Cons**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Stateful firewall filters can produce unreliable results
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Thorough discovery can be time consuming
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Layer 4 discovery with TCP consists of sending TCP packets to potential destination
+    addresses with various TCP flag bits activated. Different flag configurations
+    can trigger various responses that can be used to identify live hosts. Unsolicited
+    TCP finish (**FIN**) or **acknowledge** (**ACK**) packets can often trigger **reset**
+    (**RST**) responses from a remote server. The **synchronize** (**SYN**) packets
+    sent to a remote server can commonly trigger SYN+ACK or RST responses, depending
+    on the status of the service. The intention is not to solicit a particular response,
+    but instead to solicit any response. Any response from a given IP address is a
+    confirmation that a live system is present.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The pros and cons of layer 4 discovery with UDP are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pros**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Can discover remote systems (routable protocol)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Can even discover remote hosts with all TCP services filtered
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Cons**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Inconsistent use and filtering of ICMP port-unreachable responses makes indiscriminate
+    discovery unreliable
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Service-specific probe techniques limit thoroughness and increase the required
+    scan time
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: UDP discovery involves sending UDP probe packets to various destination ports
+    in an attempt to solicit a response from live hosts. UDP discovery can sometimes
+    be effective in identifying live hosts that have all TCP services filtered. However,
+    UDP discovery can be tricky because while some UDP services will reply to UDP
+    packets with ICMP port-unreachable responses, others will only reply to unique
+    requests that specifically correspond to a running service. Additionally, ICMP
+    traffic is commonly filtered by egress restrictions on firewalls, making it difficult
+    to perform indiscriminate UDP discovery. As such, effective UDP discovery scanning
+    often requires unique techniques that vary from service to service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Scapy to perform host discovery (layers 2/3/4)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Scapy is a powerful interactive tool that can be used to capture, analyze,
+    manipulate, and even create protocol-compliant network traffic, which can then
+    be injected into the network. Scapy is also a library that can be used in Python,
+    thereby offering the capability to create highly effective scripts to perform
+    network traffic handling and manipulation. We will demonstrate here how to use
+    Scapy to perform discovery in layers 2, 3, and 4:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, we will use Scapy and Python to perform ARP discovery in layer 2.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, we will use Scapy to inject and analyze ICMP traffic in layer 3.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Finally, we will use Scapy and Python to perform layer 4 discovery using both
+    UDP and TCP.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Scapy to perform ARP discovery, you will need to have at least one system
+    on the **local area network** (**LAN**) that will respond to ARP requests. In
+    the examples provided, a combination of Linux and Windows systems are used. For
+    more information on setting up systems in a local lab environment, refer to the
+    *Installing Metasploitable2* and *Installing Windows Server* recipes in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Scapy to perform layer 3 and layer 4 discovery does not require a lab
+    environment, as many systems on the Internet will reply to ICMP echo requests
+    as well as both TCP and UDP traffic. However, it is highly recommended that you
+    perform any type of network scanning exclusively in your own lab unless you are
+    thoroughly familiar with the legal regulations imposed by any governing authorities
+    to whom you are subject. If you wish to perform this technique within your lab,
+    you will need to have at least one system that will respond to ICMP, TCP, and
+    UDP requests. In the examples provided, a combination of Linux and Windows systems
+    are used. For more information on setting up systems in a local lab environment,
+    refer to the *Installing Metasploitable2* and *Installing Windows Server* recipes
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additionally, this section will require a script to be written to the filesystem,
+    using a text editor such as Vim or GNU nano. For more information on writing scripts,
+    refer to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426)*,
+    Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Let's go through the discovery steps layer by layer. In this layer, we will
+    use Scapy to perform discovery at layers 2, 3, and 4.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Layer 2 discovery - ARP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To understand how ARP discovery works, we will start by using Scapy to craft
+    custom packets that will allow us to identify hosts on the LAN using ARP:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To begin using Scapy in Kali Linux, enter the `scapy` command from the Terminal.
+    You can then use the `display()` function to see the default configurations for
+    any ARP object created in Scapy in the following manner:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00576.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Notice that both the IP and MAC source addresses are automatically configured
+    to the values associated with the host on which Scapy is being run. Except in
+    the case that you are spoofing an alternate source address, these values will
+    never have to be changed for any Scapy object. The default opcode value for ARP
+    is automatically set to `who-has`, which designates that the packet will be requesting
+    an IP and MAC association. In this case, the only value we need to supply is the
+    destination IP address. To do this, we can create an object using the ARP function
+    by setting it equal to a variable. The name of the variable is irrelevant (in
+    the example provided, the variable name, `arp_request`, is used).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Have a look at the following commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00635.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that the `display()` function can also be applied to the created ARP
+    object to verify that the configuration values have been updated. For this exercise,
+    use a destination IP address that corresponds to a live machine in your lab network.
+    The `sr1()` function can then be used to send the request over the wire and return
+    the first response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00004.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Alternatively, you can perform the same task by calling the function directly
+    and passing any special configurations as arguments to it, as shown in the following
+    screenshot. This can avoid the clutter of using unnecessary variables and can
+    also allow the completion of the entire task in a single line of code.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00132.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Notice that in each of these cases, a response is returned, indicating that
+    the IP address of `172.16.69.128` is at the MAC address of `00:0C:29:96:81:f2`.
+    If you perform the same task, but instead assign a destination IP address that
+    does not correspond to a live host on your lab network, you will not receive any
+    response, and the function will continue to analyze the incoming traffic on the
+    local interface indefinitely.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You can forcibly terminate the function using *Ctrl *+ *C*. Alternatively,
+    you can specify a timeout argument to avoid this problem. Using timeouts will
+    become critical when Scapy is employed in Python scripting. To use a timeout,
+    an additional argument should be supplied to the send/receive function, specifying
+    the number of seconds to wait for an incoming response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00136.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By employing the timeout function, a request sent to a non-responsive host
+    will return after the specified amount of time, indicating that `0` answers were
+    captured. Additionally, the responses received by this function can also be set
+    to a variable, and subsequent handling can be performed on the response by calling
+    this variable:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00285.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Scapy can also be used as a library within the Python scripting language. This
+    can be used to effectively automate redundant tasks performed in Scapy. Python
+    and Scapy can be used to loop through each of the possible host addresses within
+    the local subnet in sequence and send ARP requests to each one. An example of
+    a functional script that could be used to perform layer 2 discovery on a sequential
+    series of hosts might look like the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first line of the script indicates where the Python interpreter is located
+    so that the script can be executed without it being passed to the interpreter.
+    The script then imports all the Scapy functions and also defines Scapy logging
+    levels to eliminate unnecessary output in the script.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The subprocess library is also imported to facilitate easy extraction of information
+    from system calls. The second block of code is a conditional test that evaluates
+    whether the required argument is supplied to the script. If the required argument
+    is not supplied upon execution, the script will then output an explanation of
+    the appropriate script usage. This explanation includes the usage of the tool,
+    an example, and explanation of the task that will be performed by this example.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: After this block of code, there is a single isolated line of code that assigns
+    the provided argument to the interface variable. The next block of code utilizes
+    the `check_output()` subprocess function to perform an `ifconfig` system call
+    that also utilizes `grep` and `cut` to extract the IP address from the local interface
+    that was supplied as an argument. This output's then assigned to the `ip` variable.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `split` function is then used to extract the `/24` network prefix from the
+    IP address string. For example, if the `ip` variable contains the `192.168.11.4`
+    string, then the value of `192.168.11` will be assigned to the `prefix` variable.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The final block of code is a `for` loop that performs the actual scanning. The
+    `for` loop cycles through all values between `0` and `254`, and for each iteration,
+    the value is then appended to the network prefix. In the case of the example provided
+    earlier, an ARP request would be broadcast for each IP address between `192.168.11.0`
+    and `192.168.11.254`. For each live host that does reply, the corresponding IP
+    address is then printed to the screen to indicate that the host is alive on the
+    LAN.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Once the script has been written to the local directory, you can execute it
+    in the Terminal using a period and forward slash, followed by the name of the
+    executable script. Have a look at the following command used to execute the script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00518.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If the script is executed without any arguments supplied, the usage is output
+    to the screen. The usage output indicates that this script requires a single argument
+    that defines what interface should be used to perform the scan. In the following
+    example, the script is executed using the `eth0` interface:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00520.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once run, the script will determine the local subnet of the supplied interface,
+    perform the ARP scan on this subnet, and then output a list of live IP addresses
+    based on the responses from the hosts to which these IPs are assigned. Additionally,
+    Wireshark can be run at the same time as the script is running, to observe how
+    a request is broadcast for each address in sequence and how live hosts respond
+    to these requests, as seen in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00458.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Additionally, one can easily redirect the output of the script to a text file
+    that can then be used for subsequent analysis. The output can be redirected using
+    the greater-than sign followed by the name of the text file. An example of this
+    is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00525.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once output has been redirected to the output file (`output.txt`), you can
+    use the `ls` command to verify that the file was written to the filesystem, or
+    you can use the `cat` command to view the contents of the file. This script can
+    also be easily modified to only perform ARP requests against certain IP addresses
+    contained within a text file. To do this, we would first need to create a list
+    of IP addresses that we desire to scan. For this purpose, you can use either the
+    GNU nano or Vim text editors. To evaluate the functionality of the script, include
+    some addresses that were earlier discovered to be live and some other randomly
+    selected addresses in the same range that do not correspond to any live host.
+    To create the input file in either Vim or GNU nano, use one of the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00237.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the input file (`iplist.txt`) has been created, you can verify its contents
+    using the `cat` command. Assuming that the file was created correctly, you should
+    see the same list of IP addresses that you entered into the text editor:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00251.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To create a script that will accept a text file as input, we can either modify
+    the existing script from the previous exercise or create a new script file. To
+    utilize this list of IP addresses in our script, we will need to perform some
+    file handling in Python. An example of a working script might look like the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The only real difference between this script and the one that was previously
+    used to cycle through a sequential series is the creation of a variable called
+    `file` rather than `interface`. The `open()` function is then used to create an
+    object by opening the `iplist.txt` file in the same directory as the script. The
+    `r` value is also passed to the function to specify read-only access to the file.
+    The `for` loop cycles through each IP address listed in the file and then outputs
+    IP addresses that reply to the broadcast ARP requests. This script can be executed
+    in the same manner as discussed earlier:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00021.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If the script is executed without any arguments supplied, the usage is output
+    to the screen. The usage output indicates that this script requires a single argument
+    that defines the input list of IP addresses to be scanned. In the following example,
+    the script is executed using an `iplist.txt` file in the execution directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00088.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once run, the script will only output the IP addresses that are in the input
+    file and are also responding to ARP request traffic. Each of these addresses represents
+    a system that is alive on the LAN. In the same manner as discussed earlier, the
+    output of this script can be easily redirected to a file using the greater-than
+    sign followed by the desired name of the output file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00153.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once the output has been redirected to the output file, you can use the `ls`
+    command to verify that the file was written to the filesystem, or you can use
+    the `cat` command to view the contents of the file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Layer 3 discovery - ICMP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In order to send an ICMP echo request using Scapy, we will need to start stacking
+    layers to send requests. A good rule of thumb when stacking packets is to work
+    up through the layers of the OSI model. You can stack multiple layers by separating
+    each layer with a forward slash. To generate an ICMP echo request, an IP layer
+    needs to be stacked with an ICMP request:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To get started, use the `scapy` command to open the Scapy interactive console,
+    and then assign an `IP` object to a variable:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00334.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the `display()` function was used to view the default
+    configurations of the object attributes after it was assigned to the `ip` variable.
+    By default, the `IP` object is configured to send and receive using the loopback
+    IP address of `127.0.0.1`. To change any attribute of an object in Scapy, you
+    need to set `[object].[attribute]` equal to the desired value. In this case, we
+    want to change the destination IP address to the address of the system that we
+    would like to send the ICMP request to, as shown in the following set of commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00302.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After assigning the new value to the destination address attribute, the changes
+    can be verified by calling the `display()` function once again. Notice that when
+    the destination IP address value is changed to any other value, the source address
+    is also automatically updated from the loopback address to the IP address associated
+    with the default interface. Now that the attributes of the `IP` object have been
+    appropriately modified, we will need to create the second layer in our packet
+    stack. The next layer to be added to the stack is the ICMP layer, which we will
+    assign to a separate variable:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00351.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the ICMP object was initialized with the `ping` variable
+    name. The `display()` function can then be called to display the default configurations
+    of the ICMP attributes. To perform an ICMP echo request, the default configurations
+    are sufficient. Now that both layers have been configured correctly, they can
+    be stacked in preparation to send. In Scapy, layers can be stacked by separating
+    each layer with a forward slash. Have a look at the following set of commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00672.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the stacked layers have been assigned to a variable, the `display()` function
+    will then show the entire stack. The process of stacking layers in this manner
+    is often referred to as datagram encapsulation. Now that the layers have been
+    stacked, the request is ready to be sent across the wire. This can be done using
+    the `sr1()` function in Scapy:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00057.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the `sr1()` function is assigned to the `ping_reply`
+    variable. This executes the function and then passes the result to this variable.
+    After receiving the response, the `display()` function is used on the `ping_reply`
+    variable to see the contents of the response. Notice that this packet was sent
+    from the host to which we sent the initial request, and the destination address
+    is the IP address of our Kali system. Additionally, notice that the ICMP type
+    of the response is an echo reply. This process of sending and receiving ICMP with
+    Scapy may seem functional, based on this example, but if you attempt to use the
+    same process with a non-responsive target address, you will quickly notice the
+    problem:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00585.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The example output was truncated, but this output will continue indefinitely
+    until you force an escape with *Ctrl* + *C*. Without supplying a timeout value
+    to the function, the `sr1()` function will continue to listen until a response
+    is received. If a host is not alive or if the IP address is not associated with
+    any host, no response will be sent, and the function will not exit. To use this
+    function effectively within a script, a timeout value should be defined:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00596.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By supplying a timeout value as a second argument passed to the `sr1()` function,
+    the process will then exit if no response is received within the designated number
+    of seconds. In the example provided, the `sr1()` function is used to send the
+    ICMP request to a nonresponsive address that is exited after 1 second because
+    no response was received. In the examples provided so far, we have assigned functions
+    to variables to create objects that are persistent and can be manipulated. However,
+    these functions do not have to be assigned to variables but can also be generated
+    by calling the functions directly:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00270.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided here, all of the work that was done earlier with four
+    separate commands can actually be accomplished with a single command by directly
+    calling the functions. Notice that if an ICMP request is sent to an IP address
+    that does not reply within the timeframe specified by the timeout value, calling
+    the object will result in an exception. As no response was received, the answer
+    variable in this example that was set equal to the response is never initialized:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00347.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Knowledge of these varied responses can be used to generate a script that will
+    perform ICMP requests on multiple IP addresses in sequence. The script will loop
+    through all of the possible values for the last octet in the destination IP address,
+    and for each value, it will send an ICMP request. As each `sr1()` function is
+    returned, the response is evaluated to determine whether an echo response was
+    received:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first line of the script indicates where the Python interpreter is located
+    so that the script can be executed without it being passed to the interpreter.
+    The script then imports all Scapy functions and also defines Scapy logging levels
+    to eliminate unnecessary output in the script.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The second block of code is a conditional test that evaluates whether the required
+    argument is supplied to the script. If the required argument is not supplied upon
+    execution, the script will then output an explanation of appropriate script usage.
+    This explanation includes the usage of the tool, an example, and an explanation
+    of the task that will be performed by this example.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: After this block of code, the supplied value is assigned to the `address` variable.
+    That value is then used to extract the network prefix. For example, if the `address`
+    variable contains the `192.168.11.0` string , the value of `192.168.11` will be
+    assigned to the `prefix` variable.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The final block of code is a `for` loop that performs the actual scanning. The
+    `for` loop cycles through all values between `0` and `254`, and for each iteration,
+    the value is then appended to the network prefix. In the case of the example provided
+    earlier, an ICMP echo request would be sent to each IP address between `192.168.11.0`
+    and `192.168.11.254`. For each live host that does reply, the corresponding IP
+    address is then printed to the screen to indicate that the host is alive on the
+    LAN.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Once the script has been written to the local directory, you can execute it
+    in the Terminal using a period and forward slash, followed by the name of the
+    executable script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00631.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If the script is executed without any arguments supplied, the usage is output
+    to the screen. The usage output indicates that this script requires a single argument
+    that defines the `/24` network to scan. In the example provided, the script is
+    executed using the `172.16.36.0` network address. The script then outputs a list
+    of live IP addresses in the `/24` network range. This output can also be redirected
+    to an output text file using a greater-than sign followed by the output filename.
+    An example of this is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00512.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The `ls` command can then be used to verify that the output file was written
+    to the filesystem, or the `cat` command can be used to view its contents. This
+    script can also be modified to accept a list of IP addresses as input. To do this,
+    the `for` loop must be changed to loop through the lines that are read from the
+    specified text file. An example of this can be seen as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The only major difference from the prior script is that this one accepts an
+    input `filename` as an argument and then loops through each IP address listed
+    in this file to scan. Similar to the other script, the resulting output will include
+    a simple list of IP addresses associated with systems that responded to the ICMP
+    echo request with an ICMP echo response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00478.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The output of this script can be redirected to an output file in the same way.
+    Execute the script with the input file supplied as an argument and then redirect
+    the output using a greater-than sign followed by the name of the output text file.
+     An example of this can be seen as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00637.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Layer 4 discovery - TCP and UDP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To verify that an RST response is received from a live host, we can use Scapy
+    to send a TCP ACK packet to a known live host. In the example provided, the ACK
+    packet will be sent to the TCP destination port `80`. This port is commonly used
+    to run HTTP web services. The host used in the demonstration currently has an
+    Apache service running on this port.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To do this, we need to build each of the layers of our request. The first layer
+    to be built is the IP layer. Have a look at the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00484.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Here, we have initialized the `i` variable as an `IP` object and then reconfigured
+    the standard configurations to set the destination address to the IP address of
+    our target server. Notice that the source IP address is automatically updated
+    when any IP address other than the loopback address is provided for the destination
+    address. The next layer we need to build is our TCP layer. This can be seen in
+    the commands that follow:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00486.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Here, we have initialized the `t` variable as a `TCP` object. Notice that the
+    default configurations for the object already have the destination port set to
+    HTTP or port `80`. Here, we only needed to change the TCP flags from SYN (`S`)
+    to ACK (`A`). Now, the stack can be built by separating each of the layers with
+    a forward slash, as seen in the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00489.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Here, we have set the entire request stack equal to the request variable. Now,
+    the request can be sent across the wire with the send and receive function, and
+    then the response can be evaluated to determine the status of the target address:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00026.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that the remote system responds with a TCP packet that has the RST flag
+    set. This is indicated by the `R` value assigned to the `flags` attribute. The
+    entire process of stacking the request and sending and receiving the response
+    can be compressed into a single command by calling the functions directly:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00493.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now that we have identified the response associated with an ACK packet sent
+    to an open port on a live host, let''s attempt to send a similar request to a
+    closed port on a live system and identify whether there is any variation in response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00495.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In this request, the destination TCP port was changed from the default port
+    `80` to the port `1111` (a port on which no service is running). Notice that the
+    response that is returned from both an open port and a closed port on a live system
+    is the same. Regardless of whether this is a service actively running on the scanned
+    port, a live system will return an RST response. Additionally, it should be noted
+    that if a similar scan is sent to an IP address that is not associated with a
+    live system, no response will be returned. This can be verified by modifying the
+    destination IP address in the request to one that is not associated with an actual
+    system on the network:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00066.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'So, in review, we discovered that an ACK packet sent to a live host on any
+    port, regardless of the port status, will return an RST packet, but no response
+    will be received from an IP if no live host is associated with it. This is excellent
+    news because it means that we can perform a discovery scan on a large number of
+    systems by only interacting with a single port on each system. Using Scapy in
+    conjunction with Python, we can quickly loop through all of the addresses in a
+    `/24` network range and send a single ACK packet to only one TCP port on each
+    system. By evaluating the response returned by each host, we can easily output
+    a list of live IP addresses:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The example script that is provided is fairly simple. While looping through
+    each of the possible values for the last octet in the IP address, the ACK packet
+    is sent to the TCP port `80`, and the response is evaluated to determine whether
+    the integer conversion of the TCP flag within the response has the value of `4`
+    (the value associated with a solitary RST flag). If the packet has an RST flag,
+    the script outputs the IP address of the system that returned the response. If
+    no response is received, Python is unable to test the value of the response variable
+    as no value is assigned to it. As such, an exception will occur if no response
+    is returned. If an exception is returned, the script will then pass. The resulting
+    output is a list of live target IP addresses. This script can be executed using
+    a period and forward slash, followed by the name of the executable script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00232.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Similar discovery methods can be used to perform layer 4 discovery using the
+    UDP protocol. To determine whether we can discover a host using the UDP protocol,
+    we need to determine how to trigger a response from any live host with UDP, regardless
+    of whether the system has a service running on the UDP port. To attempt this,
+    we will first build our request stack in Scapy:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00503.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that the default source and destination port for the UDP object is DNS.
+    This is a commonly used service that can be used to resolve domain names to IP
+    addresses. Sending the request as it is will prove to be of very little help in
+    determining whether the IP address is associated with a live host. An example
+    of sending this request can be seen in the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00647.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Despite the fact that the host associated with the destination IP address is
+    alive, we receive no response. Ironically, the lack of response is actually due
+    to the fact that the DNS service is in use on the target system. Despite what
+    you might naturally think, it can sometimes be more effective to attempt to identify
+    hosts by probing UDP ports that are not running services, assuming that ICMP traffic
+    is not blocked by a firewall. This is because live services are often configured
+    to only respond to requests that contain specific content. Now, we will attempt
+    to send the same request to a different UDP port that is not in use:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00023.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By changing the request destination to port `123` and then resending it, we
+    now receive a response indicating that the destination port is unreachable. If
+    you examine the source IP address of this response, you can see that it was sent
+    from the host to which the original request was sent. This response then confirms
+    that the host at the original destination IP address is alive. Unfortunately,
+    a response is not always returned in these circumstances. The effectiveness of
+    this technique largely depends on the systems that you are probing and their configurations.
+    It is because of this that UDP discovery is often more difficult to perform than
+    TCP discovery. It is never as easy as just sending a TCP packet with a single
+    flag lit up. In the case that services do exist, service-specific probes are often
+    needed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Fortunately, there are a variety of fairly complex UDP-scanning tools that can
+    employ a range of UDP requests and service-specific probes to determine whether
+    a live host is associated with any given IP address.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: ARP layer 2 discovery is possible in Scapy by employing the use of the `sr1()`
+    (send/receive one) function. This function injects a packet, as defined by the
+    supplied argument, and then waits to receive a single response. In this case,
+    a single ARP request is broadcast, and the function will return the response.
+    The Scapy library makes it possible to easily integrate this technique into a
+    script and enables the testing of multiple systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: ICMP layer 3 discovery was performed here with Scapy by crafting a request that
+    includes both an IP layer and an appended ICMP request. The IP layer allowed the
+    packet to be routed outside the local network, and the ICMP request was used to
+    solicit a response from the remote system. Using this technique in a Python script,
+    this task can be performed in sequence to scan multiple systems or entire network
+    ranges.
+  prefs: []
+  type: TYPE_NORMAL
+- en: TCP and UDP layer 4 discovery methods were used by Scapy to craft custom requests
+    to identify live hosts using each of these protocols. In the case of TCP, the
+    custom ACK packets were constructed and sent to an arbitrary port on each target
+    system. If an RST reply was received, the system was identified as alive. Alternatively,
+    empty UDP requests were sent to arbitrary ports to attempt to solicit an ICMP
+    port unreachable response. Responses were used as an indication of a live system.
+    Each of these techniques can be used in a Python script to perform discovery against
+    multiple hosts or against a range of addresses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Nmap to perform host discovery (layers 2/3/4)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Network Mapper** (**Nmap**) is one of the most effective and functional tools
+    in Kali Linux. Nmap can be used to perform a large range of different scanning
+    techniques and is highly customizable. This tool will be addressed frequently
+    throughout the course of this book. In this recipe, we will discuss how to use
+    Nmap to perform layer 2 scanning with ARP, layer 3 scanning with ICMP, and layer
+    4 scanning utilizing TCP/UDP.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Nmap to perform ARP discovery, you will need to have at least one system
+    on the LAN that will respond to ARP requests. In the examples provided, a combination
+    of Linux and Windows systems are used. For more information on setting up systems
+    in a local lab environment, refer to the *Installing Metasploitable2* and *Installing
+    Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Nmap to perform layer 3 and layer 4 discovery does not require a lab environment,
+    as many systems on the Internet will reply to ICMP echo requests, as well as both
+    TCP and UDP traffic. However, it is highly recommended that you perform any type
+    of network scanning exclusively in your own lab unless you are thoroughly familiar
+    with the legal regulations imposed by any governing authorities to whom you are
+    subject. If you wish to perform this technique within your lab, you will need
+    to have at least one system that will respond to ICMP, TCP, and UDP requests.
+    In the examples provided, a combination of Linux and Windows systems are used.
+    For more information on setting up systems in a local lab environment, refer to
+    the the *Installing Metasploitable2* and *Installing Windows Server* recipes in
+    [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+    Additionally, this section will require a script to be written to the filesystem,
+    using a text editor such as Vim or GNU nano. For more information on writing scripts,
+    refer to the *Using text editors (VIM and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As in the previous recipe, we'll go through this layer by layer.  In this layer,
+    we will use Nmap to perform discovery at layers 2, 3, and 4.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Layer 2 discovery - ARP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Nmap is another option for performing automated layer 2 discovery scans with
+    a single command. The `-sn` option is referred to by Nmap as a ping scan. Although
+    the term **ping scan** naturally leads you to think that layer 3 discovery is
+    being performed, it is actually adaptive:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Assuming that addresses on the same local subnet are specified as the argument,
+    a layer 2 scan can be performed with the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00091.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This command will send an ARP request to the LAN broadcast address and will
+    determine whether the host is alive, based on the response that is received. Alternatively,
+    if the command is used against an IP address of a host that is not alive, the
+    response will indicate that the host is down:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00675.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This command can be modified to perform layer 2 discovery on a sequential series
+    of IP addresses, using dash notation. To scan a full `/24` range, you can use
+    `0-255`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00159.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Using this command will send out broadcast ARP requests for all hosts within
+    that range and will determine each host that is actively responding. This scan
+    can also be performed against an input list of IP addresses, using the `-iL` option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00305.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When the `-sn` option is used, Nmap will first attempt to locate the host using
+    layer 2 ARP requests, and it will only use layer 3 ICMP requests if the host is
+    not located on the LAN. Notice how an Nmap ping scan performed against the hosts
+    on the local network (on the `172.16.36.0/24` private range) returns MAC addresses.
+    This is because the MAC addresses are returned by the ARP response from the hosts.
+    However, if the same Nmap ping scan is performed against remote hosts on a different
+    LAN, the response will not include system MAC addresses:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00195.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When performed against a remote network range (public range `74.125.21.0/24`),
+    you can see that layer 3 discovery was used, as no MAC addresses were returned.
+    This demonstrates that when possible, Nmap will automatically leverage the speed
+    of layer 2 discovery, but when necessary, it will use routable ICMP requests to
+    discover remote hosts on layer 3\. This can also be seen if you use Wireshark
+    to monitor traffic while an Nmap ping scan is performed against hosts on the local
+    network.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the following screenshot, you can see that Nmap utilizes ARP requests to
+    identify hosts on the local segment:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00209.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Layer 3 discovery - ICMP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nmap is an adaptive tool that will automatically adjust and use layer 2, layer
+    3, or layer 4 discovery as needed. If the `-sn` option is used in Nmap to scan
+    IP addresses that do not exist on the local network segment, ICMP echo requests
+    will be used to determine whether the hosts are alive and responding.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To perform an ICMP scan of a single target, use Nmap with the `-sn` option,
+    and pass the IP address to be scanned as an argument:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00523.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The output of this command will indicate whether the device is up and will
+    also provide details about the scan performed. Additionally, notice that the system
+    name is also identified. Nmap also performs DNS resolution to provide this information
+    in the scan output. It can also be used to scan a sequential range of IP addresses,
+    using dash notation. Nmap is multithreaded by default and runs multiple processes
+    in parallel. As such, Nmap is very fast in returning scan results. Have a look
+    at the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00526.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, Nmap is used to scan an entire `/24` network range.
+    For convenience of viewing, the output of this command was truncated. By analyzing
+    the traffic passing across the interface with Wireshark, you may notice that the
+    addresses are not sequentially scanned. This can be seen in the following screenshot.
+    This is further evidence of the multithreaded nature of Nmap and illustrates how
+    processes are initiated from addresses in a queue as other processes complete:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00660.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Alternatively, Nmap can also be used to scan IP addresses from an input text
+    file. This can be done using the `-iL` option, followed by the name of the file
+    or file path:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00529.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, a list of six IP addresses exists in the execution
+    directory. This list is then input into Nmap, and each of the listed addresses
+    is scanned in an attempt to identify live hosts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00280.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Layer 4 discovery - TCP and UDP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'There are options in Nmap to discover hosts with both TCP and UDP. UDP discovery
+    with Nmap is already configured to use unique payloads necessary to trigger replies
+    from less-responsive port services:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To perform a discovery scan with UDP, use the `-PU` option in conjunction with
+    the port to test:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00534.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Similarly, it is also possible to configure an Nmap UDP ping request to a series
+    of IP addresses as defined by an input list. Here, in the example provided, we
+    will use the `iplist.txt` file in the same directory to scan each host listed
+    within:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00253.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Although the output from each of these examples indicated that six hosts were
+    discovered, this does not necessarily indicate that the six hosts were all discovered
+    by means of the UDP discovery method. In addition to the probing performed on
+    UDP port `53`, Nmap also will utilize any other discovery technique it can to
+    discover hosts within the designated range or within the input list. Although
+    the `-sn` option is effective in preventing Nmap from performing a TCP port scan,
+    it does not completely isolate our UDP ping request.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Although there is no effective way to isolate just this task, you can determine
+    what hosts were discovered via UDP requests by analyzing the traffic in Wireshark
+    or TCPdump. Alternatively, Nmap can also be used to perform a TCP ACK ping in
+    the same fashion as was discussed with Scapy. To use ACK packets to identify live
+    hosts, use the `-PA` option in conjunction with the port that you would like to
+    use:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00327.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The TCP ACK ping-discovery method can also be performed on a range of hosts
+    using dash notation, or can be performed on specified host addresses based on
+    an input list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00540.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nmap performs layer 2 scanning by sending out ARP requests to the broadcast
+    address for a series of IP addresses and identifies live hosts by flagging responses.
+    However, because this functionality is already integrated into Nmap, it can be
+    executed by simply providing the appropriate arguments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap performs layer 3 scanning by sending out ICMP echo requests for each IP
+    address within the supplied range or text file. As Nmap is a multithreaded tool,
+    multiple requests are sent out in parallel, and results are quickly returned to
+    the user. As Nmap's discovery function is adaptive, it will only use ICMP discovery
+    if ARP discovery cannot effectively locate the host on the local subnet. Alternatively,
+    if neither ARP discovery nor ICMP discovery is effective in identifying a live
+    host at a given IP address, layer 4 discovery techniques will be employed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap performs layer 4 scanning by sending a series of TCP ACK packets to arbitrary
+    ports on the target system and attempts to solicit an RST response as an indication
+    of a live system. The technique used by Nmap to perform UDP discovery, however,
+    is somewhat different than the technique we discussed with Scapy. Rather than
+    merely relying on ICMP host-unreachable responses, which can be inconsistent and/or
+    blocked, Nmap also performs host discovery by delivering service-specific requests
+    to targeted ports in an attempt to solicit a response.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using ARPing to perform host discovery (layer 2)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: ARPing is a command-line network utility that has a functionality similar to
+    the commonly used `ping` utility. This tool can identify whether a live host is
+    on a local network at a given IP by supplying that IP address as an argument.
+    This recipe will discuss how to use ARPing to scan for live hosts on a network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use ARPing to perform ARP discovery, you will need to have at least one system
+    on the LAN that will respond to ARP requests. In the examples provided, a combination
+    of Linux and Windows systems is used. For more information on setting up systems
+    in a local lab environment, refer to the *Installing Metasploitable2* and *Installing
+    Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem, using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'ARPing is a tool that can be used to send ARP requests and identify whether
+    a host is alive and responding:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The tool is used by simply passing an IP address as an argument to it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00462.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, a single ARP request is sent to the broadcast address,
+    requesting the physical location of the `172.16.36.135` IP address. As indicated
+    by the output, a single reply was received by the host with the `00:0C:29:3D:84:32`
+    MAC address. This tool can be more effectively used for layer 2 discovery scanning
+    if a bash script is used to perform this action on multiple hosts simultaneously.
+    In order to test the responses of each instance in bash, we should determine a
+    unique string that is included in the response, indicating a live host, but not
+    included when no response is received.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To identify a unique string, an ARPing request should be made to a non-responsive
+    IP address:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00465.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By analyzing varying responses from successful and unsuccessful ARPings, one
+    might notice that the unique bytes from a string only exist in the response if
+    there is a live host associated with the provided IP address, and it is also within
+    a line that includes the IP address. By grepping this response, we can extract
+    the IP address for each responding host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00141.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Grepping for this unique string when performing an ARPing against an actual
+    host IP returns a line with that IP address included, as seen in the first response
+    from the previous set of commands. Performing the same task against an IP address
+    that is not associated with an actual host returns nothing, as seen in the last
+    response from the previous set of commands. Using `cut` with a specially crafted
+    delimiter (`-d`) and the field (`-f`) values, we can quickly extract the IP address
+    from this string. The command-line function `cut` can be used in bash to separate
+    a line into an array, based on a specified delimiter. A specific value can then
+    be returned from the `cut` function by specifying the field. By piping over the
+    output multiple times, we can easily extract the MAC address from the returned
+    string. Have a look at the following set of commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00271.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can easily extract the IP address from the returned string by merely manipulating
+    the delimiter and field values supplied to the `cut` function:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00290.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Upon identifying how to extract the IP address from a positive ARPing response,
+    we can easily pass this task through a loop in a bash script and output a list
+    of live IP addresses. An example of a script that uses this technique is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the bash script that is provided, the first line defines the location of
+    the bash interpreter. The block of code that follows performs a test to determine
+    whether the expected argument was supplied. This is determined by evaluating whether
+    the number of supplied arguments is not equal to `1`. If the expected argument
+    is not supplied, the usage of the script is output, and the script exits. The
+    usage output indicates that the script is expecting the local interface name as
+    an argument.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next block of code assigns the supplied argument to the `interface` variable.
+    The `interface` value is then supplied to `ifconfig`, and the output is then used
+    to extract the network prefix. For example, if the IP address of the supplied
+    interface is `192.168.11.4`, the prefix variable would be assigned `192.168.11`.
+    A `for` loop is then used to cycle through the values of the last octet to generate
+    each possible IP address in the local `/24` network. For each possible IP address,
+    a single `arping` command is issued. The response for each of these requests is
+    then piped over, and then `grep` is used to extract lines with the `bytes from`
+    phrase. As discussed earlier, this will only extract lines that include the IP
+    address of live hosts.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Finally, a series of `cut` functions are used to extract the IP address from
+    this output.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Notice that an ampersand is used at the end of the `for` loop task instead
+    of a semicolon. The ampersand allows the tasks to be performed in parallel instead
+    of in sequence. This drastically reduces the amount of time required to scan the
+    IP range. Have a look at the following set of commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00471.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'One can easily redirect the output of the script to a text file that can then
+    be used for subsequent analysis. The output can be redirected using the greater-than
+    sign, followed  by the name of the text file. An example of this can be seen here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00463.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the output has been redirected to the output file, you can use the `ls`
+    command to verify that the file was written to the filesystem, or you can use
+    the `cat` command to view the contents of the file. This script can also be modified
+    to read from an input file and only verify that the hosts listed in this file
+    are alive. For the following script, you will need an input file with a list of
+    IP addresses. For this, we can use the same input file that was used for the Scapy
+    script, discussed in the previous recipe:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The only major difference between this script and the preceding one is that
+    rather than supplying an interface name, the filename of the input list is supplied
+    upon the execution of the script. This argument is passed to the `file` variable.
+    The `for` loop is then used to loop through each value in this file to perform
+    the ARPing task. To execute the script, use a period and forward slash, followed
+    by the name of the executable script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00530.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Executing the script without any arguments supplied will return the usage of
+    the script. This usage indicates that an input file should be supplied as an argument.
+    When this is done, the script is executed, and a list of live IP addresses is
+    returned from the input list of IP addresses. In the same manner as discussed
+    earlier, the output of this script can easily be redirected to an output file
+    using the greater-than sign. An example of this can be seen as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00649.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once the output has been redirected to the output file, you can use the `ls`
+    command to verify that the file was written to the filesystem, or you can use
+    the `cat` command to view the contents of the file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: ARPing is a tool that was written with the intention of validating whether a
+    single host is online. However, the simplicity of its use makes it easy to manipulate
+    it in bash to scan multiple hosts in sequence. This is done by looping through
+    a series of IP addresses, which are then supplied to the utility as arguments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using netdiscover to perform host discovery (layer 2)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The netdiscover tool is a tool that is used to identify network hosts through
+    both active and passive ARP analysis. It was primarily written to be used on a
+    wireless interface; however, it is functional in a switched environment as well.
+    In this specific recipe, we will discuss how to use netdiscover for both active
+    and passive scanning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use netdiscover to perform ARP discovery, you will need to have at least
+    one system on the LAN that will respond to ARP requests. In the examples provided,
+    a combination of Linux and Windows systems are used. For more information on setting
+    up systems in a local lab environment, refer to the *Installing Metasploitable2*
+    and *Installing Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: A tool that was specifically designed to perform layer 2 discovery is netdiscover.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `netdiscover` command can be used to scan a range of IP addresses by passing
+    the network range in CIDR notation as an argument while using the `-r` option.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00650.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The output generates a table that lists live IP addresses, corresponding MAC
+    addresses, the number of responses, the length of responses, and MAC vendor:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00027.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The `netdiscover` command can also be used to scan IP addresses from an input
+    text file. Instead of passing the CIDR range notation as an argument, the `-l`
+    option can be used in conjunction with the name or path of an input file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00678.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After running the command, we see the results displayed in the Terminal window:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00160.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Another unique feature that sets this tool apart from the others is the capability
+    to perform passive discovery. Broadcasting ARP requests for every IP address in
+    an entire subnet can sometimes trigger alerts or responses from security devices
+    such as **intrusion detection systems** (**IDS**) or **intrusion prevention systems**
+    (**IPS**). A stealthier approach is to listen for the ARP traffic, as the scanning
+    system naturally interacts with other systems on the network, and then record
+    the data collected from ARP responses. This passive scanning technique can be
+    performed using the `-p` option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00491.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: This technique will be significantly slower in gathering information, as the
+    requests have to come in as a result of normal network interactions, but it will
+    also be unlikely to draw any unwanted attention. This technique is much more effective
+    if it is run on a wireless network, as a promiscuous wireless adapter will receive
+    ARP replies intended for other devices.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To work effectively in a switched environment, you would need access to SPAN
+    or TAP, or need to overload the CAM tables to force the switch to start broadcasting
+    all traffic.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The underlying principle that describes ARP discovery with netdiscover is essentially
+    the same as what we discussed with the previous layer 2 discovery approaches.
+    The major differences between this tool and some of the others that we have discussed
+    include the passive discovery mode and inclusion of the MAC vendor in the output.
+    Passive mode is, in most cases, useless on a switched network, because the receipt
+    of an ARP response will still require some interaction with discovered clients,
+    albeit independent of the netdiscover tool. Nonetheless, it is important to understand
+    this feature and its potential usefulness in a broadcast network such as a hub
+    or wireless network. The netdiscover tool identifies the MAC vendor by evaluating
+    the first half (first three octets `/24` bits) of the returned MAC address. This
+    portion of the address identifies the manufacturer of the network interface and
+    is often a good indication of the hardware manufacturer for the rest of the device.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Metasploit to perform host discovery (layer 2)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Metasploit is primarily an exploitation tool, and this functionality will be
+    discussed in great length in the upcoming chapters. However, in addition to its
+    primary function, Metasploit also has a number of auxiliary modules that can be
+    used for various scanning and information gathering tasks. One auxiliary module
+    in particular can be used to perform ARP scanning on the local subnet. This is
+    helpful for many, as Metasploit is a tool that most penetration testers are familiar
+    with, and the integration of this function into Metasploit reduces the total number
+    of tools required for the duration of a given test. This specific recipe will
+    demonstrate how to use Metasploit to perform ARP discovery.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Metasploit to perform ARP discovery, you will need to have at least one
+    system on the LAN that will respond to ARP requests. In the examples provided,
+    a combination of Linux and Windows systems is used. For more information on setting
+    up systems in a local lab environment, refer to the *Installing Metasploitable2*
+    and *Installing Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Although often considered an exploitation framework, Metasploit also has a large
+    number of auxiliary modules that can be useful in scanning and information gathering.
+    There is one auxiliary module in particular that can be used to perform layer
+    2 discovery.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To start the Metasploit framework, use the `msfconsole` command. Then, the
+    `use` command in conjunction with the desired module can be used to configure
+    the scan:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00309.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the module has been selected, you can view the configurable options using
+    the `show options` command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00054.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: These are configuration options that specify information about the targets to
+    be scanned, the scanning system, and scan settings. Most of the information for
+    this particular scan can be collected by examining the interface configurations
+    of the scanning system. Conveniently, system shell commands can be passed while
+    in the Metasploit Framework Console.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the following example, a system call is made to execute `ifconfig` without
+    ever leaving the Metasploit Framework Console interface:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00479.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The interface to be used for this scan is the `eth1` interface. As layer 2
+    scans are only effective for identifying live hosts on the local subnet, we should
+    look to the scanning system IP and subnet mask to determine the range to scan.
+    In this case, the IP address and subnet mask indicate that we should scan the
+    `172.16.69.0/24` range. Additionally, the source IP address and MAC address of
+    the scanning system can be identified in these configurations. To define the configurations
+    in Metasploit, use the `set` command, followed by the variable to be defined and
+    then the value that you want to assign it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00500.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the scan configurations have been set, the settings can be reviewed again
+    by using the `show options` command. This should now display all the values that
+    were previously set:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00094.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Upon verifying that all the settings are configured correctly, the scan can
+    then be launched using the `run` command. This particular module will then print
+    out any live hosts discovered with ARP. It will also indicate the **network interface
+    card** (**NIC**) vendor, as defined by the first 3 bytes in the MAC address of
+    the discovered hosts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00108.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The underlying principle for how ARP discovery is performed by Metasploit is
+    once again the same. A series of ARP requests is broadcast, and the ARP responses
+    are recorded and output. The output of the Metasploit auxiliary module provides
+    the IP address of all live systems, and then it also provides the MAC vendor name
+    in parentheses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using hping3 to perform host discovery (layers 3/4)
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: An even more versatile discovery tool that can be used to perform host discovery
+    in multiple different ways is `hping3`. It is more powerful than `fping` in the
+    sense that it can employ multiple different types of discovery techniques but
+    is less useful as a scanning tool because it can only be used to target a single
+    host. However, this shortcoming can be overcome using bash scripting. This recipe
+    will demonstrate how to use `hping3` to perform layer 3 and layer 4 discovery
+    on remote hosts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Using `hping3` to perform layer 3 discovery does not require a lab environment,
+    as many systems on the Internet will reply to ICMP echo requests as well as both
+    TCP and UDP traffic. However, it is highly recommended that you perform any type
+    of network scanning exclusively in your own lab unless you are thoroughly familiar
+    with the legal regulations imposed by any governing authorities to whom you are
+    subject. If you wish to use this technique within your lab, you will need to have
+    at least one system that will respond to ICMP, TCP, and UDP requests. In the examples
+    provided, a combination of Linux and Windows systems are used. For more information
+    on setting up systems in a local lab environment, refer to the *Installing Metasploitable2*
+    and *Installing Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem, using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As before, we will look at this layer by layer.  Let's go through the discovery
+    steps layer by layer.  In this layer, we will use hping3 to perform discovery
+    at layers 3 and 4.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Layer 3 discovery - ICMP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `hping3` command is a very powerful discovery utility that has a large range
+    of options and modes that it can operate in. It is capable of performing discovery
+    in both layer 3 and layer 4.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To perform basic ICMP discovery of a single host address using `hping3`, you
+    merely need to pass the IP address to be tested and the desired scanning mode
+    of ICMP to it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00510.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the demonstration provided, the process was stopped using *Ctrl* + *C*.
+    Similar to the standard `ping` utility, the `hping3` ICMP mode will continue indefinitely
+    unless a specific number of packets is specified in the initial command. To define
+    the number of attempts to be sent, the `-c` option should be included with an
+    integer value that indicates the desired number of attempts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00112.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Although `hping3` does not support the scanning of multiple systems by default,
+    this can easily be scripted out with bash scripting. In order to do this, we must
+    first identify the distinctions between the output associated with a live address
+    and the output associated with a nonresponsive address.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To do this, we should use the same command on an IP address to which no host
+    is assigned:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00145.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By identifying the responses associated with each of these requests, we can
+    determine a unique string that we can `grep` for; this string will isolate the
+    successful ping attempts from the unsuccessful ones. With `hping3`, you may notice
+    that the length value is only presented in the case that a response is returned.
+    Based on this, we can extract the successful attempts by grepping for `len`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To determine the effectiveness of this approach in a script, we should attempt
+    to concatenate the two previous commands and then pipe over the output to our
+    `grep` function. Assuming that the string we have selected is truly unique to
+    successful attempts, we should only see the output associated with the live host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00514.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Despite the desired outcome, the `grep` function, in this case, does not appear
+    to be effectively applied to the output. As the output display handling in `hping3`
+    makes it difficult to pipe over to a `grep` function and only extract the desired
+    lines, we can attempt to work around this by other means. Specifically, we will
+    attempt to determine whether the output can be redirected to a file, and then
+    we can `grep` directly from the file. To do this, we will attempt to pass the
+    output for both the commands used earlier to the `handle.txt` file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00176.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'While this attempt was not completely successful as the output was not totally
+    redirected to the file, we can see by reading the file that enough is output to
+    create an effective script. Specifically, we are able to redirect a unique line
+    that is only associated with successful ping attempts and that contains the corresponding
+    IP address in the line. To verify that this workaround might be possible, we will
+    attempt to loop through each of the addresses in the `/24` range and then pass
+    the results to the `handle.txt` file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00421.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can now open the `handle.txt` file and see the output of our script:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00496.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Despite doing this, there is still a large amount of output (the provided output
+    is truncated for convenience) that consists of all the parts of the output that
+    were not redirected to the file. However, the success of the following script
+    is not contingent upon the excessive output of this initial loop, but rather on
+    the ability to extract the necessary information from the output file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00563.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After completing the scan loop, the output file can be identified in the current
+    directory using the `ls` command, and then the unique string of `len` can be grepped
+    directly from this file. Here in the output, we can see that each of our live
+    hosts is listed. At this point, the only remaining task is to extract the IP addresses
+    from this output and then recreate this entire process as a single functional
+    script. Have a look at the following set of commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00625.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By piping over the output to a series of `cut` functions, we can extract the
+    IP addresses from the output. Now that we have successfully identified a way to
+    scan multiple hosts and easily identify the results, we should integrate it into
+    a script. An example of a functional script that would tie all of these operations
+    together is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the bash script that is provided, the first line defines the location of
+    the bash interpreter. The block of code that follows performs a test to determine
+    whether the one argument that was expected was supplied. This is determined by
+    evaluating whether the number of supplied arguments is not equal to `1`. If the
+    expected argument is not supplied, the usage of the script is output, and the
+    script exits. The usage output indicates that the script is expecting the `/24`
+    network address as an argument.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next line of code extracts the network prefix from the supplied network
+    address. For example, if the network address supplied was `192.168.11.0`, the
+    prefix variable would be assigned the value `192.168.11`. The `hping3` operation
+    is then performed on each address within the `/24` range, and the resulting output
+    of each task is placed into the `handle.txt` file.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Once completed, `grep` is used to extract the lines that are associated with
+    live host responses from the `handle.txt` file and then extract the IP addresses
+    from those lines. The resulting IP addresses are then passed into an `output.txt`
+    file, and the temporary `handle.txt` file is removed from the directory.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This script can be executed using a period and forward slash, followed by the
+    name of the executable script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00673.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once completed, the script should return an `output.txt` file to the execution
+    directory. This can be verified using `ls`, and the `cat` command can be used
+    to view the contents of this file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00267.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When the script is run, you will still see the same large amount of output that
+    was seen when originally looping through the task. Fortunately, your list of discovered
+    hosts will not be lost in this output, as it is conveniently written to your output
+    file each time.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Layer 4 discovery - TCP and UDP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Unlike Nmap, `hping3` makes it very easy to identify hosts that are discovered
+    by UDP probes by isolating the task.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By specifying the UDP mode with the `--udp` option, UDP probes can be transmitted
+    in attempts to trigger replies from live hosts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00533.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the demonstration provided, the process was stopped using *Ctrl* + *C*.
+    When using `hping3` in UDP mode, discovery will continue indefinitely unless a
+    specific number of packets is defined in the initial command. To define the number
+    of attempts to be sent, the `-c` option should be included with an integer value
+    that indicates the desired number of attempts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00295.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Although `hping3` does not support the scanning of multiple systems by default,
+    using bash scripting we can filter our results to show only live addresses. In
+    order to do this, we must first identify the distinctions between the output associated
+    with a live address and the output associated with a nonresponsive address. To
+    do this, we should use the same command on an IP address to which no host is assigned:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00308.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By identifying the responses associated with each of these requests, we can
+    determine a unique string that we can `grep`; this string will isolate the successful
+    discovery attempts from the unsuccessful ones. In the previous requests, you may
+    have noticed that the phrase `ICMP Port Unreachable` is only presented in the
+    case that a response is returned. Based on this, we can extract the successful
+    attempts by grepping for `Unreachable`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To determine the effectiveness of this approach in a script, we should attempt
+    to concatenate the two previous commands and then pipe over the output to our
+    `grep` function. Assuming that the string we have selected is truly unique to
+    successful attempts, we should only see the output associated with the live host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00537.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Despite the desired outcome, the `grep` function, in this case, does not appear
+    to be effectively applied to the output. As the output display handling in `hping3`
+    makes it difficult to pipe over to a `grep` function and only extract the desired
+    lines, we can attempt to work around this by other means. Specifically, we will
+    attempt to determine whether the output can be redirected to a file, and then
+    we can grep directly from the file. To do this, we will attempt to pass the output
+    for both the commands used earlier to the `handle.txt` file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00445.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'While this attempt was not completely successful as the output was not totally
+    redirected to the file, we can see by reading the file that enough is output to
+    create an effective script. Specifically, we are able to redirect a unique line
+    that is only associated with successful ping attempts and that contains the corresponding
+    IP address in the line. To check whether this workaround is possible, we will
+    attempt to loop through each of the addresses in the `/24` range and then pass
+    the results to the `handle.txt` file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00349.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can now view the results by viewing the contents of `handle.txt`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00352.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By doing this, there is still a large amount of output (the provided output
+    is truncated for convenience) that consists of all the parts of output that were not
+    redirected to the file. However, the success of the script is not contingent upon
+    the excessive output of this initial loop, but rather on the ability to extract
+    the necessary information from the output file. This can be seen in the following
+    commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00041.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After completing the scan loop, the output file can be identified in the current
+    directory using the `ls` command, and then the unique string of `Unreachable`
+    can be grepped directly from this file, as shown in the next command. Here, in
+    the output, we can see that each of our live hosts discovered by UDP probing is
+    listed. At this point, the only remaining task is to extract the IP addresses
+    from this output and then recreate this entire process as a single functional
+    script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00359.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By piping over the output to a series of `cut` functions, we can extract the
+    IP addresses from the output. Now that we have successfully identified a way to
+    scan multiple hosts and easily identify the results, we should integrate it into
+    a script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the bash script that is provided, the first line defines the location of
+    the bash interpreter. The block of code that follows performs a test to determine
+    whether the one argument that was expected was supplied. This is determined by
+    evaluating whether the number of supplied arguments is not equal to `1`. If the
+    expected argument is not supplied, the usage of the script is output, and the
+    script exits. The usage output indicates that the script is expecting the `/24`
+    network address as an argument.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next line of code extracts the network prefix from the supplied network
+    address. For example, if the network address supplied was `192.168.11.0`, the
+    prefix variable would be assigned a value of `192.168.11`. The `hping3` operation
+    is performed on each address within the `/24` range, and the resulting output
+    of each task is placed into the `handle.txt` file.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Once this is complete, `grep` is used to extract the lines that are associated
+    with live host responses from the `handle.txt` file and then extract the IP addresses
+    from those lines.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The resulting IP addresses are then passed into an `output.txt` file, and the
+    temporary `handle.txt` file is removed from the directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00363.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can now view the contents of our `output.txt` file:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00365.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When the script is run, you will still see the same large amount of output
+    that was seen when originally looping through the task. Fortunately, your list
+    of discovered hosts will not be lost in this output, as it is conveniently written
+    to your output file each time. You can also use `hping3` to perform TCP discovery.
+    TCP mode is actually the default discovery mode used by `hping3`, and this mode
+    can be used by just passing the IP address to be scanned to `hping3`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00369.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the same way that we created a bash script to cycle through a `/24` network
+    and perform UDP discovery using `hping3`, we can create a similar script for TCP
+    discovery. First, a unique phrase that exists in the output associated with a
+    live host but not in the output associated with a nonresponsive host must be identified.
+    To do this, we must evaluate the response for each:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00372.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In this case, the length value is only present in the output associated with
+    a live host. Once again, we can develop a script that redirects the output to
+    a temporary `handle.txt` file and then greps the output from this file to identify
+    live hosts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This script will perform in a way similar to the one developed for UDP discovery.
+    The only differences are in the command performed in the loop sequence, grep value,
+    and the process to extract the IP address. Once run, this script will produce
+    an `output.txt` file that will contain a list of the IP addresses associated with
+    the hosts discovered by TCP discovery:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00125.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'You can confirm that the output file was written to the execution directory
+    using the `ls` command and read its contents using the `cat` command. This can
+    be seen in the following example:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00379.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To effectively use `hping3` for layer 3 discovery, a bash script was used to
+    perform an ICMP echo request in sequence. This was possible due to the unique
+    response that was generated by a successful and unsuccessful request. By passing
+    the function through a loop and then grepping for the unique response, we could
+    effectively develop a script that performs ICMP discovery against multiple systems
+    in sequence and then outputs a list of live hosts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For layer 4 discovery, `hping3` uses ICMP host-unreachable responses to identify
+    live hosts with UDP requests and uses null-flag scanning to identify live hosts
+    with TCP requests. For UDP discovery, a series of null UDP requests is sent to
+    arbitrary destination ports in an attempt to solicit a response. For TCP discovery,
+    a series of TCP requests is sent to destination port `0` with no flag bits activated.
+    In the example provided, this solicited a response with the ACK+RST flags activated.
+    Each of these tasks was passed through a loop in bash to perform scanning on multiple
+    hosts or a range of addresses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using ICMP to perform host discovery
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Layer 3 discovery is probably the most commonly used tool among network administrators
+    and technicians. It uses the famous ICMP `ping` utility to identify live hosts.
+    This recipe will demonstrate how to use the `ping` utility to perform layer 3
+    discovery on remote hosts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Using `ping` to perform layer 3 discovery does not require a lab environment,
+    as many systems on the Internet will reply to ICMP echo requests. However, it
+    is highly recommended you perform any type of network scanning exclusively in
+    your own lab unless you are thoroughly familiar with the legal regulations imposed
+    by any governing authorities to whom you are subject. If you wish to use this
+    technique within your lab, you will need to have at least one system that will
+    respond to ICMP requests. In the examples provided, a combination of Linux and
+    Windows systems is used. For more information on setting up systems in a local
+    lab environment, refer to the *Installing Metasploitable2* and *Installing Windows
+    Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem, using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Most people who work in the IT industry are fairly familiar with the `ping`
+    tool. To determine whether a host is alive using `ping`, you merely need to pass
+    an argument to the command to define the IP address that you wish to test:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00382.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When this command is issued, an ICMP echo request will be sent directly to
+    the IP address provided. Several conditions must be true in order to receive a
+    reply to this ICMP echo request. These conditions are as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The IP address tested must be assigned to a system
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The system must be alive and online
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: There must be an available route from the scanning system to the target IP
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The system must be configured to respond to ICMP traffic
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: There should not be any host-based or network firewall between the scanning
+    system and the target IP that is configured to drop ICMP traffic
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: As you can see, there are a lot of variables that have to be factored into the
+    success of ICMP discovery. It is for this reason that ICMP can be somewhat unreliable,
+    but unlike ARP, it is a routable protocol and can be used to discover hosts outside
+    of the LAN. Notice that in the previous example, `^C` appears in the output presented
+    from the `ping` command. This signifies that an escape sequence (specifically,
+    *Ctrl* + *C*) was used to stop the process. Unlike Windows, the `ping` command
+    integrated into Linux operating systems will, by default, ping a target host indefinitely.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'However, the `-c` option can be used to specify the number of ICMP requests
+    to be sent. Using this option, the process will end gracefully once the timeout
+    has been reached or replies have been received for each sent packet. Have a look
+    at the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00384.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the same way that ARPing can be used in a bash script to cycle through multiple
+    IPs in parallel, `ping` can be used in conjunction with bash scripting to perform
+    layer 3 discovery on multiple hosts in parallel. To write a script, we need to
+    identify the varied responses associated with a successful and failed ping request.
+    To do this, we should first ping a host that we know to be alive and responding
+    to ICMP, and then follow it up with a ping request to a nonresponsive address.
+    The following command demonstrates this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00388.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As with the ARPing requests, the bytes from a unique string are only present
+    in the output associated with live IP addresses, and they are also on a line that
+    contains this address. In the same fashion, we can extract the IP address from
+    any successful ping request using a combination of `grep` and `cut`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00198.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By employing this task sequence in a loop that contains a range of target IP
+    addresses, we can quickly identify live hosts that respond to ICMP echo requests.
+    The output is a simple list of live IP addresses. An example script that uses
+    this technique can be seen here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the provided bash script, the first line defines the location of the bash
+    interpreter. The block of code that follows performs a test to determine whether
+    the one argument that was expected was supplied. This is determined by evaluating
+    whether the number of supplied arguments is not equal to `1`. If the expected
+    argument is not supplied, the usage of the script is output, and the script exits.
+    The usage output indicates that the script is expecting the `/24` network address
+    as an argument.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next line of code extracts the network prefix from the supplied network
+    address. For example, if the network address supplied was `192.168.11.0`, the
+    prefix variable would be assigned `192.168.11`. A `for` loop is then used to cycle
+    through the values of the last octet to generate each possible IP address in the
+    local `/24` network. For each possible IP address, a single `ping` command is
+    issued. The response for each of these requests is then piped over, and then `grep`
+    is used to extract lines with the `bytes from` phrase. This will only extract
+    lines that include the IP addresses of live hosts.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Finally, a series of `cut` functions is used to extract the IP address from
+    that output. Notice that an ampersand is used at the end of the `for` loop task
+    instead of a semicolon. The ampersand allows the tasks to be performed in parallel
+    instead of in sequence. This drastically reduces the amount of time required to
+    scan the IP range.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The script can then be executed with a period and forward slash, followed by
+    the name of the executable script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00212.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When executed without any arguments supplied, the script returns the usage.
+    However, when executed with a network address value, the task sequence begins,
+    and a list of live IP addresses is returned. As discussed in the previous scripts,
+    the output of this script can also be redirected to a text file for later use.
+    This can be done with a greater-than sign followed by the name of the output file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00227.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the `ls` command is used to confirm that the output
+    file was created. The contents of this output file can be viewed by passing the
+    filename as an argument to the `cat` command.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Ping is a well-known utility in the IT industry, and its existing functionality
+    is already to identify live hosts. However, it was built with the intention of
+    discovering whether a single host is alive and not as a scanning tool. The bash
+    script in this recipe essentially does the same thing as using `ping` on every
+    possible IP address in a `/24` CIDR range. However, rather than doing this tedious
+    task manually, bash allows us to quickly and easily perform this task by passing
+    the task sequence through a loop.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using fping to perform host discovery
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: A tool that is very similar to the well-known `ping` utility is `fping.` However,
+    it is also built with a number of additional features that are not present in
+    `ping`. These additional features allow `fping` to be used as a functional scan
+    tool, without additional modification. This recipe will demonstrate how to use
+    `fping` to perform layer 3 discovery on remote hosts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Using `fping` to perform layer 3 discovery does not require a lab environment,
+    as many systems on the Internet will reply to ICMP echo requests. However, it
+    is highly recommended that you perform any type of network scanning exclusively
+    in your own lab unless you are thoroughly familiar with the legal regulations
+    imposed by any governing authorities to whom you are subject. If you wish to use
+    this technique within your lab, you will need to have at least one system that
+    will respond to ICMP requests. In the examples provided, a combination of Linux
+    and Windows systems is used. For more information on setting up systems in a local
+    lab environment, refer to the the *Installing Metasploitable2* and *Installing
+    Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `fping` command is very similar to the `ping` utility with a few extras
+    added on. It can be used in the same way that `ping` can be used to send an ICMP
+    echo request to a single target to determine whether it is alive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is done by simply passing the IP address as an argument to the `fping`
+    utility:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00400.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Unlike the standard `ping` utility, `fping` will stop sending ICMP echo requests
+    after it receives a single reply. Upon receiving a reply, it will indicate that
+    the host corresponding to this address is alive. Alternatively, if a response
+    is not received from the address, `fping` will, by default, make four attempts
+    to contact the system prior to determining that the host is unreachable:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00254.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This default number of connection attempts can be modified using the `-c` (count)
+    option and supplying an integer value to it that defines the number of attempts
+    to be made:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00269.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When executed in this fashion, the output is slightly more cryptic but can be
+    understood with careful analysis. The output for any host includes the IP address,
+    the number of attempts made (`xmt`), the number of replies received (`rcv`), and
+    the percentage of loss (`%loss`).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the example provided, the first address was discovered to be online. This
+    is evidenced by the fact that the number of bytes received and the latency of
+    reply are both returned. You can also easily determine whether there is a live
+    host associated with the provided IP address by examining the percentage loss.
+    If the percentage loss is 100, no replies have been received. Unlike `ping`—which
+    is most commonly used as a troubleshooting utility—`fping` was built with the
+    integrated capability to scan multiple hosts.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'A sequential series of hosts can be scanned with `fping,` using the `-g` option
+    to dynamically generate a list of IP addresses. To specify a range to scan, pass
+    this argument to both the first and last IP address in the desired sequential
+    range:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00282.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The generate list option can also be used to generate a list based on the CIDR
+    range notation. In the same way, `fping` will cycle through this dynamically generated
+    list and scan each address:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00415.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Finally, `fping` can also be used to scan a series of addresses as specified
+    by the contents of an input text file. To use an input file, use the `-f` (file)
+    option and then supply the filename or path of the input file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00417.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `fping` tool performs ICMP discovery in the same manner as other tools that
+    we discussed earlier. For each IP address, `fping` transmits one or more ICMP
+    echo requests, and the received responses are then evaluated to identify live
+    hosts. `fping` can also be used to scan a range of systems or an input list of
+    IP addresses by supplying the appropriate arguments. As such, we do not have to
+    manipulate the tool with bash scripting in the same way that was done with `ping`
+    to make it an effective scanning tool.
+  prefs: []
+  type: TYPE_NORMAL

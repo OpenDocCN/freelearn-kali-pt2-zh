@@ -1,0 +1,1065 @@
+- en: Password Cracking
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Resetting local Windows machine password
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking remote Windows machine passwords
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows domain password attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking local Linux password hashes
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking password hashes with a wordlist
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Brute force password hashes
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking FTP passwords
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking Telnet and SSH passwords
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking RDP and VNC passwords
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking ZIP file passwords
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Password cracking has its own uses, often times you may be able to access and
+    recover password databases but they are encrypted and on other times to escalate
+    privilege or gain access, you may have to use a password attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Resetting local Windows machine password
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will crack the local Windows machine passwords with direct
+    access to the computer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will also simulate booting off a CD-ROM in order to reset
+    the local password.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Windows workstation is powered down
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have recently downloaded the Kali ISO
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Have a local standard user on the Windows workstation with a password
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now reset the Windows password using Kali boot media:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With your Windows machine off, start by going into VirtualBox, click on the
+    Windows VM, and click on Settings:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5c9c15f5-f2e0-4f49-916d-4ba8edf6969c.png)VirtualBox machine screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Settings menu click on Storage.Click on the CD-ROM drive and choose
+    the Kali ISO you recently downloaded. Then click OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5b5a9489-6d84-44bd-b57b-f884d21a304b.png)VirtualBox machine storage
+    settings'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now start your Windows VM and it should automatically load the Kali CD. From
+    the main menu select Live (forensic mode).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Watch the screen carefully depending on what operating system you are working
+    with, you may be asked to boot off the CD. ![](assets/8f70c352-1d9a-464f-bd82-943996ea1f0e.png)Kali
+    boot screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once Kali is running open your terminal screen. ![](assets/d96f9769-1242-42d7-9f44-8eee7330cd4c.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You must change to the directory of your mounted Windows volume. Your ID of
+    the drive will be different from mine but follow the following steps to find it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From the listed directory contents you will probably just have the one drive
+    – use the `cd` command to make that the active drive. Once in the directory use
+    the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/0daee393-bb04-46c2-8e74-d33609b46d7c.png)Kali SAM output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will now see a list of users and whether or not they are an admin. Let''s
+    reset `UserA` password and make it an admin on the system:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will now be brought to a configuration screen. Select 1 and then 3, then
+    select `Y` when asked to do it. Next hit `q` to quit and select `y` to write the
+    hive files back:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/560817cf-ca2a-4801-966e-baa601eda581.png)chnt user modify screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To validate, type the following command and you will note that `UserA` is now
+    an `ADMIN` and has a `*BLANK*` password:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/cdc199c4-db7d-44dd-b2cb-682e77e71281.png)chnt show SAM screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Power off the VM at this point and remove the ISO from the CD-ROM drive. Lastly,
+    start the VM. This time it should take you right to Windows. Click on your user
+    and you will be brought right in without requiring a password:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3d63314c-84b5-4479-8c62-64d04e00dec6.png)Windows 7 main login screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you go in and check your user account you will notice that `UserA` is now
+    an administrator:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2833cfad-1433-49a0-abfa-87061b6e0ee5.png)Windows 7 user administration
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking remote Windows machine passwords
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will crack a remote Windows machine password. In this case,
+    we will assume we have already launched the attack through Armitage and have taken
+    the hashes we need. Please refer to [Chapter 4](9f678d15-2115-4e29-a75d-03dba65d3398.xhtml),
+    *Finding Exploits in the Target* and the *Advanced attacks with Armitage* recipe
+    if needed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have started Armitage up and it's running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have collected the needed hashes already from the remote machine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now break the password hashes of a Windows machine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Armitage screen select Console| Credentials. Notice from our prior
+    attack, we have the hashes that we pulled off the Windows XP machine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/be6142ec-f8bd-46d4-bc03-bccd33d710c2.png)Armitage screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: At the bottom select Crack Passwords.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From there you will be presented with an Option dialog. Scroll through it a
+    bit and see the options that are available to you. Without making any changes
+    click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/acd3ee1d-b805-4893-b710-b4fd7f449b99.png)Armitage implementation
+    of John the Ripper'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It will take a couple of minutes but ultimately you should be given the passwords
+    as per the following figure:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9491986a-5c9c-4363-8613-a739537a014d.png)Armitage output screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This attack uses John the Ripper to extract passwords. If for some reason it
+    was not able to crack your passwords in this run, we will be talking about further
+    advanced techniques and various options to make John the Ripper more effective.
+    We will be exploring this further as we continue through this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Windows domain password attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will try to crack the active directory database from a Windows
+    domain controller. We will assume you have already recovered the needed files,
+    the system file, and `NTDS.dit` files from the computer through other exploitation
+    means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your domain controller has some sample accounts on it
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have collected the system file and the `NTDS.dit` files through other means
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now recover passwords from a windows domain controller:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open up a terminal by clicking on the terminal icon. ![](assets/284e924e-3ef3-46fd-9602-871f91ea344a.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We need to install a couple of packages to assist us with the cracking of the **Active
+    Directory** (**AD**) Domain. Specifically, these are `libexedb` and `ntdsxtract`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you do not already have a logon to GitHub, open your browser and go to `www.github.com`
+    and register as a user.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To download `libexedb` enter the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'For more detailed instructions or issues on installation refer to the following
+    site: [https://github.com/libyal/libesedb/wiki/Building](https://github.com/libyal/libesedb/wiki/Building).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s get the `ntdsxtract` scripts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Let''s change to the directory that contains the files we obtained from the
+    domain controller. In my case AD files, from here we will use `esedbexport` to
+    parse and extract the `ntds.dit` file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/da666ad6-6d22-4f53-8cf1-e7c1d60ca4ec.png)Directory listing'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s see what files are in our new `actived.export` directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/8142a71f-5da5-41d8-9282-1f8a4b3ba31c.png)Directory listing'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now we can extract the hashes and other data output tables that we can then
+    use with John the Ripper:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/fc5a00be-3df6-48eb-9969-9ca38a4c4331.png)HASH extraction'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now if we take a look in our `temp` directory we will see several files including
+    the two output files that we specified as `lm.out` and `nt.out`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/d5b8ddbd-9fbe-424d-9c5a-e137f1d33f6c.png)Directory listing'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s get ready to use `john`. One of the first things we need to do is
+    make sure the `rockyou` password file is unzipped. Then we will run `john` and
+    see the output:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/51b8abf8-d785-4fe1-856f-2381ed5cc8bc.png)Output of cracked passwordsTry
+    running `john` with the following command line switch with the'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`--format=LM` and using the `lm.out` file.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking local Linux password hashes
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will crack Linux passwords using John the Ripper.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will also simulate booting off a CD-ROM in order to crack
+    the passwords using John the Ripper.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have some sample users and passwords setup on your Linux machine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now crack Linux password with John the Ripper:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With your Windows machine off start by going into VirtualBox, clicking on the
+    Linux VM, and click on Settings:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3875a895-0df2-4b57-94ab-1e2dc23321e2.png)VirtualBox virtual machine
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the settings menu click Storage.Click on the CD-ROM drive and choose the
+    Kali ISO that you recently downloaded. Then click OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/bf64376b-59b5-4e04-877e-7b4b9d03a476.png)VirtualBox virtual machine
+    storage settings'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now start your Linux VM and it should automatically load the Kali CD. From the
+    main menu select Live (forensic mode).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Watch the screen carefully depending on what operating system you are working
+    with, you may be asked to boot off the CD. ![](assets/e7dab174-ec0e-4cac-9a97-3852a974443b.png)Kali
+    boot screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s use places to find our Linux volume: Click Places | Computer| + Other
+    Locations and double-click on our Linux volume. You can then close places window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/7f90bf8b-4de3-4757-ac04-6e6716295cee.png)Kali places screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now open your terminal screen. ![](assets/7d490293-ac82-4e19-b3cf-10e92c3297d2.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You must change to the directory of your mounted Linux volume. Your ID of the
+    drive will be different from mine but follow the following steps to find it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From the listed directory contents you will probably just have the one drive
+    - `cd` into that drive directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/53a13360-bbdd-4f5b-82b8-27f3143f1e65.png)Directory listing'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s use the `shadow` file and John the Ripper to try and crack the passwords.
+    We are going to use John the Ripper with default settings. You will notice from
+    the output that we have cracked a few passwords:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/0fc42544-15ff-4adb-b4dd-1d61125363c5.png)John the Ripper output
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Although we did this attack locally against the `shadow` file, the attack is
+    the exact same if done remotely, you just need to get the `shadow` file from the
+    Linux machine through an exploit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking password hashes with a wordlist
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will crack hashes using John the Ripper and the password
+    lists. We will also work with a local `shadow` file from a Linux machine and we
+    will try to recover passwords based off wordlists.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have some sample users and passwords setup on your Linux machine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You copied the `shadow` file to your Kali `root` directory
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now attempt to crack passwords using a pre-defined wordlist:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Verify you have the `shadow` file copied in the `root` directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/fd16c746-c746-43f3-9ec9-b4a686ca2919.png)Directory listing'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s extract the `rockyou` password list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Let''s use John the Ripper with the password file that we just extracted against
+    the `shadow` file. You will note that we have some passwords that we recovered
+    that appear like very simple passwords:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/d490aa72-f2df-4eef-a535-0e98f3ecbc8b.png)John the Ripper output
+    screenNote that all the passwords we recovered were not actually dictionary words
+    but some were just very simple combinations.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Brute force password hashes
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will crack hashes using John the Ripper in brute force mode.
+    We will work with a local `shadow` file from a Linux machine and we will try to
+    recover passwords by brute forcing them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have some sample users and passwords setup on your Linux machine add some
+    more and make a couple accounts with random 4 character passwords.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You copied the `shadow` file to your Kali `root` directory
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will use a brute force method of attack on password hashes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Verify you have the `shadow` file copied in the `root` directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/88a8d1a9-3809-471b-9676-ab876245515c.png)Directory listing'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use a brute force attack against our `shadow` file we can use the following
+    commands. This command will take a very long time to crack any passwords and is
+    considered as a last resort:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/74e13169-5d53-40f5-919b-ab19512b5691.png)John the Ripper progress
+    screenYou can press the spacebar at any time to get an update as to how the password
+    cracking is going. Also, there are several options after the `-incremental` to
+    speed mine along, as I knew my passwords were all lowercase letters, I used `-incremental:lower`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After several hours I was able to obtain the passwords for Amy and Sheldon:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b31d279a-4435-45fa-b3f1-b4c62bd82b6b.png)John the Ripper output
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking FTP passwords
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will try and crack FTP passwords.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking FTP passwords is a great way to both access the system through FTP
+    and get the username and passwords against other systems and services. For this
+    recipe, we will use hydra to test the system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Metasploitable machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate the IP address of the Metasploitable machine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s attempt to crack an FTP server passwords:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s start by logging into the Metasploitable machine and we will create
+    a couple of users to test against:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: Validate the IP address of the Metasploitable machine – in my case it is `192.168.56.104`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You have a username but not a password
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this section we will proceed having a known username but an unknown password:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open a terminal window in Kali by clicking the icon. ![](assets/379d3bef-ac2c-4a60-9d63-14a3577c8079.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We will use a hydra to hunt for passwords using a wordlist. You will note that
+    quite quickly we get a hit for the user we added:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/0299755a-f892-48f5-9bd8-1359d4d63315.png)Hydra output screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You have a userlist
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will used a defined list of actual or potential usernames
+    that exist on the server:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open a terminal window in Kali by clicking the icon. ![](assets/eadb7caf-999e-4c48-a805-b2dc2641e46b.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We will use a hydra to hunt for passwords using a wordlist along with a predefined
+    set of usernames. Let''s build our name list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now let''s run hydra using our username list and wordlist. You will notice
+    that this does take some time but ultimately you will get the passwords:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/7a1fbc4f-3018-438e-871f-224358c84fa1.png)Hydra output screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking Telnet and SSH passwords
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will try and crack Telnet and SSH passwords.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking Telnet and SSH passwords can be used against systems as well as infrastructures.
+    With this, you have the ability to try and penetrate into switches, firewalls,
+    routers, pretty much any network equipment and most often Linux machines will
+    have this method of access enabled.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Metasploitable machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate the IP address of the Metasploitable machine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will attempt to crack Telnet and SSH passwords:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s start by logging into the Metasploitable machine and we will create
+    a couple of users to test against:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: Validate the IP address of the Metasploitable machine—in my case it is `192.168.56.104`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Cracking Telnet passwords with a userlist
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will try and crack telnet passwords based on known or potential
+    username list:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open a terminal window in Kali by clicking the icon. ![](assets/512520b2-9a1d-4779-8d1a-f2fe1843e6f2.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We will use a hydra to hunt for passwords using a wordlist along with a predefined
+    set of usernames. Let''s build our name list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now let''s run hydra using our username list and wordlist. You will notice
+    that this does take some time but ultimately you will get the passwords:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/bd6894f5-4547-47f9-8aa6-ddd774bf1bce.png)Hydra output screenTelnet
+    can take a very long time and provide unreliable results. However, because of
+    its prevalence in legacy networks, it''s a great method of attack.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking SSH password with a known user
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will crack SSH passwords with a know username:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open a terminal window in Kali by clicking the icon. ![](assets/a93ff871-5615-4b56-bd6b-ac4025b5fdcb.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now let''s run hydra using our known username and wordlist. You will notice
+    that this does take some time but ultimately you will get the passwords:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/7a020347-c3b2-43e0-8880-77b44d7de26a.png)Hydra output screenThe
+    `-t 4` slows the amount of processes down so it does not overwhelm or trigger
+    protections against some SSL instances.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking RDP and VNC passwords
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will try and crack RDP and VNC passwords on our Windows machine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cracking into either RDP or VNC can be a very powerful method to access any
+    system. While RDP is restricted to Windows systems VNC is a cross platform remote
+    control utility covering Windows, Mac, and Linux. You can use your previous scanning
+    to look for open VNC ports even on Windows machines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Windows machine is powered up on the NAT network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have some valid users on the system with RDP enabled for them
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now attempt to crack remote access passwords:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let's start by logging into the Windows machine and validate that we have some
+    accounts ready and also to get VNC downloaded and installed as well.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open internet explorer and browse to `www.uvnc.com`. Click Downloads at the
+    top. Select the latest version of the software and download it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Install `UltraVNC` by double-clicking the icon from the download location:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/12fbd7ea-46de-498d-81a0-5617a72db849.png)Directory listing'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When asked, click Run and select Yes when the UAC dialog box comes up. Select
+    the appropriate language and click the radio button to accept the agreement and
+    click Next. Click Next on the release notes info. Validate the installation directory
+    and click Next. Validate the components being installed—Full Installationand verify
+    if the UltraVNC Server is selected then click Next. At the shortcut name screen,
+    accept the default and select Next.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'At the select additional tasks screen selects all check boxes and click Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/e553ace3-93ea-4599-9e15-2ce2ecb88399.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Finally, go ahead and click Install.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once done, click through the remainder of the screens as needed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Shut down your Windows machine–switch it back to host only–start the Windows
+    VM.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For the purpose of this test, we will assume you know how to add users through
+    the control panel using the user accounts tab. Add two users:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Username - `UserA`, password - `franks`
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Username - `UserB`, password - `beans`
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Make sure if you set these users up as standard users and not admins that you
+    allow them to access the RDP services. To do this on Windows 7, right-click on
+    My Computer and then click on Properties:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/28b7f7d0-7a84-4d1c-bcb1-972f57fd6fd3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the upper- left hand corner, click on Remote settings.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'On the system properties screen, please make sure that you have the radio button
+    selected to Allow connections from computers running any version of Remote Desktop
+    (less Secure) selected. Then click on Select Users... :'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d2ad342d-f7f3-45f9-a91a-010eb7aa9f28.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'From the select user dialog, add `UserA` and `UserB` and click OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2d8a5c0f-2053-41b2-9e6f-06c147f5b0e7.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Close out all the remaining dialog boxes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Validate the IP of your Windows machine; for mine, I am using `192.168.56.105`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open a terminal window in Kali by clicking the icon. ![](assets/adfdb39a-2c7b-4fac-a887-d1e3d8cf60fb.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now let''s run hydra using our known username and wordlist. You will notice
+    that this does take some time but ultimately you will get the passwords:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/e5ab44b9-b9e3-4b68-b15e-c61b5cf0255e.png)Hydra output screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To run the same against VNC, simply replace RDP with VNC:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: Cracking ZIP file passwords
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will try and crack a ZIP file password.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sometimes, you will come across ZIP files that have a password on them. Normally,
+    you can easily crack these passwords with a simple dictionary attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now crack a ZIP files password and recover it''s contents:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open a terminal window in Kali by clicking the icon. ![](assets/656b7853-2057-4554-ae27-7cc6b88046e5.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Enter the following commands to create an encrypted ZIP file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: When asked for a password, let's use a simple one such as `password`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We will use our `rockyou.txt` dictionary file from the past recipes along with
+    `fcrackzip`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/17644e3c-ea01-4966-b6b1-7697f389a0c9.png)fcrackzip output'
+  prefs: []
+  type: TYPE_NORMAL

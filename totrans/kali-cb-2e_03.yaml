@@ -1,0 +1,1345 @@
+- en: Vulnerability Analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installation and configuration of OpenVAS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A basic vulnerability scanning with OpenVAS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Advanced vulnerability scanning with OpenVAS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installation and Configuration of Nessus
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A basic vulnerability scanning with Nessus
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Advanced vulnerability scanning with Nessus
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The installation and configuration of Nexpose
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Basic vulnerability scanning with Nexpose
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Advanced vulnerability scanning with Nexpose
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Once access to a network has been gained and the systems within that network
+    have been identified, the next step is establishing a foothold and persistent
+    access. There are several tools that are available to help identify and exploit
+    systemic vulnerabilities, but we will be focusing only on three of them in this
+    chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenVAS ([http://www.openvas.org](http://www.openvas.org))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Nessus ([https://www.tenable.com/products/nessus-vulnerability-scanner](https://www.tenable.com/products/nessus-vulnerability-scanner))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Nexpose ([https://www.rapid7.com/info/nexpose-community/](https://www.rapid7.com/info/nexpose-community/))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installation and configuration of OpenVAS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Since the default Kali Linux media does not include OpenVAS with the initial
+    installation, we will need to perform a full, fresh installation. This is done
+    from the console or over a remote connection.
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenVAS is an open source vulnerability management platform that was created
+    as a fork of the venerable Nessus platform when Tenable Network Security moved
+    Nessus to a closed source (initially named GNessUs). Over time, the OpenVAS framework
+    became part of the Greenbone Network's commercial vulnerability management solution.
+    Greenbone continues to contribute to OpenVAS, ensuring that it stays up to date
+    and relevant.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Considering that OpenVAS is accessible through a web browser as well as the
+    command line, it is a very powerful tool that can be leveraged either locally
+    through the command line or a browser, or it can be put in place in a central
+    location and used by other devices on the network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In order to be able to complete this section, you will need this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Console access to your Kali Linux system
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Internet access to download and install OpenVAS application
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will perform the steps necessary to install OpenVAS on Kali:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you have not fully updated your Kali Linux installation, you will want to
+    do so now. From the root shell, run the following command. If there are many updates,
+    this may take a while, but be patient. Once the update process is complete, reboot
+    the system, login, and open a root shell again:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From the root shell, use `apt-get` to download and install OpenVAS:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Once the installation is complete, run the following from the root shell to
+    kick off the setup process. Due to the amount of data needed, it is likely this
+    will take a while even over a fast connection, so be prepared to wait:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: At the end of this process, you will see the admin password displayed. Write
+    this down so that you are able to log into the OpenVAS portal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the event where you forget this password, it can be reset from the command
+    line using the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**`openvasmd --user=admin --new-password=[your password here]`**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A basic vulnerability scanning with OpenVAS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Once installed, OpenVAS provides a centralized platform that can be used from
+    any browser-based system or from the command line. Because OpenVAS is a security
+    analysis tool, it will be looking at the systems in this environment to identify
+    services and vulnerabilities, so ensure that you are prepared for potential impacts.
+    Even the most careful and the least impact scans can potentially affect services.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In order to be able to complete this section, you will need the following steps
+    completed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenVAS successfully installed and configured on your Kali Linux system
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Access to the Kali system, either from the desktop or a browser
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network access to the systems that were configured as part of the lab discussion
+    in the earlier sections
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You will need to confirm the IP address of your lab network and be able to ping
+    hosts on it
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will perform a basic vulnerability scan using OpenVAS:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Connect to the OpenVAS service on the Kali Linux system by opening a browser
+    and navigating to `https://[your Kali IP]:9392`; accept the certificate security
+    warning, and create an exception for the invalid certificate.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To prepare a more permanent implementation, create a new user that is unique
+    to your use. From the dashboard, navigate to Administration | Users. You will
+    see the list of configured users (in this case, since this is a default installation,
+    there should only be Admin). Under Actions for the user admin, click on Clone.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once cloned, you will be taken to the new account overview page. Click on the
+    Edit User option in the upper-left part to edit the details for this user. You
+    will be able to set the username, as well as permissions. Give the new user an
+    appropriate name and reset the password to something you will remember in the
+    future exercises.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In larger environments where LDAP is available, you can also connect OpenVAS
+    to these repositories to leverage a centralized account management. To enable
+    this, navigate to Administration | LDAP and configure the connection information
+    that is necessary to connect to these repositories.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once connected to the OpenVAS system, click on the Scans | Tasks link from the
+    top menu bar. Once the page loads, you should be immediately presented with an
+    initial scan wizard. This will help you kick off the very first scan you will
+    run, which we will run against our first Windows 7 host.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'With the Task Wizard window open, enter the IP address of your lab network.
+    In this case, add `192.168.56.0/24` into the textbox, and initiate the scan by
+    clicking on Start Scanning:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9fdd93ba-838a-42dc-8a6b-0f9b19cde87d.png)Task Wizard to initial
+    a scan'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After the scan is initiated, you will see a list of tasks, one of which is
+    the scan we just created:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/106911fc-311a-4833-9113-7cb7ed363710.png)List of running tasks'
+  prefs: []
+  type: TYPE_NORMAL
+- en: While the scan is running, you should familiarize yourself with the action icons
+    available, as they can be used to archive task configurations to move to other
+    systems, clone to create a copy, and so on.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once the scan is completed, you should see a change in the dashboard view to
+    something that looks similar to the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6efd23cd-a1ac-436e-b76a-ac9554462f0c.png)Task dashboard after initial
+    scan'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on the date of the scan to see the results of the scan:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d1f8a5a2-7b4b-4e00-a2c7-9122ed5c65d5.png)Scan result report'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are some important things to note in the initial report. First, you will
+    see that OpenVAS is only showing you three of the identified 15 vulnerabilities.
+    While this may seem unusual, it is necessary to understand how OpenVAS displays
+    its results through the default filter. The field named **Quality of Detection**
+    (**QoD**) stands for an indication of how trustworthy the results of a particular
+    scan maybe. To demonstrate this fact, click on the vulnerability with the highest
+    QoD:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ca574069-de4a-4620-8d6c-eec721396615.png)Vulnerability details'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you can see, the QoD for this check is 95%, meaning that the ability to determine
+    a host's exposure to this vulnerability is quite high. In looking through the
+    details of the check, you can also see that this is a potentially damaging vulnerability—this
+    vulnerability requires a vendor-supplied fix, has a very wide distribution of
+    affected platforms, and the result of a successful exploitation results in **remote
+    code execution** (**RCE**). The combination of these factors results in the severity
+    to be calculated as a 9.3 out of 10 (HIGH).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This particular vulnerability was used by the WannaCry ransomware campaign that
+    occurred in May 2017\. Additional fields of interest are the manner in which the
+    vulnerability was detected, and the information necessary to get more detailed
+    information, including vendor-specific patch information as well as CVE/BID/CERT
+    information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Using the information contained in this report will help to determine the system''s
+    level of risk to some known vulnerabilities and insecure configurations. If you
+    would like more detail, such as identified vulnerabilities that are below the
+    default QoD of 70%, you may customize the filter in the upper portion of the report
+    screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b973dc02-feb1-4ee9-9954-82972c0df860.png)Customize filtered view'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At the far right in the Actions column, you can see some very useful options.
+    The Add Note allows you to add additional narrative to the reports to add context,
+    document additional or relevant findings, and so on. The Add Override option allows
+    you to override a particular finding, with fields for where this is permitted,
+    which hosts, duration of the override, and the new severity (overrides are frequently
+    used to designate a false positive severity):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4c6b16ca-7a31-4bf5-980d-b8b52f74be3d.png)Each report contains documented
+    vulnerabilities that can be used in conjunction with other tools (such as Metasploit)
+    to successfully gain access to a target system. This information must be treated
+    with care. Ensure that the installation of OpenVAS is secured, and that the service
+    is not left running when not in immediate use.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Advanced vulnerability scanning with OpenVAS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Vulnerability identification through unauthenticated network scanning is a good
+    way to start gathering intelligence on a network, but a powerful component of
+    this is the ability to perform more frequent, targeted scans, and this can include
+    credentials that allow for the successful authentication to a target system for
+    deeper level evaluations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Features that make OpenVAS more powerful include highly configurable scan configurations,
+    scheduled tasks, automated reporting, and alerting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Aside from the default scan configurations that are present in the OpenVAS dashboard,
+    it also contains some very flexible options, including scheduled scans and customized
+    scan types. We will be looking at customized scan configurations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In order to complete this section, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OpenVAS successfully installed and configured on your Kali Linux system
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Access to the Kali system, either from the desktop or a browser
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network access to the systems that were configured as part of the lab discussion
+    in earlier sections.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You will need to confirm the IP address of the desktop `target1.kalicookbook.local`
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Successfully ping `target1.kalicookbook.local` from the Kali Linux system
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s begin our advanced scanning techniques using OpenVAS:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To prepare to configure more in-depth scans, we will start with adding credentials
+    we may be aware of. When credentials are known, we will be able to do much deeper
+    levels of evaluation. Navigate to Configuration | Credentials. In the upper-left
+    part, click on the New Credential icon to bring up the New Credential dialog box.
+    Configure as follows, using a domain user from your lab domain:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/24756421-48f8-4382-b793-cb5d99353c65.png)New Credential dialogAs
+    new accounts are discovered, they should be added to this section to not only
+    be used for authentication but also identification of all places where they are
+    used – a password reuse is very common.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The next section we will configure will be the selection of targets. Navigate
+    to Configuration | Targets. On this page, you will see some existing target sets,
+    including the automatically generated ones used in the quick start wizard. Click
+    on the New Target icon to create a new one. Use the following configuration:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/737f55c8-d5fa-4bf8-bcaf-ebafd1905f7e.png)Configure New Target'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that the target environment and known credentials are configured, we will
+    take a look at the actual scan configuration. Navigate to Configuration | Scan
+    Configs. The following scans are typical for a fresh installation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3388367c-11f1-4171-9c90-8fc47ed19dd5.png)List of scan configurations'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One thing you will notice is that scans can have the same number of NVT''s,
+    but have a higher or lower likelihood of causing services to stop. Also, scans
+    can reference and leverage data from previous runs. To get a better idea, find
+    the full and fast scan configuration, and click on Clone under the Actions column.
+    When the new configuration is presented, click on the Edit icon, and give the
+    scan a more meaningful name. Review the settings to get a better understanding
+    of how the scan is configured:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/f40060f8-ee1d-4581-a40b-107bbb82cb63.png)Scan configurationThe Fast
+    and Full Scan is the configuration we used for our scan in the previous section.
+    Despite how quickly the scan runs, it contains a lot of NVTs, demonstrating the
+    speed of OpenVAS.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will now put these three components – target, credentials, and a scan configuration
+    together to create a task. Navigate to Scans | Tasks, and click on the New Task
+    icon. Once opened, enter the following information:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Name: Scan for vulnerabilities'
+  prefs:
+  - PREF_UL
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Scan targets: Internal network'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Click on the star at the end of the schedule line, and create a new schedule
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Scan config: Kali Cookbook'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Leave all other options default, then click on Save
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](assets/0ca2e83e-90d7-40f4-8f64-64f38d7931cd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: From this point forward, a weekly, deep vulnerability scan will be run, and
+    a report will be generated for review. Multiple scheduled runs can be configured
+    as necessary, with email notifications sent at their completion.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Installation and Configuration of Nessus
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nessus is one of the most widely used penetration testing platforms in the industry
+    It used to come pre-installed in Kali up until recent releases. It is sold as
+    a commercial product by Tenable, but we will be using the home edition, which
+    will allow us to perform scanning on a limited number of IPs and gain the knowledge
+    we need to use the tool fully.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate the internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ensure you have recently done the updates and upgrades to Kali
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will perform Nessus setup and initial configuration:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We must first register for an account by going to the following website [https://www.tenable.com/products/nessus-home](https://www.tenable.com/products/nessus-home)
+    and register for an activation code:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d76cda76-62c2-4619-a369-8592844fd8b9.png)Tenable registration website'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you register you will be shown a Download link - select it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/647e9d13-86e4-44d5-8336-096aa18967cf.png)Tenable nessus download
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select the appropriate download Linux for your Kali distribution in our case
+    we will be downloading the 64 bit version:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d160f9e6-6a59-450e-9991-4443bbb7addb.png)Tenable Nessus OS screen
+    selection'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On the subscription agreement screen check the box to accept the terms of service
+    and click Download. Then click Save File:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/848927c1-eff7-4a32-a6ac-2a78ea5dd864.png)Nessus file download screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open a terminal window and enter the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Launch your web browser by clicking the Firefox icon: ![](assets/fdc356e3-473b-4cfe-a6ad-9bdc2eb622b0.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Open the following page: `https://localhost:8834`. You will be brought to a
+    screen saying where your connection is not secure. Click on Advanced, select Add
+    Exception..., and select Confirm Security Exception:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/fe99ebd3-c451-4a31-b1ba-0f557e1c143e.png)Firefox - certificate warning
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From the welcome to Nessus screen, click on Continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You will be asked to create a local account. For our purposes, we will use
+    the username of the admin, select and use a good password, and select Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/90e32ec0-32e7-4f01-92aa-ca257746ca38.png)Nessus - account setup
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Check your email and enter your Activation Code and select Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/24076d32-22dd-4818-b164-cfdccde1f396.png)Nessus - registration screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will be brought to a Nessus splash screen, and it will begin downloading
+    and initializing other setup functions.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This process will take several minutes to perform so please be patient. While
+    you are waiting for the initialization process to complete, you can go ahead and
+    create a bookmark for Nessus.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will now be brought to the main login screen; enter the username and password
+    previously created and select Sign In.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Let's validate that Nessus is up to date - from the main screen, select the
+    Gear icon and click on it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From the Scanners menu, select Software Update and click on Manual Software
+    Update.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From the Manual Software Update screen, select Update all components and click
+    on Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b19dd406-dce5-408d-83b9-3a55586c8446.png)Nessus - manual software
+    update screenWait a couple of minutes because when the updates complete, the interface
+    may restart and you may be brought back to a login screen.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Ensure Automatic Updates is enabled, specify Update Frequency, and click on Save:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/37e04685-bac1-4d05-ab46-b02d6bce7043.png)Nessus - automatic updates
+    screenTo save resources when you are not using Nessus, you can stop the service
+    by closing the browser and selecting Applications | Vulnerability Analysis | Nessus
+    stop.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A basic vulnerability scanning with Nessus
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will perform some basic vulnerability scans against our network to see if
+    they have any known issues or weaknesses with Nessus.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Start the Metasploitable virtual machine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ensure you have completed the setup of Nessus, Nessus is started, and you are
+    at the main screen after logging in
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now perform our vulnerability scan using Nessus:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Although we already have our targets from previous exercises, we will perform
+    a basic host discovery to start. Select New Scan:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b0ae0832-5ff8-4578-9e4e-44f283cd6548.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: From the Scanner Templates screen, select Host Discovery.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the Name field, add a descriptive name and specify your targets. In this
+    case, we are going to specify our test network of `192.168.56.0/24` and select
+    Save:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ea1d2bf7-eb1e-4637-a811-3ec9ab86803f.png)Nessus - host discovery
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From the My Scans screen, select the newly created scan and press the launch
+    button on the right. The scan will take a couple of minutes to perform. While
+    it is running, you will see a green circular icon.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: While this scan is running, you can create other scans and start them as well.
+    So, you don't have to wait for a scan to finish to move on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the scan is complete, you will see a check mark in the scan screen, and
+    you can click on it to review the results. From our results, you will see that
+    a number of hosts are responding:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ba3e1287-44bd-42e0-8650-72c358140318.png)Nessus - host discovery
+    results'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To perform a basic scan against our Metasploitable VM at `192.168.56.101`, we
+    will select Scans from the top menu, New Scan, and select Basic Network Scan.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the Name field, add a descriptive name; and for targets, use the IP of your
+    Metasploitable machine. Click on Save, then launch the scan:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/23bed7d7-0edc-4c30-9e78-465b5c925945.png)Nessus - basic network
+    scan'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This scan will take several minutes to complete, but once done, we can select
+    the scan to view the results. You will notice we have discovered several vulnerabilities:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/05d673f3-9464-447b-b1f9-baeb176fc12a.png)Nessus - basic network
+    scan results'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To take a closer look, select Vulnerabilities at the top. From here, you will
+    have a more detailed view of the vulnerabilities in the order of severity. Scroll
+    through the list and take a look at all the data presented:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3d2409cc-dfde-4657-a322-ecb84f75ce7a.png)Nessus - basic scan results
+    - vulnerabilities list'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s click on the VNC server vulnerability to get some more specific information
+    about that vulnerability. This provides us with a lot of information that we can
+    use later to gain remote access to the host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/608eb18b-09de-455e-872e-3eda971f6199.png)Nessus - VNC vulnerability
+    detailsTake some time to go through several of the vulnerabilities, and explore
+    the information provided. Also, try running scans against other devices you have
+    authorization to do so. These could be devices and computers on your personal
+    network or other test hosts you may have installed.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Advanced vulnerability scanning with Nessus
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will now create a more in-depth scan where we will modify some of the parameters
+    of a scan to include other, more targeted testing using Nessus. What we would
+    hope to see is better and more complete results of the target host in question.
+    This will give you a base level of understanding to customize your scans.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Start the Metasploitable virtual machine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ensure you have completed the setup of Nessus, Nessus is started, and you are
+    at the main screen after logging in
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s begin our advanced scanning techniques using Nessus:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To perform a more advanced scan with Nessus, we will explore several options
+    available to us. Select Scans from the top. Select New Scan | Advanced Scan.From
+    our General screen, add a descriptive name; and target your Metasploitable VM's
+    IP address.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Spend a minute to scroll through the Basic options on the left. We can perform
+    scheduled scans. We can also provide notifications when the scan is done.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select Discovery |Host Discovery; look through the options available. You will
+    note that we can turn on various discovery methods including scanning for network
+    printers.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Since we already know the specific host that we want to scan, we need not select
+    any other options under host discovery. However, if you are doing the subnet scan,
+    these options are useful.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select Discovery | Port Scanning, and modify the following options based on
+    the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/1191e4a2-b720-44c8-9b92-d7974def93f4.png)Nessus - advanced settings'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select Assesment | General. Check Perform thorough tests.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select Assesment | Brute Force. Check both Oracle Database Tests and Hydra.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You can add login and password files to target possible or well-known usernames
+    and passwords.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select Assesment | Web Applications. Check Follow dynamically generated pages.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Under Application Test Settings, match the following options:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d71ada90-7fbe-4bd5-8aa3-a155662395dd.png)Nessus - advanced settings'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select Save at the bottom and launch the scan. This scan will take a long time
+    to complete (about 2 hours). However, once completed, let''s review the following
+    result. We will see that we have found incremental information and vulnerabilities
+    regarding the host in question:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/553507c5-7abe-4dbd-a58d-d6185f381d31.png)Nessus - scan results screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Clicking on the results, you will see that we significantly increased the number
+    of high-level vulnerabilities. This again is all useful information that we can
+    use as we move forward to exploiting our targets.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Remember to save and log all the information so that you can use this information
+    as we move forward.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The installation and configuration of Nexpose
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nexpose is a commercial product by Rapid7\. Recently, it appears that it was
+    renamed to InsightVM; and there was an attempt to eliminate the community edition
+    of Nexpose. However, Rapid7 has reconsidered and made the community edition available
+    once again with a 1 year license key.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will install the community edition of Nexpose here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Take a snapshot of your VM first
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Disconnect the host-only network and use the NAT network only
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Nexpose installation and operation can be confused with multiple interfaces
+    and multiple connections. For this and all recipes that involve Nexpose we will
+    be doing everything on the NAT network. After you are done with the recipes involving
+    Nexpose, you may want to revert back to a snapshot taken just before installation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now install and configure Nexpose on our Kali machine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, we must register on Rapid7's site, obtain a license key, and download
+    the code. Open Firefox by clicking on the icon. ![](assets/2b7c9b23-3942-40c4-aae5-b4f6cc84aef6.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Go to the following site, [https://www.rapid7.com/info/nexpose-community/](https://www.rapid7.com/info/nexpose-community/) and
+    register with your information. You will receive an email within a few minutes
+    with your license key, as well as being able to download the appropriate software.
+    Save the file in the `Downloads` directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/22991b1d-f9b2-4d50-8dee-769f1da719e6.png)The Nexpose registration
+    website'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let's prepare to install Nexpose by opening a terminal window and entering
+    the following commands: ![](assets/b5782523-62b1-41b9-98ff-c8f56f42b9a7.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Once you are presented with the welcome screen, click on Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/35c1b473-be12-441e-9d33-1383d4285ab4.png)The Nexpose installer screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the radio button labeled Security Console with local Scan Engine. Accept
+    the default destination directory and click on Next.If you receive an error related
+    to insufficient disk space, just click on Continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'On the system settings screen, click on Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c52d56da-acf1-4f88-a730-b19fa6ac1806.png)The Nexpose installer screen
+    - settings compare'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter your information on the account details screen, and click on Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/1168a8bc-84ae-4653-8dea-cdce44f857bf.png)The Nexpose installer screen
+    - user details'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On the next screen, select Initialize and start after installation and click
+    on Next. It will then go through the installation process and when complete you will
+    be presented with the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4395dbfc-23a4-4589-b98f-f8ed22fddf6e.png)The Nexpose installer screen
+    - complete'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on Finish to close it out.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As it states, it can take several minutes to initialize and start. My recommendation
+    is to let it sit for 30 minutes, and then reboot the VM. Once the VM comes backup,
+    log in and give it a few minutes before attempting to go to the website.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open Firefox by clicking on the icon, ![](assets/2b7c9b23-3942-40c4-aae5-b4f6cc84aef6.png) 
+    and enter the following address in the address bar: `https://localhost:3780`.
+    If you are presented with a security screen, click on Advanced and select Add
+    Exception:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3af8700c-cbe1-4a6f-b05c-fac2935f0ae8.png)The Firefox security screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on Confirm Security Exception:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3a2d364b-4ea8-4df1-9f22-169a24e5b00e.png)The Firefox security exception
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once Nexpose has finished installing, you will be brought to the login screen.
+    Use the credentials you provided to log on:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/88b2844c-b02a-4f05-9f58-cac8de072c1d.png)The Nexpose login screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Almost immediately, you will be brought to the screen asking you to enter your
+    product key. Retrieve the email that was sent containing it. Enter the key and
+    click on ACTIVATE WITH KEY:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ab73c658-540b-4257-b455-824c87a6237c.png)The Nexpose enter product
+    key screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the activation is successful, you will receive a confirmation screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/1f18ed4e-e98b-4874-b78d-2083978c54b3.png)The Nexpose activation
+    success screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For now, let''s click on the intro screen, and select Dismiss:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/e173baf0-f843-46bb-bb0d-4e7858850cdd.png)Welcome to the Nexpose
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The updates will automatically install after the startup.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We suggest moving directly into the next recipe, *Basic vulnerability scanning
+    with Nexpose*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Basic vulnerability scanning with Nexpose
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now we will use Nexpose to scan our NAT network to give us information regarding
+    vulnerable devices and services. The community edition of Nexpose is limited to
+    32 IP addresses but otherwise is fully functional.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Disconnect the host-only network, and use the NAT network on all VMs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Start Metasploitable and your Windows XP machine with the NAT network connected
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Nexpose installation and operation can be confused with multiple interfaces
+    and multiple connections. For this and all recipes that involve Nexpose we will
+    be doing everything on the NAT network. After you are done with the recipes involving
+    Nexpose, you may want to revert back to a snapshot taken just before installation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Using Nexpose we will now perform a basic vulnerability scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open Firefox by clicking on the icon ![](assets/7a8cc37d-b035-4433-8fca-323742eefb24.png) and
+    browse to `https://localhost:3780`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Log in with the credentials you used earlier.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on the Assets button on the left and click on CREATE SITE.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Name your site as you wish; in my case, it is `Lab`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/31b6d1b8-5a05-4e07-8ec1-ada758e05578.png)The Nexpose site creation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, click on ASSETS at the top; and add your machines IP addresses into the
+    network; in my case, the Metasploitable VM is `10.0.2.5` and the Windows XP VM
+    is `10.0.2.6`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9439df38-9966-4d1a-85f4-79ce4258d824.png)The Nexpose asset screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, click on TEMPLATES,and you will notice a variety of scanning templates
+    that you can use. We are going to use the default, which is Full audit without
+    Web Spider. Take a minute to read through the scanning templates available:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9eeaf3fa-c6e0-4682-854b-12451a987eba.png)The Nexpose template screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, select SAVE & SCAN from the top right, when asked to validate, feel free
+    to check Don''t show this alert again,and select the SAVE & SCAN button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2e3818dd-1713-4dc5-b088-2f2994a33c30.png)The Nexpose site save and
+    scan confirmation screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can monitor the scan progress and watch for Completed Successfully in the
+    Scan Status:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/86373070-6326-4a88-a17a-c6cc1e72d3f9.png)The Nexpose scan status
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you scroll down, you will see the identified hosts, IP addresses, operating
+    system, and most importantly, a count of vulnerabilities:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a05f8365-2082-492a-8c00-a648b10ac62a.png)The Nexpose device list'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s click on the Metasploitable machine and see what information has been
+    collected. You will notice various pieces of information as well as Risk Score:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/f58aaf6f-d742-4aa5-b9ce-d623b96cc838.png)The Nexpose host detail
+    information'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Continue to scroll down; and you will see a list of vulnerabilities, services,
+    installed software, fingerprints, and users:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9eb6fec7-f841-4aed-b797-087f56f067d4.png)The Nexpose host vulnerability
+    information'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on one of the vulnerabilities to gather more information about it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/543b55de-10be-429f-bc3b-553290e3f4ab.png)The Nexpose host vulnerability
+    detail information'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scroll down the list; and you will see information on the remediation steps,
+    which can provide you crucial information on how to exploit the vulnerability.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Continue to explore the interface, and when done, return to the home screen
+    by clicking on the home button on the left. ![](assets/53d7fde5-56b7-491d-9408-65e22817da9b.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We suggest moving directly into the next recipe, Advanced vulnerability scanning
+    with Nexpose.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Advanced vulnerability scanning with Nexpose
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now, we will use Nexpose to perform a more advanced and in-depth scan of our
+    NAT network. We will use Nexpose in a more aggressive fashion against our target
+    machines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Disconnect the host-only network, and use the NAT network on all VMs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Start Metasploitable and your Windows XP machine with the NAT network connected
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Nexpose installation and operation can be confused with multiple interfaces
+    and multiple connections. For this and all recipes that involve Nexpose we will
+    be doing everything on the NAT network. After you are done with the recipes involving
+    Nexpose, you may want to revert back to a snapshot taken just before installation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s begin our advanced scanning techniques using Nexpose:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open Firefox by clicking on the icon ![](assets/0d204cbb-0e2e-4240-b6bb-cb1da8686f5f.png) and
+    browse to `https://localhost:3780`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Log in with the credentials you used earlier.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Scroll down to the SITES section, and click on the Lab site.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Click on TEMPLATES at the top; and scroll down to select the radio button for
+    Penetration Test. Then, click on SAVE & SCAN at the top:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/122d45c8-adad-452f-b536-5e0408f8c8e5.png)The Nexpose site template
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the scan is complete, you will notice that we have found a larger number
+    of vulnerabilities than what the original scan produced. Before we continue, we
+    are going to add some additional information to our site and scan again.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Return to the home screen by clicking on the home button on the left. ![](assets/17510e71-d105-4cf5-9396-99107d9ea965.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Scroll down to the SITES section, and click on the Lab site.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now, click on AUTHENTICATION at the top. On the left, select ADD CREDENTIALSand
+    enter `msfadmin` for the name; and click on CREATE:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/8517be39-8d14-4fb9-b243-8dc6353fd79d.png)The Nexpose add credential
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, select ACCOUNT on the left and add the following information:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Service: Secure Shell (SSH)
+  prefs:
+  - PREF_UL
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Credential Management: Nexpose
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: User Name: `msfadmin`
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Password: `msfadmin`
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Confirm Password: `msfadmin`
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Permission Elevation Type: `sudo`
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Permission Elevation User: `` `msfadmin` ``
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Permission Elevation Password: `msfadmin`
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Confirm Permission Elevation Password: `msfadmin`
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](assets/fd6c16cd-b179-4fd3-85a7-0895043804ad.png)The Nexpose account information'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, select CREATE.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select TEMPLATES at the top, select Exhaustive,and select SAVE & SCAN:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/73b0da1b-84f8-443f-9fb5-e3ec2672f990.png)The Nexpose templates screenThis
+    scan can take some time, so please be patient.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the scan is complete, scroll down to COMPLETED ASSETS, and click on the
+    Metasploitable machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You can now scroll down to VULNERABILITIES,and again see a larger list of vulnerabilities.
+    Spend some time scrolling through the interface and looking at the vulnerabilities
+    found:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d97163d8-92c6-4b37-b6ff-1c9de31e9ba3.png)The Nexpose host vulnerability
+    information'
+  prefs: []
+  type: TYPE_NORMAL

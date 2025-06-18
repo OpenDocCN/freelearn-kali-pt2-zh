@@ -1,0 +1,970 @@
+- en: Web Application Scanning
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'This chapter contains the following recipes for performing web application
+    vulnerability scanning:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Web application scanning with Nikto
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SSL/TLS scanning with SSLScan
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SSL/TLS scanning with SSLyze
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: GET method SQL injection with sqlmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: POST method SQL injection with sqlmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Requesting a capture SQL injection with sqlmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Automating CSRF testing
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validating command-injection vulnerabilities with HTTP traffic
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validating command-injection vulnerabilities with ICMP traffic
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In recent years, we have seen increasing media coverage about major corporate
+    and government data breaches, and as general awareness of security has increased,
+    it has become more and more difficult to infiltrate an organization's networks
+    by exploiting standard perimeter services. Publicly known vulnerabilities associated
+    with these services are often quickly patched and leave little available attack
+    surface. On the contrary, web applications often contain custom code that usually
+    does not undergo the same amount of public scrutiny that a network service from
+    an independent vendor does. Web applications are often the weakest point on an
+    organization's perimeter, and as such, appropriate scanning and evaluation of
+    these services is critical.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Prior to addressing each of the listed recipes specifically, we will discuss
+    some general information regarding sqlmap. The sqlmap is an integrated command-line
+    tool in Kali Linux that drastically reduces the amount of effort required to exploit
+    SQL injection vulnerabilities, by automating the entire process. The sqlmap works
+    by submitting requests from a large list of known SQL injection queries. It has
+    been highly optimized over the years to intelligently modify injection attempts
+    based on the responses from previous queries.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Web application scanning with Nikto
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nikto is a command-line tool in Kali Linux that can be used to evaluate a web
+    application for known security issues. Nikto spiders through a target application
+    and also makes numerous preconfigured requests, attempting to identify potentially
+    dangerous scripts and files that exist on an application. In this recipe, we will
+    discuss how to run Nikto against a web application and how to interpret the results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Nikto to perform web application analysis against a target, you will
+    need to have a remote system that is running one or more web applications. In
+    the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s perform web application scanning using Nikto:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The syntax and usage complexity associated with running Nikto largely depends
+    on the nature of the application that it is being run against. To see an overview
+    of the usage and syntax of this tool, use the `nikto -help` command.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the first example provided, a scan is performed against `google.com`. The
+    `-host` argument can be used to specify the hostname value of the target to be
+    scanned. The `-port` option defines the port that the web service is running on.
+    The `-ssl` option instructs Nikto to establish an SSL/TLS session with the target
+    web server before scanning, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00043.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Alternatively, the `-host` argument can also be used to define the IP address
+    value for the target system to be scanned. The `-nossl` argument can be used to
+    instruct Nikto to not use any transport-layer security.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The `-vhost` option can be used to specify the value of the host header in
+    HTTP requests. This can be particularly helpful in any case where multiple virtual
+    hostnames are hosted on a single IP address. Have a look at the following example:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00383.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the following example, a Nikto scan is performed against the web service
+    hosted on the Metasploitable2 system. The `-port` argument is not used because
+    the web service is hosted on the TCP port `80`, which is the default scan port
+    for Nikto. Additionally, the `-nossl` argument is not used because by default,
+    Nikto will not attempt an SSL/TLS connection over port `80`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00113.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The results from the Nikto scan of the Metasploitable2 web service display some
+    of the items that are frequently identified by Nikto. These items include risky
+    HTTP methods, default installation files, exposed directory listings, sensitive
+    information disclosure, and files to which access should be restricted. Awareness
+    of these files can often be useful in looking to gain access to or identifying
+    vulnerabilities on a server.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nikto identifies potentially interesting files by referencing the `robots.txt`
+    file, by spidering the surface of the application, and by cycling through a list
+    of known files that contain sensitive information, vulnerable content, or should
+    be access restricted because of the nature of the content and/or functionality
+    presented by them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SSL/TLS scanning with SSLScan
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**SSLScan** is an integrated command-line tool in Kali Linux that can be used
+    to evaluate the security of the SSL/TLS support of a remote web service. In this
+    recipe, we will discuss how to run SSLScan against a web application and how to
+    interpret and/or manipulate the output results.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use SSLScan to perform SSL/TLS analysis against a target, you will need to
+    have a remote system that is running a web service with SSL or TLS enabled. In
+    the examples provided, a combination of Google and an instance of Metasploitable2
+    is used to perform this task. For more information on setting up Metasploitable2,
+    refer to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to perform SSL/TLS scanning with SSLScan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'SSLScan can be an effective tool to perform streamlined analysis of the SSL/TLS
+    configurations of a target web server. To perform a basic scan against a web server
+    with a registered domain name, merely pass it the name of the domain as an argument,
+    as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00170.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When executed, SSLScan will quickly cycle through connections to the target
+    server and enumerate accepted ciphers, preferred cipher suites, and SSL certificate
+    information. It is possible to use `grep` to restrict the output to necessary
+    information. In the following example, the `grep` command is used to only view
+    accepted ciphers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00182.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Multiple `grep` functions can be piped together to limit the output as much
+    as desired. By using multiple piped `grep` requests, the output in the following
+    example is limited to 256-bit ciphers that were accepted by the target service:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00390.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: One unique function that SSLScan provides is the implementation of the STARTTLS
+    request in SMTP. This allows SSLScan to easily and effectively test the transport-layer
+    security of a mail service by using the `--starttls` argument and then specifying
+    the target IP address and port.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the following example, we use SSLScan to determine whether the SMTP service
+    integrated into Metasploitable2 supports any weak ciphers and checks vulnerability
+    to heartbleed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00256.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: SSL/TLS sessions are generally established by negotiations between a client
+    and server. These negotiations consider the configured cipher preferences of each
+    and attempt to determine the most secure solution that is supported by both parties.
+    SSLScan works by cycling through a list of known ciphers and key lengths and attempting
+    to negotiate a session with the remote server using each configuration. This allows
+    SSLScan to enumerate supported ciphers and keys.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SSL/TLS scanning with SSLyze
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**SSLyze** is an integrated command-line tool in Kali Linux that can be used
+    to evaluate the security of the SSL/TLS support of a remote web service. In this
+    recipe, we will discuss how to run SSLyze against a web application and how to
+    interpret and/or manipulate the output results.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use SSLyze to perform SSL/TLS analysis against a target, you will need to
+    have a remote system that is running a web service with SSL or TLS enabled. In
+    the examples provided, a combination of Google and an instance of Metasploitable2
+    is used to perform this task. For more information on setting up Metasploitable2,
+    refer to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s interpret and manipulate the output results using the SSLyze by running
+    it against a web application:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Another tool that performs a thorough sweep and analyzes the SSL/TLS configurations
+    of a target service is SSLyze. To perform the majority of the basic tests in SSLyze,
+    arguments should include the target server and the `--regular` argument. This
+    includes tests for SSLv2, SSLv3, TLSv1, renegotiation, resumption, certificate
+    information, HTTP GET response status codes, and compression support, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00393.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Alternatively, a single version of TLS or SSL can be tested to enumerate the
+    supported ciphers associated with that version. In the following example, SSLyze
+    is used to enumerate the supported TLSv1.2 ciphers, and it then uses the `grep` command
+    to extract only 256-bit ciphers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00331.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'One very helpful feature that SSLyze supports is testing for zlib compression.
+    This compression, if enabled, is directly associated with an information leakage
+    vulnerability known as **Compression Ratio Info-leak Made Easy** (**CRIME**).
+    This test can be performed using the `--compression` argument, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00395.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: SSL/TLS sessions are generally established by negotiations between a client
+    and server. These negotiations consider the configured cipher preferences of each
+    and attempt to determine the most secure solution that is supported by both parties.
+    SSLyze works by cycling through a list of known ciphers and key lengths and attempting
+    to negotiate a session with the remote server using each configuration. This allows
+    SSLyze to enumerate supported ciphers and keys.
+  prefs: []
+  type: TYPE_NORMAL
+- en: GET method SQL injection with sqlmap
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Web applications frequently accept arguments within a supplied URL. These parameters
+    are generally transmitted back to the web server in the HTTP GET method requests.
+    If any of these parameter values are then included in a query statement to a backend
+    database, an SQL injection vulnerability could exist. In this recipe, we will
+    discuss how to use the `sqlmap` command to automate the testing of the HTTP GET
+    method request parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use `sqlmap` to perform SQL injection against a target, you will need to
+    have a remote system that is running one or more web applications that are vulnerable
+    to SQL injection. In the examples provided, an instance of Metasploitable2 is
+    used to perform this task. Metasploitable2 has several preinstalled vulnerable
+    web applications running on the TCP port `80`. For more information on setting
+    up Metasploitable2, refer to the *Installing Metasploitable2* recipe in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s test the HTTP GET method request parameters using the `sqlmap` command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To use `sqlmap` to test the HTTP GET method parameters, you will need to use
+    the `-u` argument and the URL to be tested. This URL should include any GET method
+    parameters.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Additionally, if the web content is only accessible to an established session,
+    the cookie values that correspond to that session should be supplied with the
+    `--cookie` argument, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00422.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, a risk value of `3` and a level value of `5` were used.
+    These values define the riskiness and the thoroughness of the tests performed,
+    respectively. For more detailed information on risk and level, refer the `sqlmap`
+    man pages or the `help` file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When running this test, `sqlmap` quickly identified the backend database as
+    MySQL, and other tests were skipped. If no action is specified, `sqlmap` will
+    merely determine whether any of the tested parameters are vulnerable, as shown
+    in the previous example.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After a series of injection attempts, `sqlmap` has determined that the `id`
+    parameter is vulnerable to multiple types of SQL injection. After confirming the
+    vulnerability, action can be taken in `sqlmap` to start extracting information
+    from the backend database, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00398.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the `--dbs` argument is used to enumerate all available
+    databases that are accessible via an SQL injection. Judging by name, it appears
+    that only one of the listed databases directly corresponds to the DVWA application.
+    We can then focus our subsequent action against that database directly.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To extract the table names of all the tables in the DVWA database, we can use
+    the `--tables` argument to instruct `sqlmap` to extract the table names and then
+    use the `-D` argument to specify the database (`dvwa`) from which to extract the
+    names, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00498.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By doing this, we can see that there are two tables present in the DVWA database.
+    These tables include `guestbook` and `users`. It is often worth the effort to
+    extract the contents from user tables in databases, as these often have usernames
+    and associated password hashes in their contents.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To extract the contents from one of the identified tables, we can use the `--dump`
+    argument and then the `-D` argument to specify the database, and the `-T` argument
+    to specify the table from which to extract the contents, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00246.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The table and its contents are output as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00564.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Upon identifying that there are password hashes in the contents of the table,
+    `sqlmap` will provide the option of using the integrated password cracker to perform
+    a dictionary attack against the enumerated password hashes. This can be performed
+    using a built-in word list, a custom word list, or a series of word lists.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After performing the dictionary attack, we can see the contents of the table
+    to include the user ID, the username, the location of the user's avatar image,
+    the MD5 hash, the appended cleartext value of that hash, and then the first and
+    last name.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sqlmap works by submitting requests from a large list of known SQL injection
+    queries. It has been highly optimized over the years to intelligently modify injection
+    attempts based on the responses from previous queries. Performing SQL injection
+    on HTTP GET parameters is as easy as modifying the content passed through the
+    requested URL.
+  prefs: []
+  type: TYPE_NORMAL
+- en: POST method SQL injection with sqlmap
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sqlmap is an integrated command-line tool in Kali Linux that drastically reduces
+    the amount of effort required to manually exploit SQL injection vulnerabilities
+    by automating the entire process. In this recipe, we will discuss how to use the `sqlmap` command
+    to automate the testing of HTTP POST method request parameters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the `sqlmap` command to perform SQL injection against a target, you will
+    need to have a remote system that is running one or more web applications that
+    are vulnerable to SQL injection. In the examples provided, an instance of Metasploitable2
+    is used to perform this task. Metasploitable2 has several preinstalled vulnerable
+    web applications running on the TCP port `80`. For more information on setting
+    up Metasploitable2, refer to the *Installing Metasploitable2* recipe in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s automate the testing of HTTP POST method request parameters using the
+    `sqlmap` command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To perform an SQL injection attack on a service using the HTTP POST method,
+    we will need to define the string of POST parameters using the `--data` argument.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The login application in Mutillidae offers a login interface that transmits
+    a username and password over the POST method. This will be our target for our
+    SQL injection attack. Have a look at the following example:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00405.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The output of `sqlmap` has been truncated for space, following we can see the
+    continuation of sqlmap''s output to include vulnerabilities found:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00627.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: If no action is specified, `sqlmap` will merely determine whether any of the
+    tested parameters are vulnerable, as shown in the previous example. After a series
+    of injection attempts, `sqlmap` has determined that the username POST parameter
+    is vulnerable to both boolean-blind and error-based injection techniques.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After confirming the vulnerability, actions can be taken in `sqlmap` to start
+    extracting information from the backend database, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00410.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The output of the `sqlmap` command has been truncated. In the next screenshot,
+    we see more of the output generated by the command, including available databases:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00674.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the `--dbs` argument is used to enumerate all available
+    databases that are accessible via SQL injection. We can then focus our subsequent
+    actions against a specific database directly.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To extract the table names of all the tables in the `owasp10` database, we
+    can use the `--tables` argument to instruct `sqlmap` to extract the table names
+    and then use the `-D` argument to specify the database (`owasp10`) from which
+    to extract the names, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00414.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The output of the `sqlmap` command has been truncated. In the following screenshot,
+    we can see the tables associated with the `owasp10` database:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00061.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By doing this, we can see that there are six tables present in the `owasp10`
+    database. These tables are `accounts`, `blog_table`, `captured_data`, `credit_cards`,
+    `hitlog`, and `pen_test_tools`. The obvious table name that will probably catch
+    the eye of most of us is the `credit_cards` table.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To extract the contents from one of the identified tables, we can use the `--dump`
+    argument and then the `-D` argument to specify the database, and the `-T` argument
+    to specify the table from which to extract the contents, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00416.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The `sqlmap` command''s output has been truncated. In the next screenshot,
+    we see the contents of the `credit_cards` table in the `owasp10` database:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00572.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "The `sqlmap` command works by submitting requests from a large list of known\
+    \ SQL injection queries. It has been highly optimized over the years to intelligently\
+    \ modify injection attempts based on the responses from previous queries. Performing\
+    \ SQL injection on HTTP POST method parameters is done by manipulating the data\
+    \ that is appended to the end of a POST \Lmethod request."
+  prefs: []
+  type: TYPE_NORMAL
+- en: Requesting a capture SQL injection with sqlmap
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To simplify the process of using the `sqlmap` command, it is possible to use
+    a captured request from Burp Suite and execute `sqlmap` with all the parameters
+    and configurations defined within. In this recipe, we will discuss how to use
+    `sqlmap` to test the parameters associated with a provided request capture.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use `sqlmap` to perform SQL injection against a target, you will need to
+    have a remote system that is running one or more web applications that are vulnerable
+    to SQL injection. In the examples provided, an instance of Metasploitable2 is
+    used to perform this task. Metasploitable2 has several preinstalled vulnerable
+    web applications running on the TCP port `80`. For more information on setting
+    up Metasploitable2, refer to the *Installing Metasploitable2* recipe in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to capture SQL injection with the help of
+    `sqlmap` command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use a request capture with `sqlmap`, it must first be saved in text format.
+    To do this, right-click on the request content in Burp Suite and then select Copy
+    to file. Once it''s saved, you can verify the contents of the file by browsing
+    to the directory and using the `cat` command, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00418.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To use the request capture, use `sqlmap` with the `-r` argument and the value
+    of the absolute path of the file. Using this method often drastically reduces
+    the amount of information that needs to be provided in the `sqlmap` command, as
+    much of the information that would otherwise be provided is included in the request.
+    Have a look at the following example:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00204.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, no cookie values need to be passed to `sqlmap` because
+    the cookie values are already identified in the captured request. When `sqlmap`
+    is launched, the cookie values in the capture will be automatically used in all
+    requests, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00337.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The `sqlmap` command is able to test all GET method parameters identified in
+    the request capture. Here, we can see that the `id` parameter is vulnerable to
+    several SQL injection techniques.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `sqlmap` command is able to accept a captured request by parsing through
+    the contents of that request and identifying any testable parameters for evaluation.
+    This effectively allows `sqlmap` to be launched without expending the additional
+    effort of transcribing all of the parameters necessary to perform the attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Automating CSRF testing
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Cross-site request forgery** (**CSRF**) is one of the most commonly misunderstood
+    web application vulnerabilities. Nonetheless, failure to properly identify such
+    vulnerabilities can pose a serious risk to a web application and its users. In
+    this recipe, we will discuss how to test for CSRF vulnerabilities in both GET
+    and POST method parameters.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To perform CSRF testing against a target, you will need to have a remote system
+    that is running one or more web applications that are vulnerable to CSRF. In the
+    examples provided, an instance of Metasploitable2 is used to perform this task.
+    Metasploitable2 has several preinstalled vulnerable web applications running on
+    the TCP port `80`. For more information on setting up Metasploitable2, refer to
+    the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In the following steps we will be automating CSRF testing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'CSRF is a vulnerability that can be present in both GET and POST method transactions.
+    DVWA offers a good example of a GET method CSRF vulnerability. The application
+    allows the users to update their password by submitting the new value twice via
+    the GET method parameters, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00275.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Because of a lack of CSRF controls, it is easy to exploit this vulnerability.
+    If a user of the web application can be tricked into accessing a URL with preconfigured
+    values for the `password_new` and `password_conf` parameters, an attacker could
+    force the victim to change the password to one of the attacker's choice.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The following URL is an example of this exploit. If this link were followed
+    by the victim, their password would be changed to `compromised`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'However, it is rarely this simple to exploit a CSRF vulnerability. This is
+    because most developers are at least security-conscious enough to not perform
+    secure transactions using GET method parameters. A good example of an application
+    that is vulnerable to the POST method CSRF is the blog functionality of the Mutillidae
+    application, which is shown as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00161.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the previous request, we can see that the contents of the blog entry submitted
+    by an authenticated user are sent via the `blog_entry` POST method parameter.
+    To exploit the lack of CSRF controls, an attacker would need to craft a malicious
+    web page that would cause the victim to submit the desired parameters. The following
+    is an example of a POST method CSRF attack:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00424.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The malicious web page uses an HTML form that returns to the vulnerable server
+    with several hidden input fields that correspond to the same inputs required for
+    the submission of a blog entry request in the Mutillidae application. Additionally,
+    JavaScript is used to submit the form. All of this will happen without any action
+    performed on the part of the victim. Consider the following example:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00377.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To deploy this malicious web content, it should be moved to the web root directory.
+    In Kali Linux, the default Apache web root directory is `/var/www/`. Also, ensure
+    that the Apache2 service is running. Have a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00370.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When an authenticated victim browses to the malicious page, the victim is automatically
+    redirected to the Mutillidae blog application and the blog post HACKED is submitted.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: CSRF occurs because the request is ultimately made by the victim user's session.
+    It is an attack that exploits the trust that a victim's browser has established
+    with a remote web service. In the case of the GET method CSRF, a victim is enticed
+    to access a URL that contains the parameters that define the terms of the malicious
+    transaction. In the case of the POST method CSRF, the victim is enticed to browse
+    to a web page that defines the parameters that are then forwarded on to the vulnerable
+    server, by the victim's browser, to perform the malicious transaction. In either
+    case, the transaction is performed because the request originates from the browser
+    of the victim, who has already established a trusted session with the vulnerable
+    application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validating command-injection vulnerabilities with HTTP traffic
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Command injection is probably the most dangerous of all known web application
+    attack vectors. Most attackers seek to exploit vulnerabilities in the hope that
+    they will ultimately find a way to execute arbitrary commands on the underlying
+    operating system. Command-execution vulnerabilities provide that capability without
+    any additional steps. In this recipe, we will discuss how to use web server logs
+    or custom web service scripts to confirm command-execution vulnerabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To perform command-injection testing against a target using HTTP request confirmation,
+    you will need to have a remote system that is running one or more web applications
+    that are vulnerable to command injection. In the examples provided, an instance
+    of Metasploitable2 is used to perform this task. Metasploitable2 has several preinstalled
+    vulnerable web applications running on the TCP port `80`. For more information
+    on setting up Metasploitable2, refer to the *Installing Metasploitable2* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*. Additionally, this section will require a script to be written to the
+    filesystem using a text editor such as Vim or GNU nano. For more information on
+    writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe in
+    [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s validate command-injection vulnerabilities with HTTP traffic:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is possible to validate a command injection vulnerability in a web application
+    by executing commands that will force the backend system to interact with a web
+    server that you own.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The logs can be easily examined for evidence that the vulnerable server has
+    interacted with it. Alternatively, a custom script can be written that will generate
+    an ad hoc web service that can listen for external connections and print the requests
+    received. The following is an example of a Python script that will do just that:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Once the script has been executed, we need to force the target server to interact
+    with the listening service to confirm the command-injection vulnerability. The
+    DVWA application has a `ping` utility that can be used to ping a provided IP address.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "The user input is directly passed to a system call and can be modified to execute\
+    \ arbitrary commands in the underlying operating system. We can append multiple\
+    \ commands using a semicolon followed by \Leach subsequent command, as shown in\
+    \ the following screenshot:"
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00604.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, input was given to ping `127.0.0.1` and perform a
+    `wget` request on `http://172.16.69.133:8000`. The `wget` request corresponds
+    to the ad hoc listening Python service. After submitting the input, we can verify
+    that the command was executed by referring to the output of the script, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00432.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Here, we can see that a connection was received from the target web server and
+    that the user agent used to access the web service was `wget`. The `curl` command
+    is another alternative that could be used if `wget` is not installed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This Python script works to confirm command-injection vulnerabilities because
+    it proves that commands can be executed from the target server via an injected
+    payload from a different system. It is highly unlikely that a similar request
+    would be performed at the same time that the payload was injected to the server.
+    However, even if there is a concern that the payload was not the true source of
+    the detected traffic, multiple attempts could easily be made to eliminate the
+    concern of false positives.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validating command-injection vulnerabilities with ICMP traffic
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "Command injection is likely the most dangerous of all known web application\
+    \ attack vectors. Most attackers seek to exploit vulnerabilities in the hope that\
+    \ they will ultimately find a way to execute arbitrary commands on the underlying\
+    \ operating system. Command-execution vulnerabilities provide that capability\
+    \ without any additional steps. In this recipe, we will discuss how to write a\
+    \ custom script for validating remote code-execution vulnerabilities \Lwith ICMP\
+    \ traffic."
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To perform command-injection testing against a target using ICMP echo request
+    confirmation, you will need to have a remote system that is running one or more
+    web applications that are vulnerable to command injection. In the examples provided,
+    an instance of Metasploitable2 is used to perform this task. Metasploitable2 has
+    several preinstalled vulnerable web applications running on the TCP port `80`.
+    For more information on setting up Metasploitable2, refer to the *Installing Metasploitable2*
+    recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*. Additionally, this section will require a script to be written to the
+    filesystem using a text editor such as Vim or GNU nano. For more information on
+    writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe in
+    [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In the following steps we will be creating a custom script for validating remote
+    code-execution vulnerabilities with ICMP traffic:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It is possible to validate a command-injection vulnerability in a web application
+    by executing commands that will force the backend system to send ICMP traffic
+    to a listening service. The received ICMP echo requests can be used to identify
+    vulnerable systems. The following is an example of a Python script that uses the
+    Scapy library to do just that:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: After the ICMP listener has been executed, we need to attempt to launch an ICMP
+    echo request from the vulnerable server to our listening service. This can be
+    done by injecting a `ping` command into the user input that is vulnerable to command
+    injection.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In Mutillidae, there is a vulnerable function that performs DNS enumeration
+    by passing user input to a direct system call. A separate ping request can be
+    appended to the user input by using a semicolon, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00516.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Assuming that the server is vulnerable to command injection, the Python listener
+    should indicate that the ICMP echo request was received and that the target server
+    is likely to be vulnerable, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00544.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "This Python script works to confirm command-injection vulnerabilities because\
+    \ it proves that commands can be executed from the target server via an injected\
+    \ payload from a different system. It is highly unlikely that a similar request\
+    \ would be performed at the same time that the payload was injected to the server.\
+    \ However, even if there is a concern that the payload was not the true source\
+    \ of the detected traffic, multiple attempts could easily be performed \Lto eliminate\
+    \ the concern of false positives."
+  prefs: []
+  type: TYPE_NORMAL

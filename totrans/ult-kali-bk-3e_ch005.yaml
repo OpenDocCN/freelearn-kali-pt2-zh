@@ -1,0 +1,1236 @@
+- en: 4 Passive Reconnaissace
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Join our book community on Discord
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[https://packt.link/SecNet](https://packt.link/SecNet)![Qr code Description
+    automatically generated](../media/file119.png)As an aspiring ethical hacker and
+    penetration tester, it’s important to develop your skills and gain a solid understanding
+    on how adversaries are able to efficiently discover and collect sensitive information
+    about a targeted organization, and analyze the collected data to create meaningful
+    information that can be leveraged in planning a future cyber-attack on the target.
+    As with many aspiring ethical hackers, we are always excited to get started with
+    hacking into systems and networks as it’s the fun part of learning offensive security
+    tactics and techniques. However, it’s important to develop the mindset of an adversary
+    to better understanding why and how a real threat actor will plan their attack
+    on a targeted system, network or organization.Adversaries use various reconnaissance
+    techniques and procedures to find and collect data about their targets to better
+    understand whether the targeted systems are online, whether any security vulnerabilities
+    exists on them, and which attack vectors and infrastructure are available for
+    delivering malicious payloads to the target. The more information that’s known
+    about the target can improve how the plan of attack by the adversary.In this chapter,
+    you will learn how reconnaissance techniques are used by threat actors and ethical
+    hackers to discover, collect and analyze sensitive data that’s leaked by the targeted
+    organization, and how such data can lead to a future cyber-attack. In addition,
+    you will learn how to conceal your identity as an ethical hacker and penetration
+    tester, and anonymize your internet-based traffic to improve your stealth and
+    reduce your threat level.In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Importance of reconnaissance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exploring passive reconnaissance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating a sock puppet
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Anonymizing internet-based traffic
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s dive in!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Technical Requirements
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To follow along with the exercises in this chapter, please ensure that you
+    have met the following hardware and software requirements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux - [https://www.kali.org/get-kali/](https://www.kali.org/get-kali/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Importance of reconnaissance
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Reconnaissance focuses on collecting as much data as possible on a target,
+    then analyzing the collected data to create meaningful information that can be
+    leveraged by an adversary or threat actor to identify the attack surface and security
+    vulnerabilities on a targeted system, network or organization. Adversaries uses
+    various reconnaissance techniques and tools to collect system information, networking
+    information and organizational information about their targets. Without first
+    understanding your target and their weaknesses, it’ll be challenging to create
+    a weapon such as an *exploit* that will be effective in compromise the confidentiality,
+    integrity and/or availability of the targeted system, network or organization.System
+    information provides valuable insights to ethical hackers as it lets us know what’s
+    running on the targeted system, such as it host operating system and version.
+    The operating system and version information helps ethical hackers to research
+    known security vulnerabilities and develop/acquire exploits that has the potential
+    to compromise the target. For instance, many organizations around the world does
+    not always run the latest version of operating systems within their network infrastructure
+    While operating system vendors are continuously working on a newer version and
+    releasing security updates to customers, not everyone installs the latest security
+    patches/updates or even upgrade to the latest version for many reasons. This situation
+    creates many possibilities for adversaries, ethical hackers and penetration testers.
+    Imagine you’re performing an internal network penetration test on a targeted organization
+    and have discovered their servers are running an older version of Microsoft Windows
+    Server, and after some research, you’ve discovered all the servers contains the
+    *EternalBlue* and *PrintNightmare* critical security vulnerabilities. If a real
+    adversary were to discover these vulnerabilities, you can imagine the potential
+    impact and damages that can be done.System information includes the following
+    details:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Identifying live hosts on a network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hostnames of devices
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Operating system type and version
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Running services and versions
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Open service ports
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Unauthenticated network shares
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Username and passwords
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Network information helps ethical hackers and penetration testers to identify
+    whether the targeted organization is using any unsecure protocols, running vulnerable
+    services and has any unintentional exposed service ports on critical systems.
+    For instance, unsecure network protocols does not encrypt any data before or after
+    transmission, therefore, an ethical hacker can intercept network traffic with
+    the intent to capture any sensitive data such as user credentials and password
+    hashes which can be leveraged for gain unauthorized access to critical systems
+    on the network.Network information includes the following details:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Domain Name System** (**DNS**) records'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Domain names
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Sub-domain names
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Firewall rules and policies
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: IP addresses and network blocks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network protocols and services
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Organizational information helps ethical hackers to identify the employees
+    of a targeted organization, their contact information such as telephone numbers
+    and email address which can be used for various social engineering attacks such
+    as phishing. In addition, identifying high-profile employees of an organizations
+    helps the ethical hacker to focus their phishing emails to targeted persons with
+    high-privileged user accounts.Organizational information includes the following
+    details:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Employees’ details and contact information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Geo-location of the organizations and its remote offices
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Employees’ role and profile
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The first stage of Lockheed Martin’s **Cyber Kill Chain** is reconnaissance,
+    which describes how the threat actor uses this phase of attack to plan their operations
+    such as performing extensive research on their targets to gain a better understanding
+    of their security vulnerabilities and determine how the threat actor can meet
+    their objectives/goals of the cyber-attack. In addition, the **MITRE ATT&CK**
+    framework listed reconnaissance as the first stage on their Enterprise Matrix
+    and describe it as the techniques used by an attacker to either passively or actively
+    collect information about a target, where such collecting organizational, network
+    and system information and employees’ data that can be leveraged in a future cyber-attack.
+    Therefore, cybersecurity professionals such as ethical hackers and penetration
+    testers uses the same reconnaissance techniques to efficiently collect and analyze
+    data as a real attacker to compromise their targets. Hence, providing the ethical
+    hacker and penetration tester with insights and **Cyber Threat Intelligence**
+    (**CTI**) on how the targeted organization is leaking sensitive data about themselves,
+    and how it can be leveraged by a real attacker when planning a future attack.Reconnaissance
+    is usually broken-down into the following categories:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Passive – Passive reconnaissance techniques are used to ensure the ethical hacker
+    does not establish direct interaction with the target. This technique involves
+    collecting and analyzing publicly available information from multiple data sources
+    from the internet about target. Passive information gathering helps the ethical
+    hacker to improve stealth and reduce the likelihood of alerting or triggering
+    any security sensors that notifies the target.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Active – Active reconnaissance techniques establishes a direct connection or
+    interaction with the target to collect sensitive information that’s not available
+    through passive reconnaissance techniques. This technique involves sending specially-crafted
+    probes over a network to the target to collect technical details such as operating
+    system and running services.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'According to the MITRE ATT&CK framework, the following are common reconnaissance
+    techniques used by adversaries:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Active reconnaissance – This technique focuses on sending probes to the targeted
+    systems and networks to collect sensitive information such as identifying the
+    target’s network block information and discovering security vulnerabilities on
+    applications and operating systems.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gather victim host information – This techniques helps the threat actor to collect
+    information about the target’s hardware, software running on devices, firmware
+    on device and system configurations.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gather victim identity information – This technique is used by threat actors
+    to collect users’ credentials, email addresses, employees’ name and contact information
+    from public data sources and leaked data.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gather victim network information – Threat actors uses this techniques to collect
+    network-related information about their target’s network infrastructure such as
+    domain registrar information, public DNS records, network topology details, IP
+    addresses and network block details.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gather victim org information – Malicious actors uses this technique to collect
+    information about the target’s geo-location, the service providers to the target,
+    days and time of business operations and identify key personnel of the organization.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Phishing for information – This technique is commonly used by malicious actors
+    by sending phishing email messages to the targeted organization with the intention
+    to trick victims into performing an action or revealing sensitive information
+    that can be further leverage in a cyber-attack.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Searched closed sources – Searching closed data sources involves looking through
+    subscription-based services that provide information about threat intelligence
+    and data leaks that contains sensitive information about breached data from organization.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Search open technical databases – These open technical databases contains publicly
+    available information about people, organizations, and domain names. Such information
+    can be leveraged by a threat actor when planning a cyber-attack on a target.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Search open websites/domains – This technique involves searching social media
+    platform, internet search engines and code repository websites for any publicly
+    available information that can be used to identify security flaws and plan a cyber-attack
+    on the target.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Search victim-owned websites – Visiting the targeted owned-website may contain
+    useful information such as contact details of employees, telephone numbers, email
+    addresses, and identify high-profile employees and their roles. Such information
+    can be leverage for spear-phishing attack campaigns.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The information collected during the reconnaissance phases helps the threat
+    actor, ethical hacker and penetration tester to move onto the exploitation phases
+    to gain access to a targeted system or network.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Reconnaissance is commonly referred to as *footprinting*, which is to obtain
+    specific information about the targeted organization from an attacker’s perspective.
+    The information that''s collected can be used in various ways to gain access to
+    the targeted system, network, or organization. Footprinting allows an ethical
+    hacker and penetration tester to better understand the security posture of the
+    targeted infrastructure, quickly identify security vulnerabilities on the targeted
+    systems and networks, create a network map of the organization, and reduce the
+    area of focus to the specific IP addresses, domain names, and the types of devices
+    regarding which information is required. Footprinting is part of the reconnaissance
+    phase; however, since footprinting can provide more specific details about the
+    target, we can consider footprinting to be a subset of the reconnaissance phase.The
+    following diagram shows how linkage between information gathering, reconnaissance,
+    and footprinting:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file120.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As an aspiring ethical hacker and penetration tester, using the same **Tactics,
+    Techniques and Procedures** (**TTPs**) for reconnaissance helps you to better
+    understand how a real attacker is able to identify the attack surface of a targeted
+    organization, collect and analyze publicly available data to identify security
+    vulnerabilities and leverage the collected data to improve their plan of attack
+    on the target. By using the same reconnaissance TTPs as real adversaries, you
+    will be able to better simulate a real-world cyber-attack on your target and gain
+    the insights needed to provide recommendations on improving the cyber defenses,
+    reducing the attack surface and improve the security posture of the organization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploring Passive reconnaissance
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Passive reconnaissance focuses on collecting information without directly connecting
+    or interacting with the target. This method reduces the threat level of the ethical
+    hacker and penetration tester, whereby reducing the likelihood of triggering any
+    alerts which notifies the target that someone is collecting information about
+    them, their systems and network infrastructure.Each day, more data is being uploaded
+    and created on the internet by people around the world. Whether someone is uploading
+    a picture of themselves, a fun marketing video or even information about new products
+    and services for new and existing customers, the internet is storing lots of data
+    which can be harvested and carefully analyzed by cyber criminals to better understand
+    their targets and improve their cyber operations. As previously mentioned, ethical
+    hackers and penetration testers uses the same TTPs as real threat actors as a
+    method to efficiently discover how organization are leaking data about themselves
+    and how malicious actors are able to leverage the collected data to identify and
+    compromise security vulnerabilities within their targets.For instance, internet
+    search engines are designed to index (crawl) and analyze each webpage found on
+    the internet to improve their search results and provides users with more accurate
+    information, helping a user to easily find the hostname of a web server or the
+    **Uniform Resource Locator** (**URL**) to a resource on the internet. Adversaries
+    and ethical hackers also use various internet search engines to discover unintentionally
+    exposed systems, unsecure web portals and resources which are owned by the targeted
+    organization.The following are common internet search engines used by ethical
+    hackers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Google - [https://www.google.com/](https://www.google.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Yahoo! - [https://www.yahoo.com/](https://www.yahoo.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Bing - [https://www.bing.com/](https://www.bing.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DuckDuckGo - [https://duckduckgo.com/](https://duckduckgo.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Yandex - [https://yandex.com/](https://yandex.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Yandex internet search engine is Russian-based and provides better search
+    results for resources within the Asia and Europe regions. DuckDuckGo is a privacy-focused
+    internet search engine which does not store the user’s searches or tracking details.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: As an aspiring ethical hacker, it’s recommended to use at least two different
+    internet search engines when performing research on your target. For instance,
+    one internet search engine may provide better results that’s aligned towards your
+    target, while another internet search engine may provide less sensitive results.
+    However, it’s important to collect all the information during the reconnaissance
+    phase, then analyze the collected data to determine what is useful and helps you
+    build a profile of your target. To get a better understanding on how adversaries,
+    ethical hackers and penetration testers uses passive reconnaissance to identify
+    sensitive information and security vulnerabilities on targets, let’s take a deep
+    dive into exploring open source intelligence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open source intelligence
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: '**Open Source Intelligence** (**OSINT**) is commonly referred to as the collection
+    and analysis of publicly available information from multiple data sources to better
+    understand the attack surface such as the security vulnerabilities on a targeted
+    organization. In addition, OSINT helps ethical hackers and penetration testers
+    to identify how their targets are leaking sensitive data which can be leveraged
+    by threat actors to improve their cyber-attacks and threats.As more organizations
+    are creating an online presence on the internet, from spinning up virtual servers
+    to hosting their web applications on cloud computing service providers’ infrastructure,
+    many companies are using social media platforms to create awareness and share
+    information with new and existing customers. While social media platforms enables
+    people around the world to share updates, pictures and videos to each other using
+    a digital medium, sometimes people leak sensitive information about themselves
+    or their organizations without realizing the potential risk if the information
+    were to be leveraged by a cyber-criminal. For instance, an employee shares a digital
+    photograph of themselves while at their workstation, however the background of
+    the image shows some confidential documents on their desk, their employee’s ID
+    badge and some applications on their computer’s monitor. If a threat actor is
+    targeting the company, the attacker will use passive reconnaissance to identify
+    the social media presence of the targeted organization such as their LinkedIn,
+    Facebook, Instagram and Twitter pages. Sometimes, organizations will post on social
+    media about new job vacancies with the technical requirements for a potential
+    candidate. Threat actors can leverage the technical details found within a job
+    post to determine the technologies and applications that are running within the
+    organization’s network.Furthermore, the threat actor can identify the social media
+    accounts of past and present employees to determine if anyone has uploaded a picture
+    with sensitive details. Social media platforms provides a lot of privacy features
+    to their users, however, not everyone takes the extra times to ensure their online
+    profiles are private and visible to online trusted contacts. If a threat actor
+    is able to find an employee’s social media accounts with unsecure privacy settings
+    and their pictures are all publicly available. The threat actor can simply looks
+    for pictures that contains the employee’s ID badge which can be used to create
+    a fake badge to gain unauthorized physical access to the compound, and even determine
+    what applications are running on the employee’s computer. Identifying the applications
+    on the targeted systems helps the threat actor to research security vulnerabilities
+    for the operating system and applications on the computers.While there’s a lot
+    of sensitive information which can be found on social media platforms, there are
+    addition OSINT data sources, such as the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Online forums – There are many online forums and discussions boards such as
+    **Stack Overflow** ([https://stackoverflow.com/](https://stackoverflow.com/))
+    which are commonly used by the tech community to help and share ideas with each
+    other. However, technical employees may create a profile on a discussion forum
+    and include their job title and company name. A threat actor can search for users’
+    profiles that are associated with the targeted organization, then the attacker
+    can view all the posts and discussions made by the employees to identify any sensitive
+    information that may be leaked. For instance, the employees may create a discussion
+    post on requesting help for a specific application on their network and reveals
+    the application version, error logs and host operating system for a server. The
+    threat actor can leverage this information to research known security vulnerabilities
+    for the application and operating system.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Search engines – Internet search engines crawl each web page and identify web
+    servers on the internet. Threat actors can leverage the search algorithm and use
+    customized search parameters on various internet search engines to find specific
+    resources and sensitive URLs of targeted organizations. For instance, both threat
+    actors and cybersecurity professionals can use *Google Dorking* techniques to
+    perform advanced Google searches.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Public databases – There are many public databases on the internet which contains
+    information about companies and their location, and people and their contact details.
+    Threat actors can collect and analyze the information found on public databases
+    to plan social engineering attacks on the employees of a targeted organization
+    to gain a foothold into their network infrastructure.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Internet archive – The **Internet Archive** ([https://archive.org/](https://archive.org/))
+    is an online, digital library which takes a snapshot of everything on internet
+    and archives it for the next 20 years. Therefore, anything that’s posted on the
+    internet is archived and it’s retrievable by anyone, including threat actors and
+    ethical hackers. The Internet Archive helps threat actors identify legacy web
+    applications and plugins on the targeted web server for any security vulnerabilities.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: WHOIS databases – There are many WHOIS databases on the internet which stores
+    registration details of public domain names. This type of database contains the
+    domain registration and expiration date, the contact details and address of the
+    person who registered the domain, and public DNS records. If a domain owner does
+    not pay an additional fee to safeguard their **Personally Identifiable Information**
+    (**PII**), a threat actor can use the owner’s personal information to plan future
+    cyber operations such as social engineering attacks.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Public records – Around the world, there are many state-owned and government
+    agencies that often store public records about their country’s property, citizens,
+    business registration and so on. For instance, many of these agencies are acquiring
+    an online presence on the internet, and threat actors can easily access the public
+    records to identify the geo-location of targeted companies.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Code repositories – Many developers are using GitHub and other online code repositories
+    to simultaneously work on new and existing applications for their organization.
+    However, if a user does not apply proper privacy controls on their user account,
+    a threat actor can easily view their online code projects to determine the applications
+    that are running within the targeted organization and whether any security vulnerabilities
+    exists within the code that can be exploited to gain a foothold on the network.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Geospatial data – This data source includes publicly available mapping and imagery
+    systems which enables anyone on the internet to find physical places and identify
+    the surroundings of an area. For instance, a threat actor can use **Google Maps**
+    to determine the geolocation of a targeted organization, and its **Street View**
+    feature identify whether there are any nearby carparks and physical access to
+    the compound.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Furthermore, organizations usually publish information about themselves on
+    various internet platforms, such as blogs, social media platforms, and recruitment
+    websites. As the internet is so readily available and accessible, it''s quite
+    easy for someone such as a threat actor or a penetration tester to gather information
+    on a targeted organization simply by using search engines to determine their underlying
+    infrastructure.Since adversaries leverages OSINT to improve their cyber-attacks
+    and future operations, ethical hackers and penetration testers use the same TTPs
+    to ensure they can efficiently discover how their targets are leaking sensitive
+    data and how threat actors can leverage it to compromise their target’s systems
+    and networks. In addition, ethical hackers will gain the insights and **Cyber
+    Threat Intelligence** (**CTI**) needed to provide recommendations on how to help
+    organizations reduce their data leakages and prevent future cyber-attacks and
+    threats.The following diagram shows a visual mind-map for collecting OSINT from
+    various online data sources:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file121.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding diagram, there are many data sources which are commonly
+    used by both adversaries and ethical hackers for different goals. Such that, threat
+    actors’ goals are usually focused on compromising the confidentiality, integrity
+    and/or availability of their targeted systems with malicious intentions. While
+    ethical hackers and penetration testers uses the same techniques and skills with
+    a good moral compass to help organizations identify hidden security vulnerabilities
+    and implement countermeasures to prevent a real cyber-attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Keep in mind, it’s important to validate the accuracy of the information collected
+    from OSINT. Sometimes, an online data source may not provide the most up-to-date
+    information about a target and this can lead to planning a cyber-attack or developing
+    an exploit based on outdated information.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: How much data should be collected
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The more data collected should help you better understand the target, but how
+    much data is enough? Before getting started with OSINT, ethical hackers and penetration
+    testers need to understand what are the deliverables of the penetration test,
+    whether the organization is interested in determining whether their company’s
+    data is being intentionally and unintentionally leaked online, how will an attacker
+    identify and exploit the security vulnerabilities on their systems, and what will
+    be the impact if an adversary were to leverage OSINT about the organization to
+    plan a cyber-attack.Once the ethical hacker determines the scope of the security
+    assessment, the ethical hacker will proceed to *data collection and retrieval*
+    of OSINT on the targeted organization. This means, the ethical hacker will use
+    reconnaissance TTPs to collect multiple data types such as text, media and geo-spatial
+    data from multiple data sources on the internet to create a profile about the
+    target. During this phase, it’s important for both ethical hackers and penetration
+    testers to identify relevant information that adds context to the target and when
+    sufficient is collected. If insufficient data is collected, the ethical hacker
+    will not have enough details to determine the type of security vulnerabilities
+    on targeted systems, attack vectors for delivering malicious payloads, geo-location
+    of the target, running services and applications on systems, and so on.After the
+    data collection phase, the ethical hackers needs to carefully analyze the collected
+    data to better understand how it applies to the targeted organization. During
+    this phase, the ethical hacker may discover something that’s interesting and decides
+    to go deeper by collecting more data for analysis. However, it’s important to
+    monitor the amount of time spent during each phase of your penetration test, as
+    you do want to spend most of your time on reconnaissance while forgetting about
+    exploitation and post-exploitation phases. Therefore, be mindful when going down
+    a rabbit-hole when researching your target.The **Your OSINT Graphical Analyzer**
+    (**YOGA**) mind-map helps ethical hackers and penetration testers to better visualize
+    how one data point can easily lead to another and displays the type of the information
+    that can be collected from each data point, as shown below:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file122.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding screenshot, if an ethical hacker uses the targeted
+    domain name as a starting point, YOGA provides a map showing the next data points
+    and sources for information gathering.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To learn more about YOGA, please see: [https://yoga.myosint.training/](https://yoga.myosint.training/).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'The analyzed data is converted into meaningful information to determine the
+    following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is the accuracy of the collected data?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Was the data found from credible sources?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Is the collected data factual or is it subjective?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Was enough data collected to understand the target or more is needed?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Next, the ethical hacker or penetration tester may attempt to collect more data
+    but in a different area to better understand and improve the profile of the target.
+    For instance, the ethical hacker may attempt to determine the organizational hierarchy
+    of employees, and perform social media OSINT to identify all employees with a
+    social media profile to investigate what type of information each person is leaking
+    about the company. Discovering the social media accounts of employees can lead
+    to discovering the IT professionals who are employed by the targeted organization,
+    and identify whether they made any recent social media post about their technical
+    work in the organizations.Once sufficient data is analyzed about the target, the
+    ethical hacker and penetration tester creates intelligence that will assist in
+    planning for the *weaponization*, *delivery* and *exploitation* phase to compromise
+    the target. However, active reconnaissance techniques and procedures are needed
+    to collect sensitive information that’s not available from OSINT. Having completed
+    this section, you have learnt about the importance of passive information gathering
+    and how OSINT can be leveraged by ethical hackers and penetration testers to identify
+    security flaws on a targeted system, network and organization. In the next section,
+    you will learn how to conceal your online identity as an aspiring ethical hacker.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a sock puppet
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: There are many techniques and tools which are commonly used by ethical hackers
+    and penetration testers to gather information about their target various sources
+    on the internet. When using OSINT strategies and techniques, you’ll need to ensure
+    you do not make direct contact with the targeted organization and that your real
+    identity is not revealed during the process. A **sock puppet** is a terminology
+    that's used within the cybersecurity industry, especially among penetration testers.
+    A sock puppet is simply a misrepresentation of an individual, such as creating
+    an entire fake identity or persona with the intent to infiltrate an online community
+    to gather information. While pretending to be someone else is unlawful, hackers
+    always create a fake identity on the internet when gathering information about
+    their targets. By creating a fake persona on an online platform such as a social
+    media website, no one knows the true identity of the account owner. Therefore,
+    the hacker can pretend to be an employee or a mutual friend of their target to
+    gather data about the organization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Never use personal accounts for work-related activities, such as OSINT operations,
+    investigations, ethical hacking, or penetration testing.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Penetration testers usually create a sock puppet to mask their true identity
+    when performing any type of intelligence gathering about their targets. This technique
+    is used to prevent the target, such as an organization or person, from determining
+    the true identity of the penetration tester who is collecting data about them.
+    If the organization hires a penetration tester to simulate a real-world cyber-attack,
+    and the penetration tester is using their real online accounts to gather intelligence,
+    their true identity may be revealed. Some social media platforms such as LinkedIn
+    allow a user to see who has visited their profile recently. If the penetration
+    tester uses their real account to investigate an employee''s profile, this may
+    trigger a red flag for the organization. Another key aspect of using a sock puppet
+    is to ensure the target does not know who is performing the OSINT investigation.
+    This is also a good practice for penetration testers to remain stealthy during
+    a security assessment.When creating a sock puppet, ensure the profile looks very
+    legitimate and believable to anyone who views it. The following are some resources
+    for creating a sock puppet:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fake Name Generator - [https://www.fakenamegenerator.com/](https://www.fakenamegenerator.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This Person Does Not Exist - [https://www.thispersondoesnotexist.com/](https://www.thispersondoesnotexist.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Proxy credit card - [https://privacy.com/](https://privacy.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Rather than thinking about all the components needed to create a fake identity
+    or persona, using a website such as **Fake Name Generator** enables you to select
+    various characteristics and parameters, and the site will generate an entire fake
+    identity within a few seconds. A profile without a picture is always a red flag,
+    and using someone else''s photo may work for a bit until someone discovers their
+    friend''s or relative''s profile picture is being used on another account. Using
+    a website such as **This Person Does Not Exist** is beneficial as it uses algorithms
+    to generate pictures of people who do not exist in reality. However, keep in mind,
+    there are various online tools that can be used to identify an AI-generated image.Sometimes,
+    as a penetration tester, you''ll need a *burner phone number* or some type of
+    payment service to help with your penetration testing engagement. Using your own
+    credit card on various sites can lead to revealing your true identity, such as
+    purchasing a burner phone number to perform social engineering over the telephone.
+    Using a website such as **Privacy** can act as a proxy for your credit card. The
+    site works by storing your real credit card number, which then enables you to
+    generate a unique proxy card number for each unique service or website you want
+    to perform a transaction on. This prevents you from revealing your true identity
+    through your credit card number on the e-commerce websites.The following are some
+    guidelines when creating a sock puppet:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Whenever you’re creating a social media account, ensure you do not use your
+    real IP address. Considering using the free internet service at a local coffee
+    shop.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When creating social media accounts, do not use **Virtual Private Networks**
+    (**VPNs**) or **The Onion Router** (**TOR**) services as many social media platforms
+    are able to detect your origin traffic is being proxy through a VPN or TOR, and
+    will require additional identity verification during the account creation process.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your sock puppet account should look like a normal person to avoid any red flags
+    of being identified as a fake account.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Consider using burner email address when registering for online accounts. There
+    are many free email services such as **Proton Mail** ([https://proton.me/](https://proton.me/))
+    which provide additional layers of privacy. However, you can create a vanilla
+    (basic) email address on Gmail, Outlook, and even Yahoo Mail.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: After the sock puppet profile is created, ensure you frequently share updates,
+    statuses, pictures, interact and connect with others on the platform.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Do not use another person’s picture as your sock puppet profile picture. Reverse
+    image search can be used to identify whether a picture is fake or being misused
+    online.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Having completed this section, you have understood the fundamentals and importance
+    of using a sock puppet when performing reconnaissance on a target. In the next
+    section, you will learn how to anonymize your internet-based traffic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Anonymizing internet-based traffic
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Ensuring your identity is kept a secret during a penetration test is important
+    to prevent the target from knowing who is collecting information about them. However,
+    during the reconnaissance phase of the Cyber Kill Chain, you may be using various
+    tools to help automate the information-gathering process. These tools will be
+    generating traffic and contain your source IP address within each packet that
+    leaves your device.For instance, you’re performing a port scan on a targeted web
+    server to identify open ports and running services. When the port scanner tool
+    on your devices sends specially crafted packets (probes) to the targeted web server,
+    each probe will contain your source IP address which can be used to identify your
+    geolocation. The targeted web server will be generating log messages on each transaction
+    it performs and will contain a record of all source IP addresses, including yours.The
+    following are common techniques that are used by penetration testers to anonymize
+    their traffic:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Virtual Private Network** (**VPN**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Proxychains**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**The Onion Router** (**TOR**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the following sub-sections, you will discover the benefits of using each
+    of these technologies as a penetration tester.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Virtual Private Network (VPN)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'A VPN allows a user to securely send data across an unsecure network, such
+    as the internet. Within the field of Information Technology (IT), security and
+    networking professionals often implement VPNs to ensure their remote workers and
+    offices can securely access the resources located at the corporate office over
+    the internet. This type of VPN is referred to as a Remote Access VPN. Additionally,
+    a Site-to-Site VPN can be used to establish a secure communication channel between
+    branch offices across the internet without using a dedicated **Wide Area Network**
+    (**WAN**) service from a telecommunications provider.Penetration testers can use
+    a VPN service to ensure the network traffic that originates from their attacker
+    system exists in a different geographic location. Let''s imagine you need to use
+    a tool to perform a scan on a target server on the internet but you do not want
+    your target to know the actual source of the traffic. Using a VPN, where the VPN
+    server is located in another country, can be beneficial to you. This means your
+    network traffic will be securely routed through the VPN service provider''s network
+    and will only exit in the country of your destination VPN server. Therefore, you
+    can have all your network traffic exit in the USA, Russia, and Brazil, and so
+    on, masking and anonymizing your identity and origin. The following diagram shows
+    a simple representation of using online VPN servers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![G:\.shortcut-targets-by-id\1CmOHjwHtAmAazfQWf4vwF3iXF6hLABBW\Packt Projects\09
+    - Reconnaissance for Ethical Hackers\Chapter 03\Diagrams\3.7.png](../media/file123.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The following are some notable points to consider when using a VPN to anonymize
+    your network traffic to the internet:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using a commercial VPN service provider requires a paid subscription.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ensure your VPN service provider does not keep logs or sell users data to third
+    party data brokers on the internet.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ensure the VPN service providers allows unlimited or unmetered bandwidth for
+    users.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ensure the VPN service provider has support and a VPN client for your operating
+    system.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You can host your own VPN server on a cloud service provider on the internet.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When using a VPN, ensure your DNS traffic is not leaking as it will reveal your
+    geolocation. Consider using **DNS Leak Test** ([https://www.dnsleaktest.com/](https://www.dnsleaktest.com/))
+    to verify whether your DNS messages are leaking outside your VPN tunnel.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: When using a VPN, consider disabling IPv6 communication on your operating system.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'OpenVPN enables anyone to host their own VPN access server as a self-hosting
+    solution or on the cloud. The OpenVPN Access Server enables up to 2 devices for
+    free. To learn more about OpenVPN Access Server, please see: [https://openvpn.net/access-server/](https://openvpn.net/access-server/).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Before choosing a VPN service, cloud provider, or setting up a solution, ensure
+    you do a lot of research and testing to determine which solution works best for
+    you. Next, you will learn how to use Proxychains to anonymize your traffic to
+    the internet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Proxychains
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'A proxy is a system such as a server that sits between a source and destination
+    host on a network. If a sender wants to communicate with a destination server,
+    the sender forwards the message to the proxy system, which is then forwarded to
+    the destination server. The destination server will think the message is originating
+    from the proxy system and not the actual source. Within the field of information
+    technology, using proxy servers has many benefits. In the cybersecurity industry,
+    it is commonly used to anonymize the origin of network traffic and to mask the
+    real source IP address of an ethical hacker and penetration tester.Penetration
+    testers use **proxychains**, which enables them to create a logical chain of connections
+    between multiple proxy servers when sending traffic to a targeted system, network
+    or the internet. Proxychains allow a penetration tester to configure various types
+    of proxies, such as the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: HTTP
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: HTTPS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SOCKS4
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SOCKS5
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Simply put, the traffic from the ethical hacker’s system will be sent to first
+    proxy server within the chain, then to the next and so on until the last proxy
+    server within the chain forwards the traffic to the destination (target) on the
+    internet. Using Proxychains does not encrypt your traffic as compared to VPNs,
+    but it does provide anonymity for your network traffic and prevents your real
+    IP address from being exposed to the target.The following diagram shows the flow
+    of traffic during the proxy chaining effect:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![G:\.shortcut-targets-by-id\1CmOHjwHtAmAazfQWf4vwF3iXF6hLABBW\Packt Projects\09
+    - Reconnaissance for Ethical Hackers\Chapter 03\Diagrams\3.8.png](../media/file124.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Where does a penetration tester obtain a list of proxy servers? This is a common
+    question that's asked by many people. Simply put, you can set up your own proxy
+    servers on the internet using various cloud service providers, such as Microsoft
+    Azure and **Amazon Web Services** (**AWS**). Additionally, you can obtain proxy
+    servers from paid services such as VPN service providers and perform a Google
+    search, such as *free proxy server list*, to find freely available proxy servers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can use a website such as [https://spys.one/en/](https://spys.one/en/),
+    to obtain a list of free proxy servers. However, keep in mind that these servers
+    may not always be online or available. Therefore, it’s recommended to use multiple
+    proxy servers.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'To get started setting up proxychains, please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open **Oracle VM VirtualBox Manager** and power-on the **Kali Linux** virtual
+    machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Login to the **Kali Linux** virtual machine, then open the **Terminal** and
+    use the following commands to update the local filename database and search for
+    the `proxychains4` configuration file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the location of the proxychains4.conf file:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file125.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, either on your host operating system or Kali Linux, open the web browser
+    and go to [https://spys.one/en/](https://spys.one/en/) for a list of proxy servers.
+    Ensure you choose a few proxy servers from the website.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After choosing a few proxy servers from the previous step, you will need to
+    modify the `proxychains4.conf` file to use the proxy servers. Use the following
+    command to open the `proxychains4.conf` file with the Nano command-line text editor:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, the contents of the `proxychains4.conf` file will appear on the Terminal,
+    scroll-down using the directional keys on your keyboard to the line that contains
+    `#dynamic_chain` and remove the `#` character from the start of the line. Then,
+    insert a `#` character at the start of the `strict_chain`, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file126.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding screenshot, removing the `#` character at the start
+    of a line within a configuration file in Linux will uncomment the line of code
+    and will allow the operating system to execute the line of commands. Therefore,
+    uncommenting `dynamic_chain`, the proxychains application will chain all the proxy
+    servers within a predefined list. By commenting `strict_chain`, proxychains will
+    not use this method of proxy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, scroll-down to the end of the `proxychains4.conf` file and insert a comment
+    (`#`) at the start of the `socks4 127.0.0.1 9050` to disable the TOR proxy option.
+    Then, insert each additional proxy server on a new line at the end of the **ProxyList**,
+    as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file127.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, to save the configuration file, press `CTRL + X` on your keyboard, then
+    `Y` to confirm the filename and hit `Enter` to save and exit to the Terminal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Before using Proxychains, use the following commands to retrieve your real
+    public IPv4 address:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To use Proxychains, use the following commands to launch a Firefox web browsing
+    session that will route all internet-based traffic through the list of proxy servers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: The `proxychains4 -f <configuration file>` command enables us to select a specific
+    configuration file to use.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Next, once the Firefox application opens on Kali Linux, go to [https://ifconfig.co/](https://ifconfig.co/)
+    to verify the public IP address and geolocation that’s seen by devices on the
+    internet, as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file128.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As shown in the preceding screenshot, the public IP address is the last proxy
+    server on the `proxychains4.conf` file. In addition, the public IP address shown
+    here is different from your real public address from step 8.In addition, you can
+    use the following commands to download and view the `ifconfig.co` webpage with
+    the new public address:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the public IP addresses with and without using
+    Proxychains:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![C:\Users\Glen\AppData\Local\Temp\SNAGHTML718659e.PNG](../media/file129.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Lastly, whenever you want to use Proxychains, ensure you check whether the proxy
+    servers are online and use the commands shown in step 9.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, you will learn how to route your internet-based traffic through the dark
+    web using TOR.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Onion Router (TOR)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The TOR project and its services are commonly used by cybersecurity professionals,
+    researchers and cyber criminals to both anonymize their internet-based traffic
+    and to access the dark web. TOR allows a user to route their internet-based through
+    multiple nodes on the TOR network as a technique to conceal the sender’s identity
+    and geolocation data from other systems on the internet.This type of service and
+    technology is very useful for ethical hackers and penetration testers as TOR adds
+    multiple layers of data encryption for improved security and anonymity. Whenever
+    a user sends a packet into the TOR network, the TOR application on their computer
+    will encrypt the packet by wrapping it in multiple layers of data encryption.
+    When the encrypted packet arrives at the first-node within the TOR network, the
+    first-node decrypts the first layer of encryption to determine how to forward
+    the packet to the next node. When the packet arrives at the second-node, it decrypts
+    another layer and the process is repeated until the packet arrives at the exit-
+    or last node within the TOR network. The exit-node will perform the final decryption
+    to determine the true destination IP address of the packet and forwards it towards
+    the destination host on the internet/dark web.Therefore, the destination host
+    on the internet or dark web will not be to trace the packet back to the real source
+    as each TOR-node only knows about the previous and next-node when forwarding packets
+    within the TOR network.The following diagram shows the chaining effect in the
+    TOR network:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![G:\.shortcut-targets-by-id\1CmOHjwHtAmAazfQWf4vwF3iXF6hLABBW\Packt Projects\09
+    - Reconnaissance for Ethical Hackers\Chapter 03\Diagrams\3.14.png](../media/file130.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To get started with setting up TOR services and TOR Browser on Kali Linux,
+    please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open **Oracle VM VirtualBox Manager** and power-on the **Kali Linux** virtual
+    machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, after logging-in to Kali Linux, open the **Terminal** and use the following
+    commands to update the software package repository list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, install **TOR** and **TOR Browser** on Kali Linux with the following
+    commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, launch the **TOR Browser** application with the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Once the **TOR Browser** appears, click on **Connect** to establish a connection
+    between the TOR Browser and the TOR network, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file131.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the connection is established to the TOR network, go to [https://ifconfig.co/](https://ifconfig.co/)
+    to determine if the traffic from the TOR Browser is being routed over the TOR
+    network, as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file132.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: If you choose to visit a web address with the `.onion` extension, you are doing
+    so at your own risk. Ensure you do not download anything, trust anything or anyone
+    on the dark web.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Next, close the **TOR Browser** to terminal the connection and the application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The TOR Browser will only route traffic from itself through the TOR network
+    and not from any other application on Kali Linux. To route traffic from any application
+    on Kali Linux through the TOR network, please use the following configurations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On **Kali Linux**, open the **Terminal** and use the following commands to
+    open the `proxychains4.conf` file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Once the `proxychains4.conf` file is open, uncomment the `socks4 127.0.0.1
+    9050` line and comment all other proxy servers within the **ProxyList** as shown
+    below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file133.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, to save the configuration file, press `CTRL + X` on your keyboard, then
+    `Y` to confirm the filename and hit `Enter` to save and exit to the Terminal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, start the TOR service on Kali Linux with the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the TOR service is running (active):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file134.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, use the following commands to launch an application while routing all
+    its internet-based traffic through the TOR network:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the internet-based traffic from the Firefox
+    application is being routed through the TOR network:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file135.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Lastly, use the following commands to stop the TOR service on Kali Linux:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Having completed this section, you’ve learnt about various methods to anonymize
+    your internet-based traffic while learning how to use proxychains and TOR services
+    on Kali Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: During this chapter, you have learnt how reconnaissance plays an important role
+    during penetration testing and how it helps ethical hackers to build a profile
+    about their targets to better understand the security vulnerabilities that exists
+    on them. In addition, you have explored the various TTPs of reconnaissance and
+    how penetration testers leverages OSINT to identify how targeted organizations
+    are leaking sensitive data about themselves and how it can be leveraged by a real
+    adversary. Lastly, you have gained the skills and hands-on experience to conceal
+    your online identity and anonymize your internet-based traffic as an ethical hacker
+    and penetration tester.I trust that the knowledge presented in this chapter has
+    provided you with valuable insights, supporting your path towards becoming an
+    ethical hacker and penetration tester in the dynamic field of cybersecurity. May
+    this newfound understanding empower you in your journey, allowing you to navigate
+    the industry with confidence and make a significant impact. In the next chapter,
+    *Exploring Open Source Intelligence*, you will gain the practical skills needed
+    to efficiently harvest and analyze publicly available information to create intelligence
+    on a target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further Reading
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: MITRE ATT&CK Reconnaissance - [https://attack.mitre.org/tactics/TA0043/](https://attack.mitre.org/tactics/TA0043/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OSINT lifecycle - [https://www.sans.org/blog/what-is-open-source-intelligence/](https://www.sans.org/blog/what-is-open-source-intelligence/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OSINT Framework - [https://osintframework.com/](https://osintframework.com/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

@@ -1,0 +1,873 @@
+- en: Privilege Escalation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Establishing a connection as an elevated user
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Remotely bypassing Windows UAC
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Local Linux system check for privilege escalation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Local Linux privilege escalation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Remote Linux privilege escalation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DirtyCOW privilege escalation for Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we have some small foothold in the environment, we will use this foothold
+    to expand the scope of our breach, increase the admin level, and use lateral movement
+    to compromise more machines. In most cases, the initial point of a breach is not
+    the desired target but just a means to get to the more valuable targets. By elevating
+    privileges it will make your ability to move in the environment much easier.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Establishing a connection as an elevated user
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will establish a connection to a remote Windows computer.
+    We will use the same skills that we learned in previous chapters to make our initial
+    connection to the computer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali Linux VM is powered up and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Windows XP VM is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now connect to a Windows machine and elevate that connection to a privileged
+    level:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validate the IP addresses of your Kali box and your Windows machine—you should
+    have interfaces on both of your host-only networks on both boxes. In my case,
+    my Kali VM is `192.168.56.10` and my Windows XP VM is `192.168.56.102`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Let's ensure we have NetBIOS over TCP enabled in Windows XP. Log in to your
+    Windows XP VM as an administrator and click onStart | Control Panel | Network
+    Connections.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Right-click on your Local Area Connection and click on Properties:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/187c679f-1227-496c-8011-8211668d0109.png)Windows network connection
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on the Advanced button in the bottom right and then click on WINS at
+    the top, and ensure Enable NetBIOS over TCP/IP is selected:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4f3601a5-849d-4adb-a8d9-cdd7e59f4e1f.png)Advanced TCP/IP settings:
+    WINS'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If it was not selected, click on OK | Close and reboot your Windows XP VM.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For the purposes of this book, we will use Armitage, but if you would rather
+    do everything through the CLI, you may use `msfconsole`. We will also clear the
+    database if there are any hosts displayed in it at this time.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Refer to [Chapter 4](9f678d15-2115-4e29-a75d-03dba65d3398.xhtml), *Finding Exploits
+    in the Target*, for information on starting Armitage or Metasploit and clearing
+    the database, depending on your preference.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Armitage screen, we will click on Hosts | Add Hosts and enter our
+    Windows XP machine IP address `192.168.56.102` and then click on Add. Click on
+    OK when it acknowledges that the host was added:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/21fda32f-6900-4088-b3e0-40911e7e642f.png)Armitage: Add Hosts dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the top menu, click on Hosts | Nmap Scan | Intense Scan and for the scan
+    range, enter the IP address of the XP machine and click OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/705a5d34-eedb-41da-9c67-f7b49aaff0bb.png)Armitage: nmap scan'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once `nmap` is finished, you will be presented with a Scan Complete! message;
+    click OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From the top menu, click on Attacks | Find Attacks:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/91513504-9421-4097-93c5-18e7394baaf9.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: On the Attack Analysis Complete... screen, click OK.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Right-click on the host and click on Attack | smb | ms08_067_netapi:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/0e122b6f-e0cc-476c-ae72-c98ffbfe3a0a.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Attack dialog, click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/f6885753-15a4-46ce-8af5-1a5f33346fcb.png)Armitage: attack dialog
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will notice that the host now shows you have compromised the device:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/0e694fff-b826-4fe2-81c7-2784e6d4ce52.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the XP host and click on Meterpreter 1 | Interact | Meterpreter
+    Shell:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/36b1d2d1-11c7-4995-90cd-80b11389c657.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the shell, enter `getuid` to see who is currently logged in – you will
+    notice you have system-level privileges:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a204ed9e-fccd-44e3-87f2-f7b7e5e00461.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remotely bypassing Windows UAC
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will establish a connection to a remote Windows computer.
+    We will then bypass **User Account Control** (**UAC**) to gain elevated permissions.
+    The UAC is part of windows attempt to harden itself from remote attack by prompting
+    the user to confirm potential escalated privileges requests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali Linux VM is powered up and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Windows XP VM is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will remotely bypass Windows UAC to elevate privileges:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validate the IP addresses of your Kali VM and your Windows VM – you should have
+    interfaces on both of your host-only networks on both boxes. In my case, my Kali
+    device is `192.168.56.10` and my Windows XP device is `192.168.56.102`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open a terminal window by clicking the terminal icon: ![](assets/58d64492-2224-4790-866e-60e7030e7b9a.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We will quickly create a payload file with `msfvenom` by typing the following
+    command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/96a824a9-1d64-499b-a3dc-91175db40693.png)Kali: Terminal output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the payload is created, move it to your target machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Log in to your target machine as a standard user. In my case, I will be logging
+    in as `Jane Doe`. You can open Command Prompt and use the `qwinsta` command, or
+    on later versions of Windows, you can use the `whoami` command, similar to Linux
+    systems:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The `qwinsta` command and the `whoami` command provide information about the
+    currently logged in session. The `qwinsta` has been used since the early days
+    of Windows. The `whoami` command was a standard command used in Linux environments
+    for years and was ultimately adopted by more recent versions of Windows.![](assets/d9ce1c86-542e-4f7f-b416-1e9f3d726b27.png)Windows:
+    Command Prompt'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let's start a listener in Armitage for the payload we just copied over.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Refer to [Chapter 4](9f678d15-2115-4e29-a75d-03dba65d3398.xhtml), *Finding Exploits
+    in the Target*, for more information on creating listeners.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Armitage main screen, select Armitage | Listeners | Reverse (wait
+    for):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/8daf179f-6ada-4cea-9a49-0900788ddce5.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Set the Port to `8443` and the Type as meterpreter, and click on Start Listener:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/40932b20-f1fb-44d1-b478-0d53791652ec.png)Armitage: create listener
+    dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From your Windows machine, launch the `exploit.exe` file by double-clicking
+    on it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b7fa154a-f7de-4d62-b4b6-dfa2a9a8d9a2.png)Windows main screen: launching
+    exploit'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will now notice that we see the device exploited and a session has been
+    created:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/dd551a4e-17df-411c-a00c-8c0caa9efa91.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the exploited machine and select Meterpreter 1 | Interact |
+    Meterpreter Shell:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ff7f0d6e-c562-4714-9a51-d8ef994aeca9.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the `meterpreter` console, enter the following commands. You will notice
+    that I am logged in as `Jane Doe` and I do not have the privileges to run the
+    `getsystem` command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/cbb60a20-c771-443e-931a-edc4067f1ea4.png)Armitage: meterpreter console'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To bypass UAC controls, on the left, select exploit | Windows | local | ms10_015_kitrap0d:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2d96b2a4-ca53-467e-b377-801db9d0755e.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the dialog box, validate that the session correctly identifies the `msf`
+    session you are currently working with (in my case, 1),and the LHOST reflects
+    the IP address of the interface on the same subnet as your Windows machine, and
+    then click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d3e81b45-976a-4cb8-beae-72fb835c4323.png)Armitage: exploit options
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will then see a successful exploit and a new session opened:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b9ab2af8-41bf-4fb7-ba0f-d2e6194bf099.png)Armitage exploit screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select this new session by right-clicking on the Windows machine and selecting
+    Meterpreter 2 | Interact | Meterpreter Shell:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/bf8cf8e1-b673-4990-8a79-e0551e985621.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s rerun the previous commands. You will notice that I am logged in
+    as `SYSTEM` and I do have the privileges to run the `getsystem` command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/52d921f7-fafd-440e-9606-58bc98c0deb3.png)Armitage: meterpreter console'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Local Linux system check for privilege escalation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will use a Python script to check the system for vulnerabilities
+    that could lead to privilege escalation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Metasploitable machine is connected to the NAT network (remove it immediately
+    after this lab)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Metasploitable machine is powered up
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will try and discover a vulnerability that will allow us
+    to escalate privileges in linux:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Log in to the Metasploitable machine with the username `msfadmin` and password
+    `msfadmin`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From the terminal prompt of the Metasploitable machine, run the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You can now scroll through a list of vulnerabilities that can be used against
+    this machine to provide privilege escalation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3ff6a38d-7e9a-4c68-bfdb-132c8675e0f6.png) Metasploitable console
+    output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From here, you can use the exploit DB we learned to use in previous recipes
+    to see what attacks can be used against the Linux VM for privilege escalation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Local Linux privilege escalation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will use a known exploit to gain elevated privileges for
+    the logged-in user in Linux. We will have login credentials for a standard user
+    and we will then escalate their privileges through local account access.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali VM is up and running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Download and set up Vulnerable OS 2 (VulnOS2) from [https://www.vulnhub.com/entry/vulnos-2,147/](https://www.vulnhub.com/entry/vulnos-2,147/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Attach the network interface to your host-only network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Start your VulnOS2 image
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Refer to [Chapter 1](7560c369-51ac-43f6-b94e-3889265b10bc.xhtml), *Installing
+    Kali and the Lab Setup*, if you need assistance setting up the VM in VirtualBox.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now elevate privileges in Linux:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start by finding the IP address of the VulnOS2 image – we can use a simple `nmap`
+    scan to find it. Open a terminal window by clicking on the terminal icon.![](assets/f39e71d6-37a9-42fd-af2d-97306a5e6823.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Enter the following commands to run a quick `nmap` for the host-only network
+    of `192.168.56.0/24`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From our output, we can see that the address of the machine is `192.168.56.104`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a110a183-2c88-4526-bfba-84d1b0935325.png)Kali console outputWe are
+    going to use this exploit through SSH access to the device. Local access to the
+    device will work; however, the person who designed the VM used the AZERTY keyboard
+    layout, so you will have to adjust for that if you want to do it locally. As this
+    layout assumes a different keyboard layout you will not be able to simply type
+    as you normally would. The creators intention for this is that as a penetration
+    tester you have to be aware that different users or computers may provide unfamiliar
+    environments to you that you would have to adjust to.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s SSH to the device and use the credentials that we found through other
+    means. From the Kali command terminal window, enter the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: The username is `webmin` and the password is `webmin1980`. If you are asked
+    whether to continue connecting, select yes. If you were given an error stating
+    that the remote host identification has changed, you can clear your known hosts
+    by typing `rm /root/.ssh/known_hosts <enter>` from the console and trying to SSH
+    again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now assuming we used the previous recipe, Local Linux system check for privilege
+    escalation, we could find that this system is vulnerable to exploit `37292`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Open Firefox and go to [https://www.exploit-db.com/exploits/37292/](https://www.exploit-db.com/exploits/37292/).
+    Review the details of the exploit and click on View Raw and copy its contents
+    to the clipboard:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Vulnerability 37292 (CVE-2015-1328) overlayfs is a vulnerability affecting
+    Ubuntu where it does not do proper checking of file creation in the upper filesystem
+    area. Exploiting this can lead to root privilege.![](assets/fd03aeeb-1475-4068-9aeb-a43d270ecc49.png)Firefox:
+    exploit database'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the SSH session, enter the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Paste the contents of the clipboard, exit nano, and save the file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/1eb8af4a-0736-4142-89fa-974bc078d88e.png)nano editor screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now we must compile the C code by entering the following—also note that we
+    are logged in as `webmin` and the shutdown command fails:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now let''s run the exploit by entering the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will now notice that you are the root user:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/dfa03d5b-fdc2-45d8-a179-451598e9eaac.png)Console output screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remote Linux privilege escalation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will use Metasploit against the Metasploitable VM to raise
+    the privileges of the user.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali VM is up and running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Metasploitable VM is up and running and on the host-only network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will remotely elevate privilege on a Linux device:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, let's log in to the Metasploitable VM and add a standard user.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Metasploitable's default username is `msfadmin` and password `msfadmin`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the console, enter the following commands to add a user and validate the
+    IP address of the Metasploitable host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/63822a93-b98f-421b-bf63-5a49c1f667f6.png)Metasploitable console'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From Kali, let's start Armitage.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Refer to [Chapter 4](9f678d15-2115-4e29-a75d-03dba65d3398.xhtml), *Finding Exploits
+    in the Target*, for information on starting Armitage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From Armitage, add the Metasploitable VM, in my case `192.168.56.105`, by clicking
+    on Hosts | Add Hosts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/44e270d7-66a0-4451-a8ea-c638660f1b49.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Add Hosts dialog box, enter your Metasploitable VM''s IP address and
+    click on Add. Click on OK on the confirmation dialog box:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/55df966c-3bb2-4fcd-a385-a8af16d24b6a.png)Armitage: Add Hosts dialog
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Run a quick scan against the device by selecting the host and then clicking
+    on Hosts | Nmap Scan | Intense Scan. Ensure the IP address of your VM is populated
+    in the input screen and click on OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/301d8928-ebe7-487d-9684-2251270ef079.png)Armitage: Input dialog
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the scan is complete, click OK in the Scan Complete dialog box.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Now click on Attacks | Find attacks from the top menu and click on OK in the
+    Attack Analysis Complete... dialog box.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now let''s log in with Telnet to the Metasploitable machine with the username
+    and password that we have by right-clicking on the host and selecting Login |
+    telnet:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ef932ca8-50d3-41b7-904e-2358c51da583.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the login dialog box, enter `user7` for the user and `password` for the
+    password, and then click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4c30f5ef-b192-41e7-be44-2188885b41fd.png).Armitage: Launch dialog
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will now see that we have remote access to the box based on the host icon
+    change:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ad866731-3b97-463c-91fe-d4ba5c68956a.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the hosts and select the shell| Interact option, and you will
+    be dropped into a Command Prompt window on the Metasploitable machine. Enter the
+    following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From the output, you will notice that we are a standard user and have no root
+    or `sudo` privileges:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/164e288c-7bfa-4f92-a435-a3b46edfbea2.png)Armitage: shell output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s try and exploit the system to gain root access. Right-click on the
+    hosts and select Attack | samba | usermap_script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/73fa81f0-0fdd-475f-951b-7f23dbc97b02.png)Armitage: main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On the attack dialog box, make sure your LHOST is correct, and click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5501de39-53cf-40ef-a82c-66cc12b776ef.png)Armitage: attack dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After it shows a successful launch, you will see that a new shell session was
+    created, in my case, shell 8:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b10c18cc-33b4-408d-8900-b6a2e08501da.png)Armitage exploit output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the host and select the shell8 | Interact option, and you will
+    be dropped into a Command Prompt window in the Metasploitable machine. Enter the
+    following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will now see that we are the root user and we can shut down the host with
+    the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/9bc6d6b1-9b76-4318-89b3-8471cddd43a0.png)Armitage shell output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will notice if you switch to the screen of the Metasploitable machine that
+    it is shutting down:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ab60c623-1cfd-4a9d-82c8-9bef522422be.png)Metasploitable console:
+    machine shutting down'
+  prefs: []
+  type: TYPE_NORMAL
+- en: DirtyCOW privilege escalation for Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will use DirtyCOW to exploit Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will use Metasploit with the DirtyCOW vulnerability to provide privilege
+    escalation. **Dirty Copy-On-Write** (**DirtyCOW**) was recently discovered and
+    was a major vulnerability as it went for several years without being recognized
+    and patched. DirtyCOW is a privilege escalation bug that exploits a race condition
+    in the copy on write function.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali VM is up and running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Metasploitable VM is up and running and on the host-only network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now launch DirtyCOW against a Linux machine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open up a terminal window by clicking on the terminal icon: ![](assets/7b4a48f1-4620-42af-99a4-0cb257600f28.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Enter the following commands to download our DirtyCOW exploit:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From within nano, look for the section `struct Userinfo user;`and change the
+    `user.username` to `"dirtycow"`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/f5f7b4bb-f819-49b4-959a-964d101c1c8d.png)nano interface'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now we will send over the C code to our Metasploitable machine for compiling.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I will use the same username and password I created in a previous recipe, *Remote
+    Linux privilege escalation*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From your Kali VM, open an SSH session to your Metasploit VM as a standard
+    user:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Let''s compile our new exploit:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now we will take a look at how we are before we launch the exploit:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will notice I am a standard user and have no root privileges, nor am I
+    a `sudo` user:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/769e178d-ad15-449f-b87d-a61f05c21ba6.png)Metasploitable machine
+    output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s now run the `dirtycow` exploit:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This will take several minutes to complete; be patient until you are back at
+    the Command Prompt window.![](assets/f09174df-7b58-4153-a526-f937f7b951bf.png)Metasploitable:
+    DirtyCOW exploit'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s see if we have a user we can `su` too:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will now see from the output that I am an elevated user and root equivalent:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b99340e4-31ea-4c27-a335-6cafcbaa4812.png)Metasploitable: elevated
+    privileges output.Don''t forget to restore your `/etc/passwd` file when finished
+    by entering the following command: `mv /tmp/passwd.bak /etc/passwd`.'
+  prefs: []
+  type: TYPE_NORMAL

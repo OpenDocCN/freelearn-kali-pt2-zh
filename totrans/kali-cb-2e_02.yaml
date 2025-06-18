@@ -1,0 +1,1167 @@
+- en: Reconnaissance and Scanning
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using KeepNote to organize our data
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Getting up and running with Maltego CE
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gathering domain information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gathering public IP information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gathering external routing information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gathering internal routing information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gathering cloud service information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Identifying network hosts
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Profiling hosts
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Identifying whether there is a web application firewall
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using SNMP to gather more information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, you will learn the skills necessary to gather information about
+    your target environment. We will spend time trying to identify as much information
+    as possible. The more information we can gather will provide us with more potential
+    vectors for possible penetration in the environment as well as make those penetration
+    attempts more successful. We will gather domain names, IP subnets, hosts, routing
+    information, as well as other useful information. You will also learn how to keep
+    track of this data, so we can refer to it in the future as we progress through
+    our penetration testing environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using KeepNote to organize our data
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will explore the application KeepNote and how you can use it to capture the
+    information we discover during our testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It will be very important for you to record all the information in detail, as
+    this information will be useful in later chapters, as well as for the reports
+    that you need to create for your customer. Kali actually provides some useful
+    purpose-built tools for recording your information. Don't reinvent the wheel;
+    if you have already used a note taking tool like Microsoft OneNote or EverNote,
+    just stick to it. However, if you don't do this, Kali does provide a cross-platform,
+    note-taking application called KeepNote that you can use if you don't have a preference.
+    But always remember that, as a penetration tester, you are gathering information
+    that can be used to do great harm to a customer, so remember security and privacy
+    when you decide on the tools you use to record the data you gather.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate the internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will learn how to use KeepNote in order to collect and organize
+    the data we collect:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on Applications. Slide your mouse down and highlight 12 - Reporting Tools,
+    and click onthe KeepNote icon:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/fa9a1eb3-5e44-493d-9b57-5baecf4a27c5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'From the main KeepNote screen, select File | New Notebook. We will be provided
+    with a file navigation screen. So, select `/root/Documents` and type in your customer
+    name (for example we will use `customer_1`), and click on New:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/e778f879-036d-4adf-bdf5-9ce040425921.png)KeepNote - New Notebook
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One of the first pieces of information we want to capture is basic company
+    details. Click on File| New Page, name it `Company Info`, and press *Enter*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/39039f9a-2f15-4521-8bbb-8959af19cd0c.png)KeepNote - New Page screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Populate it with whatever information you can find about your target. Use Google
+    searches, go through its website and if it''s a public company gather their financial
+    and SEC filing information:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/09b3c610-9331-428f-8f2c-b12008b5fd54.png)KeepNote - Add information
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on File | New Child Page, and call it `e-mail addresses`. Add any email
+    address you can find:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/87fb8d43-2536-4825-a569-dd10d3292448.png)KeepNote - New Child page'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To save the notebook, click on File | Save Notebook.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To quit, click on File | Quit but make sure you always save it first.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You're never going to be done recording information. Every little piece of information
+    you find, log it and keep it organized. You can add output information from the
+    commands you run, from images, and from screenshots. After you do a few of these,
+    you will find that you may be able to start with a basic template of information.
+    You can create a generic template that has pages and child pages already set up.
+    Just copy it over for your new notebook whenever you start a new engagement. You
+    can continue modify and adjust these template as you find new categories of information
+    you want to capture.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Explore the [http://keepnote.org/](http://keepnote.org/) website to get more
+    information on the KeepNote application and its capabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting up and running with Maltego CE
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will be using the **maltego community edition** (**Maltego CE**) for several
+    more recipes. This chapter will take us through the initial setup of Maltego.
+    Maltego is a tool designed for data mining and discovery. It will place the information
+    in a knowledge graph that you can continue to build and pivot from to help discover
+    and gather information. This information can then be leveraged to expand our attack
+    surface.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following pre-requisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate network connectivity to the internet
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Sign up for a Maltego community edition account through [https://www.paterva.com/web7/community/community.php](https://www.paterva.com/web7/community/community.php)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will get Matego - Community Edition registered and setup:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Launch Maltego CE by going to Applications | 01 - Information Gathering. Click
+    on maltegoce:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/bbcf726f-42eb-4d0c-a614-fd9bf94a68f3.png)Kali application menu screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will be brought to a welcome Screen. Click on Next to Continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You will now be brought to Install Transforms From: Screen. Ensure that there
+    is a check mark in the Maltego public servers,and click on Next.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: At the Ready...Set...Go! screen, select Go away, I have done this before!, and
+    click on Finish.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Click on the Maltego CE icon in the top left-hand corner of the screen, and
+    select Log in to Community Server at the bottom:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a690f51f-6120-4e37-b9c5-2df41af4788c.png)Maltego icon'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Log in with the credentials you created in the preceding *Getting ready* section,
+    and click on Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/806547f7-6d00-4f10-9bf0-0f14b783faec.png)Maltego logon screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will be presented with a screen providing the personal details that you
+    used when registering; click on Finish.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The API key Maltego provided through your login is good for three days. Every
+    three days, you will have to log back in to obtain a new API key.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we are all done, we should be brought to Transform Hub. To start, let's
+    click on Refresh Transform Hub to ensure we have the latest list of transforms
+    available.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once Transform Hub is refreshed, you can start by installing all the transforms
+    listed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You can easily install a transform by clicking on it and selecting Install.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After you install your transforms, you can go through and, by clicking on them,
+    check whether there are any settings that you may need to, or want to, modify.
+    In particular, you may need to set up credentials for other transforms as needed,
+    in order to use them.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A transform is an operation that will take a bit of data and analyze it against
+    a predefined set of characteristics and add that information to the graph. Later,
+    we will review machines that our groups of transforms put together in a macro.
+    Here, we can carry out successive data operations by linking multiple transforms
+    together in a series. Please note that the community edition of Maltego is limited
+    to 12 entries returned per transform, which may require you to run certain transforms
+    multiple times, or with less granular information, to receive all the information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'You can read more information on Maltego at [https://docs.paterva.com/en/user-guide/](https://docs.paterva.com/en/user-guide/).
+    There are many other transforms available for Maltego that you can search for
+    online. Here are a few links to get you started:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[https://maltego.shodan.io/](https://maltego.shodan.io/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[http://packetninjas.net/tools/socialnet.html](http://packetninjas.net/tools/socialnet.html)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[https://code.google.com/p/recordedfuture/downloads/detail?name=RF_Maltego_Package_1.0.tgz](https://code.google.com/p/recordedfuture/downloads/detail?name=RF_Maltego_Package_1.0.tgz)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[https://github.com/allfro/sploitego](https://github.com/allfro/sploitego)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[https://github.com/catalyst256/Watcher](https://github.com/catalyst256/Watcher)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[https://github.com/digital4rensics/Malformity](https://github.com/digital4rensics/Malformity)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[https://www.threatminer.org/maltego.php](https://www.threatminer.org/maltego.php)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gathering domain information
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe we will use Maltego CE to gather Internet Domain information.
+    If we are mainly working an external, internet based, penetration test. This information
+    will provide of plenty of valuable information regarding the public aspects of
+    there network. This tool will start with a domain name and pivot out to several
+    different aspects of publicly available domain information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate network connectivity to the internet
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Maltego is running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will use Maltego CE to gather information about a target''s
+    domain name:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the upper left-hand corner, click on the new graph button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3fbc9fd7-e514-4927-9c5f-26efed9de93f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: On the left, select Entity palette. Scroll down to Infrastructure, and click
+    on Domain. Drag it onto the graph.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Rename `paterva.com` to `example.com`; `example.com` will suffice as the target
+    domain for this round of testing:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9ac481bf-f7b6-45ff-af14-756f1dc2978e.png)Maltego - New Graph pageWe
+    will use `example.com` for some of our initial testings. The `example.com` is
+    a reserved site dedicated to documentation. It has some infrastructure behind
+    it. The infrastructure is minimal, so some results will not be complete. You can
+    use `example.com` for your testing or a domain you are authorized to access.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the `example.com` domain icon, which will show you a variety
+    of transform options. Let''s start by getting the whois information. Navigate
+    to Threat Miner | [Threat Miner] Domain to Whois Details. This will reach out
+    and pull all the publicly available information on the domain. If you now double-click
+    on the domain icon, and select Properties (14) from the top. Then, you will see
+    that all the information is populated:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ddc50273-0d6b-4e50-bc5e-44b08c4958f0.png)Spend a minute getting
+    used to how the transform interface works. Right-click on `example.com` to open
+    the Run Tansform(s) dialog. Along the left edge, you may notice a return arrow,
+    which can bring you back in the transform menu. Depending on where you are, you
+    may need to click back a couple times to get back to the root transform screen;
+    go into a couple of the populated choices as needed.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Continue building the graph and have it populate the name servers. Right-click
+    on `example.com`, and select Paterva CTS | DNS from Domain | To DNS name - NS
+    (name server). You will now see our name servers populating:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/937e4ce9-e86f-4bc3-b40e-b4cb59642b03.png)Maltego - example.com graph
+    with name servers'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There is a tremendous amount of additional information that you can use Maltego
+    to gather. Spend some time trying to obtain more domain-related information. Test
+    some different transforms, even if one transform fails to gather a particular
+    type of data, another transform may succeed in gathering it. Also you can use
+    Maltego to discover other domains that may be related to the company. Perhaps,
+    they have `example.com` and `example.org` that have different mappings, so take
+    the time to explore and gather all the information you can.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will continue to use Maltego for further examples, so, either save your graph
+    at this point so that you can come back to it, or continue with other operations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Gathering public IP information
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will now use Maltego to obtain the external host, the IP address, and some
+    netblock information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We want to continue from where we left off with the last section, so, if you
+    are coming back to the book after a while, open your saved Maltego graph from
+    the Gathering domain information recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will use Maltego CE to gather a company''s public IP information:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Starting from the graph screen, right-click on the `example.com` domain icon
+    and select Paterva CTAS | DNS from Domain | To Website [Quick lookup]. You will
+    now discover `www.example.com`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6ddba475-11ec-417a-b0ac-bcd8670b92da.png)Maltego - Graph screen
+    with www.example.comAgainst a real domain, try the following transforms to further
+    propagate a list of hosts. Some of the transforms you may want to try are; Paterva
+    CTAS | DNS from Domain | To DNS Name [Using DB] andPaterva CTAS | DNS from Domain | To DNS
+    Name [Find common DNS names].'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s resolve the host names of all objects to their corresponding IP
+    addresses. Start by highlighting multiple objects by clicking and dragging across
+    the ones you want to select. Once those items are highlighted right-click and Select Paterva
+    CTAS | Resolve to IP | To IP Address [DNS]:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ed180e92-c778-4edc-b0a7-ebaa1effa2fb.png)Maltego - Graph screen
+    with www.example.com'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s obtain netblock information for `www.example.com` now that we have its
+    IP address. Right-click on the IP address in the question, and select All Transforms | To
+    Netblock [Using routing info]:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/7b6474dc-2363-424e-9874-cd351244d425.png)Maltego - Graph screen
+    with www.example.comWe will be continuing to use Maltego for further examples,
+    so, either save your graph at this point so that you can come back to it, or continue
+    on with other operations.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Gathering external routing information
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will now use Maltego to obtain external routing information. External routing
+    information can provide us with valuable information such as who their internet
+    service providers are and how their traffic flows.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We want to continue from where we left off with the last section, so, if you
+    are coming back to the book after a while, open your saved Maltego graph from
+    the *Gathering public IP information recipe*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will use Maltego CE to gather BGP autonomous system information:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By right-clicking on the IP netblock, we can now obtain the BGP AS number assigned
+    to this netblock by selecting Paterva CTAS** |** To AS number:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3065791b-06a6-49eb-8c79-bfd7613b63d2.png)Maltego - Graph screen
+    with www.example.com'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we want to find the owner of the AS number in question. Right-click on
+    the AS number and select All Transforms | To Company [Owner].
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will be continuing to use Maltego for further examples, so, either save your
+    graph at this point so that you can come back to it, or continue on with other
+    operations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Gathering internal routing information
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will use zenmap to provide a graphical representation of our network. Zenmap
+    is a graphical front end to nmap. Zenmap does have some advantages over nmap,
+    especially when it comes to providing certain graphical outputs. We are going
+    to use it to provide a visual look at our target network. By obtaining information
+    about how the internal network is layed out we can use this information to spread
+    attacks beyond just the local subnet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate network connectivity to the internet
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will use zenmap to graphically map our network out to a predefined point:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open zenmap by selecting Application | Information Gathering - zenmap. Spend
+    a minute and examine the interface. You have some profile scans, and you can create
+    your own to perform repetitive tasks. You will also see several output tabs. The
+    one we will concentrate on a bit will be the Topology section:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/39f82cea-4362-462e-96a9-3267fd13c645.png)Zenmap - Main start screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Start by using an nmap traceroute scan using ICMP to map the path that we have
+    to `scanme.nmap.org`. In the target screen, type `scanme.nmap.org`, and we will
+    use the following options: `-sn` for a simple ping scan, `-PE` to specify protocol
+    ICMP, and `-traceroute` to indicate that we want traceroute information to the
+    destination. Once done, click on Topology to see a graphical view of our network.
+    This information can be used to see other areas we may want to scan:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/27ed1e65-82be-458d-ba70-8dae62be8918.png)Zenmap - External topology
+    scan'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If we have internal access to the network, we can try scanning it against the
+    RFC1918 address block. For speed, we specifically just did the `192.168.0.0/16`
+    address block. As you see, we have found other address blocks that are worth exploring:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c89f0989-2aba-48fe-950b-9ad67feb4519.png)Zenmap - internal topology
+    scanThis will be a fairly noisy scan, so, in a typical penetration testing scenario,
+    we would be more tactical with our scans. We would do this by tracerouting to
+    some specific things that we would know of: internal DNS servers, domain controllers,
+    and so on. We will use this information to be more specific and narrower with
+    our scans.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can click on Save Graphic, and save the topology as a PDF or PNG file, and
+    insert it into KeepNote. You can also save the entire scan by going to Scan |
+    Save Scan for later reference, or to continue to grow your knowledge of the network
+    host and the host discovery.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Remember zenmap provides all the nmap capabilities and functionalities. Try
+    some additional scans including traceroute, and try to use it to a build a map
+    of your internal home network or a network you are authorized to use.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Also, for additional information, take a look at [https://nmap.org/book/zenmap.html.](https://nmap.org/book/zenmap.html)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Gathering cloud service information
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We next want to discover whether the target is using any cloud-based services.
+    Based on the IP addresses we have found we can see if there are multiple different
+    domain and host information associated with an individual IP Address which would
+    indicate some form of cloud based service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cloud services come in several different forms and offerings. Cloud services
+    originally started the as a service trend with **Software as a Service** (**SaaS**), such
+    as Office 365 and Exchange 365 and a **Platform as a Service** (**PaaS**) like
+    AWS and Azure. Today, many organizations rely on cloud-based systems. Sometimes,
+    these systems are controlled, managed, and monitored as part of the data center infrastructure.
+    At other times, this use is regarded as Shadow IT. Shadow IT refers to the services
+    that are brought up outside the corporate IT environment and control. They are
+    often used for development purposes or to actually get around restricts or delays
+    based on standard corporate IT policies. These environments can be rich with information;
+    in fact, some of the more recent breaches of **Personally Identifiable Information**
+    (**PII**) have been from either unsecured or badly secured test applications,
+    where they used real data in the databases.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We want to continue from where we left off with the last section, so, if you
+    are coming back to the book after a while, open your saved Maltego graph from
+    the Gathering public IP information recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now use Maltego CE to obtain information about network blocks and hosts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can get some more information about the netblock by right-clicking on it
+    and selecting All Transforms | To Entities (NER):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3ee934be-98ba-4029-adc9-a17b5d666ac3.png)Maltego - Graph screen
+    with www.example.com'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Analyze the information to see if there are any signs of it being a cloud service
+    provider; there are no chances in this case, but let's try something else.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The following is the output from another domain. In this case, we see that
+    this website (not disclosed) is being hosted by Weebly, a popular web hosting
+    company:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6363f9d6-b9c2-48f3-bb53-8c0f0b9eaa63.png)Maltego - Graph screen
+    with reference to weeblyRun this function against all the IP addresses you can
+    find through the various items of domain information that we have worked on in
+    the past, to see if any of them register back to a known service provider.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Identifying network hosts
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are various methods we can use to scan for hosts on internal or external
+    networks. We will explore some of these in detail. We will use nmap for several
+    examples in this section. TCP port scans are default within nmap as most of our
+    well-known servers running using TCP. However, from a penetration standpoint,
+    there are some very useful UDP ports that might be open that could provide us
+    with attack vectors such as SNMP.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Bring up your other test machines (Metasploitable and Windows)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate network connectivity to the network you plan on scanning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will use nmap and various command line options to perform a variety of different
+    scans:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open the terminal screen by clicking on the terminal icon:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b7d4089f-0c93-4dc4-97c0-155b56bcb62a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: From the main terminal screen, you should be at a Command Prompt of `root@kali:~#`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type `nmap` and press *Enter*. A list of options should fill the screen; briefly,
+    review the list of options.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A simple subnet scan
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will perform simple scan of a subnet:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Perform a simple subnet scan of your lab network, `192.168.56.0/24`. Substitute
+    the subnet you created for your lab network in the section installing Kali on
+    VirtualBox :'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This command will scan 1000 popular ports of all targets in a specific subnet
+    range. Examine the output. In the case of our Metasploitable machine (`192.168.56.102`),
+    we will see the following output. From this output, we can identify the IP address
+    as well as the number of open ports:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/d49db9e3-186c-436c-abea-c0e02839984e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Scan all the TCP ports of a host
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To perform a full TCP scan of our Metasploitable machine, `192.168.56.102`,
+    we add the command line option `-p-`. Substitute the IP address for your Metasploitable
+    virtual machine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This command will scan all the TCP ports of the target device. The following
+    is the output of our scan. You will notice that we have discovered some new open
+    ports:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/fac93ba1-1628-46e1-acdb-159e6b46d9a4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Performing a TCP SYN scan
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'TCP SYN scans, otherwise known as half open scans, are very useful because
+    of their specific scanning nature; they are often not logged by the target device.
+    This allows you to scan a host without leaving traces of the scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Upon scanning the host, you will notice that we have discovered the same open
+    ports.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performing a UDP port scan
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Performing UDP scans against targets provides us with additional vectors of
+    attacks. We are also going to add a couple of extra CLI options. We have also
+    added to other command line options `-r` for randomize, which will help avoid
+    detection by security devices such as IDS and IPS servers and the `-v` for verbose,
+    allowing us to see action more quickly. This scan will take several minutes to
+    run, so it''s nice to know what it''s doing while we wait:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will see from the output that we did find a few UDP ports open that we
+    can explore later:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/c5c1043d-acdc-48d9-b054-438ac41daddd.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The nmap output formats
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'There are several types of output that you can use for simple logging of the
+    data, logging in an XML format for potential input into another program, or outputting
+    for grep:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| `nmap -oN filename.txt` | `N` is a standard default text output format |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `nmap -oG filename.txt` | `G` is a format so you can better run grep against
+    the file |'
+  prefs: []
+  type: TYPE_TB
+- en: '| `nmap -oX filename.xml` | `X` is for an XML format |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Let''s take a simple scan and output it to a file for grep:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will see the output on the screen, and it will also output to a TXT file
+    in your home directory, which you can use as a target for grep:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/e46aeb5a-74a6-4997-8cf2-104b77744e6c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Profiling hosts
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will continue to use some advanced functions of nmap to provide us with additional
+    information about a particular host.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Bring up your other test machines (Metasploitable and Windows)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate network connectivity to the network you plan on scanning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now provide more targeted nmap scans against particular hosts to obtain
+    further information about the ports and protocols that are open:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open the terminal screen by clicking on the terminal icon on the top-left corner:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ffe86dd8-f6fb-46d5-9507-c4db028bc4f9.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: From the main terminal screen, you should be at a Command Prompt of `root@kali:~#`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Operating systems and service detection
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following command will run an operating system and service discovery of
+    our Metasploitable host:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will notice a considerable amount of information provided in the output.
+    Starting from the bottom you will see that it correctly identified the machine
+    as well as other useful information:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/c4fae0d3-dc53-49a3-8b7f-77e28a94fcd8.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As we scroll through the output we see a considerable amount of information
+    about running services. It gives us detailed information about the specific service
+    being run on the port, version information, and other relevant information. The
+    following is an example of the VNC port:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/430cae6d-d0ca-461f-9afd-972c336a7b07.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Aggressive service detection
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To perform an aggressive service scan against a host, we will use the following
+    command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will see we get a nice consolidated output of open ports, service, and
+    the version information:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/8d960d3a-1e3e-486c-8a50-beb3f8a7580c.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: If you are interested in learning more about nmap please take a look at [https://nmap.org/nmap_doc.html](https://nmap.org/nmap_doc.html).
+    Also, for all those who would rather use a graphical interface to nmap, there
+    is zenmap. Why don't you open it and try a few scans with it? Lastly, if you want
+    to try a target on the internet for some testing of nmap or zenmap, try it against
+    [scanme.nmap.org](http://scanme.nmap.org/). This site is available as a training
+    aid for you to do scanning as long as you don't get too aggressive with your testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Identifying whether there is a web application firewall
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will use `wafw00f` to identify whether there is a web application firewall
+    between us and our target website.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Many organizations will use a **Web Application Firewall** (**WAF**) to protect
+    websites from web-specific attack. Understanding that a security device sits between
+    you and your target is extremely important. You will need to obfuscate and avoid
+    detection. You will have to be more targeted and use special techniques to penetrate
+    the website even with the WAF in place.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate the internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will use `wafwoof` to see if there is a web application firewall
+    in our path:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open the terminal screen by clicking on the terminal icon on the top-left corner:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6f28f9f1-68b3-4389-bc1f-874c76808a96.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: From the main terminal screen, you should be at a Command Prompt of `root@kali:~#`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Let''s examine a site without a WAF:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The `wafw00f` will provide results showing there was no detection of a WAF
+    protecting [scanme.nmap.org](http://scanme.nmap.org/):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/80506a8b-4684-48b3-95d2-037cb94fef43.png)wafwoof output - no WAF'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we can examine a site with a WAF using the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Here, we will see an indication of a WAF protecting the site:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/8baa20a7-5d9f-4134-aaf7-9c8be8ceb690.png)wafw00f - www.example.com'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we will examine another site protected by a WAF using the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We will note that a different indication has been triggered:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/51d39671-23c5-4fcc-9811-5e3e2ba2ebd5.png)wafw00f - example.uk'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using SNMP to gather more information
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We can use hosts that we identified through nmap as having open SNMP ports or
+    services running, to try and gather more information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **Simple Network Management Protocol** (**SNMP**) is a protocol used to
+    provide status and configuration for various devices including servers, workstations,
+    network appliances, IoT devices, and other hosts. This protocol provides both
+    a read-only and read-write functionality. Quite often, devices have been deployed
+    with read-only available by default. Network administrators will often enable
+    read-write access for management purposes. The default passwords for SNMP on many
+    devices is public for a read-only access and private for a read-write access.
+    There are three types of SNMPs. While version 1 has been mostly deprecated, version
+    2 is still quite common, and version 3 is gaining in use due to it's better security
+    and authentication system. We will focus on version 2 for this testing
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Resolve the IP address of `demo.snmplabs.com` (at the time of the writing this
+    book, it was `104.236.166.95`)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Open the terminal screen by clicking on the terminal icon on the top-left corner:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/73431fd7-0143-486c-aca3-11d22f79f9c9.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: From the main terminal screen, you should be at a Command Prompt of `root@kali:~#`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Perform a simple scan of the target device using `snmp-check`. By default,
+    many SNMP implementation uses public and private as default SNMP passwords. If
+    we know the password or can guess it, we can substitute it for the default `public`
+    in the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Looking at the output we see a significant amount of information was displayed
+    about the host. There is network interface information, routing information, services
+    running and TCP/UDP ports open, as well as a variety of system information:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2fb90ac2-4080-493e-b512-2ed3ee8d66e9.png)snmp-check - command output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the case where we may not know the credentials used for SNMP, we can attempt
+    to use a dictionary attack against the host to guess the credentials using `onesixtyone`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will notice the output from the commands show that both public and private
+    are available for the host. We used the built in dictionary file provided with
+    `onesixtyone`. It''s important to note that this only has a few potential passwords
+    in it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/54029838-39b7-4104-99ec-eb565b818eeb.png)onesixtyone - command output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are a variety of dictionary files that provide more complete password
+    lists that will give you an increased chance of discovering the appropriate passwords
+    for the host in question. Check out [https://github.com/danielmiessler/SecLists/tree/master/Miscellaneous](https://github.com/danielmiessler/SecLists/tree/master/Miscellaneous).
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,475 @@
+- en: '5'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Installing Wine in Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we will learn how to extend the functionality of our Kali Linux
+    environment by adding the capability to install Windows tools within Kali using
+    Wine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will look at the following topics in this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What Wine is and the advantages of using it in Kali Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Wine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing our Wine installation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s begin by looking at Wine and its advantages.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What Wine is and the advantages of using it in Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Wine** is commonly, but mistakenly, referred to as a **Windows Emulator**,
+    but as stated on the official website, it was initially known as **Wine Is Not
+    an Emulator**, hence the acronym. Wine allows non-Windows users to run certain
+    Windows applications on **Portable Operating System Interface** (**POSIX**)-compliant
+    systems, including macOS and versions of Linux and BSD, including Kali Linux.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For our **Digital Forensics and Incident Response** (**DFIR**) purposes, this
+    is incredibly useful, as we can now use many industry-standard tools, specifically
+    made for Windows on our Kali Linux systems, whether using them as standalone operating
+    systems or as virtual machines. This also addresses the issue of having to purchase
+    a license for Windows, as we do not have to use a device running Windows. These
+    cost savings are also extended when considering that you can now use less hardware
+    if running all DFIR tools within your Kali Linux box.
+  prefs: []
+  type: TYPE_NORMAL
+- en: By installing Wine in our Kali Linux installations, we can now have an advantage
+    not only from a DFIR perspective but also from a purple teaming one, as we can
+    also install many red teaming tools for Windows in our Kali machines. Drawing
+    from personal experience, I’ve always used two laptops for DFIR exercises and
+    investigations, with one running Linux-based operating systems such as Kali Linux,
+    CSI Linux, and Ubuntu, and another running Windows 10\. Some very important Windows
+    applications that I use for almost every DFIR exercise and investigation are Belkasoft
+    RAM capturer, FTK Imager, and Autopsy 4 **GUI** (**Graphical User Interface**).
+    These tools are highly used throughout the community, as they are very powerful
+    and fairly simple to use. With Wine installed on my Kali Linux and other Linux-based
+    systems, I can now perform all tasks using one machine, which saves on time, effort,
+    and cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the sections ahead within this chapter, we will be installing Wine manually
+    using the Terminal and then installing the Google Chrome browser as a test to
+    ensure that our Wine installation is a successful one. In later chapters, we will
+    also install Belkasoft RAM Capturer, FTK Imager, and Autopsy 4 using Wine for
+    DFIR purposes within Kali Linux. More information about Wine can be found on the
+    official site at [https://www.winehq.org/](https://www.winehq.org/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Wine
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Installing Wine requires that we run a few commands in precise order. Although
+    I am sure that many of the commands used will be new to many of you, I’ve outlined
+    the exact steps in the following sequence:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Be sure that you are connected to the internet before proceeding.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Let’s first download Wine by opening a new Terminal and typing the following
+    command, followed by pressing the *Enter* key:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the following screenshot, we added the 32-bit architecture:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.1: Running the sudo dpkg –add-architecture i386 command](image/Figure_5.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.1: Running the sudo dpkg –add-architecture i386 command'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, we need to download the **wine** key by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.2: Installing WINE in the Terminal](image/Figure_5.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.2: Installing Wine in the Terminal'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once our key has been downloaded, we can then add it to **/usr/share/keyrings/winehq-archive.key**
+    by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.3: Adding the keyring](image/Figure_5.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.3: Adding the keyring'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, we download the Wine **sources** file by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.4: Downloading the required WINE sources](image/Figure_5.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.4: Downloading the required Wine sources'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once our **sources** file has been downloaded and saved successfully, we can
+    add it to our sources list by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.5: Adding the sources file to the sources list](image/Figure_5.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.5: Adding the sources file to the sources list'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will now add the Debian repository for a smooth installation by typing the
+    following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.6: Adding the Debian repository](image/Figure_5.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.6: Adding the Debian repository'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once your Terminal looks like the preceding screenshot, you can check for any
+    newer updates by typing the **sudo apt update** command. As seen in the following
+    screenshot, there are quite a few updates to my installation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.7: Updating Kali](image/Figure_5.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.7: Updating Kali'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once all updates have been completed, we can now download the latest stable
+    version of Wine by using the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.8: Installing the latest stable version of WINE](image/Figure_5.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.8: Installing the latest stable version of Wine'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will be prompted to enter your password and press *Y* for Yes to continue
+    the installation when prompted. This may take a couple of minutes to install as
+    the file is large.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once all goes well and all the necessary files and packages are downloaded
+    and installed, we can verify the installation and version of Wine installed by
+    running the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.9: Verifying the version of WINE installed](image/Figure_5.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.9: Verifying the version of Wine installed'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Configuring our Wine installation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Our final step in the Terminal before we move on to the graphical installation
+    and configuration of Wine is to run the **winecfg** command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.10: Running the winecfg command to start WINE](image/Figure_5.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.10: Running the winecfg command to start Wine'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once all is as it should be, the **Wine Mono Installer** box appears and asks
+    us to install the Microsoft .NET Framework, which is required for Windows applications
+    to run correctly, and then follow these steps to configure and complete the installation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on the **Install** button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.11: Installing Wine Mono](image/Figure_5.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.11: Installing Wine Mono'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wine Mono will then begin downloading and installing.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.12: Wine Mono installation status bar](image/Figure_5.12_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.12: Wine Mono installation status bar'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the **Wine configuration** box, you can also select the version of Microsoft
+    Windows you would like to mimic on your Kali Linux box.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.13: Configuring Wine](image/Figure_5.13_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.13: Configuring Wine'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this instance, we can see that **Windows 7** is selected and presented by
+    default. To change this setting to another version of Windows, click the drop-down
+    arrow to the right of the Windows version and select your operating system of
+    choice, as seen here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.14: Windows OS selection](image/Figure_5.14_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.14: Windows OS selection'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ve selected **Windows 10** as my operating system as the Windows DFIR applications
+    that we will be installing all run on Windows 10.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.15: Selecting Windows 10](image/Figure_5.15_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.15: Selecting Windows 10'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on **Apply** to continue, then enter your details for **Owner** and **Organization**
+    in the **About** tab, as seen next, and click on **Apply** and **OK** to complete
+    the Wine configuration.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.16: Completion of Wine configuration](image/Figure_5.16_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.16: Completion of Wine configuration'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve completed all the steps to install Wine in this section, we will
+    need to install a Windows program as a test, which we will now do in the next
+    section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing our Wine installation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Good job on getting this far. To test our installation, let’s try installing
+    a file recovery tool called Recuva in our Kali Linux system using Wine. Recuva
+    is a popular tool that comes in both a free and paid version. Let’s get started
+    with its download and installation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can download the free version at [https://www.ccleaner.com/recuva/download](https://www.ccleaner.com/recuva/download),
+    which allows users to only perform advanced file recovery. At the time of this
+    writing, the file can also be downloaded directly at [https://www.ccleaner.com/recuva/download/standard](https://www.ccleaner.com/recuva/download/standard).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Whichever download method you choose, please be sure to click on the **FREE**
+    **RECUVA** option.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The filename will appear as **rcsetup153.exe**, which indicates that it is
+    a Windows executable file, as seen in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.17: The Recuva installation file download](image/Figure_5.18_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.17: The Recuva installation file download'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on the folder icon to the right of the file download or navigate to the
+    **Downloads** folder, where we should find the downloaded Recuva file (**rcsetup153.3xe**).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.18: Recuva installation file in the Downloads folder](image/Figure_5.19_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.18: Recuva installation file in the Downloads folder'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Recuva from here is very simple. Double-click on the **rcsetup153.exe**
+    file and it will open the installer, exactly as it would on a Windows machine,
+    as seen in the next figure.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Alternatively, you may also right-click on the file and select **Open With Wine
+    Windows** **Program Loader**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.19: The Recuva installation interface](image/Figure_5.20_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.19: The Recuva installation interface'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on **Install** to continue and install Recuva in Kali Linux.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.20: The Recuva installation completion screen](image/Figure_5.21_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.20: The Recuva installation completion screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once installed, you can uncheck the **View release notes** box and then click
+    on the **Run Recuva** button to start Recuva.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This completes our installation, and you should now also see the Recuva icon
+    on your Kali Linux desktop, similar to the following screenshot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.21: Recuva desktop shortcut](image/Figure_5.22_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.21: Recuva desktop shortcut'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on the **Next** button to close off the installation screen. Notice in
+    the following screenshot that there is a wine glass in the top-left corner of
+    the screen, indicating that Recuva is being installed using Wine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Although we will look at using Recuva in a later chapter, you can run Recuva
+    as a final test to ensure that the program and Wine were both successfully installed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once you see the following screenshot, it means that both Wine and Recuva were
+    installed successfully:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.22: The Recuva scan configuration interface](image/Figure_5.23_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Figure 5.22: The Recuva scan configuration interface'
+  prefs: []
+  type: TYPE_NORMAL
+- en: At this point, you can click on the **Cancel** button to cancel running Recuva,
+    as we will configure and run Recuva later on in [*Chapter 9*](B19441_09.xhtml#_idTextAnchor179),
+    *File Recovery and Data Carving Tools*, where we will look at **File Recovery**
+    and **Data** **Carving** tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can now view our Wine installation and configuration as a success, as we
+    were able to install and run the Recuva tool, which was built for Windows, within
+    Kali Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we learned about Wine and some great advantages of using the
+    software for our DFIR purposes. We also learned how to install the latest stable
+    version of Wine via the Terminal in Kali Linux, which allows us to run Windows
+    applications in our Kali Linux system, along with the Microsoft .NET Framework,
+    which is required by Windows to run programs and applications. We also looked
+    at how to choose between Windows operating systems that Wine mimics, as some programs
+    may only run on newer versions of Windows. Finally, we tested our Wine installation
+    by downloading the Recuva file-recovery tool, which was built specifically for
+    Windows, and then installed Recuva on our Kali system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we continue any further on our exciting journey with Recuva, we’ll next
+    look at some fundamental knowledge on understanding file systems, which will cover
+    the basics and background knowledge required for file recovery. See you in the
+    next chapter!
+  prefs: []
+  type: TYPE_NORMAL

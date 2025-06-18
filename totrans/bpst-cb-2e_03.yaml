@@ -1,0 +1,2610 @@
+- en: '3'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Configuring, Crawling, Auditing, and Reporting with Burp
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This chapter will help testers calibrate Burp Suite settings at both the project
+    and user levels for optimization against the target application. For example,
+    tweaks to the **Crawling** and **Auditing** options can assist with less abusive
+    and less noisy brute-forcing attacks. Likewise, testers can find themselves in
+    interesting network situations when trying to reach a target. Thus, several features
+    are included in Burp Suite for testing sites running over **Hypertext Transport
+    Protocol Secure** (**HTTPS**) or accessing sites through a SOCKS proxy or a port
+    forward. Many settings are available at both the project and user levels. Finally,
+    Burp Suite provides out-of-the-box functionality to generate a report for found
+    issues.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Establishing trust over HTTPS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Setting project configurations
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Setting user configurations
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Crawling target sites
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating a custom scan script
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Reporting issues
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To complete the recipes in this chapter, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OWASP **Broken Web** **Applications** (**BWA**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OWASP Mutillidae link
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Burp Suite Proxy Community or Professional ([https://portswigger.net/burp/](B21173_03.xhtml#_idTextAnchor159))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Firefox browser ([https://www.mozilla.org/en-US/firefox/new/](B21173_03.xhtml#_idTextAnchor213))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The FoxyProxy Standard add-on for the Firefox browser configured to allow Burp
+    Suite to proxy traffic ([https://addons.mozilla.org/en-US/firefox/addon/foxyproxy-standard/](B21173_03.xhtml#_idTextAnchor210))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The proxy configuration steps are covered in the *Listening for HTTP traffic
+    using Burp* recipe of [*Chapter 1*](B21173_01.xhtml#_idTextAnchor020).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Establishing trust over HTTPS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Since most websites implement (HTTPS, it is beneficial to know how to enable
+    Burp Suite to communicate with such sites. HTTPS is an encrypted tunnel running
+    over **Hypertext Transport** **Protocol** (**HTTP**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The purpose of HTTPS is to encrypt traffic between the client browser and the
+    web application to prevent eavesdropping. However, as testers, we wish to allow
+    Burp Suite to eavesdrop since that is the point of using an intercepting proxy.
+    Burp Suite provides a root **Certificate Authority** (**CA**) signed certificate.
+    This certificate can be used to establish trust between Burp Suite and the target
+    web application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: By default, Burp’s Proxy can generate a per-target CA certificate when establishing
+    an encrypted handshake with a target running over HTTPS. That takes care of the
+    Burp-to-web-application portion of the tunnel. We also need to address the browser-to-Burp
+    portion.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To create a complete HTTPS tunnel connection between the client browser, Burp,
+    and the target application, the client will need to trust the PortSwigger certificate
+    as a trusted authority within the browser.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In situations that require penetration testing with a website running over HTTPS,
+    a tester must import the PortSwigger CA certificate as a trusted authority within
+    their browser. You may use a proxy pass-through, such as FoxyProxy, to allow traffic
+    to be channeled to Burp Suite much more easily.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Ensure Burp Suite is started. Then, execute the following steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Download the FoxyProxy Standard add-on and install the extension in the Firefox
+    browser.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.1 – FoxyProxy Standard Firefox add-on](image/B21173_Figure_3.01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.1 – FoxyProxy Standard Firefox add-on
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Configure FoxyProxy Standard to act as a pass-through to Burp. Click **Add**
+    and fill in the settings, as shown here. Click **Save** when you’re done:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.2 – How to configure FoxyProxy Standard with Burp](image/B21173_Figure_3.02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.2 – How to configure FoxyProxy Standard with Burp
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You should see the following output when you’re done:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.3 – FoxyProxy Standard with Burp Suite configured](image/B21173_Figure_3.03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.3 – FoxyProxy Standard with Burp Suite configured
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Toggle the **FoxyProxy** button to **On** to begin channeling all browser traffic
+    so that it flows through Burp:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.4 – Toggling FoxyProxy Standard on to intercept traffic to send
+    to Burp Suite](image/B21173_Figure_3.04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.4 – Toggling FoxyProxy Standard on to intercept traffic to send to
+    Burp Suite
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This is how FoxyProxy looks when toggled on to allow browser traffic to flow
+    through Burp Suite:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.5 – FoxyProxy Standard toggled on](image/B21173_Figure_3.05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.5 – FoxyProxy Standard toggled on
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To establish trust between Burp’s certificate and the target application, you
+    will need to add Burp’s certificate to your browser and check it as trusted. To
+    do this, open your Firefox browser to [http://burp](B21173_03.xhtml#_idTextAnchor207).
+    You must type the URL exactly as shown to reach this page. You should see the
+    following screen in your browser. Note the link on the right-hand side labeled
+    **CA Certificate**. Click this link to download the PortSwigger CA certificate:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.6 – URL to download the PortSwigger CA certificate](image/B21173_Figure_3.06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.6 – URL to download the PortSwigger CA certificate
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will be presented with a dialog box prompting you to download the PortSwigger
+    CA certificate. The file is labeled **cacert.der**. Download the file to a location
+    on your hard drive.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In Firefox, open the Firefox menu. Then, click **Options**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Click **Privacy & Security** on the left-hand side and scroll down to the **Certificates**
+    section. Click the **View** **Certificates…** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.7 – Firefox settings to install the PortSwigger certificate](image/B21173_Figure_3.07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.7 – Firefox settings to install the PortSwigger certificate
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select the **Authorities** tab. Click **Import**, select the PortSwigger CA
+    certificate file that you previously saved, and click **Open**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.8 – Importing the PortSwigger CA certificate into your Firefox browser](image/B21173_Figure_3.08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.8 – Importing the PortSwigger CA certificate into your Firefox browser
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the dialog box that appears, check the **Trust this CA to identify websites**
+    box and click **OK**. Click **OK** on the **Certificate Manager** dialog as well:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.9 – Explicit trust you must give to the PortSwigger CA certificate](image/B21173_Figure_3.09.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.9 – Explicit trust you must give to the PortSwigger CA certificate
+  prefs: []
+  type: TYPE_NORMAL
+- en: Close all dialog boxes and restart the Firefox browser. If the installation
+    was successful, you should now be able to visit any HTTPS URL in your browser
+    while proxying the traffic through Burp Suite without any security warnings.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s more...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'As a simpler alternative to using FoxyProxy and having to import Burp’s certificate
+    to your browser, you can use the browser built into Burp Suite instead. To access
+    this, go to **Proxy** from the top menu, choose the **Intercept** sub-menu, and
+    then click the **Open** **browser** button:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.10 – Burp Suite’s browser is an alternative to using FoxyProxy Standard
+    or an external browser](image/B21173_Figure_3.010.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.10 – Burp Suite’s browser is an alternative to using FoxyProxy Standard
+    or an external browser
+  prefs: []
+  type: TYPE_NORMAL
+- en: This built-in browser takes care of establishing certificate trust and takes
+    care of proxying all traffic into Burp. Burp’s browser is one of the most efficient
+    and user-friendly features that’s been added in recent years.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s a screenshot of Burp Suite’s built-in browser:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 3.11 – Burp Suite’s browser upon startup\uFEFF](image/B21173_Figure_3.011.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.11 – Burp Suite’s browser upon startup
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting project configurations
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Project settings allow a tester to save or set configurations specific to a
+    project or scoped target. These settings are stored within the Project file, which
+    is created upon launching the Burp Suite application. There are multiple subsections
+    available under the **Project** section, which include **Tools**, **Project**,
+    **Sessions**, and **Network**. Many of these options are required for pentesters
+    when they’re assessing specific targets, which is why they are covered here. As
+    we iterate through each area, we will provide some recommendations that you may
+    find helpful during your testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To access all **Project** level configurations, click the **Settings** gear
+    icon in the top right-hand corner of Burp Suite:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.12 – Project-level settings are available upon clicking Settings](image/B21173_Figure_3.012.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.12 – Project-level settings are available upon clicking Settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A new pop-out window will appear. Make sure you have **Project** selected within
+    the left-hand menu, at the top of the pop-out window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.13 – Inside the pop-out window, make sure Project is highlighted](image/B21173_Figure_3.013.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.13 – Inside the pop-out window, make sure Project is highlighted
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The subsections included under **Project** are **Tools**, **Project**, **Sessions**,
+    and **Network**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.14 – All Project configurations available in the pop-out window](image/Image96548.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.14 – All Project configurations available in the pop-out window
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Tools tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'This tab allows you to set configurations for the **Proxy**, **Repeater**,
+    **Sequencer**, and **Burp’s browser** Burp Suite tools. To add some color, we
+    will provide some recommendations regarding some of these areas to assist you
+    during your penetration testing journey:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.15 – Project | Tools menu items](image/B21173_Figure_3.015.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.15 – Project | Tools menu items
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Tools | Proxy tab
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Under the **Proxy** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Proxy listeners**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Out of the box, Burp Suite configures a default proxy listener for your localhost
+    to run on port **8080**. Other proxy listeners can be configured in this area
+    for testing unusual applications, such as mobile apps. For most testers, the default
+    configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.16 – Listing of default proxy listeners](image/B21173_Figure_3.016.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.16 – Listing of default proxy listeners
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Request** **interception rules**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'By default, Burp Suite Proxy is configured to listen to and intercept all HTTP
+    requests except for images (**^gif$**, **^jpg$**, **^png$**, **^css$**, **^js$**,
+    **^ico$**, **^svg$**, **^eot$**, **^woff$**, **^woff2$**, and **^ttf$**). If you
+    wish to change the default setting, you may do so here. For most testers, the
+    default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.17 – Request interception rules by default](image/B21173_Figure_3.017.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.17 – Request interception rules by default
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Response** **interception rules**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'By default, Burp Suite Proxy is *not* configured to intercept HTTP responses:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.18 – Response interception rules, turned off by default](image/B21173_Figure_3.018.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.18 – Response interception rules, turned off by default
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The advantage of capturing responses is that you can manipulate status codes
+    and response bodies to determine if JavaScript on the web page reacts differently
+    based on such changes. To begin to capture every HTTP response before displaying
+    them in your browser, make the following changes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.19 – Recommended changes to Response interception rules](image/B21173_Figure_3.019.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.19 – Recommended changes to Response interception rules
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**WebSocket** **interception rules**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When an application uses WebSockets, this setting controls the interception
+    of those messages. For most testers, the default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.20 – WebSocket interception rules](image/B21173_Figure_3.020.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.20 – WebSocket interception rules
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Response** **modification rules**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Burp Suite allows you to rewrite the HTML response before you forward it to
+    your local browser. In this section, you may configure Burp Suite to unhide hidden
+    form fields or even disable JavaScript on the response page:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.21 – Response modification rules by default](image/B21173_Figure_3.021.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.21 – Response modification rules by default
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Match and** **replace rules**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Burp Suite provides a very powerful **Match and replace rules** table so that
+    you can automatically replace values within requests or responses before interception.
+    Uses for this table are at the tester’s discretion. For example, you may want
+    to use this table to replace, say, your user agent to have your browser look like
+    a mobile phone. Alternatively, you may want to use it to set cookie values or
+    even remove headers! You can even add regular expression rules to match values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.22 – The Match and replace rules table](image/B21173_Figure_3.022.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.22 – The Match and replace rules table
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**TLS** **pass through**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'You can use **TLS pass through** to identify your destination when other devices
+    sit in front of your target. Burp Suite will pass the traffic through those devices,
+    seeking only your target:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.23 – TLS pass through](image/B21173_Figure_3.023.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.23 – TLS pass through
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Miscellaneous**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'A catchall area for Burp Suite Proxy behavior is in **Miscellaneous**. This
+    area allows you to change the HTTP protocol that’s used to a very old version,
+    HTTP/1.0\. This area also allows gzip deflation controls. For most testers, the
+    default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.24 – Miscellaneous settings](image/B21173_Figure_3.024.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.24 – Miscellaneous settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Tools | Repeater tab
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Under the **Repeater** tab, a tester has the following options:'
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Connections**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting controls if Repeater will reuse the same connection and protocol
+    used in the original request or have Burp Suite create a new connection and change
+    the protocol. For most testers, the default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.25 – Connections](image/B21173_Figure_3.025.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.25 – Connections
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Message modification**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Any modifications made within this section are saved to the current project
+    only. For most testers, the default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.26 – Message modification](image/B21173_Figure_3.026.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.26 – Message modification
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Redirects**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When using Burp Suite Repeater, whenever a 302 Redirect is encountered, you
+    may control the behavior or Repeater here. For most testers, they choose to not
+    have the redirection done automatically, so the default setting will usually suffice:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.27 – Redirects](image/B21173_Figure_3.027.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.27 – Redirects
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Default** **tab group**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Unless you are performing client-desync attacks with multiple tab groups, you
+    probably won’t need to modify this setting. This area allows you to specify which
+    tab group any new requests to Repeater will be sent:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.28 – Default tab group](image/B21173_Figure_3.028.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.28 – Default tab group
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Tools | Sequencer tab
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Under the **Sequencer** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Live capture**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting controls the number of threads and behavior the Sequencer will
+    use when harvesting tokens from live requests. For most testers, the default configuration
+    is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.29 – Live capture](image/B21173_Figure_3.029.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.29 – Live capture
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Token handling**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting controls how each harvested token is handled during analysis.
+    For most testers, the default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.30 – Token handling](image/B21173_Figure_3.030.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.30 – Token handling
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Token analysis**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting controls the types of tests that are performed against the tokens.
+    For most testers, the default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.31 – Token analysis](image/B21173_Figure_3.031.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.31 – Token analysis
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Tools | Burp’s browser tab
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'This setting controls Burp’s built-in Chromium browser and allows you to use
+    your machine’s **graphics processing unit** (**GPU**). You may also specify running
+    the built-in browser without a sandbox. The sandbox setting is a protection mechanism
+    for any compromised target applications affecting your local machine. For most
+    testers, the default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.32 – The Browser running setting for Burp’s browser](image/B21173_Figure_3.032.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.32 – The Browser running setting for Burp’s browser
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Project | Scope tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Under the **Scope** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Target scope**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The *Setting the target site map* recipe in [*Chapter 2*](B21173_02.xhtml#_idTextAnchor073)
+    showed you how to set your target scope for this area. Notice that there is also
+    an **Exclude from scope** section, which allows you to specify URLs you do not
+    wish to be included, which, most commonly, are logout links:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.33 – Target scope](image/B21173_Figure_3.033.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.33 – Target scope
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Out-of-scope** **request handling**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting, when turned on, will have Burp Suite drop any requests that are
+    not in scope, even if they’re requested within the browser. For most testers,
+    the default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.34 – Out-of-scope request handling](image/B21173_Figure_3.034.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.34 – Out-of-scope request handling
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Project | Collaborator tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Burp Suite Collaborator is a feature of Burp Suite Professional that provides
+    the tester with access to an external server for capturing DNS and/or HTTP requests
+    made by internal target servers. This is a very powerful feature for an attacker
+    because many vulnerabilities can be proven using Collaborator. Such vulnerabilities
+    include **server-side request forgery** (**SSRF**), data exfiltration via **cross-site
+    scripting** (**XSS**), cookie stealing, and many more. Most testers use the PortSwigger-provided
+    Collaborator server, but you can also configure your own in this setting and use
+    that instead. See [*Chapter 11*](B21173_11.xhtml#_idTextAnchor639) for more details
+    on how to use **Burp** **Collaborator server**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.35 – Burp Collaborator server](image/B21173_Figure_3.035.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.35 – Burp Collaborator server
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This section has a button for running a health check. Clicking **Run health
+    check** allows you to check your connectivity to all the external services offered
+    on the external **Collaborator** server:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.36 – Burp Collaborator Health Check](image/B21173_Figure_3.036.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.36 – Burp Collaborator Health Check
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Project | Tasks tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Under the **Tasks** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Resource pools**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Resource pools are threads that are available to intruder and scanning tasks.
+    This setting allows you to create custom resource pools of lower concurrent requests
+    (threads) as well as throttle request timing. The use of the default setting is
+    completely dependent on the target application’s ability to handle multiple requests
+    at the same time. If you are in doubt, create a custom resource pool with less
+    than 10 concurrent requests:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.37 – Resource pools](image/B21173_Figure_3.037.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.37 – Resource pools
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**New** **task auto-start**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Tasks are autonomous scans you can run in the background. This setting allows
+    you to configure whether you wish for those tasks to auto-start as soon as you
+    create them. For most testers, the default configuration is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.38 – New task auto-start](image/B21173_Figure_3.038.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.38 – New task auto-start
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Schedule tasks**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'If you wish to schedule your tasks, this setting allows you to set the date,
+    time, and frequency for specific tasks to start and stop:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.39 – Schedule tasks](image/B21173_Figure_3.039.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.39 – Schedule tasks
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Project | Logging tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The **Logging** tab allows you to specify which tools will log their requests
+    and/or responses to a file. If selected, the user will be prompted for a filename
+    and location to save the log file on the local machine. For most testers, this
+    feature is usually not used:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.40 – Logging](image/B21173_Figure_3.040.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.40 – Logging
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Sessions tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: See [*Chapter 10*](B21173_10.xhtml#_idTextAnchor588) for more recipes on how
+    to use the functionality contained within the **Sessions** tab. The **Sessions**
+    tab consists of the **Session handling rules**, **Cookie jar**, and **Macros**
+    areas.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Under the **Sessions** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Session handling rules**: This area allows you to configure customized session
+    handling rules while assessing a web application. By default, Burp Suite captures
+    and uses all cookies seen in the HTTP traffic and saves them inside the **Cookie**
+    **jar** area:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.41 – Session handling rules](image/B21173_Figure_3.041.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.41 – Session handling rules
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Cookie jar**: The **Cookie jar** area provides a list of cookies, their respective
+    domains and paths, and name/value pairs captured by Burp Suite Proxy (by default).
+    Cookies inside the **Cookie jar** area are also editable:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.42 – Cookie jar](image/B21173_Figure_3.042.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.42 – Cookie jar
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Macros**: The **Macros** section allows testers to script requests/responses
+    previously performed to automate activities while they’re interacting with the
+    target application:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.43 – Macros](image/B21173_Figure_3.043.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.43 – Macros
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Network tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The **Network** tab offers controls for the **Connections**, **TLS**, and **HTTP**
+    areas.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Network | Connections tab
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'The **Connections** tab allows a tester to control specific interactions such
+    as authentication and proxy servers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Platform authentication** allows you to automate how Burp Suite can authenticate
+    against target platforms. The default setting of this feature is at the **User**
+    **setting** level:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.44 – Platform authentication](image/B21173_Figure_3.044.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.44 – Platform authentication
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If the **Project setting** level is desired, you must use the slider on the
+    left to activate **Override options for this** **project only**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.45 – Platform authentication override settings](image/B21173_Figure_3.045.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.45 – Platform authentication override settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After clicking the **Add** checkbox, you will be presented with a table of
+    authentication options (that is, **Basic**, **NTLMv2**, or **NTLMv1**) to be used
+    against the target platform. The destination host is commonly set to the wildcard
+    (*****) character and the credentials and domain must be known beforehand:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.46 – Add platform authentication credentials](image/B21173_Figure_3.046.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.46 – Add platform authentication credentials
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The **Timeouts** area allows you to specify timeout thresholds when Burp Suite
+    attempts connections to target applications. For most testers, the default configuration
+    is fine:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.47 – Timeouts](image/B21173_Figure_3.047.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.47 – Timeouts
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The **Upstream proxy servers** setting allows you to identify any upstream
+    proxy servers to reach the target application. The default setting of this feature
+    is at the **User** **setting** level:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.48 – Upstream proxy servers](image/B21173_Figure_3.048.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.48 – Upstream proxy servers
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If the **Project setting** level is desired, you must use the slider on the
+    left to activate **Override options for this** **project only**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.49 – Override settings for upstream proxy servers for the Project
+    setting level](image/B21173_Figure_3.049.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.49 – Override settings for upstream proxy servers for the Project setting
+    level
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After clicking the checkbox to override the user’s options, you will be presented
+    with a table for enabling upstream proxy options specific to this project. Clicking
+    the **Add** button will display a pop-up box called **Add upstream proxy rule**.
+    This rule is specific to the target application’s environment. This feature is
+    very helpful if the target application’s environment is fronted with a web proxy
+    that requires a different set of credentials than the application login:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.50 – Adding details for an upstream proxy rule](image/B21173_Figure_3.050.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.50 – Adding details for an upstream proxy rule
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Hostname resolution overrides** allows you to add host entries similar to
+    a host file on a local machine to override the **Domain Name System** (**DNS**)
+    resolution:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.51 – How to add hostname resolutions](image/B21173_Figure_3.051.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.51 – How to add hostname resolutions
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**SOCKS proxy** allows Burp Suite to reach a target via a **SOCKS proxy** configuration.
+    The default setting of this feature is at the **User** **setting** level:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.52 – SOCKS proxy](image/B21173_Figure_3.052.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.52 – SOCKS proxy
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If the **Project setting** level is desired, you must use the slider on the
+    left to activate **Override options for this** **project only**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 3.53 – Overriding the SOCK project settings for the\uFEFF Project\
+    \ setting level](image/B21173_Figure_3.053.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.53 – Overriding the SOCK project settings for the Project setting level
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Network | TLS tab
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'The options under the **TLS** tab allow you to configure certificates and various
+    TLS-related settings. The **TLS negotiation**, **Client TLS certificates**, and
+    **Server TLS certificates** areas can be found here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**TLS negotiation**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When Burp Suite communicates with a target application over TLS, this option
+    allows you to use preconfigured ciphers or specify different ones:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.54 – TLS negotiation](image/B21173_Figure_3.054.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.54 – TLS negotiation
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you wish to customize the ciphers, you can click the **Use custom protocols
+    and ciphers** radio button. A table will appear, allowing you to select protocols
+    and ciphers that Burp Suite can use while communicating with the target application:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.55 – TLS negotiation using custom protocols](image/B21173_Figure_3.055.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.55 – TLS negotiation using custom protocols
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Client** **TLS certificates**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'If you wish to use client-side certificates against your target application,
+    you can configure those certificates within this section. Keep in mind that you
+    must have access to the private key when adding your client-side certificate.
+    The default setting of this feature is at the **User** **setting** level:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.56 – Client TLS certificates](image/B21173_Figure_3.056.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.56 – Client TLS certificates
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If the **Project setting** level is desired, you must use the slider on the
+    left to activate **Override options for this** **project only**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.57 – Overriding Client TLS certificates for the Project setting
+    level](image/B21173_Figure_3.057.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.57 – Overriding Client TLS certificates for the Project setting level
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Server** **TLS certificates**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This table is read-only and provides a list of all server-side certificates
+    Burp Suite has received from various web servers. You can double-click any of
+    these line items to view the details of each certificate:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 3.5\uFEFF8 – Server TLS certificates](image/B21173_Figure_3.058.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.58 – Server TLS certificates
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Project | Network | HTTP tab
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Under the **HTTP** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Allowed redirect types** provides redirection types for Burp Suite to use
+    while capturing HTTP traffic. For most testers, the default setting is fine:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.59 – Allowed redirect types](image/B21173_Figure_3.059.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.59 – Allowed redirect types
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Streaming responses** provides configurations related to responses that stream
+    indefinitely. For most testers, the default setting is fine:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.60 – Streaming responses](image/B21173_Figure_3.060.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.60 – Streaming responses
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Status 100 response handling** provides a setting for Burp Suite to handle
+    HTTP status code 100 responses. For most testers, the default setting is fine:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.61 – Status 100 response handling](image/B21173_Figure_3.061.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.61 – Status 100 response handling
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**HTTP/1** allows you to reuse the same **HTTP/1** connection instead of creating
+    a new one. For most testers, the default setting is fine:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.62 – HTTP/1](image/B21173_Figure_3.062.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.62 – HTTP/1
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**HTTP/2** defaults Burp Suite to use **HTTP/2** instead of **HTTP/1** when
+    supported by the target web server, as negotiated during the initial TLS handshake.
+    For most testers, the default setting is fine:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.63 – HTTP/2](image/B21173_Figure_3.063.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.63 – HTTP/2
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting user configurations
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'User settings will be applied to all Burp Suite instances that run on your
+    local machine. These settings allow a tester to set and save configurations to
+    be used across all Burp Suite projects. There are multiple subsections available
+    under the **User** options tab, which include **Tools**, **Project**, **Sessions**,
+    **Network**, **User Interface**, **Suite**, **Extensions**, and **Configuration
+    Library**. As we iterate through each area, we will provide some recommendations
+    that you may find helpful during your testing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.64 – User configurations](image/B21173_Figure_3.064.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.64 – User configurations
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To access all user-level configurations, click the **Settings** gear icon in
+    the top right-hand corner of Burp Suite:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.65 – User-level settings available via Settings](image/B21173_Figure_3.065..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.65 – User-level settings available via Settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A new pop-out window will appear. Make sure you have **User** selected within
+    the left-hand menu, at the top of the pop-out window:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.66 – Inside the pop-out window, make sure User is highlighted](image/B21173_Figure_3.066..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.66 – Inside the pop-out window, make sure User is highlighted
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Tools tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Notice the areas affected by the **User** | **Tools** subsection. We will focus
+    on each area – that is, **Proxy**, **Intruder**, **Repeater**, and **Burp’s browser**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.67 – The User | Tools menu items](image/B21173_Figure_3.067..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.67 – The User | Tools menu items
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Tools | Proxy tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Under the **Proxy** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Proxy** **history logging**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting prompts you (or not) regarding whether you still wish to log out-of-scope
+    items to the **HTTP** **History** tab:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.68 – Proxy history logging](image/B21173_Figure_3.068..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.68 – Proxy history logging
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Default Proxy** **interception state**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'By default, the Proxy interceptor will be toggled on (**Enable interception**).
+    This can be seen in the following screenshot. Our recommendation is to turn this
+    feature off (**Disable interception**). This is probably one of the first changes
+    you will want to make to all of your Burp Suite instances for **User setting**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.69 – Default Proxy interception state](image/B21173_Figure_3.069..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.69 – Default Proxy interception state
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Tools | Intruder tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Under the **Intruder** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Automatic** **payload placement**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When using **Intruder**, use this setting to determine whether payloads will
+    replace identified positions or append values at the identified positions. For
+    most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.70 – Automatic payload placement](image/B21173_Figure_3.070..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.70 – Automatic payload placement
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**New** **tab configuration**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When using **Intruder**, use this setting to determine the behavior of data
+    when new tabs are opened during an attack. For most testers, the default setting
+    is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.71 – New tab configuration](image/B21173_Figure_3.071..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.71 – New tab configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Behavior when closing** **result windows**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'If you wish to remove prompts before closing modal windows, use this setting
+    to turn them off. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.72 – Behavior when closing result windows](image/B21173_Figure_3.072..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.72 – Behavior when closing result windows
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Payload** **list location**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When using **Intruder**, use this setting if you wish to change the source
+    for wordlists that are available in Burp Suite Professional. For most testers,
+    the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.73 – Payload list location](image/B21173_Figure_3.073..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.73 – Payload list location
+  prefs: []
+  type: TYPE_NORMAL
+- en: User | Tools | Repeater tab | Tab view
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The default setting for how tabs are viewable in **Repeater** is **Wrapped
+    view**. You can see what *wrapped* looks like in the following screenshot. For
+    most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.74 – Tab view using Wrapped view](image/B21173_Figure_3.074..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.74 – Tab view using Wrapped view
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here is the screenshot of what the wrapped tab view looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3\. 75 – The wrapped tab view](image/B21173_Figure_3.075..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3\. 75 – The wrapped tab view
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you wish to change how **Repeater** tabs are viewed, select **Scrolling
+    view**. You can see what *scrolling* looks like here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.76 – Scrolling view](image/B21173_Figure_3.076..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.76 – Scrolling view
+  prefs: []
+  type: TYPE_NORMAL
+- en: User | Tools | Burp’s browser | Browser data
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'You can use this setting to customize where to store all the traffic that’s
+    captured while using Burp’s built-in browser. For most testers, the default setting
+    is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.77 – Browser data](image/B21173_Figure_3.077..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.77 – Browser data
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Project tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Notice the areas affected by the **User** | **Project** subsection. We will
+    focus on each area – that is, **Tasks** and **Automatic backup**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.78 – The User | Project menu items](image/B21173_Figure_3.078..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.78 – The User | Project menu items
+  prefs: []
+  type: TYPE_NORMAL
+- en: User | Project | Task tab | Automated tasks on startup
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The default behavior for starting all Burp Suite instances is to pause any
+    previously running tasks. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.79 – Automated tasks on startup](image/B21173_Figure_3.079..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.79 – Automated tasks on startup
+  prefs: []
+  type: TYPE_NORMAL
+- en: User | Project | Automatic backup
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'By default, Burp Suite will auto-save (that is, back up) your work in real
+    time. However, this setting gives you more control over the frequency of saving
+    your backup file for your project. By turning this setting on, you can configure
+    the number of minutes between backups. This feature is unavailable for temporary
+    projects:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.80 – Automatic backup](image/B21173_Figure_3.080..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.80 – Automatic backup
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Network tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Notice the areas affected by the **User** | **Network** subsection. We will
+    focus on each area – that is, **Connections** and **TLS**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.81 – The User | Network menu items](image/B21173_Figure_3.081..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.81 – The User | Network menu items
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Network | Connections tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The **Connections** tab allows a tester to control specific interactions, such
+    as authentication and proxy servers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Platform authentication**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Platform authentication** allows you to automate how Burp Suite can authenticate
+    against target platforms. The default setting of this feature is at the **User**
+    **setting** level:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.82 – Platform authentication](image/B21173_Figure_3.082..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.82 – Platform authentication
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Upstream** **proxy servers**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The **Upstream proxy servers** setting allows you to identify any upstream
+    proxy servers that have reached the target application. The default setting of
+    this feature is at the **User** **setting** level:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.83 – Upstream proxy servers](image/B21173_Figure_3.083..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.83 – Upstream proxy servers
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**SOCKS proxy**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SOCKS proxy** allows Burp Suite to reach a target via a **SOCKS proxy** configuration.
+    The default setting of this feature is at the **User** **setting** level:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.84 – SOCKS proxy](image/B21173_Figure_3.084..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.84 – SOCKS proxy
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Network | TLS tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Under the **TLS** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Client** **TLS certificates**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'If you wish to use client-side certificates against your target application,
+    you must configure those certificates within this section. Keep in mind that you
+    must have access to the private key when adding your client-side certificate.
+    The default setting of this feature is at the **User** **setting** level:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.85 – Client TLS certificates](image/B21173_Figure_3.085..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.85 – Client TLS certificates
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Java** **TLS settings**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'For target applications using Java, this setting allows the TLS handshake negotiation
+    to use algorithms that may normally be blocked by the Java security policy due
+    to obsoleteness. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.86 – Java TLS settings](image/B21173_Figure_3.086..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.86 – Java TLS settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | User interface tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Notice the areas affected by the **User** | **User interface** subsection.
+    We will focus on each area – that is, **Inspector and message editor**, **Hotkeys**,
+    and **Display**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.87 – The User | User interface menu items](image/B21173_Figure_3.087..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.87 – The User | User interface menu items
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | User Interface | Inspector and messaged editor tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Under the **Inspector and messaged editor** tab, a tester has the following
+    options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Inspector widgets**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting allows you to make adjustments to the way the widgets within **Inspector**
+    are displayed. Widgets include multiple text areas showing sections of the request
+    and response. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.88 – Inspector widgets](image/B21173_Figure_3.088..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.88 – Inspector widgets
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Default Inspector** **panel layout**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Here, you can change the side where the Inspector sits. By default, the Inspector
+    displays on the right-hand side, next to the HTTP response. However, this setting
+    allows you to change it to the left-hand side if you like. For most testers, the
+    default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.89 – Default Inspector panel layout](image/B21173_Figure_3.089..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.89 – Default Inspector panel layout
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Message editor** **request views**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'You can add additional tabs to the message editor atop each request. By default,
+    **Pretty**, **Raw**, and **Hex** are always available. This setting allows you
+    to add more. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.90 – Message editor request views](image/B21173_Figure_3.090..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.90 – Message editor request views
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Message editor** **response views**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Here, you can add additional tabs to the message editor atop each response.
+    By default, **Pretty**, **Raw**, **Hex**, and **Render** are always available.
+    This setting allows you to add more. For most testers, the default setting is
+    fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.91 – Message editor response views](image/B21173_Figure_3.091..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.91 – Message editor response views
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**HTTP** **message display**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting controls the font and font size used within the message editor.
+    By default, Burp Suite will highlight searched values in either the request or
+    response, which is a nice feature. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.92 – HTTP message display](image/B21173_Figure_3.092..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.92 – HTTP message display
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Character sets**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting controls the character scheme that’s used in raw HTTP messages.
+    By default, Burp Suite is set to automatically recognize which character set to
+    use based on the headers within the message. For most testers, the default setting
+    is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.93 – Character sets](image/B21173_Figure_3.093..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.93 – Character sets
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**HTML rendering**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When an HTTP response contains HTML content, the **Render** tab is enabled
+    and, when clicked, will display the response as it would appear in your browser.
+    By default, this setting allows an additional request to be made to render the
+    page properly. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.94 – HTML rendering](image/B21173_Figure_3.094..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.94 – HTML rendering
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**HTTP** **message search**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'At the bottom of each HTTP message is a search box. This setting allows you
+    to permanently add various options for finding search terms typed into the box.
+    For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.95 – HTTP message search](image/B21173_Figure_3.095..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.95 – HTTP message search
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | User Interface | Hotkeys tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Hotkeys are keystroke combinations that provide alternatives to right-clicks
+    for actions. For example, instead of right-clicking a request and selecting **Send
+    to Repeater**, you may use the *Ctrl* + *R* hotkey to do the same thing. The table
+    in this section allows you to configure more hotkeys for almost any action to
+    be taken in Burp Suite:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.96 – Hotkeys](image/B21173_Figure_3.096..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.96 – Hotkeys
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | User Interface | Display tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Under the **Display** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Appearance**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting allows you to control the font size of the user interface, as
+    well as change the theme from light (default) to dark:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.97 – Appearance](image/B21173_Figure_3.097..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.97 – Appearance
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Learn** **tab display**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'This setting allows you to stop the **Learn** tab from appearing on the top
+    list of Burp Suite tools:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.98 – Learning tab display](image/B21173_Figure_3.098..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.98 – Learning tab display
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here is a screenshot of the **Learn** tab. You may also turn the tab off using
+    the **Hide this** **tab** button:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.99 – Learn](image/B21173_Figure_3.099..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.99 – Learn
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Scaling**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Burp Suite can be configured to automatically adjust DPI scaling for high-resolution
+    displays. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.100 – Scaling](image/B21173_Figure_3.0100..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.100 – Scaling
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Suite tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Notice the areas affected by the **User** | **Suite** subsection. We will focus
+    on each area – that is, **REST API**, **Updates**, **Performance feedback**, and
+    **Temporary** **files location**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.101 – The User | Suite menu items](image/B21173_Figure_3.0101..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.101 – The User | Suite menu items
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Suite | REST API tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: When testing APIs, this feature allows users to stand up a headless instance
+    of Burp, and then configure Burp Suite as a proxy in Postman to capture all traffic.
+    The following screenshot shows that the default listener for the REST API for
+    Burp Suite is set to run on localhost (for example, **127.0.0.1**) and port **7777**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'PortSwigger highly recommends using an API key to connect to the Burp Suite
+    listening service as connecting without is not secure. Generating an API key is
+    quite easy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.102 – REST API](image/B21173_Figure_3.0102..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.102 – REST API
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Click the **New** button and copy the key to your clipboard. You will need
+    to paste it into Postman for use. Note that the API key is only available at the
+    initial generation and not after:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.103 – Copy key to clipboard](image/B21173_Figure_3.0103..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.103 – Copy key to clipboard
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following screenshot shows how to invoke the REST API in Burp Suite from
+    Postman. You can see that the REST API is running on localhost, port **7777**,
+    and uses the API key generated in the previous step at the end of the URL.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the JSON body of the API call, you can add the target application and the
+    default Burp Suite listener. These settings will capture all API traffic from
+    Postman into Burp:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.104 – Postman settings to use the Burp Suite REST API](image/B21173_Figure_3.0104..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.104 – Postman settings to use the Burp Suite REST API
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s more...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'For a simpler alternative to capturing traffic from Postman into Burp, configure
+    Postman’s settings (via the gear icon at the top right), and select the **Proxy**
+    tab. Select **Add a custom proxy configuration** and fill in the Burp Suite listener’s
+    IP address and port. By default, these values are **127.0.0.1** and **8080**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.105 – Alternative option for capturing Postman API traffic into
+    Burp Suite](image/B21173_Figure_3.0105..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.105 – Alternative option for capturing Postman API traffic into Burp
+    Suite
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Suite | Updates tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'By default, when updates to the Burp Suite product are available, this setting
+    automatically downloads and prompts you to restart the product for the changes
+    to take effect. For most testers, the default setting is fine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.106 – Updates](image/B21173_Figure_3.0106..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.106 – Updates
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Suite | Performance feedback tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Performance and debugging information can be automatically sent to PortSwigger
+    for further troubleshooting if this setting is turned on:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.107 – Performance feedback](image/B21173_Figure_3.0107..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.107 – Performance feedback
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Suite | Temporary files location tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In situations where PortSwigger requires additional logs from your system to
+    troubleshoot, you can provide such logs from a custom location:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.108 – Temporary files location](image/B21173_Figure_3.0108..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.108 – Temporary files location
+  prefs: []
+  type: TYPE_NORMAL
+- en: The User | Extensions tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Under the **Extensions** tab, a tester has the following options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Startup behavior**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'As your experience in using Burp Suite grows, you will undoubtedly begin to
+    add extensions to the product to scan for specific vulnerabilities. Some extensions
+    can be extremely intrusive and noisy on the network. This setting allows you to
+    control the behavior of extensions upon the initial startup of Burp. This behavior
+    includes reloading and updating those extensions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.109 – Startup behavior](image/B21173_Figure_3.0109..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.109 – Startup behavior
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Java environment**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When using any extension written in Java, Burp Suite requires you to specify
+    the JDK location on your local system:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.110 – Java environment](image/B21173_Figure_3.0110..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.110 – Java environment
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Python environment**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When using any extension written in Python, Burp Suite requires you to specify
+    the Jython (Java-to-Python translator) location on your local system:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.111 – Python environment](image/B21173_Figure_3.0111..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.111 – Python environment
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Ruby environment**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When using any extension written in Ruby, Burp Suite requires you to specify
+    the JRuby (Java-to-Ruby translator) location on your local system:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.112 – Ruby environment](image/B21173_Figure_3.0112..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.112 – Ruby environment
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Configuration library tab
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'When using the scanning capabilities of Burp Suite (Professional version),
+    various types of scans can be performed. Out of the box, Burp Suite provides built-in
+    scan types, but you may add custom ones as well. **Configuration library** is
+    a centralized housing location for all of these scanning scripts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 3.113 \uFEFF– Configuration library](image/B21173_Figure_3.0113..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.113 – Configuration library
+  prefs: []
+  type: TYPE_NORMAL
+- en: Crawling target sites
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Crawling is a type of scan that’s used to map out a web application. This mapping
+    exercise is necessary to uncover links, folders, and files present within the
+    target application. While running, Burp Suite will add found assets to **Target**
+    | **Site map**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Crawling should occur before scanning since testers wish to identify all possible
+    paths and functionality before looking for vulnerabilities. There are built-in
+    Burp Suite scripts specific to crawling available in **Configuration library**,
+    as shown in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 3.114 – Crawling scripts available i\uFEFFn Configuration library](image/B21173_Figure_3.0114..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.114 – Crawling scripts available in Configuration library
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the OWASP Mutillidae II application found within the OWASP BWA VM, we
+    will configure and use one of the built-in scripts to crawl through the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Ensure Burp Suite and the OWASP BWA VM are running and that you are either using
+    Burp’s browser or have FoxyProxy turned on in your Firefox browser.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From the OWASP BWA landing page, click the link to the **OWASP Mutillidae**
+    **II** application:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.115 – Link to the Mutillidae II application from the VM splash page](image/B21173_Figure_3.0115..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.115 – Link to the Mutillidae II application from the VM splash page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We need to set up our scope before running any scripts. Go to **Target** |
+    **Site map**, highlight the **mutillidae** folder, right-click it, and select
+    **Add** **to scope**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.116 – How to add the Mutillidae root application to the target scope](image/B21173_Figure_3.0116..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.116 – How to add the Mutillidae root application to the target scope
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will be presented with an option to stop sending out-of-scope items to
+    Burp. For our purposes, we will click the **Yes** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.117 – The Proxy history logging prompt](image/B21173_Figure_3.0117..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.117 – The Proxy history logging prompt
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Optionally, you can clean up the **Site map** area so that it only shows in-scope
+    items by clicking **Filter: Hiding out of scope and not found items; hiding CSS,
+    image and general binary content; hiding 4xx responses; hiding** **empty folders**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.118 – Filter on Target | Site map](image/B21173_Figure_3.0118..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.118 – Filter on Target | Site map
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After clicking **Filter: ….**, You will see a drop-down menu appear. From here,
+    check the **Show only in-scope items** box. Now, click anywhere in Burp Suite
+    outside of the drop-down menu to have the filter disappear again:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.119 – Filter curtain drop-down menu](image/B21173_Figure_3.0119..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.119 – Filter curtain drop-down menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that our scope has been set, we can begin the process of crawling and auditing.
+    Go to Burp Suite’s **Target** tab and ensure you are resuming all traffic so that
+    it flows into Burp. Look for the following message and, if displayed, click the
+    **Resume** button. If you do not click the **Resume** button, **Site map** will
+    not be populated with new assets found during crawling. If you do not see this
+    message at all, don’t worry about this feature:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.120 – Resume task execution to see traffic](image/B21173_Figure_3.0120..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.120 – Resume task execution to see traffic
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to Burp Suite’s **Target** tab, right-click the **mutillidae** folder, and
+    click **Scan**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.121 – Contextual menu to begin scan configurations from Target |
+    Site map](image/B21173_Figure_3.0121..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.121 – Contextual menu to begin scan configurations from Target | Site
+    map
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A new pop-out menu will appear where you to configure the scan – or in this
+    case, crawl. Select the **Crawl** radio button. The URL to scan should already
+    be populated for you:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.122 – Selecting Crawl in the Scan type section](image/B21173_Figure_3.0122..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.122 – Selecting Crawl in the Scan type section
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Still within the pop-out menu, select **Scan configuration** from the left-hand
+    side:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.123 – Selecting Scan configuration](image/B21173_Figure_3.0123..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.123 – Selecting Scan configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Select from library** button at the bottom; then, click the **Built-in**
+    button inside the modal to display all scanning scripts included with Burp Suite
+    Professional:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.124 – How to select a built-in script from the library](image/B21173_Figure_3.0124..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.124 – How to select a built-in script from the library
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select one of the crawling scripts from the list provided. For our purposes,
+    we will choose **Crawl limit –** **10 minutes**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.125 – Selecting Crawl limit – 10 minutes from the list of crawling
+    scripts](image/B21173_Figure_3.0125..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.125 – Selecting Crawl limit – 10 minutes from the list of crawling
+    scripts
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click **OK** at the bottom of the **Scan configuration** pop-out menu:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.126 – Clicking the OK button to close the dialog box](image/B21173_Figure_3.0126..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.126 – Clicking the OK button to close the dialog box
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Still within the pop-out menu, select **Application login** from the left-hand
+    side. This feature allows you to give credentials to the crawler when a login
+    HTML form is encountered. Click **New** and add a username of **admin** and a
+    password of **admin**. Click **OK** when you’re done:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.127 – To add authentication, scroll to the Application login section
+    and add credentials](image/B21173_Figure_3.0127..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.127 – To add authentication, scroll to the Application login section
+    and add credentials
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Still within the pop-out menu, select **Resource pool** from the left-hand
+    side. This feature allows you to configure a different pool size for the number
+    of concurrent requests. For our purposes, we will use the default resource pool
+    provided. Click **OK** to close the pop-out menu and begin the crawl:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.128 – Use the default resource pool if resources are sufficient](image/B21173_Figure_3.0128..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.128 – Use the default resource pool if resources are sufficient
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to the **Dashboard** tab to see the progress of our crawling script. An
+    estimate of the time required to complete the script to be displayed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.129 – Upon script execution, the Dashboard tab will show the running
+    script and its estimated time](image/B21173_Figure_3.0129..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.129 – Upon script execution, the Dashboard tab will show the running
+    script and its estimated time
+  prefs: []
+  type: TYPE_NORMAL
+- en: Return to **Target** | **Site map**; notice that additional assets now appear
+    under the **mutillidae** folder.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If you wish to stop the crawler before the 10 minutes are up, click the *pause*
+    icon or delete the task by clicking the *trashcan* icon. Make sure the crawling
+    script is not running before you move on to the next recipe:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 3.130 – How to pause or delet\uFEFFe running scripts](image/B21173_Figure_3.0130..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.130 – How to pause or delete running scripts
+  prefs: []
+  type: TYPE_NORMAL
+- en: Auditing target sites
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scanner capabilities are only available in Burp Suite Professional.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Burp Suite Scanner is a scanning tool that automates the search for weaknesses
+    within the runtime version of an application. The auditor attempts to find security
+    vulnerabilities based on the behavior of the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Burp Suite Scanner will identify indicators that may lead to the identification
+    of a security vulnerability. Burp Suite Scanner is extremely reliable; however,
+    it is the responsibility of the tester to validate any findings before reporting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are two scanning modes available in Burp Suite Scanner:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Passive scanner**: This mode analyzes traffic that’s already passed through
+    **Proxy**. The passive scanner is non-invasive against the target. Deductions
+    of possible vulnerabilities are analyzed and made against the traffic that’s already
+    been captured:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.131 – How to passively scan the target application](image/B21173_Figure_3.0131..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.131 – How to passively scan the target application
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Active scanner**: This mode sends numerous requests against the target that
+    contain known attack patterns. These attack patterns are designed to trigger behavior
+    that may indicate the presence of vulnerabilities ([https://portswigger.net/kb/issues](B21173_03.xhtml#_idTextAnchor206)).
+    Active scanner focuses on input-based bugs that may be present on the client and
+    server side of the application:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 3.132 – How to actively scan the target application](image/B21173_Figure_3.0132..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.132 – How to actively scan the target application
+  prefs: []
+  type: TYPE_NORMAL
+- en: Live crawl and audit tasks
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Scanning tasks should occur after crawling is complete, but they can be done
+    together (for example, crawl and audit). Previously, we learned how Burp Suite
+    continues to crawl as new content is discovered. Similarly, passive scanning continues
+    to identify vulnerabilities as new traffic passes through **Proxy**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When initially interacting with a target application with Proxy capturing traffic,
+    Burp Suite will automatically run two tasks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Live passive crawl from Proxy
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Live audit from Proxy
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Both tasks start to populate **Target** | **Site map**, as well as identify
+    possible issues. You will find these two tasks under the **Dashboard** tab:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.133 – Built-in live tasks](image/B21173_Figure_3.0133..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.133 – Built-in live tasks
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Since the live audit is running, you will see potential issues appear with
+    a color code and number. The following screenshot shows that 11 low (blue) and
+    6 information (gray) issues have been identified:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.134 – Number of issues identified](image/B21173_Figure_3.0134..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.134 – Number of issues identified
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can click **View details** to pop out the sections of data from this scanning
+    script. The areas include **Details**, **Audit items**, **Issue activity**, **Event
+    log**, and **Logger**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Live Audit task** | **Details**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The **Details** tab provides a summary of the issues found and the type of
+    scan performed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.135 – The Details tab of the detailed view of the live task](image/B21173_Figure_3.0135..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.135 – The Details tab of the detailed view of the live task
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Live Audit task** | **Audit items**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The **Audit items** tab provides a list of all audited items and specifies
+    **Host**, **URL**, and the running progress of the scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.136 – The Audit items tab of the detailed view of the live task](image/B21173_Figure_3.0136..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.136 – The Audit items tab of the detailed view of the live task
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Live Audit task** | **Issue activity**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The **Issue activity** tab displays all scanner findings in a tabular format
+    and includes both passive and active scanner issues.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By selecting a specific issue in the table, the message details are displayed,
+    including an advisory for the finding along with the request and response:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.137 – The Issue activity tab of the detailed view of the live task](image/B21173_Figure_3.0137..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.137 – The Issue activity tab of the detailed view of the live task
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Live Audit task** | **Event log**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The **Event log** tab shows a list of issues, based on severity, that were
+    encountered during the scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.138 – The Event log tab of the detailed view of the live task](image/B21173_Figure_3.0138..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.138 – The Event log tab of the detailed view of the live task
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Live Audit task** | **Logger**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The **Logger** tab provides a view of each request that was sent during the
+    scan. Notice the addition of the **Time** and **Start response timer** columns
+    in this tab. Such information can be quite helpful when you’re looking for timing-based
+    attacks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.139 – The Logger tab of the detailed view of the live task](image/B21173_Figure_3.0139..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.139 – The Logger tab of the detailed view of the live task
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'All issues that can be detected by Burp Suite Scanner are listed at [https://portswigger.net/kb/issues](B21173_03.xhtml#_idTextAnchor206)
+    and also available within Burp Suite under **Target** | **Issue definitions**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.140 – Issue definitions](image/B21173_Figure_3.0140..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.140 – Issue definitions
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a custom scan script
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite provides predefined tasks for crawling and auditing. Previously,
+    we looked at the live crawl and audit tasks and how they work. However, if you
+    want to create a custom scanning script, Burp Suite provides the mechanism for
+    you to do so.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the OWASP Mutillidae II application found within the OWASP BWA VM as our
+    target, we will create a scanning script with custom configurations and run this
+    script against Mutillidae.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Right-click the target application and select **Scan** from the menu:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.141 – How to configure a scan for the target application](image/B21173_Figure_3.0141..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.141 – How to configure a scan for the target application
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the **New scan** pop-out window, make sure the **Crawl and audit** radio
+    button is selected and your target application is shown in the **URLs to scan**
+    text area. Move down to the **Scan** **configuration** box:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.142 – Select or use the default setting of Crawl and audit](image/B21173_Figure_3.0142..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.142 – Select or use the default setting of Crawl and audit
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note that there are several preset scan modes to choose from. In this recipe,
+    we will be creating a custom one. Select the **Use a custom configuration** radio
+    button:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.143 – Scan configuration](image/B21173_Figure_3.0143..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.143 – Scan configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click **New…** and select **Auditing**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.144 – How to create a custom audit configuration](image/B21173_Figure_3.0144..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.144 – How to create a custom audit configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the new pop-out window, give your scanning script a name if you wish; you
+    may use the default name. Expand the **Audit Optimization** area and select **Thorough**
+    for **Audit speed** as this should be the best setting for finding vulnerabilities.
+    *Do not* close this area after making a change. Move down to **Modifying Parameter
+    Locations** and check all the boxes provided, as shown in the following screenshot.
+    *Do not* close this area after making your changes. If you close either of these
+    areas, your changes will be *lost*. Leave these areas expanded and be sure to
+    save your new scanning configuration script to the library (that is, **Save to
+    library**). Click **Save** at the bottom. The areas we did not change are generally
+    fine for most testers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.145 – Custom settings for the custom configuration](image/B21173_Figure_3.0145..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.145 – Custom settings for the custom configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'An optional step is to add credentials to the **Application login** section
+    of the **New scan** dialog box:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.146 – Adding authentication to the custom scan](image/B21173_Figure_3.0146..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.146 – Adding authentication to the custom scan
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Immediately after saving your configuration and clicking **OK**, you will see
+    that your scanning script begins to run under the **Dashboard** tab. From this
+    area, you may pause your scan using the pause button, change any configurations
+    using the gear icon, or delete your scan altogether:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 3.147 – Upon executing the scan, the Dashboard tab shows the running\
+    \ script and the estimate\uFEFF\uFEFF\uFEFFd time of completion](image/B21173_Figure_3.0147..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.147 – Upon executing the scan, the Dashboard tab shows the running
+    script and the estimated time of completion
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s more...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'If you do not wish to use a custom scanning script and would prefer to use
+    the recommended active scanning configurations from PortSwigger, simply right-click
+    on the branch you wish to scan and select **Actively scan** **this branch**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.148 – Alternative scanning option when using built-in scanning configurations](image/B21173_Figure_3.0148..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.148 – Alternative scanning option when using built-in scanning configurations
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reporting issues
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reporting capabilities are only available in Burp Suite Professional.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In Burp Suite Professional, when the scanner discovers a potential vulnerability,
+    the finding will be added to a list of issues under the **Target** tab, on the
+    right-hand side of the UI:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.149 – Issues](image/B21173_Figure_3.0149..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.149 – Issues
+  prefs: []
+  type: TYPE_NORMAL
+- en: Issues are color-coded to indicate their severity and confidence level. An issue
+    with a red exclamation point means it has a high severity and the confidence level
+    is certain.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Items with a lower severity or confidence level will be low, informational,
+    and yellow, gray, or black. These items require manual penetration testing to
+    validate whether the vulnerability is present. For example, **HTML does not specify
+    charset** is a potential vulnerability identified by the scanner. This could be
+    an attack vector for XSS or it could be a false positive. It is up to the pentester
+    and their level of experience to validate such an issue:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Severity levels**: The available severity levels are high, medium, low, information,
+    and false positive. Any findings marked as false positive will not appear on the
+    generated report. False positive is a severity level that must be manually set
+    on an issue by the pentester.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Confidence levels**: The confidence levels available are certain, firm, and
+    tentative.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: After the scanning process is complete, we need to validate our findings, adjust
+    the severities accordingly, and generate our report.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'For this recipe, select **Cookie without HttpOnly flag set** under the **Issues**
+    heading:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.150 – Issues item to confirm](image/B21173_Figure_3.0150..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.150 – Issues item to confirm
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Look at the **Response** tab of this message to validate the finding. Here,
+    we can see that the **PHPSESSID** cookie does not have the **HttpOnly** flag set.
+    Therefore, we can change the severity from **Low** to **Medium** and the confidence
+    level from **Firm** to **Certain**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.151 – Confirming that the HttpOnly flag is missing in the response](image/B21173_Figure_3.0151..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.151 – Confirming that the HttpOnly flag is missing in the response
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click the issue and change the severity to **Medium** by selecting **Set
+    severity** | **Medium**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.152 – How to change the severity of an issue](image/B21173_Figure_3.0152..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.152 – How to change the severity of an issue
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click the issue and change its severity to **Certain** by selecting **Set
+    confidence** | **Certain**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.153 – How to change the confidence of an issue](image/B21173_Figure_3.0153..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.153 – How to change the confidence of an issue
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After running your auditing script for a while, you should have several high
+    issues to choose from in the **Issues** panel:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.154 – The Issues panel](image/B21173_Figure_3.0154..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.154 – The Issues panel
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this recipe, select the issues with the highest confidence and severity
+    levels to be included in the report, along with our medium **Cookie without HttpOnly
+    flag** finding. After selecting (highlighting + *Shift* key) the items shown here,
+    right-click and select **Report** **selected issues**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.155 – Six items selected to be included in the report](image/B21173_Figure_3.0155..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.155 – Six items selected to be included in the report
+  prefs: []
+  type: TYPE_NORMAL
+- en: Upon clicking **Report selected issues**, a pop-up box will appear, prompting
+    us for the format of the report. This pop-up is called **Burp Scanner** **reporting
+    wizard**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For this recipe, allow the default setting of HTML. Click **Next**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 3.156 – HTML is the default format for the Burp Suite report](image/B21173_Figure_3.0156..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.156 – HTML is the default format for the Burp Suite report
+  prefs: []
+  type: TYPE_NORMAL
+- en: This screen prompts for the types of details to be included in the report. For
+    this recipe, allow the default settings. Click **Next**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This screen prompts for how messages should be displayed within the report.
+    For this recipe, allow the default settings. Click **Next**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This screen prompts for which types of issues should be included in the report.
+    For this recipe, allow the default settings. Click **Next**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'This screen prompts for the location of where to save the report. For this
+    recipe, click **Select file…**, select a location, and provide a filename, followed
+    by the **.html** extension; allow all other default settings. Click **Next**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.157 – Selecting the directory and filename of the Burp Suite report](image/B21173_Figure_3.0157..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.157 – Selecting the directory and filename of the Burp Suite report
+  prefs: []
+  type: TYPE_NORMAL
+- en: This screen reflects that the report has been generated. Click **Close** and
+    browse to the saved location of the file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Double-click the filename to load the report into a browser:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 3.158 – Burp Suite report produced](image/B21173_Figure_3.0158..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 3.158 – Burp Suite report produced
+  prefs: []
+  type: TYPE_NORMAL
+- en: Congratulations! You’ve created your first Burp Suite report!
+  prefs: []
+  type: TYPE_NORMAL

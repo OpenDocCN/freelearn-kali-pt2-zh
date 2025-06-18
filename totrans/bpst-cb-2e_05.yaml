@@ -1,0 +1,846 @@
+- en: '5'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Assessing Authorization Checks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This chapter covers the basics of authorization, including an explanation of
+    how an application uses roles to determine user functions. Web penetration testing
+    involves key assessments to determine how well the application validates functions
+    assigned to a given role or individual user, and we will learn how to use Burp
+    Suite to perform these tests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for directory traversal
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for **Local File** **Inclusion** (**LFI**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for **Remote File** **Inclusion** (**RFI**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for privilege escalation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for **Insecure Direct Object** **Reference** (**IDOR**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To complete the recipes in this chapter, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'OWASP **Broken Web Applications** (**BWA**) VM: the OWASP Mutillidae application'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Burp Suite Proxy Community or Professional (https://portswigger.net/burp/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The use of a PortSwigger account to access Web Security Academy ([https://portswigger.net/web-security/all-labs](https://portswigger.net/web-security/all-labs))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A Firefox browser configured to allow Burp Suite to proxy traffic ([https://www.mozilla.org/en-US/firefox/new/](https://www.mozilla.org/en-US/firefox/new/))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The **wfuzz** wordlist repository from GitHub ([https://github.com/xmendez/wfuzz](https://github.com/xmendez/wfuzz))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for directory traversal
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Directory traversal attacks are attempts to discover or force-browse unauthorized
+    web pages usually designed for administrators of the application. If an application
+    does not configure the web document root properly and does not include proper
+    authorization checks on the server side for each page accessed, a directory traversal
+    vulnerability may exist. This type of weakness allows an attack to perform system
+    command injection exploitation or arbitrary code execution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using OWASP Mutillidae II as our target application, let’s determine whether
+    it contains any directory traversal vulnerabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ensure that Burp Suite and the OWASP BWA VM are running, that Burp Suite is
+    configured in the Firefox browser (or use the Burp Suite browser), and that you
+    are viewing the OWASP BWA applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From the OWASP BWA landing page, click the link to the OWASP Mutillidae II application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open the login screen of OWASP Mutillidae II in the Firefox browser. From the
+    top menu, click **Login**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Find the request you just performed within the **Proxy** | **HTTP history**
+    table. Look for the call to the **login.php** page. Highlight the message, move
+    your cursor into the **Raw** tab of the **Request** tab, right-click, and click
+    on **Send** **to Intruder**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 5.1 – Send to Intruder\uFEFF](image/B21173_Figure_5.01.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.1 – Send to Intruder
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch over to the **Intruder** | **Positions** tab and clear all Burp-defined
+    payload markers by clicking the **Clear $** button on the right-hand side.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Highlight the value currently stored in the **page** parameter (**login.php**),
+    and place a payload marker around it using the **Add §** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.2 – Intruder | Positions tab](image/B21173_Figure_5.02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.2 – Intruder | Positions tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Continue to the **Intruder** | **Payloads** tab and select the following wordlist
+    from the **wfuzz** repository: **admin-panels.txt**. The location of the wordlist
+    from the GitHub repository follows this folder structure: **wfuzz/wordlist/general/admin-panels.txt**.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click the **Load** button within the **Payload Options [Simple list]** section
+    of the **Intruder** | **Payloads** tab and a popup will display, prompting for
+    the location of your wordlist.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Browse to the location at which you downloaded the **wfuzz** repository from
+    GitHub. Continue to search through the **wfuzz** folder structure (**wfuzz/wordlist/general/**)
+    until you reach the **admin-panels.txt** file, then select the file, and click
+    **Open**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.3 – Wordlist loading](image/B21173_Figure_5.03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.3 – Wordlist loading
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Scroll to the bottom and uncheck (by default, it is checked) the **URL-encode
+    these** **characters** option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.4 – Uncheck the payload encoding box](image/B21173_Figure_5.04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.4 – Uncheck the payload encoding box
+  prefs: []
+  type: TYPE_NORMAL
+- en: You are now ready to begin the attack. Click the **Start attack** button in
+    the top right-hand corner of the **Intruder** | **Positions** page.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The attack results table will appear. Allow the attacks to complete. There are
+    137 payloads in the **admin-panels.txt** wordlist. Sort on the **Length** column
+    from ascending to descending order to see which of the payloads hit a web page.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Notice the payloads that have larger response lengths. This looks promising!
+    Perhaps we have stumbled upon administration pages that may contain fingerprinting
+    information or unauthorized access:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.5 – Results table](image/B21173_Figure_5.05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.5 – Results table
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select one of the pages found in the list with the largest lengths 99,000+,
+    such as **admin.php**. From the attack results table, look at the **Response**
+    | **Render** tab, and notice the page displays the PHP version and the system
+    information:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.6 – One successful result replayed in Repeater](image/B21173_Figure_5.06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.6 – One successful result replayed in Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Without even being logged in, we were able to force-browse to an unmapped area
+    of the web application. The term *unmapped* means the application itself had no
+    direct link to this secret configuration page. However, using Burp Suite Intruder
+    and a wordlist containing commonly known administration file names, we were able
+    to discover the page using the directory traversal attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for LFI
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Web servers control access to privileged files and resources using configuration
+    settings. Privileged files include files that should only be accessible to system
+    administrators – for example, the **/etc/passwd** file on Unix-like platforms
+    or the **boot.ini** file on Windows systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: An **LFI** attack is an attempt to access privileged files using directory traversal
+    attacks. LFI attacks include different styles, including **dot-dot-slash attacks**
+    (**../**), **directory brute-forcing**, **directory climbing**, or **backtracking**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using OWASP Mutillidae II as our target application, let’s determine whether
+    it contains any LFI vulnerabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ensure Burp Suite and OWASP BWA VM are running and that Burp Suite is configured
+    in the Firefox browser used to view the OWASP BWA applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From the OWASP BWA Landing page, click the link to the OWASP Mutillidae II application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open the login screen of OWASP Mutillidae II in the Firefox browser. From the
+    top menu, click **Login**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Find the request you just performed within the **Proxy** | **HTTP history**
+    table. Look for the call to the **login.php** page. Highlight the message, move
+    your cursor into the **Raw** tab of the **Request** tab, right-click, and select
+    **Send** **to Intruder**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Switch over to the **Intruder** | **Positions** tab and clear all Burp-defined
+    payload markers by clicking the **Clear §** button on the right-hand side.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Highlight the value currently stored in the **page** parameter (**login.php**)
+    and place a payload marker around it using the **Add §** button on the right-hand
+    side.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Continue to the **Intruder** | **Payloads** tab. Select the following wordlist
+    from the **wfuzz** repository: **Traversal.txt**. The location of the wordlist
+    from the GitHub repository follows this folder structure: **wfuzz/wordlist/injections/Traversal.txt**.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click the **Load** button within the **Payload Options [Simple list]** section
+    of the **Intruder** | **Payloads** tab. A popup will display, prompting for the
+    location of your wordlist.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Browse to the location at which you downloaded the **wfuzz** repository from
+    GitHub. Continue to search through the **wfuzz** folder structure until you reach
+    the **Traversal.txt** file. Select the file and click **Open**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.7 – Wordlist loading](image/B21173_Figure_5.07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.7 – Wordlist loading
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scroll to the bottom and uncheck (by default, it is checked) the **URL-encode
+    these** **characters** option.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You are now ready to begin the attack. Click the **Start attack** button at
+    the top-right-hand corner of the **Intruder** | **Positions** page.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The attack results table will appear. Allow the attacks to complete. Sort on
+    the **Length** column from ascending to descending order to see which of the payloads
+    hit a web page. Notice the payloads with larger lengths; perhaps we gained unauthorized
+    access to the system configuration files!
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.8 – Results table snippet](image/B21173_05_008.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.8 – Results table snippet
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select request **2** in the list. From the attack results table, look at the
+    **Response** | **Render** tab and notice the page displays the contents of the
+    host file from the system! Alternatively, you can also send the request to **Repeater**
+    and replay the attack to see the same result.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 5.9 – One successful result replayed in Rep\uFEFF\uFEFFeater](image/B21173_05_009.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.9 – One successful result replayed in Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Due to poorly protected file permissions and a lack of application authorization
+    checks, attackers can read privileged local files on a system containing sensitive
+    information. The danger behind LFI vulnerabilities is the discovery of secrets,
+    API keys, source code, and configuration files. Revelations of these kinds have
+    the potential to lead to remote code execution, system account takeovers, or even
+    pivoting to other machines across the network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for RFI
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**RFI** is an attack that attempts to access external URLs and remotely located
+    files. This kind of attack is possible due to parameter manipulation, a lack of
+    server-side checks, and a lack of whitelisting for outbound traffic at the firewall
+    level. These oversights may lead to data exfiltration of user information to external
+    servers controlled by an attacker.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using OWASP Mutillidae II as our target application, let’s determine whether
+    it contains any RFI vulnerabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ensure Burp Suite and OWASP BWA VM are running and that Burp Suite is configured
+    in the Firefox browser used to view the OWASP BWA applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From the OWASP BWA landing page, click the link to the OWASP Mutillidae II application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open the login screen of OWASP Mutillidae II in the Firefox browser. From the
+    top menu, click **Login**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Find the request you just performed within the **Proxy** | **HTTP history**
+    table. Look for the call to the **login.php** page:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.10 – Finding the POST login request](image/B21173_05_010.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.10 – Finding the POST login request
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Make a note of the **page** parameter that determines the page to load:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.11 – Note the page parameter](image/B21173_05_011.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.11 – Note the page parameter
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s see whether we can exploit this parameter by providing a URL that is outside
+    the application. For demonstration purposes, we will use a URL that we control
+    in the OWASP BWA VM. However, in the wild, this URL would be attacker-controlled
+    instead.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the **Proxy** | **Intercept** tab, and press the **Intercept is**
+    **on** button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Return to the Firefox or Burp Suite browse, and reload the login page. The
+    request is paused and contained within the **Proxy** | **Intercept** tab:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.12 – Proxy | Intercept is on](image/B21173_05_012.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.12 – Proxy | Intercept is on
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now let’s manipulate the value of the **page** parameter from **login.php**
+    to a URL that is external to the application. Let’s use the login page to the
+    **GetBoo** application. Your URL will be specific to your machine’s IP address,
+    so adjust accordingly. The new URL will be **http://<your_IP_address>/getboo/**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Reload the login page in your browser that is sending traffic to Burp Suite
+    by clicking the *refresh* button or pressing *F5*. You may also wish to click
+    the **Login/Register** button again.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.13 – Clicking the Login/Register button](image/B21173_05_013.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.13 – Clicking the Login/Register button
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice the request is held up in **Proxy** | **Intercept**. You may need to
+    click the **Forward** button until you reach the **GET /multillidae/index.php?page=login.php**
+    request. Now we can manipulate the values before sending the request to the web
+    server:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.14 – Login request captured in Proxy Intercept](image/B21173_05_014.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.14 – Login request captured in Proxy Intercept
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s start manipulating the parameters by replacing the **login.php** value
+    with **http://<your_IP_address>/getboo/** and clicking the **Forward** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.15 – Redirecting the user to the GetBoo application](image/B21173_05_015.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.15 – Redirecting the user to the GetBoo application
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now press **Intercept is on** again to toggle the intercept button to off(**Intercept**
+    **is off**).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Return to the Firefox browser and notice the page loaded is the **GetBoo** index
+    page within the context of the Mutillidae application!
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 5.16 – Evidence of a successful re\uFEFFdire\uFEFFction](image/B21173_05_016.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.16 – Evidence of a successful redirection
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The **page** parameter does not include proper data validation to ensure the
+    values provided are whitelisted or contained in a prescribed list of acceptable
+    values. By exploiting this weakness, we can dictate values to this parameter,
+    redirecting our victim to a page of our choice, or worse, data exfiltration cookie
+    information and scrape sensitive data from our victim’s browser session.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for privilege escalation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Developer code in an application must include authorization checks on assigned
+    roles to ensure an authorized user is not able to elevate their role to a higher
+    privilege. As an attacker, frequent targets for accessing elevated functionality
+    include parameter tampering, forced browsing, and authentication bypass. These
+    types of privilege escalation attacks may potentially occur by modifying the value
+    of an assigned role or parameter value and replacing that value with another.
+    If the attack is successful, the bad actor gains unauthorized access to resources
+    or functionality normally restricted to administrators or more powerful accounts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Let’s use the *Privilege escalation via server-side prototype pollution* PortSwigger
+    lab, which is located in the *Prototype pollution* section of *All labs*, as our
+    target application. We will attempt to find a weakness in the Node.js inheritance
+    hierarchy to elevate our privileges within the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Log in to your PortSwigger account and navigate to the following URL: [https://portswigger.net/web-security/prototype-pollution/server-side/lab-privilege-escalation-via-server-side-prototype-pollution](https://portswigger.net/web-security/prototype-pollution/server-side/lab-privilege-escalation-via-server-side-prototype-pollution).
+    Ensure Burp Suite is running and sending traffic through either Firefox or the
+    Burp Suite browser.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'From the *Lab: Privilege escalation via server-side prototype pollution* landing
+    page, click the link entitled **Access the lab**. If you do not see the **Access
+    the lab** button, make sure you are logged in to your PortSwigger account.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.17 – Starting the PortSwigger lab instance](image/B21173_05_017.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.17 – Starting the PortSwigger lab instance
+  prefs: []
+  type: TYPE_NORMAL
+- en: A new tab will open in your browser and a unique instance of the lab will start
+    up just for you. Your URL will be unique, thus different from the one shown in
+    the following screenshot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.18 – Instance of the lab running](image/B21173_05_018.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.18 – Instance of the lab running
+  prefs: []
+  type: TYPE_NORMAL
+- en: With traffic running through Burp, log in to the application instance by clicking
+    the **My account** link on the top right-hand side. You will be presented with
+    a login page.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.19 – Login page](image/B21173_05_019.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.19 – Login page
+  prefs: []
+  type: TYPE_NORMAL
+- en: Credentials are provided in the lab description and solution, which are username
+    **wiener** and password **peter**. Log in to the application. After logging in,
+    you will be presented with a profile page. Update the address field with a number
+    or additional letter and submit.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.20 – Profile landing page](image/B21173_05_020.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.20 – Profile landing page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Switch to Burp’s **Proxy** | **HTTP history** tab. Find the **POST** request
+    you just made on the profile page to update the address:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.21 – Finding the address change POST request in the Proxy HTTP history
+    table](image/B21173_05_021.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.21 – Finding the address change POST request in the Proxy HTTP history
+    table
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click and select **Send** **to Repeater**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.22 – Send to Repeater](image/B21173_05_022.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.22 – Send to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In **Repeater**, add a prototype property of **__proto__** to the JSON **POST**
+    body. Inside the new property, add a fake name/value pair. If you place the following
+    prototype property at the beginning or middle of the existing JSON body, you must
+    add a comma; otherwise, you will receive a JSON parsing error:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'This is shown in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 5.23 – Adding a prototype into the JSON body of the POST request](image/B21173_05_023.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.23 – Adding a prototype into the JSON body of the POST request
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Send the request. Note the response is still valid. Also, notice there is a
+    property in the JSON response called **"****isAdmin": false**.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.24 – Note the isAdmin parameter in the response](image/B21173_05_024.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.24 – Note the isAdmin parameter in the response
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s use a prototype pollution attack to change this value from **false** to
+    **true**. Add the property of **"isAdmin":"true"** to the request where **"foo":"bar"**
+    originally was within the prototype **"****__proto__"** object.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.25 – Manipulating the isAdmin parameter in the request](image/B21173_05_025.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.25 – Manipulating the isAdmin parameter in the request
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Send the request and notice the response now reflects the change. We just elevated
+    our privileges to an admin! Return to the browser and refresh the **/my-account**
+    page. Notice you now have an **Admin panel** link available:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.26 – Access to Admin panel is now available](image/B21173_05_026.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.26 – Access to Admin panel is now available
+  prefs: []
+  type: TYPE_NORMAL
+- en: To solve this lab, click the **Admin panel** link. On the subsequent page, delete
+    the account **carlos**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.27 – Delete Carlos’ account](image/B21173_05_027.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.27 – Delete Carlos’ account
+  prefs: []
+  type: TYPE_NORMAL
+- en: You should see the curtain display confirming you’ve solved the lab.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 5.28 – Lab is so\uFEFFl\uFEFFved](image/B21173_05_028.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.28 – Lab is solved
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this recipe, we, as attackers, took advantage of a potential weakness in
+    Node.js objects known as prototype pollution. Each object constructed in Node.js
+    uses a prototype from which objects inherit characteristics and behaviors. If
+    an attack can *pollute* the top of the object hierarchy, then all the objects
+    constructed from that polluted prototype can be manipulated. By adding **"__proto__"**
+    to the **POST** JSON body, we found the presence of this weakness and exploited
+    it to elevate our privileges to an administrator.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for IDOR
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Allowing unauthorized direct access to files or resources on a system based
+    on user-supplied input is known as IDOR. This vulnerability allows us to bypass
+    authorization checks placed on such files or resources. IDOR is a result of unchecked
+    user-supplied input to retrieve an object without performing authorization checks
+    in the application code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Let’s use the *Insecure direct object references* PortSwigger lab, which is
+    located in the *Access control* section of *All labs*, as our target application.
+    We will attempt to find a direct object reference used as a value to a parameter,
+    manipulate it, and access information that should normally not be seen.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Log in to your PortSwigger account and navigate to the following URL: [https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references](https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references).
+    Ensure Burp Suite is running and sending traffic through either Firefox or the
+    Burp Suite browser.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'From the *Lab: Insecure direct object references* landing page, click the link
+    entitled **Access the lab**. If you do not see the **Access the lab** button,
+    make sure you are logged in to your PortSwigger account.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.29 – Starting the lab instance](image/B21173_05_029.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.29 – Starting the lab instance
+  prefs: []
+  type: TYPE_NORMAL
+- en: A new tab will open in your browser and a unique instance of the lab will start
+    up just for you. Your URL will be unique, thus different from the one shown in
+    the following screenshot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.30 – Landing page of lab](image/B21173_05_030.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.30 – Landing page of lab
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click the **Live chat** link in the application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.31 – The Live chat link](image/B21173_05_031.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.31 – The Live chat link
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On the **Live chat** page, type in a simple message and click **Send** to send
+    it to the web server backend:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![ Figure 5.32 – Sample message to send](image/B21173_05_032.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.32 – Sample message to send
+  prefs: []
+  type: TYPE_NORMAL
+- en: After clicking the **Send** button, click the **View transcript** button. Notice
+    a file is downloaded to your local system containing the conversation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.33 – Clicking the View transcript button](image/B21173_05_033.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.33 – Clicking the View transcript button
+  prefs: []
+  type: TYPE_NORMAL
+- en: View the downloaded file and see the conversation is captured in the transcript
+    as expected.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.34 – Viewing the downloaded transcript file](image/B21173_05_034.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.34 – Viewing the downloaded transcript file
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to Burp’s **Proxy** | **HTTP history** tab. Find the **GET** request
+    immediately after the **POST** request to download the file. Notice our filename
+    is a number with the **.txt** extension. What would happen if we changed the value
+    of this number to **1**?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.35 – Seeing the call to retrieve the transcript](image/B21173_05_035.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.35 – Seeing the call to retrieve the transcript
+  prefs: []
+  type: TYPE_NORMAL
+- en: Right-click and send the request to **Repeater**. Let’s perform an IDOR attack
+    by manipulating the value assigned to our transcript to the number **1**. Send
+    the request. Notice you can now read the transcript of a different user! Inside
+    the transcript reveals their password!
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.36 – Manipulating the filename](image/B21173_05_036.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.36 – Manipulating the filename
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the password we’ve uncovered, let’s log in using **carlos** as the username
+    and the password revealed inside the transcript. Click on the **My account** link
+    to navigate to the login page. Type in the credentials. Note your password may
+    differ from mine since each instance may have different secrets.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 5.37 – Using the revealed password to log in to Carlos’ account](image/B21173_05_037.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.37 – Using the revealed password to log in to Carlos’ account
+  prefs: []
+  type: TYPE_NORMAL
+- en: After logging in, you should receive the curtain display confirming you’ve solved
+    the lab!
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 5.38 – Lab is solved\uFEFF](image/B21173_05_038.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 5.38 – Lab is solved
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Due to a lack of proper authorization checks on the **transcript** filename
+    parameter, we can view the transcript of a completely different user. In this
+    recipe, the transcript contained password information, which we leveraged to perform
+    an account takeover. Mitigation and prevention against this vulnerability include
+    access controls and checks prior to revealing sensitive files and resources. When
+    these access controls are missing, IDOR vulnerabilities may be present.
+  prefs: []
+  type: TYPE_NORMAL

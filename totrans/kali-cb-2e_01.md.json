@@ -1,0 +1,1 @@
+["```\n apt-get update\n```", "```\n apt-get upgrade\n```", "```\n shutdown -r now\n```", "```\n apt-get dist-upgrade\n```", "```\n apt autoremove \n exit\n```"]

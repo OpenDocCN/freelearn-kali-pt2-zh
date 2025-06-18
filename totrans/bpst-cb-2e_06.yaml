@@ -1,0 +1,841 @@
+- en: '6'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Assessing Session Management Mechanisms
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This chapter covers techniques used to bypass and assess session management
+    schemes. Session management schemes are used by applications to keep track of
+    user activity, usually by means of session tokens. Web assessments of session
+    management also involve determining the strength of the session tokens used and
+    whether those tokens are properly protected. We will learn how to use Burp Suite
+    to perform such tests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing session token strength using Sequencer
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for cookie attributes
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for session fixation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for exposed session variables
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for cross-site request forgery
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To complete the recipes in this chapter, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: An OWASP **Broken Web Applications** (**BWA**) VM
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OWASP Mutillidae link
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Burp Suite Proxy Community or Professional ([https://portswigger.net/burp/](https://portswigger.net/burp/))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A Firefox browser or Burp Suite browser configured to allow Burp Suite to proxy
+    traffic ([https://www.mozilla.org/en-US/firefox/new/](https://www.mozilla.org/en-US/firefox/new/))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing session token strength using Sequencer
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To track user activity from page to page within an application, developers create
+    and assign unique session token values to each user. Most session token mechanisms
+    include session IDs, hidden form fields, or cookies. Cookies are placed within
+    the user’s browser on the client side.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These session tokens should be examined by a penetration tester to ensure their
+    uniqueness, randomness, and cryptographic strength, to prevent information leakage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If a session token value is easily guessable or remains unchanged after login,
+    an attacker could apply (or fixate) a pre-known token value to a user. This is
+    known as a **session fixation attack**. The purpose of the attack is to harvest
+    sensitive data in the user’s account, since the session token is known to the
+    attacker.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We’ll check the session tokens used in OWASP Mutillidae II to ensure they are
+    created in a secure and unpredictable way. An attacker who is able to predict
+    and forge a weak session token can perform session fixation attacks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ensure Burp Suite and the OWASP BWA VM are running and that Burp Suite is configured
+    in the Firefox browser used to view OWASP BWA applications, or use Burp Suite’s
+    built-in browser.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From the **OWASP BWA** landing page, click the link to the OWASP Mutillidae
+    II application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Open the Firefox browser or Burp Suite browser to access the home page of OWASP
+    Mutillidae II (URL: **http://<your_VM_assigned_IP_address>/mutillidae/**). Make
+    sure you are starting a fresh session of the Mutillidae application and are not
+    logged in to it already:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.1 – Ensure you are not logged in to the application](image/B21173_06_001.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.1 – Ensure you are not logged in to the application
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the **Proxy** | **HTTP history** tab and select the request showing
+    your initial browse to the Mutillidae home page.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Look for the **GET** request and the associated response containing the **Set-Cookie:**
+    assignments. Whenever you see this assignment, you know you are getting a freshly
+    created cookie for your session. Specifically, we are interested in the **PHPSESSID**
+    cookie value:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.2 – Cookie value of PHPSESSID](image/B21173_06_002.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.2 – Cookie value of PHPSESSID
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Highlight the value of the of the **PHPSESSID** cookie, right-click, and select
+    **Send** **to Sequencer**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.3 – Send request to Sequencer](image/B21173_06_003.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.3 – Send request to Sequencer
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sequencer is a tool within Burp Suite designed to determine the strength or
+    the quality of the randomness created within a session token.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After sending the value of the **PHPSESSID** parameter over to **Sequencer**,
+    you will see the value loaded in the **Select live capture** **request** table.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Before pressing the **Start live capture** button, scroll down to the **Token
+    location within response** section. In the **Cookie** drop-down list, select **PHPSESSID=<captured
+    session** **token value>**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.4 – Set the cookie value for Sequencer](image/B21173_06_004.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.4 – Set the cookie value for Sequencer
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since we have the correct cookie value selected, we can begin the live capture
+    process. Click the **Start live capture** button, and Burp Suite will send multiple
+    requests, extracting the **PHPSESSID** cookie out of each response. After each
+    capture, **Sequencer** performs a statistical analysis of the level of randomness
+    in each token.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Allow the capture to gather and analyze at least 200 tokens, but feel free
+    to let it run longer if you like:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.5 – Live capture of Sequencer](image/B21173_06_005.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.5 – Live capture of Sequencer
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you have at least 200 samples, click the **Analyze now** button. Whenever
+    you are ready to stop the capturing process, press the **Stop** button and confirm
+    by clicking **Yes**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.6 – Stopping the live capture](image/B21173_06_006.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.6 – Stopping the live capture
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After the analysis is complete, the output of **Sequencer** provides an overall
+    result. In this case, the quality of randomness for the **PHPSESSID** session
+    token is excellent. The amount of effective entropy is estimated to be 112 bits.
+    From a web pentester perspective, these session tokens are very strong, so there
+    is no vulnerability to report here. However, though there is no vulnerability
+    present, it is good practice to perform such checks on session tokens:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 6.7 – Summary ana\uFEFFl\uFEFFysis](image/B21173_06_007.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.7 – Summary analysis
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To better understand the math and hypothesis behind Sequencer, consult PortSwigger’s
+    documentation on the topic here: [https://portswigger.net/burp/documentation/desktop/tools/sequencer/tests](https://portswigger.net/burp/documentation/desktop/tools/sequencer/tests).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for cookie attributes
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Important user-specific information, such as session tokens, is often stored
+    in cookies within the client browser. Due to their importance, cookies need to
+    be protected from malicious attacks. This protection usually comes in the form
+    of two flags—**secure** and **HttpOnly**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **secure** flag informs the browser to only send the cookie to the web server
+    if the protocol is encrypted (for example, HTTPS or TLS). This flag protects the
+    cookie from eavesdropping over unencrypted channels.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **HttpOnly** flag instructs the browser to not allow access or manipulation
+    of the cookie via JavaScript. This flag protects the cookie from cross-site scripting
+    attacks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Check the cookies used in the OWASP Mutillidae II application, to ensure the
+    presence of protective flags. Since the Mutillidae application runs over an unencrypted
+    channel (for example, HTTP), we can only check for the presence of the **HttpOnly**
+    flag. Therefore, the **secure** flag is out of scope for this recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ensure Burp Suite and the OWASP BWA VM are running and that Burp Suite is configured
+    in the Firefox browser used to view OWASP BWA applications, or use Burp Suite’s
+    built-in browser.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From the **OWASP BWA** landing page, click the link to the OWASP Mutillidae
+    II application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Open the Firefox browser or the Burp Suite browser to access the home page
+    of OWASP Mutillidae II (URL: **http://<your_VM_assigned_IP_address>/mutillidae/**).
+    Make sure you are starting a fresh session and you are not logged in to the Mutillidae
+    application:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.8 – Ensure you are not logged in to the application](image/B21173_06_008.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.8 – Ensure you are not logged in to the application
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the **Proxy** | **HTTP history** tab and select the request showing
+    your initial browse to the Mutillidae home page. Look for the **GET** request
+    and its associated response containing **Set-Cookie:** assignments. Whenever you
+    see this assignment, you can ensure you are getting a freshly created cookie for
+    your session. Specifically, we are interested in the **PHPSESSID** cookie value.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Immediately after successful login, cookies should be set. Examine the end
+    of the **Set-Cookie:** assignments lines. Notice the absence of the **HttpOnly**
+    flag for both lines. This means the **PHPSESSID** and **showhints** cookie values
+    are not protected from JavaScript manipulation. This is a security finding that
+    you would include in your report:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 6.9 – Setting the value of the PHPSESSID cookie, absence of secur\uFEFF\
+    i\uFEFFty flags](image/B21173_06_009.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.9 – Setting the value of the PHPSESSID cookie, absence of security
+    flags
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'If the two cookies had **HttpOnly** flags set, the flags would appear at the
+    end of the **Set-Cookie:** assignment lines. When present, the flag would immediately
+    be followed by a semicolon ending the path scope of the cookie, followed by the
+    **HttpOnly** string. The display is similar for the **Secure** flag as well:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Testing for session fixation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Session tokens are assigned to users for tracking purposes. This means that
+    when browsing an application as an unauthenticated user, they are assigned a unique
+    session ID, which is usually stored in a cookie. Application developers should
+    always create a new session token after the user logs in to the website. If this
+    session token does not change, the application could be susceptible to a session
+    fixation attack. It is the responsibility of web penetration testers to determine
+    whether this token changes values from an unauthenticated state to an authenticated
+    state.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Session fixation is present when application developers do not invalidate the
+    unauthenticated session token, allowing the user to use the same one after authentication.
+    This scenario allows an attacker with a stolen session token to masquerade as
+    the user.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the OWASP Mutillidae II application and the **Proxy** | **HTTP history**
+    tab in Burp Suite, as well as **Comparer**, we will examine an unauthenticated
+    **PHPSESSID** session token value. Then, we will log in to the application and
+    compare the unauthenticated value against the authenticated value to determine
+    the presence of the session fixation vulnerability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Navigate to the login screen (click **Login/Register** from the top menu), but
+    do not log in yet.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Switch to Burp Suite’s **Proxy** | **HTTP history** tab, and look for the **GET**
+    request showing when you browsed to the login screen. Make a note of the value
+    assigned to the **PHPSESSID** parameter placed within a cookie:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.10 – Setting of PHPSESSID cookie value unauthenticated](image/B21173_06_010.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.10 – Setting of PHPSESSID cookie value unauthenticated
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click the **PHPSESSID** parameter and send the request to **Comparer**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.11 – Send request to Comparer](image/B21173_06_011.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.11 – Send request to Comparer
+  prefs: []
+  type: TYPE_NORMAL
+- en: Return to the login screen (click **Login/Register** from the top menu), and
+    this time, log in using the username **ed** and the password **pentest**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.12 – Login as user ed](image/B21173_06_012.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.12 – Login as user ed
+  prefs: []
+  type: TYPE_NORMAL
+- en: After logging in, switch to Burp Suite’s **Proxy** | **HTTP history** tab. Look
+    for the **POST** request showing your login (for example, the 302 HTTP status
+    code) as well as the immediate **GET** request following the **POST** request.
+    Note the **PHPSESSID** value assigned after login. Right-click and send the **GET**
+    request to **Comparer**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.13 – GET request immediately after logging in as ed](image/B21173_06_013.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.13 – GET request immediately after logging in as ed
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to Burp Suite’s **Comparer**. The appropriate requests should already
+    be highlighted for you.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.14 – Comparing unauthenticated request against authenticated request](image/B21173_06_014.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.14 – Comparing unauthenticated request against authenticated request
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Words** button in the bottom right-hand corner:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.15 – Click the Words button](image/B21173_06_015.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.15 – Click the Words button
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A popup shows a detailed comparison of the differences between the two requests.
+    Note the value of **PHPSESSID** does not change between the unauthenticated session
+    (on the left) and the authenticated session (on the right). This means the application
+    has a session fixation vulnerability:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 6.16 – Notice value of PHPSESSID did not change a\uFEFFf\uFEFFter\
+    \ login](image/B21173_06_016.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.16 – Notice value of PHPSESSID did not change after login
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this recipe, we examined how the **PHPSESSID** value assigned to an unauthenticated
+    user remained constant even after authentication. This is a security vulnerability
+    allowing for the session fixation attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for exposed session variables
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Session variables such as tokens, cookies, or hidden form fields are used by
+    application developers to send data between the client and the server. Since these
+    variables are exposed on the client side, an attacker can manipulate them in an
+    attempt to gain access to unauthorized data or to capture sensitive information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Burp Suite’s **Proxy** option provides a feature to enhance the visibility of
+    so-called *hidden* form fields. This feature allows web application penetration
+    testers to determine the level of sensitivity of the data held in these variables.
+    Likewise, a pentester can determine whether the manipulation of these values produces
+    a different behavior in the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the OWASP Mutillidae II application and Burp Suite’s **Unhide hidden form
+    fields** feature under **Proxy**, we’ll determine whether manipulation of a hidden
+    form field value results in gaining access to unauthorized data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Switch to Burp Suite’s **Proxy** tab by clicking the **Settings** gear icon
+    in the top right-hand corner of Burp Suite.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.17 – Global Settings button](image/B21173_06_017.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.17 – Global Settings button
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the large pop-out window displays, select **All** | **Proxy**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.18 – Settings menu](image/B21173_06_018.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.18 – Settings menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Within the **Proxy** section, scroll down to the **Response modification rules**
+    section, and check the boxes for **Unhide hidden form fields** and **Prominently
+    highlight** **unhidden fields**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.19 – Proxy | Response modification rules subsection](image/B21173_06_019.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.19 – Proxy | Response modification rules subsection
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Navigate to the **User Info** page by going to **OWASP 2013** | **A1 - Injection
+    (SQL)** | **SQLi - Extract Data** | **User** **Info (SQL)**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 6.20 – User Info page of \uFEFFthe application](image/B21173_06_020.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.20 – User Info page of the application
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note the hidden form fields now prominently displayed on the page:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.21 – Hidden fields predominantly displayed](image/B21173_06_021.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.21 – Hidden fields predominantly displayed
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s try to manipulate the value shown, **user-info.php**, by changing it
+    to **admin.php** and see how the application reacts. Modify **user-info.php**
+    to **admin.php** within the **Hidden field [****page]** textbox:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.22 – Change value of hidden field](image/B21173_06_022.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.22 – Change value of hidden field
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hit the *Enter* key after making the change. You should now see a new page
+    loaded showing **PHP Server** **Configuration** information:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 6.23 – Resulting PHP configuration p\uFEFFa\uFEFFge exposed](image/B21173_06_023.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.23 – Resulting PHP configuration page exposed
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As seen in this recipe, there isn’t anything hidden about hidden form fields.
+    As penetration testers, we should examine and manipulate these values, to determine
+    whether sensitive information is inadvertently exposed or whether we can change
+    the behavior of the application from what is expected, based on our role and authentication
+    status. In the case of this recipe, we were not even logged in to the application.
+    We manipulated the hidden form field labeled **page** to access a page containing
+    fingerprinting information. Access to such information should be protected from
+    unauthenticated users.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for cross-site request forgery
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Cross-Site Request Forgery** (**CSRF**) is an attack that rides on an authenticated
+    user’s session to allow an attacker to force the user to execute unwanted actions
+    on the attacker’s behalf. The initial lure for this attack can be a phishing email
+    or a malicious link executing through a cross-site scripting vulnerability found
+    on the victim’s website. CSRF exploitation may lead to a data breach or even a
+    full compromise of the web application.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the OWASP Mutillidae II application registration form, determine whether
+    a CSRF attack is possible within the same browser (a different tab) while an authenticated
+    user is logged in to the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To begin this recipe, let’s first baseline the current number of records in
+    the account table and perform SQL injection to see this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Navigate to the **User Info** page by going to **OWASP 2013** | **A1 - Injection
+    (SQL)** | **SQLi - Extract Data** | **User** **Info (SQL)**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: At the username prompt, type in a SQL injection payload to dump the entire account
+    table contents. The payload is **' or 1=1-- <space>** (*tick or 1 equals 1 dash
+    dash space*). Then, press the **View Account** **Details** button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Remember to include the space after the two dashes, since this is a MySQL database;
+    otherwise, the payload will not work:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.24 – SQL injection payload](image/B21173_06_024.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.24 – SQL injection payload
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When performed correctly, a message displays that 24 records were found in
+    the database for users. The data shown following the message reveals the usernames,
+    passwords, and signature strings of all 24 accounts. Only two account details
+    are shown here as a sample:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.25 – Baseline of 24 records](image/B21173_06_025.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.25 – Baseline of 24 records
+  prefs: []
+  type: TYPE_NORMAL
+- en: We confirmed that 24 records currently exist in the accounts table of the database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, return to the login screen (click **Login/Register** from the top menu)
+    and select the **Please register** **here** link.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After clicking the **Please register here** link, you are presented with a registration
+    form.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Fill out the form to create a tester account. Type in **tester** as the username,
+    **tester** as the password, and **This is a tester account** as the signature:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.26 – Register a new user](image/B21173_06_026.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.26 – Register a new user
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After clicking the **Create Account** button, you should see a green banner
+    confirming the account was created:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.27 – Confirmation of the new account creation](image/B21173_06_027.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.27 – Confirmation of the new account creation
+  prefs: []
+  type: TYPE_NORMAL
+- en: Return to the **User Info** page by going to **OWASP 2013** | **A1 - Injection
+    (SQL)** | **SQLi - Extract Data** | **User** **Info (SQL)**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Perform the SQL injection attack again and verify that you can now see 25 rows
+    in the account table, instead of the previous count of 24:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.28 – 25 rows visible in the account table](image/B21173_06_028.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.28 – 25 rows visible in the account table
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the **Proxy** | **HTTP history** tab in Burp Suite and view the **POST**
+    request that created the account for the tester.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Studying this **POST** request shows the **POST** action (**register.php**)
+    and the body data required to perform the action, in this case, **username**,
+    **password**, **confirm_password**, and **my_signature**. Also, notice there is
+    no CSRF token used. CSRF tokens are placed within web forms to protect against
+    the very attack we are about to perform. Let’s proceed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Right-click on the **POST** request and click on **Send** **to Repeater**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.29 – Send login to Repeater](image/B21173_06_029.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.29 – Send login to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you’re using Burp Suite Professional, right-click and select **Engagement
+    tools** | **Generate** **CSRF PoC:**
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.30 – Generate CSRF PoC](image/B21173_06_030.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.30 – Generate CSRF PoC
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Upon clicking this feature, a pop-up box generates the same form used on the
+    registration page but without any CSRF token protection. Inside the CSRF HTML
+    text area, change the **"tester"** username to **"attacker"**. Change the password
+    to **"attacker"**. Change the **"tester"** confirm password value to **"attacker"**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.31 – Modify and copy HTML](image/B21173_06_031.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.31 – Modify and copy HTML
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Copy HTML** button and save it as a file called **csrf.html** on
+    your local system:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.32 – Name the new file csrf.html](image/B21173_06_032.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.32 – Name the new file csrf.html
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you are using Burp Suite Community, you can easily recreate the **CSRF PoC**
+    form by viewing the source code of the registration page:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.33 – For Burp Suite Community edition, how to create CSRF PoC](image/B21173_06_033.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.33 – For Burp Suite Community edition, how to create CSRF PoC
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'While viewing the page source, scroll down to the **<form>** tag section. For
+    brevity, the form is recreated next. Insert **attacker** as a value for the username,
+    password, and signature. Copy the following HTML code and save it in a file entitled
+    **csrf.html**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: Now, return to the login screen (click **Login/Register** from the top menu)
+    and log in to the application, using the username **ed** and the password **pentest**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Open the location on your machine where you saved the **csrf.html** file. Drag
+    the file into the browser where **ed** is authenticated. After you drag the file
+    to this browser, **csrf.html** will appear as a separate tab in the same browser:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.34 – Name the new file csrf.html](image/B21173_06_034.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.34 – Name the new file csrf.html
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For demonstration purposes, there is a **Submit request** button. However,
+    in the wild, a JavaScript function would automatically execute the action of creating
+    an account for the attacker. Click the **Submit** **request** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.35 – Submit request in new tab](image/B21173_06_035.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.35 – Submit request in new tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You should receive a confirmation that the attacker account has been created:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.36 – Confirmation of CSRF attack success](image/B21173_06_036.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.36 – Confirmation of CSRF attack success
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the **Proxy** | **HTTP history** tab in Burp Suite and find the maliciously
+    executed **POST** request used to create the account for the attacker, while riding
+    on the authenticated session of **ed**. Note the **Origin** header value of **"null"**.
+    This confirms we are using our CSRF PoC since we drag and drop it from our local
+    machine (e.g., *origin of nothing*) into a new tab of an authenticated user’s
+    session.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.37 – CSRF attack as seen in Burp](image/B21173_06_037.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.37 – CSRF attack as seen in Burp
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Return to the **User Info** page by going to **OWASP 2013** | **A1 - Injection
+    (SQL)** | **SQLi - Extract Data** | **User Info (SQL)** and perform the SQL injection
+    attack again. You will now see 26 rows in the account table instead of the previous
+    count of 25:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 6.38 – Record count incremented by 1 after CSR\uFEFFF\uFEFF attack](image/B21173_06_038.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.38 – Record count incremented by 1 after CSRF attack
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: CSRF attacks require an authenticated user session to surreptitiously perform
+    actions within the application on behalf of the attacker. In this case, an attacker
+    rode on **ed**’s session to re-run the registration form to create an account
+    for the attacker. If **ed** had been an admin, this could have allowed the attacker
+    to gain access to an elevated role as well.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1984 @@
+- en: '1'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: An Introduction to Cybersecurity
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: If you’re reading this book, there’s a great chance you’re already familiar
+    with cybersecurity. You might even already have some experience with Linux or
+    even the Kali variant of the Linux **operating system** (**OS**). It’s a popular
+    tool used by offensive security people who are typically referred to as **red
+    teamers**. **Offensive security** is when users simulate attacks to discover potential
+    vulnerabilities within an organization’s technology. However, where there’s offense,
+    there most assuredly is defense. In the world of computers and technology, people
+    working on defensive security teams are typically referred to as **blue teamers**.
+    If you’re familiar with the color wheel, then you know that when red is combined
+    with blue, you get purple. Take the utilities of both offense and defense, bundle
+    them as a software application suite added to a popular Linux OS, and there you
+    have it. Welcome to Kali Purple!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we’re going to cover the following main topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How we got here
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Offensive security
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Defensive security
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You will get a very brief history of cybersecurity as it relates to the need
+    for such services and how those services relate to Kali Purple. Having this understanding
+    will lay the groundwork for the tool structures and purposes of the utilities
+    commonly found in the Purple distribution. Along the way, you will begin to recognize
+    the revolutionary power of this suite of tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Those already familiar with the Kali Linux OS will have an idea of some offensive
+    cybersecurity utilities that it contains. For those who don’t, that’s okay! While
+    those with prior Linux experience will more easily recognize some of the concepts
+    that will be talked about, those of us working professionally in the field can
+    attest to several folks who’ve succeeded in the field of cybersecurity with only
+    Windows experience. If that’s you, take comfort in knowing that we will provide
+    a high-level overview in the *Offensive security* section, which should provide
+    enough of a foundation for you to easily navigate the rest of this book. How to
+    integrate some of these offensive tools will be discussed much later in this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Throughout the bulk of the introduction to Kali Purple, the emphasis will be
+    on the blue team tools that have been added to this specific distribution of Linux.
+    As we will with the red team utilities, we will provide a high-level overview
+    up front in this first chapter. You will then see the uniqueness of Kali Purple
+    and be able to visualize how this tool can be used to set up a fully functioning
+    defensive **security operations** **center** (**SOC**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: By the end of this chapter, you’ll have a well-rounded perspective of how Kali
+    Purple can be used to train analysts within your organization. You will also start
+    to see how this tool can be used for small and at-home businesses or even personal
+    setups to provide a layer of security that otherwise would only be available as
+    a subscription from a professional **managed security services** **provider**
+    (**MSSP**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: How we got here
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The need for a technologically advanced set of computer security tools in the
+    world today is not something that just popped up overnight. There weren’t a couple
+    of college students who decided to hone their coding skills out of boredom between
+    classes. No – the idea of security for computing technology is a concept that
+    evolved in parallel with the technologies themselves.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you wanted to, you could probably find some historical parchment with ancient
+    hieroglyphics or other language painted on it telling stories of the abacus. It
+    might detail how someone, somewhere, managed to trick the ancient Mesopotamians
+    by some art of visual misdirection toward the accountants and then move a bead
+    or two on the abacus. We’ll let the historians determine and tell those stories.
+    We are going to focus on the security of modern computing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: During the 1960s and 1970s, computer security was mostly security in the traditional
+    sense of physical protection – that is, security mostly revolved around restricting
+    physical access to mainframe computers. It included access controls such as keypads
+    and locked rooms. Oftentimes, these systems were standalone. They weren’t networked
+    with other systems. When the networking of computer systems began to unfold, it
+    was usually part of a larger project to create the widespread interconnectivity
+    we see in the world today by an American government agency known as the **Defense
+    Advanced Research Projects Agency** (**DARPA**) Sometimes, the D is dropped, and
+    you’ll see it informally referred to as **ARPA**. This organization is part of
+    the **Department of Defense** (**DOD**) and has earned a reputation for working
+    on super-secret and interesting projects often dramatized in pop culture. The
+    organization has led research projects leading to cutting-edge advancements in
+    technology. Linking computer systems together is included in those achievements,
+    with what became known as the **ARPANET**. The primary purpose of this style of
+    security was to prevent unauthorized individuals from accessing and stealing sensitive
+    information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This began to evolve in the 1980s with the advent and marketing of personal
+    computers. Though born in the 1970s, Steve Jobs, Steve Wozniak, and Ronald Wayne’s
+    Apple Computer rapidly rose to fame in the early 1980s with the commercial release
+    of their legendary MacIntosh personal computer. It was the first to feature a
+    couple of pieces of technology that we now know as a **graphical user interface**
+    (**GUI**) and a mouse. Also gaining popularity at the time was computer networking
+    and the ability for machines to communicate with each other. During this era,
+    the focus of computer security shifted from physical access restriction toward
+    securing data transmission, establishing secure communication protocols, and data
+    encryption. The first iteration of the **Data Encryption Standard** (**DES**)
+    was introduced within this period to protect data from interception.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Apple Computer – now Apple Inc. – was one of the first companies to succeed
+    at the widespread distribution of a personal computer product. However, it was
+    Microsoft Windows’ rise to stardom in the 1990s that dominated the market and
+    made personal computing a household activity. Windows was born in the 1980s, but
+    it was the aptly named Windows 95, released in 1995, that brought forth many of
+    the creature comforts of personal computing we still enjoy today. The exponentially
+    increasing popularity of personal computing during this era gave birth to exponential
+    new challenges and brought forth the roots of cybercrime as we know it today.
+    The term **hacker**, once a positive term used to describe the process of making
+    innovative changes to a product, became a negative term associated with miscreants
+    wishing to use technology for their mischief. While there were isolated incidents
+    of mischief and malware in the 1960s and 1970s, not to mention the infamous **Morris
+    Worm** of 1988, it was during the 1990s that hackers began to seek out and exploit
+    vulnerabilities within software applications and network architecture on a grander
+    and more mainstream scale. Hackers with coding skills began to use their abilities
+    to create software that caused harm, acted as a nuisance, or did some other dirty
+    deed. While the first antivirus software was created in 1986 by John McAfee, this
+    resulted in the advancement of those earliest versions of antivirus software to
+    become widespread commercially available products. Firewalls were developed to
+    prevent unauthorized access to endpoints and the earliest versions of the **Secure
+    Sockets Layer** (**SSL**) and **Transport Layer Security** (**TLS**) were released.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As the world moved into the 21st century, rapidly advancing computer and network
+    technology gave way to e-commerce. This beginning of online shopping and other
+    business transactions created a need for secure payment systems. Afterall, if
+    the bad actors could cause mischief in other areas, anything that might give them
+    access to business or individual’s finances would be ripe for taking! As a result,
+    the major credit card companies at the time worked to create what is known as
+    the **Payment Card Industry-Data Security Standard** (**PCI-DSS**). This standard
+    was meant to create a framework that assisted credit and debit card stakeholders
+    in protecting against fraud. The SSL and TLS from the 1990s became more robust
+    with greater acceptance and more widespread use in the community. Those security
+    principles were designed to encrypt data during communication while covering the
+    confidentiality and integrity aspects of the Information Security Triad, sometimes
+    called the **confidentiality, integrity, and availability** (**CIA**) triad. If
+    you’re not familiar with this foundational framework of cybersecurity, we will
+    talk about it later in this chapter in the *Defensive* *security* section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: By the mid-2000s, cyberattacks and data breaches became much more frequent.
+    They were also much more sophisticated. This is where the fun begins. It is the
+    actions of cybercriminals during this era that directly led to the advancement
+    of some of the technologies you will experience in Kali Purple and learn about
+    in this book. There became a greater need to respond to security incidents in
+    real time. Though there were already technologies in place to address this, they
+    were rudimentary at best. Gaining prominence in the information security community
+    were concepts such as the **intrusion detection system** (**IDS**), **intrusion
+    prevention system** (**IPS**), and **security information and event management**
+    (**SIEM**) system, among other things. Each of these concepts is a part of Kali
+    Purple and we will go over them in detail throughout this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The 2010s improved mobile device and cloud computing technologies by degrees
+    of magnitude. Guess what else grew by degrees of magnitude? You guessed it: new
+    security challenges. Hopefully, you’re beginning to see the trend by now if you
+    haven’t already. There is a parallel between new and emerging technologies and
+    new and emerging threats in the cyber landscape. The security of mobile devices
+    was straightforward, centering around protecting user data, preventing unauthorized
+    access, and securing mobile applications; pretty much the same as it is today.
+    The security of cloud computing was more focused on access controls, data storage,
+    and protecting **virtual machines** (**VMs**). As you navigate the world of Kali
+    Purple, you will see how the tools you’ll learn about are valuable assets for
+    those areas as well.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s look at the transition from physical protection of mainframes to handheld
+    devices:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.1 – The evolution of modern cybersecurity](image/B21223_01_1.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.1 – The evolution of modern cybersecurity
+  prefs: []
+  type: TYPE_NORMAL
+- en: Up until this point, most of the security in the world of technology was an
+    area of emphasis that generally fell under the greater **information technology**
+    (**IT**) umbrella. Standalone security specialists existed but were much more
+    of a rarity than we see today. It was a series of highly publicized cyberattacks
+    post-2010 that caused the field of cybersecurity to be born as a mainstream career
+    unto itself. Since the entirety of Kali Purple is a suite of tools based upon
+    protecting against cyberattacks, we will briefly look at some of the more prominent
+    attacks so that – as we learn these tools throughout this book – we can refer
+    to this section and mentally paste together the value, need, and –above all –
+    purpose of the utilities we are about to experience.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Stuxnet
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Before delving into the post-2010 blitz of cyberattacks, we will briefly discuss
+    one of the most famous attacks of all time and one that is considered in some
+    circles to be the catalyst for cybersecurity to evolve into a self-contained career
+    field. This is an attack that involves an exterior device: a USB drive. While
+    it might seem like this attack could not have been prevented by the tools we’ll
+    be talking about in this book, remain vigilant and open-minded. Not only does
+    Kali Purple have the tools to identify and help stop these types of attacks, but
+    the Kali side of the family also has the tools to create them! The attack we’re
+    talking about here is the famous Stuxnet worm that was discovered in 2010.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Stuxnet** is also one of the first examples of governments utilizing cyber
+    technology for offensive purposes. Some consider it *The Original Sin of Cyberwarfare*.
+    While there is no definitive answer as to who was responsible for the attack,
+    the consensus throughout the cybersecurity community is that it was a likely joint
+    effort between the United States and Israel against Iran’s nuclear program.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The complex attack occurred in six stages:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reconnaissance and intelligence gathering to discover the code and systems to
+    be compromised.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Zero-day and custom exploits were used/created to compromise and manipulate
+    the systems.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Code was created to cover all tracks and avoid detection.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: USB drives were weaponized with a malicious payload and covert delivery/covering
+    of tracks.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The payload was delivered via clandestine operators who dropped the weaponized
+    USBs in a parking lot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An unsuspecting employee finds one of the USBs and installs it on the target
+    systems.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Siemens, a multinational conglomerate company of innovation and technology,
+    produces what is known as a **programmable logic controller** (**PLC**) that is
+    used to manage **industrial control systems** (**ICSs**). These are systems that
+    are usually considered to be critical infrastructure. They can include energy,
+    sewer, and water systems for cities, towns, and major metropolis populations.
+    In this case, the target was Iran’s nuclear program, and the catalyst was to intentionally
+    corrupt the Siemens PLC that was used to manage components of the program.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s important to note that this attack was highly sophisticated and likely
+    involved a large degree of intelligence gathering by clandestine agents. It involved
+    developing zero-day exploits for both Windows as well as the software used in
+    Siemens PLCs. Then, these zero-day malicious exploits were placed onto several
+    auto-run USB drives. The drives were *accidentally* dropped into the parking lot
+    of Iran’s nuclear enrichment facilities – and by *accidentally*, we mean *intentionally*
+    – with the hope that an unsuspecting employee might pick one up and insert it
+    into their work computer to see what was on it – a classic case of *curiosity
+    killed the cat*. It worked. The Stuxnet action involved exploits that were covertly
+    modifying the highly specialized code within the Siemens PLCs that managed the
+    centrifuges within Iran’s nuclear facilities. This code caused the centrifuges
+    to run at improper levels, resulting in physical sabotage of the centrifuges and
+    significant damage to Iran’s nuclear enrichment capabilities while also causing
+    significant delays in Iran’s development of nuclear technology.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part of Stuxnet’s success is the extreme lengths its architects went to so that
+    the attack could remain stealthy and evade detection. So, as Iran’s nuclear capabilities
+    were being sabotaged, so was the fact that sabotage was occurring at all initially
+    and then eventually how the sabotage occurred once it was discovered. Since Stuxnet
+    was presented in the form of a worm on a USB drive, it meant the malicious code
+    contained therein could self-replicate and independently spread itself across
+    network devices. Some might consider this a bit of a backfire if the United States
+    and/or Israel were responsible for the initial release of Stuxnet. The reason
+    is that strongly allied nations such as India and Indonesia ended up with this
+    worm in their environments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Thus began the modern era of government weaponization of computing technology.
+    Stuxnet caused a lot of reflection by security staff worldwide. However, it wasn’t
+    quite personal enough yet for the everyday average Joe to take notice. To get
+    there, we needed individual citizens to be affected. That happened just 3 years
+    later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Target cyberattack of 2013
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Perhaps one of the most individually impactful cyberattacks of the 21st century
+    is what is known as the **Target Cyberattack of 2013**. Target is a large and
+    well-known retail chain based in Minneapolis, Minnesota, that operates primarily
+    in the United States, though it does have some international endeavors. The store
+    is famous for its mascot, Bullseye, an all-white bull terrier with a literal bullseye
+    painted around one of its eyes. It is also famous for something else: top-notch
+    security. The retail store, wanting to put an end to shoplifting, spent years
+    and years developing state-of-the-art security systems so potent that they would
+    sometimes lend their forensic experts and teams to local law enforcement to assist
+    in solving complicated criminal cases as a measure of social responsibility. To
+    crack Target’s security would be like a boxer defeating Muhammad Ali. So, when
+    it happened, it was a huge deal.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In 2013, Target’s cyber defenses were successfully compromised in what had become
+    one of the largest data breeches in history. Cybercriminals were able to access
+    tens of millions of customer records, including credit and debit card numbers!
+    It is now well-known that the success of this breech was ultimately attributed
+    to lax security with third-party vendors. However, the full picture is often overlooked.
+    There were a great number of errors in this scenario and had any one of them been
+    different, this attack probably wouldn’t have succeeded. Some of the elements
+    of this cyberattack are directly addressed by the tools and training offered by
+    Kali Purple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’re not going to address every issue associated with this cyberattack or every
+    fix that might have prevented it, such as a lack of proper access controls and
+    network segmentation allowing attackers to easily make lateral movements. While
+    those items may be addressable using a Linux distribution that is used for network
+    and/or user administration and analyzing them would be fun, they are outside the
+    scope of Kali Purple. There are, however, several issues related to the Target
+    attack that directly correlate with Purple’s toolset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the most important is basic threat monitoring – what an intrusion detection
+    or prevention system does. It is rumored that the attackers were able to successfully
+    install trojans within the retail giant’s **point of sale** (**POS**) systems.
+    These are the systems that will collect and process debit or credit card information
+    after the customer’s items for purchase have been scanned, taxed, and totaled
+    in price. That would periodically grab the sensitive financial data scanned, even
+    on systems with no internet access, and transfer it to other devices within the
+    company’s network. This type of activity would surely be identified by today’s
+    IDS and SIEM technologies. Of course, that’s only valuable if the analyst believes
+    what they see and acts on it. This brings us to our next scenario.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before unpacking this story further, let’s get one very important fact straight.
+    Target’s security was – and still very much is – industry leading. It’s the best
+    any organization could have. The company is very much worthy of respect in the
+    cybersecurity community. One of the unintended consequences of being among the
+    best there is in any area of life means you have a literal target – no pun intended
+    – painted across your back. It’s why Microsoft’s Windows is statistically more
+    likely to fall victim to a virus or other malware and the Mac or Linux systems
+    are sometimes erroneously referred to as being *immune* to such things. Anybody
+    who is properly informed knows that Apple and Linux are indeed not immune to malicious
+    activity, including viruses. Those systems simply don’t have the same public hype
+    and market share that Windows does. While that is slowly changing over time, as
+    you learn about the fantastic cybersecurity defenses offered by Kali Purple, it’s
+    critical to understand that nothing is ever truly immune. Anything in life that
+    can be engineered, tangible or virtual, can also be reverse-engineered… anything!
+    Do keep that critical fact in mind throughout your security career.
+  prefs: []
+  type: TYPE_NORMAL
+- en: That said, let’s continue to break down the theories of the Target attack –
+    concerning the company’s superior security – and learn how Kali Purple can act
+    as a useful suite of tools to protect against such attacks in the future. One
+    unconfirmed rumor is that Target was in the process of installing a new IDS/IPS
+    system alongside their existing one and until the new system was fully operational,
+    the old system was allowed to remain active. If true, that’s fantastic! Another
+    version of this story is that the highly reputable security firm FireEye had developed
+    a malware detection tool, and it was that tool that was in place instead of a
+    new IDS/IPS system. It’s unknown what happened. However, even when proposed answers
+    are placed into a hypothetical situation, there are lessons to be learned here
+    regarding Kali Purple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the first proposed scenario of a new IDS/IPS, it’s been said that the new
+    system did indeed detect malicious activity (or FireEye’s product) and did indeed
+    report on it – supposedly to an annoying level! However, the old system was still
+    operational, and the old system wasn’t reporting on it. That caused the technicians
+    to incorrectly assume the new system was malfunctioning, so they manually closed
+    the alerting process, choosing instead to believe the old technology. Now, even
+    if this isn’t true, anybody who’s ever worked in a SOC before knows that **alert
+    fatigue** is a real thing and it’s very easy for a technician or analyst, especially
+    at the end of their shift, to fall victim to taking unnecessary shortcuts. Anytime
+    you or an organization you are working for is conducting an upgrade or improvement
+    to the security defenses, keep in mind that there’s a reason you’re upgrading
+    your technology. If the new technology sounds an alarm, believe it folks! As we
+    work through Kali Purple’s defensive tools, take note of whether something obnoxious
+    alerts you. If it does, believe it! Even if it ends up being incorrect the first
+    hundred times, it only takes the one time, right?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another takeaway from the Target hack is the level of security training offered
+    to the people working with the systems. It would be a fair assumption to think
+    that proper training might have encouraged those dismissing the alarms to realize
+    they could’ve been legitimate, and the older technology was simply not catching
+    what the new stuff was. One of Kali Purple’s most spectacular benefits is its
+    ability to create live scenarios for testing and proof-of-concept purposes that
+    can then be used to train technicians and analysts firsthand! Training in any
+    technology-based field is critical. When you can add the element of practical
+    application and live examples, that helps the learners visualize and better understand
+    the concepts that need to be conveyed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A couple of additional features of the Target attack to keep in mind are insufficient
+    data encryption and slow incident response. In the case of encryption, we will
+    talk more about that later when we deal with some of the tools that are available
+    alongside Kali Purple, such as **CyberChef** – a very robust encryption/decryption
+    tool that is often considered to be a *requirement* to survive in the world of
+    cybersecurity. In the case of incident response, there are a few tools we can
+    consider, such as **Synapse** and **TheHive**. We will devote [*Chapter 8*](B21223_08.xhtml#_idTextAnchor134)
+    to security incident response while looking at the utilities offered by Kali Purple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The 21st century continued to bring an influx of widespread high-profile cyberattacks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.2 – Snapshot of major cyberattacks since 2010](image/B21223_01_2.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.2 – Snapshot of major cyberattacks since 2010
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve covered a very brief history and the evolution of events that
+    created the state of cybersecurity as we know it today, let’s examine some of
+    the tools that have been developed and honed because of that evolution. In the
+    next section, you’re going to get a glimpse of some of the most powerful offensive
+    security (red team) tools in use today. They are part of the Kali Linux OS, which
+    means they’re part of Kali Purple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Offensive security
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The offensive security aspect hails from the red team side of the Purple family.
+    Because it is the defensive toolset that sets Kali Purple apart from the rest,
+    we will only highlight the offensive portion as it relates to use cases and testing
+    the defensive setup of Purple. You will want to learn or at least have a basic
+    understanding of offensive security to get the most robust rewards from Kali Purple.
+    You will gain an understanding of enough offensive security and red team tools
+    and techniques that you’ll be able to effectively test your defensive setup. That
+    will also allow you to develop live presentations and proof-of-concept activities
+    that you can use to train others or even play with yourself. This, by far, is
+    not an exhaustive instruction or reference point for anyone who is exclusively
+    or primarily interested in offensive security. It has only been included to make
+    your Kali Purple journey proper and complete.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s expected that most who are reading this book already have a certain level
+    of understanding or at least a foundation for the Kali Linux OS. However, not
+    everyone interested in or working in cybersecurity has taken the time to work
+    with and appreciate the full value of Linux. The Kali Purple hype has created
+    a renewed interest in working with Linux for some who otherwise have limited exposure
+    or experience with the OS. For that reason, we’re going to provide you with enough
+    information throughout this book so that you can successfully understand and use
+    Kali Purple, even if you have no Linux experience. However, let’s be honest –
+    we techies do tend to be rather addicted to our craft, don’t we? You may be tempted
+    to stray from Kali Purple if you have limited Linux experience. While that’s truly
+    not necessary to appreciate Purple, Vijay Kumar Velu has produced a masterpiece
+    that will satisfy your curiosities. You’ll find that golden nugget at the end
+    of this chapter in the *Further reading* section; it will help pacify your thirst
+    for those Kali Linux OS skills.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we look at some of the red team tools and methods found within the Kali Linux
+    distribution, it is mission-critical that we understand that these tools and methods
+    are very dangerous. They can do real and significant damage – criminal levels
+    of damage. Therefore, you should never use any of these tools and/or methods without
+    first making absolutely, indisputably, certain that you have permission to do
+    so. Of course, if you’re attacking your own system and later argue that you didn’t
+    give yourself permission, you likely have larger issues to deal with. Joking aside,
+    there are a plethora of publicly available testing sites and applications that
+    were specifically engineered for hands-on practice. However, those resources are
+    not applicable here because we are using these tools to test our very own defenses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Some tools that are available in the Kali Linux distribution that are used
+    by offensive operators, both hackers and security teams alike, include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Metasploit Framework
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Burp Suite
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Wireshark
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Aircrack -ng
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: John the Ripper
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hydra
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SQLmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Maltego
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Social Engineering** **Toolkit** (**SET**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s look at these in detail.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Short for **Network Mapper**, **Nmap** is popularly used by operators to discover
+    the setup and layout of any network, allowing users to draw a physical map if
+    they so choose. By mapping a network, the operator can then get a visual with
+    which to analyze the network so that they can examine potential vulnerabilities
+    or points of exploitation. Nmap accomplishes this goal by sending information
+    packets to targets and making assumptions based on whether there is a response
+    and if so, what that response looks like. Here’s an example Nmap scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.3 – Example Nmap scan](image/B21223_01_3.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.3 – Example Nmap scan
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap can be used to scan an entire network or a range of IP addresses. When
+    used in this manner, it is usually to identify any actively operating hosts within
+    the network. After sending probing packets, the Nmap operator will be able to
+    deduce that a host is online if there is a response of any kind. That will enable
+    any attacker to create a topology of the network and list potential targets available
+    for further probing and/or exploitation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As individual hosts are selected for further penetration, Nmap can then be used
+    to run a port scan, which is used to determine if any ports are open for connections
+    and communication. Not only does this technique help in identifying potential
+    points of entry for an attacker, but it can also give insight into the functions
+    of the device as specific port numbers might reveal specific types of activities.
+    Ports **80** and **443** being open, for example, could tell the user that website
+    and secure website activity is occurring with such a device.
+  prefs: []
+  type: TYPE_NORMAL
+- en: By analyzing responses to probes, Nmap can also assist the offensive operator
+    in determining which OS is active on a host. That would significantly reduce the
+    ambiguity of attack vectors and help them narrow the attack tools and methods
+    most likely to be successful against that device. This process is known as **OS
+    fingerprinting**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As it relates to Kali Purple, Nmap activity can be detected and analyzed by
+    the **Elasticsearch, Logstash, and Kibana** (**ELK**) stack, which we will begin
+    to discuss in [*Chapter 2*](B21223_02.xhtml#_idTextAnchor039). It can also be
+    detected by traffic and log analysis tools such as **Arkime** and **Malcolm**
+    as well as intrusion detection utilities such as **Suricata** and **Zeek**, provided
+    those tools are configured to do so. All of those tools are part of the Kali Purple
+    distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Metasploit Framework
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The **Metasploit Framework** is one of the most comprehensive open source exploit
+    development platforms available. It is likely to be available by default with
+    any Linux OS that focuses on penetration testing and that includes Kali Linux.
+    Here’s the Metasploit console:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.4 – Metasploit’s default console](image/B21223_01_4.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.4 – Metasploit’s default console
+  prefs: []
+  type: TYPE_NORMAL
+- en: Originally created by a fellow named **Harley David** (**HD**) **Moore**, Metasploit
+    is now owned and maintained by a company called **Rapid7**. The framework includes
+    an exhaustive supply of tools, exploits, and payloads. In addition to the community
+    framework, which is freely available, there is a paid pro edition, so you can
+    rest at ease knowing you have professional support with advanced automation and
+    reporting abilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At a high level, exploits are simply pieces of code that are designed and written
+    to take advantage of vulnerabilities in targeted information system endpoints.
+    Metasploit includes exploits that are designed to gain unauthorized access, escalate
+    privileges, and establish backdoors, as well as deliver and remotely execute malicious
+    payloads.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Even better, the Metasploit Framework allows customized payloads to be created
+    and provides access to a library of pre-built payloads. A **payload** is any application
+    or piece of code that is delivered to a compromised system. The framework also
+    includes what are known as **post-exploitation modules**, which are more like
+    level two exploits or exploits that can only be used after the successful execution
+    of a previous exploit. This can help operators continue to remorselessly explore
+    deeper into a system and network to gain access to sensitive data for exfiltration
+    or other malicious purposes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Metasploit can also be used to launch social-engineering-based attacks and generate
+    reports of actions taken. Just like Nmap, Metasploit activity can be detected
+    by the tools included with the Kali Purple distribution, especially Suricata and
+    Zeek. The ELK stack would require some customizations, but you’ll understand why
+    that’s a good thing before all is said and done.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Burp Suite
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Developed by a company called PortSwigger, **Burp Suite** is the leading cybersecurity
+    utility used for web application security (and attacks). It is highly unlikely
+    you’ll find a professional penetration tester doing web application tests who
+    isn’t using Burp Suite. There are several unique components – Burp Suite calls
+    them **modules** – to a Burp Suite installation, each designed to work with the
+    other components if the user wishes. Most of these modules can be found for free
+    within the Community edition of this product. However, some features of Burp Suite
+    are only available in the paid Pro version. Don’t discount this product, however!
+    The free Community edition provides a substantial toolset that’s very useful!
+    Here’s the Burp Suite lobby:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.5 – Burp Suite’s default lobby](image/B21223_01_5.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.5 – Burp Suite’s default lobby
+  prefs: []
+  type: TYPE_NORMAL
+- en: Burp Suite has a proxy module that serves as a sort of intermediary between
+    a web browser and the target of operations. This proxy allows for **man-in-the-middle**
+    style of attacks by providing an avenue for the operators to intercept HTTP/S
+    traffic and modify its requests and responses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There is a scanner module in the paid Pro version that provides automation for
+    identifying security vulnerabilities in the targeted web application. Like Nmap
+    for web applications, this scanner operates by sending information to the target.
+    The difference is whereas Nmap sends communication packets, Burp Suite sends attack
+    payloads to target web applications and then analyzes the responses to those payloads
+    to help identify potential vulnerabilities. Some of the vulnerabilities the scanner
+    is looking for include opportunities for SQL injection, **cross-site scripting**
+    (**XSS**), and **server-side request forgery** (**SSRF**). It then highlights
+    these prospective points of attack for further analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ever wanted to run a web crawler or spider? Now you can! One of Burp Suite’s
+    modules is exactly that, a spider. As you might have guessed, the spider module
+    will crawl the target application, where it will then attempt to map the functionality
+    of the application for further investigation. The purpose of the spider is to
+    help identify vulnerable areas that might not be so easily discovered from browsing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Burp Suite allows for attacks called **brute-force attacks**, which is where
+    the user tries all possible username and password combinations. As you might imagine,
+    doing this manually could take forever (literally!). Burp Suite automates this
+    process and works at unthinkable speeds to attempt these attacks on your behalf.
+    This action is done in the Intruder module. Within this module, the user can determine
+    the parameters they’d like the brute-force attack to use.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can also import something called **rainbow lists** into this module. When
+    a password is created in a computer system, the computer will try to encode that
+    password using a hypothetical one-way mathematical formula. This means the computation
+    – in theory – cannot be reversed. In truth, anything that can be engineered can
+    also be reverse-engineered. However, these mathematical processes’ purpose is
+    to make such an endeavor as close to impractical as possible. The result of these
+    one-way mathematical processes is called a **hash**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Over time, hackers and offensive security personnel have gathered the hashes
+    of known and commonly used passwords and stored them in files along with the passwords
+    they represent. These files are called **rainbow tables** or rainbow lists. The
+    intruder module will allow you to import such a list so that it can attempt to
+    apply the encoded hashes to break in.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The intruder module can also be used for **fuzz testing**, which is popular
+    with software test engineers and parameter manipulation. Also known as **fuzzing**,
+    it involves injecting random or unexpected data into an application or system.
+    It can be a form of *blind shooting* or taking a *stab in the dark*. It can also
+    be organized with precomputed groups of data involving random characters or excessively
+    large character inputs. You can use it to test how a web application might handle
+    various inputs. This module makes that easy by allowing the user to define custom
+    lists, payloads, and other attack scenarios. The primary purpose of the intruder
+    module is to help the operator gain access by uncovering weak passwords or injection
+    flaws or even identifying areas where **too much information** (**TMI**) was shared.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sometimes, attackers accomplish their objective by utilizing a method known
+    as a **replay attack**. Burp Suite offers a module known as the Repeater that
+    exists to make these sorts of attacks possible. Like all Burp Suite modules, this
+    one allows for customizations and offers great flexibility. It also allows the
+    operator to take existing web application responses and alter them before replaying
+    them to help determine where any application’s thresholds might be.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Sequencer is a module that Burp Suite has for analyzing the randomness and
+    quality of session tokens and what would otherwise be unguessable data. It evaluates
+    the strength of cryptographic algorithms and the level of randomness used within
+    the target application. This module does not necessarily offer an activity that
+    would be directly detected by any of Kali Purple’s included utilities. However,
+    the information an operator gleans from the sequencer can lead to attacks based
+    on the weaknesses it discovers and those attacks most assuredly can be detected
+    by the ELK stack, Suricata, Zeek, and other tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is modern technology without having the ability to make it extensible?
+    The final module in Burp Suite is the Extender. It’s an API that allows users
+    to develop and integrate custom plugins into the Burp Suite application. It allows
+    Burp Suite users to custom-tailor the utility to their organization’s needs so
+    that it includes automation. While it’s not directly going to be interacting with
+    any Kali Purple distributions, there’s a large repository that the Burp Suite
+    community has created with user-submitted plugins and any of those items will
+    have the potential to generate activity recognized by the Purple set of tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The vastness of Burp Suite cannot be overstated. Like all the tools mentioned
+    in this section, it can be used to cause harm or for good by testing for vulnerabilities
+    to rebuff. Burp Suite is based around web application hacking, and you can safely
+    fly to Vegas and *bet the ranch* any such activity will be looked at with Kali
+    Purple’s defensive toolset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wireshark
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The Kali Purple distribution adds some tools for traffic and log analysis,
+    and we will go over those in this book. However, we’d be remiss to ignore the
+    grand-daddy of all protocol analyzers – **Wireshark**. It was part of the Kali
+    Linux package even before the Purple variety was released. Wireshark is an open
+    source application that’s widely used and often referred to as the gold standard
+    for protocol analyzers. You’ll find it used for network troubleshooting, packet
+    analysis, and security vulnerability testing. It operates by *capturing* network
+    traffic packets for operators to review and analyze. Here’s an example of a Wireshark
+    packet capture:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.6 – Wireshark example packet capture](image/B21223_01_6.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.6 – Wireshark example packet capture
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wireshark works by grabbing network packets as they flow across a network interface.
+    It is typically used to capture and monitor traffic from protocols aligning with
+    Ethernet, TCP/IP, HTTP, DNS, HTTP/S, and others. By grabbing these packets, analysts
+    can look at the headers, payload, and other relevant information data that is
+    being transmitted to help determine if unwanted activity is occurring.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wireshark identifies and examines the protocols being used and then provides
+    a very detailed analysis for human eyes to help determine the intended behavior
+    and structure of the various protocols. By examining the messages and interactions
+    this tool identifies, analysts can help uncover anomalous behavior or even simple
+    security misconfigurations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wireshark can sometimes be used by bad actors for network reconnaissance in
+    a similar fashion to Nmap. In this case, the operator can map the target network
+    by evaluating the information contained in the packets instead of direct responses
+    – or lack thereof – from the devices themselves. Through packet evaluation, the
+    analyst should be able to identify the hosts on the network, detect open ports,
+    and observe communications for any odd or unusual patterns. This will help to
+    visualize the actual infrastructure of the target network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This style of analysis helps operators to investigate sessions for anomalous
+    behavior. That, in turn, should show authentication mechanisms and see if any
+    unusual activity is occurring there. Overall, weaknesses in data exchange or session
+    management should be visible. Using these methods, Wireshark can then look for
+    areas of potential traffic manipulation or opportunities to manipulate traffic
+    via injection methods, payload modification, or network protocol manipulation,
+    which is sometimes utilized by bad actors to bypass network security measures
+    such as flood attacks to cause protective devices to *fail open*, for example.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Like the previous tools listed, Wireshark activity can be detected by Suricata,
+    Zeek, and the ELK stack, among other tools found with the Kali Purple distribution.
+    Due to its popularity with penetration testers and attackers alike, we are going
+    to include it in our process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Aircrack -ng
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Aircrack -ng** is a suite of software tools that are typically used for network
+    security testing. However, unlike other network testing tools we’ve covered, this
+    suite generally specializes in wireless communications. It is most frequently
+    used to test against the strength of Wi-Fi encryption protocols and passwords.
+    The following screenshot shows some of Aircrack -ng’s Wi-Fi options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.7 – Aircrack -ng Wi-Fi options](image/B21223_01_7.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.7 – Aircrack -ng Wi-Fi options
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Airodump -ng** is one of the tools in this package and its purpose is to
+    capture and analyze Wi-Fi traffic similar to how Wireshark does. One of its unique
+    aspects is that it focuses on collecting information about nearby Wi-Fi networks,
+    any access points associated with them, and any devices connected to them at the
+    time of the scan. It also looks for any encryption protocols that have been used.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The primary tool of the suite, the title application, has a feature that captures
+    handshake packets for the nifty purpose of working out password cracking when
+    offline. By default, it will use dictionary-based brute-force methods to accomplish
+    this objective. It also has features that are designed to recover WEP and WPA/WPA2
+    keys if the network encryption is weak. It does this using statistical analysis
+    and rainbow tables – sometimes referred to as pre-computed tables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Aireplay -ng** is an application in the package that is utilized to perform
+    what is known as de-authentication attacks. It sends disassociation or de-authentication
+    packets to the targeted devices, forcing them to disconnect from their Wi-Fi networks.
+    This is done to force the reauthentication process so that handshake packets can
+    be captured.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A word of caution when using this set of tools: it is very easy for the tools
+    to perform work you didn’t overtly ask them to perform! That can be dangerous
+    due to the illegal nature of performing many of these tasks. So, use Aircrack
+    -ng with extreme caution. Unlike the other red team tools we’ve discussed thus
+    far, the actions brought on by this set are much more difficult to detect and
+    are likely only to be captured if the Kali Purple suite of defensive tools has
+    been configured to look for this activity.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: John the Ripper
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Often considered the *King of Cracking* (sometimes seen as *King of Kracking*),
+    **John the Ripper** is as it sounds, an industry-leading, open source password-cracking
+    system. In penetration testing, it is used to test the various strengths of passwords
+    by attempting to crack encrypted password hashes. The *good guys* will use it
+    to assess and gain an overall feel for the security level of their password systems
+    and policies. Here’s an example of John the Ripper cracking a password:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.8 – John the Ripper cracks a password called “password”](image/B21223_01_8.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.8 – John the Ripper cracks a password called “password”
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is commonplace for attackers to attempt to retrieve password hashes – not
+    expecting passwords to be stored *in the clear* so much in the modern era, though
+    it does still happen. John the Ripper is a tool that helps expedite the process
+    of finding and grabbing password hashes because it is a feature of this application.
+    As previously discussed, a password hash is the encrypted value of a password
+    that is stored on a system so that it may process and approve or disapprove access.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once obtained, the user will want to try and figure out the hash type so that
+    it can direct John the Ripper to the correct manner of decryption. The application
+    will first attempt to identify the hash type on its own. It supports various password
+    hash types, such as MD5, SHA1, NTLM, and others. If it cannot ID the hash type
+    on its own, another popular application called **CyberChef** might be used.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: CyberChef, a tool included in the Kali Purple suite that we will talk about
+    in the next section and again in [*Chapter 6*](B21223_06.xhtml#_idTextAnchor098),
+    is a tool that is often used to help identify encryption types that include hashes.
+    It can also be accessed online if needed but caution is advised if you’re using
+    this application remotely on a customer-related alert or incident. Any information
+    that’s stolen during data transmission constitutes a data leak and is covered
+    by many different regulatory instructions. Something simple could become a public
+    relations nightmare for you, your employer, and your employer’s customers and
+    potentially cost you your job.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Like other cracking tools, John the Ripper has features built into it that support
+    wordlists and customized tables. These are pre-generated lists of potential passwords.
+    They can be from a variety of strategies, including recently leaked database passwords,
+    most used passwords, or any other method. Once these word lists have been prepared
+    and the hashes have been identified, John the Ripper will attempt many different
+    cracking techniques to attempt to match the password hash to its dictionary representative.
+    Once complete, the results are listed as successfully cracked passwords.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When used remotely, John the Ripper activity can easily be detected by Suricata,
+    the ELK stack, Zeek, and other tools within the Kali Purple distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hydra
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Another well-known open source password-cracking tool is **Hydra**. Whereas
+    John the Ripper’s focus is on cracking passwords based on stored hashes, Hydra
+    is more for traditional brute force attacks against network services. Here’s an
+    example of Hydra’s use:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.9 – Hydra used to recover a local password for an SSH server](image/B21223_01_9.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.9 – Hydra used to recover a local password for an SSH server
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first step in using Hydra is to identify the target system or network service.
+    That can usually be accomplished by using some of the tools we’ve already discussed,
+    such as Nmap and Wireshark.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once a target is selected, the operator will identify and specify the authentication
+    method to be tested. With Hydra, the targets could be any one of SSH, FTP, HTTP/S,
+    Telnet, or database services such as MySQL or PostgreSQL, among others. As the
+    information is provided to the application, the operator will also include the
+    IP address or hostname and port number of the target, along with the desired protocol
+    method to be used, such as a password list, dictionary method, and so on. With
+    Hydra, the operator has the option to custom-create the password list they wish
+    to use or use a pre-existing list developed by others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Just like other cracking utilities, once all the information has been input
+    and the proper lists are in place, simply run the program and it will automatically
+    attempt many different password-cracking methods. It will also attempt password
+    spraying if it’s set to do so, as well as user enumeration, both of which are
+    features that are not always available with other cracking utilities. Hydra will
+    provide results the same as other cracking tools for humans to read, verify, and
+    validate. It also is easily detected by Kali Purple’s suite of defense tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SQLmap
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**SQL** stands for **Structured Query Language** and it is a common language
+    that programmers and software engineers use to interact with databases. It’s how
+    applications add, delete, and modify information in a database. So, as you might
+    have guessed, **SQLmap** is an open source tool that’s used to exploit databases.
+    It tries to detect and exploit SQL injection vulnerabilities in web applications
+    that use SQL databases. Its power lies in its ability to automate injection attacks.
+    Here’s its lobby:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.10 – SQLmap launch lobby showing available command options](image/B21223_01_10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.10 – SQLmap launch lobby showing available command options
+  prefs: []
+  type: TYPE_NORMAL
+- en: The application starts by scanning a web application to discover potential SQL
+    injection vulnerabilities. It does this in a fashion that should be familiar to
+    you by now. It sends specially crafted requests to the target web application
+    and then… you guessed it… analyzes the response. By doing this, SQLmap can determine
+    various types of SQL injection vulnerabilities, such as Boolean-based (true/false),
+    time-based, and/or error-based injections.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once a potential SQL injection vulnerability is discovered by SQLmap, it can
+    exploit that vulnerability by attempting to extract sensitive information from
+    the database. It will attempt to retrieve database schemas, tables, and columns
+    and then, if possible, dump the entire contents of the database. Making these
+    calculated step-by-step actions helps to identify the full impact of the discovered
+    vulnerability and the scope of any potential data leak. Any level of success with
+    any one database for an organization often serves as an indicator that the same
+    actions can be taken with nearly every other database found for that same organization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are a couple of awesome features within SQLmap. One is that it allows
+    its users to save the state of a successful injection attack to either resume
+    later or share with others. This might be referred to as a form of built-in persistence!
+    Another feature is that, like Metasploit, SQLmap offers a manner of post-success
+    level two exploitation. It has several built-in techniques that can be used to
+    continue the attack beyond simply extracting information from the database. It
+    can execute arbitrary SQL queries, access the underlying filesystem (powerful!),
+    and execute OS-level commands. It can even help to establish a reverse shell for
+    remote command execution!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Due to the *loud* nature of SQLmaps actions, it would undoubtedly be easily
+    detected by cyber defense systems, including the ELK stack, Suricata, Zeek, and
+    other tools within the Kali Purple distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Maltego
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Turning the page from cracking and vulnerability exploitation, we have **Maltego**.
+    It is a very powerful intelligence-gathering and data-visualization utility. As
+    implied, its purpose is to gather information, analyze it, and then place it within
+    a GUI to help the operator visualize it. Like most other tools, it looks for vulnerabilities
+    and helps to provide a comprehensive reconnaissance aspect of the attack chain.
+    This is what Maltego looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.11 – Maltego example](image/B21223_01_11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.11 – Maltego example
+  prefs: []
+  type: TYPE_NORMAL
+- en: The expected usage of Maltego involves identifying the target network, individual,
+    or domain. We’ve already covered a few tools to help with that if needed. Then,
+    it helps the operator gather information from various sources, such as public
+    databases, DNS records, social media profiles, and online publications, among
+    other things. It reconciles this data – consolidates it – into a visual graph
+    where it physically points out relationships and connections between the different
+    entities of the data created.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Entities can be IP addresses, email addresses, names, or any unique item concerning
+    the intelligence it was instructed to gather. Maltego will represent these different
+    entities in the form of nodes, showing relationships that appear to exist between
+    them using links or edges within the graph. This helps the operators to carefully
+    evaluate the gathered intelligence and visualizations with the connections between
+    the elements. That, in turn, can help the operators piece together potential attack
+    vectors, vulnerabilities, and entry points for the exploitation phase of a cyberattack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Maltego offers something called automated data transformation. Through a vast
+    array of transformation options – called **transforms** by the application – Maltego
+    automates the process of attempting to retrieve additional information by pivoting
+    from one known entity to another because of the relationships it has identified.
+    Transforms can be used to find additional domain names, DNS records, IP addresses,
+    and social media profiles. These might be associated with what you’ve already
+    collected for example, but they weren’t known until a relationship between the
+    original group of entities was discovered. It can also take this information and
+    compare it to repositories of known vulnerabilities and exploits.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another benefit of this extremely powerful intelligence-gathering tool is the
+    collaboration and reporting features it contains. Maltego can facilitate real-time
+    collaboration between multiple team members by allowing visual representations
+    and graphs to be placed within shared workspaces. It can help process these collaborations
+    by generating detailed reports for the team members to review that document the
+    findings, timeline, relationships, and evidence gathered during the process. That
+    will help the individual members formulate questions for each other in real time
+    and therefore help the entire process move along efficiently.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you can see, Maltego is a wickedly powerful and useful tool. It’s also one
+    of the most effective covert operators on this list of tools. Maltego activity
+    is not likely to be detected by cyber defenses as Maltego and malicious at the
+    same time. What that means is that if the consequences of a Maltego action are
+    picked up by cyber defenses, there would likely be little to no information suggesting
+    such activity was the result of someone using this application. That is not to
+    say it cannot happen; it’s just extremely difficult to detect. However, the actions
+    an actor might take because of the Maltego activity are highly likely to be detected
+    if they are malicious.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Social Engineering Toolkit (SET)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Sounds like something out of a Psychology 101 college course, doesn’t it? Believe
+    it or not, the **Social Engineering Toolkit** (**SET**) is a real thing; it’s
+    a technology-based toolkit that is included with the Kali Linux distribution.
+    It is an open source and Python scripting language-based framework that was created
+    by a fellow named David Kennedy. It was engineered to facilitate and automate
+    the technological portions of social engineering attacks. Social engineering involves
+    manipulating – engineering – people through deception or psychological manipulation
+    to gain important, sometimes sensitive, information or gain access that would
+    otherwise be unauthorized. While social engineering most assuredly has a strong
+    face-to-face or live interaction component, there are also technological aspects
+    associated with the overall strategy and SET exists to simplify those aspects
+    for us. This is what SET looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.12 – SET](image/B21223_01_12.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.12 – SET
+  prefs: []
+  type: TYPE_NORMAL
+- en: SET allows the operator to arrange phishing campaigns where the target is tricked
+    into entering their credentials, such as their username and password, into a fake
+    login page. SET helps to accomplish this goal by quickly replicating websites
+    into a new site that appears visually identical to the original site. This is
+    one of the main strategies attackers use to trick users into entering their credentials.
+    A user clicks on a phishing email, and it takes them to the fake site, which looks
+    identical to the original. Then, they try to log in and get an error while the
+    fake site loads the original authentic site, where the user tries a second time
+    and successfully logs in to the proper site. They gave up their credentials to
+    the attack but since they logged in to the correct site the second time, they
+    are none-the-wiser. This is known as **website cloning**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SET can also be used to generate malicious documents that also appear to be
+    legitimate. It can mimic Microsoft Word or PDF files, with hidden code embedded
+    somewhere within the file that will execute the moment someone opens the document.
+    Such code will exploit vulnerabilities in the target system and might do things
+    such as install keyloggers, which will grab every stroke the victim user enters
+    and provide credentials to every single page and/or application they use while
+    on that device after the keylogger is installed. The code can also directly infect
+    the system and grab system information, install a backdoor or reverse shell, and
+    allow the attacker direct access with the potential to laterally pivot to other
+    systems on the network. Files that allow this action are known as **infectious
+    media**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remember Metasploit and how vast and powerful it is? Guess what. SET integrates
+    with Metasploit so that the exploits available there can be seamlessly embedded
+    into the social engineering campaign once the stage of attack calls for it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SET also can create **USB-based attacks**. It can set up a USB drive to automatically
+    execute once inserted into a target system and run preconfigured attack scripts
+    and malicious payloads. Remember Stuxnet? SET can create attacks of that magnitude!
+    While it may require some special configurations to fully detect, Kali Purple’s
+    defensive utilities do have the ability to detect anomalous or suspicious behavior
+    coming from USB drives, such as alerting on auto-run/auto-execute activity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As has been noted in a few places, these tools can be extremely dangerous and
+    can land their operators in jail if not used ethically. That means having permission
+    to use them and having a predefined, ideally written scope of where and how to
+    use them and not ever, ever, ever straying outside the boundaries of that scope!
+    While these tools can be found compatible with most Linux distributions or even
+    pre-installed in some cases, what is not common are the defensive tools that you
+    will find with Kali Purple, which includes the blue team side of the family. The
+    selection of red team tools you just briefly covered are all available with Kali
+    Linux, the OS that supports Kali Purple. Now that you understand the basics of
+    the red team side of the family, let’s take a gander at the blue team side.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Defensive security
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The uniqueness of Kali Purple is how it adds defensive tools to the Kali Linux
+    distribution for blue team operators so that they may train junior analysts and/or
+    otherwise do their jobs. Of course, to fully grasp where these tools might fit
+    into an organization’s security posture, it might be helpful to know some of the
+    terms associated with cyber defense. Here, we will go over some of the more commonly
+    used terms and highlight the cyber defense concepts needed to navigate this book.
+    We will talk more directly about what it means to be a blue teamer and gain an
+    understanding of what the information security/CIA triad, SOC, SOAR, SIEM, IDS/IPS,
+    and other concepts are. In the process, we will focus on how these items relate
+    to Kali Purple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you’ve ever studied for a technology certification or any aspect of cybersecurity,
+    you have likely been introduced to the information security triad, also known
+    as the CIA triad. The three components – confidentiality, integrity, and availability
+    – are critical factors of a proper security posture. Think of a three-legged stool.
+    If you remove one leg from the stool, it will fall over. Likewise, if you remove
+    one component from the triad, your security will also falter. Collectively, the
+    confidentiality, integrity, and availability of information and resources ensure
+    the proper level of access and security for an organization’s systems and data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So, if one component of the triad breaks, the entire foundational framework
+    will topple:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.13 – The CIA triad](image/B21223_01_13.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.13 – The CIA triad
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s break this down by component.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Confidentiality
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This element of the triad talks about protecting information from unauthorized
+    access, exposure, or disclosure. This is accomplished by putting safeguards in
+    place to prevent individuals who do not have the proper level of authorization
+    from accessing sensitive data. Some of the measures that can be taken to accomplish
+    this objective might include physical access controls such as keypads, mantraps,
+    or biometrics, encrypting data, or establishing secure communication channels.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Integrity
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This element’s purpose is to ensure that data remains unaltered from unauthorized
+    sources throughout any portion of the data’s life cycle. It aims to ensure the
+    data remains accurate as presented. The accuracy of the data’s content itself
+    is the responsibility of the authorized creators and handlers of the data. It
+    focuses on preventing unauthorized modifications, corruption, or deletion of data.
+    This is usually accomplished by employing techniques such as digital signatures,
+    hashes, checksums, and digital access controls.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Availability
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This element’s need is based on allowing proper accessibility and usability
+    of an organization’s resources and information when it is needed. It ensures that
+    only authorized users will have access, that the access will be uninterrupted,
+    and that the access will contain the resources the user needs to perform their
+    tasks. These objectives are usually accomplished by adding layers of redundancy
+    to an information system – both physical and/or virtual, when backing up data,
+    establishing a disaster recovery plan, and implementing fault tolerance. Ideally,
+    the proper data will always be available to the proper users. However, we live
+    in an imperfect world and sometimes even natural disasters can pose a threat to
+    an organization’s security posture. If availability is disrupted, this element
+    of the triad also includes plans to mitigate the impact of any natural disruptions,
+    service outages, or failures.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Availability is one of the most misunderstood concepts in all of cybersecurity.
+    That’s because the other elements’ purpose is to deny access and manipulation
+    to the wrong people, whereas this element’s purpose is to ensure access is allowed
+    by the right people! It doesn’t do much good to have the best security in the
+    world if what is being secured is never allowed to be utilized. That defeats the
+    entire purpose of the World Wide Web and computing technology in general, doesn’t
+    it? Because of that abstraction, new technicians and junior analysts sometimes
+    struggle to maintain the proper balance between security and keeping business
+    operations flowing. It’s important to realize that, while you certainly can block
+    all of .com at your firewall, it doesn’t do much good if your organization requires
+    the internet to market or provide support for your product or service. Keep this
+    in mind as you negotiate the tools contained in Kali Purple because these tools
+    are powerful and indeed can severely disrupt the availability of resources if
+    misused.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve grasped the core fundamental framework for cybersecurity, let’s
+    examine the environment in which most blue team folks will be employing this framework.
+    The SOC is the environment where most defensive cybersecurity professionals will
+    operate. That is the bread and butter of what Kali Purple is! Sometimes, you’ll
+    see Purple referred to as *SOC-in-a-Box* because this suite of tools contains
+    all the core utilities and functionality needed to establish a miniature SOC.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A SOC is a unit within an organization that is generally centralized and is
+    responsible for monitoring and responding to security incidents. It has evolved
+    to more likely be associated with security incidents that are specifically cyber
+    or computer-related. However, a true SOC would encompass all security situations,
+    including old-school closed-circuit television and other surveillance systems.
+    In today’s world, a SOC is also often used to refer to the team of people who
+    work within the centralized security environment. This can be either the defensive
+    blue team and/or the offensive red team. They are responsible for enhancing and
+    maintaining the security of an organization’s information systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These teams are usually highly trained and educated cybersecurity professionals.
+    However, some business models have allowed for a *baptism-by-fire* style of training
+    cybersecurity professionals if the individuals show a level of passion or desire
+    for the field. Kali Purple is an excellent tool for organizations to provide practical
+    experience for such individuals!
+  prefs: []
+  type: TYPE_NORMAL
+- en: The primary goal or expectation of a SOC would be to identify, protect, detect,
+    respond to, and recover from cyber threats and incidents in real time. Those five
+    terms also happen to be the five pillars of the **National Institute of Standards
+    and Technology Cybersecurity Framework** (**NIST CSF**). Aligning with NIST means
+    you’re aligning your skillset with the requirements and operations of many government
+    agencies, including the US Department of Defense and critical infrastructure sectors
+    such as energy, water, healthcare, transportation, and financial services. You’ll
+    also find NIST compliance across numerous small and medium-sized business enterprises.
+    Also, though NIST is an organization within the United States Department of Commerce,
+    you’ll find adherence toward many aspects of its cybersecurity framework within
+    many multinational and globally operating organizations. Since Kali Purple was
+    directly engineered with this specific framework in mind, that makes it the perfect
+    base of operational training for those working in a SOC or desiring a career in
+    cybersecurity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the flagship utilities of a SOC is the SIEM system. A SIEM might also
+    be referred to as a normalization or correlation system. Its purpose is to collect
+    a variety of security event logs and related data from any variety of technological
+    sources – endpoints – within an organization. Then, it interprets that data, matches
+    it with other relevant data, known as data enrichment, and presents it in a universal
+    format.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Related to the SIEM is something called a **Security Orchestration, Automation,
+    and Response** (**SOAR**) system. A SOAR is meant to complement a SIEM system
+    in that it provides capabilities for automating incident response and helps to
+    orchestrate security operations in a well-structured, organized, and coordinated
+    manner.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because the data can come from any number of otherwise incompatible sources,
+    such as a Windows versus a Mac versus a Linux device, the original raw data will
+    likely exist from any one of an infinite number of languages and/or ways to present
+    it. A SIEM takes it all, does the necessary interpretation, and presents it in
+    just one consistent manner, making the analyst’s job much easier and more efficient.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By handling this normalization, the analyst can then focus on what’s most important:
+    measuring the data against known and emerging threats as well as evaluating anomalous
+    behavior that might be suggesting potentially unknown and new malicious activity.
+    That, in turn, allows the analyst to quickly narrow the attack surface, communicate
+    recommended changes or even make them if authorized, and efficiently assemble
+    compliance reports for senior security engineers to study.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will introduce you to one of these systems early on by exploring Kali Purple’s
+    inclusion of Elastic in the next chapter; you will continue to expand upon your
+    SIEM knowledge throughout the rest of this book. It’s important to understand
+    that, by itself, Elastic is not inherently a SIEM. Rather, it is a core component
+    of establishing your SIEM. We will add additional components to create a fully
+    functional SIEM.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The Wazuh SIEM is built on top of the ELK stack:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.14 – The default Wazuh SIEM dashboard after a fresh installation](image/B21223_01_14.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.14 – The default Wazuh SIEM dashboard after a fresh installation
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You must understand the following about SIEMs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Log collection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Event correlation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Alerting and notification
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Incident response
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Compliance monitoring and reporting
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Threat intelligence integration
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s look at these in detail.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Log collection
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: While SIEMs have many useful functions, log collection is usually what a cybersecurity
+    professional thinks of when visualizing such a tool. Their most accepted practice
+    of accomplishing this goal is by installing *agents* on each endpoint – that is,
+    an individual physical device or software application that the SOC wants the SIEM
+    to monitor. These endpoints might include personal computers or workstations,
+    servers, or even network devices such as routers and switches. They could include
+    individual software applications such as antivirus systems or **business-to-business**
+    (**B2B**) collaboration tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There is a wide range of complexity in these agents but the gist of it is that
+    they monitor and collect data from the device for which it is installed and then
+    simply report that data to the SIEM. Some agents might report vast amounts of
+    data for the SIEM or analyst to parse on their own while others might deliver
+    a sort of *pre-evaluation* of data and only report that which is assumed to be
+    anomalous. It is safest for all the data to be delivered. Then, a person known
+    as a cybersecurity engineer will assemble code within the SIEM itself to handle
+    any automatic sorting, enriching, or discarding of information based on organizational
+    or customer needs. The information that’s collected by the agents and sent to
+    the SIEM is referred to as logs. Each log contains very valuable information and
+    might include user activities, system events – what the machine or software is
+    commanding itself to do – and any overt security incidents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Event correlation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Once the SIEM collects the logs from the agents, it must do something with the
+    information, right? There are many options here, but the most accepted practice
+    is for the data to be analyzed and combined with previously collected or statically
+    entered data. As it was when it was originally collected, the data is considered
+    to be raw. When combined with additional relevant information – additional data
+    tables that are often referred to as lookup tables – this is known as **data enrichment**.
+    An example of this is when a SIEM collects an IP address as part of the log. Here,
+    it has a separate table that explains where certain IP addresses or ranges of
+    addresses are located, takes the IP from the log, matches it with the pre-existing
+    lookup table, and then tells the analyst where the activity in the log is geographically
+    occurring from. Enriching data is like adding additional pieces to a puzzle. It
+    gives a clearer picture of what is happening or has happened from the endpoint.
+    The SIEM platform can then analyze the enriched data for complex patterns and
+    anomalous behavior. That, in turn, allows the SIEM to recognize, flag, and report
+    potential cyberattacks. Individual pieces of raw data can fail to recognize this
+    behavior if not enough information is known or collected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Enriching and then analyzing the newly enriched data is known as **event correlation**,
+    a process that increases the odds of detecting malicious behavior exponentially.
+    Event correlation is when the SIEM takes different logs that serve different purposes
+    but have a common denominator and it presents them together to help the analyst
+    see if there’s additional information to serve their investigation. One example
+    might be a log containing authentication failures (that is, someone was unsuccessful
+    at logging in) presented with a log that contains port scanning activity that
+    occurred at or very near the same time as the authentication log.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is not to be confused with data aggregation. **Data aggregation** is when
+    the SIEM takes multiple logs that contain the same information, such as all logs
+    containing a specific IP address, and presents them together in a single report.
+    Some SIEM solutions (**Devo**) will offer the analyst an opportunity to create
+    and perform data aggregation operations and then output the results to a file
+    format of choice, such as a CSV spreadsheet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Alerting and notification
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Would you believe that even after data enrichment, correlation, and complex
+    analysis, malicious behavior can still sometimes go unnoticed? Yep, sure can!
+    That’s why we have a human element to the layers of security built within a SOC.
+    To access that human element, the SIEM takes the data it has correlated and checks
+    it against criteria established by the cybersecurity engineers who have set up
+    and/or managed the SIEM. If the data matches these criteria or rules, the SIEM
+    then either takes this data and creates a type of report known as an alert that
+    is meant for human analysis or – if a related alert already exists – adds it as
+    an additional event to that alert. These alerts are meant for human eyes, usually
+    a level one cybersecurity analyst or security triage specialist. The SIEM writes
+    these alerts in a uniform manner and language so that the analysts reviewing the
+    alert only need to learn one style of log analysis. It then typically places the
+    new or newly updated alert in some form of a queue that is actively monitored
+    by cybersecurity analysts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Incident response
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: When level one triaging security analysts review an alert and determine that
+    an incident has or is about to occur, they will typically escalate that alert
+    to a level two cybersecurity analyst, who is usually incident response. In some
+    organizations, this is level three, but mainstream cybersecurity companies usually
+    reserve level three for threat-hunting specialists. A well-setup SIEM will offer
+    helpful information for incident responders as well. This is done in the form
+    of providing workflows, playbooks, and case or customer management capabilities.
+    This not only provides an excellent point of reference for the analysts, but it
+    is also helpful to train newly hired or promoted analysts. SIEMs can be used in
+    a multitude of business models, some of which may include providing security services
+    to other businesses that might not have a cybersecurity team on-site. In that
+    scenario, there could be hundreds or even thousands of organization-specific playbooks,
+    which would be impractical for any individual incident responder to memorize.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Compliance monitoring and reporting
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: As the demand for cybersecurity grows, so does oversight such as laws and government
+    regulations, or the development of industry standards such as the PCI-DSS, which
+    we previously discussed. One area where this is very prevalent is in record keeping
+    and reporting. There are many new rules covering how to record and report cybersecurity
+    activity. A well-designed SIEM will provide visibility into security events and
+    will have features that assist in generating reports for compliance purposes.
+    Even without pre-existing laws or regulations in place, it would be a good practice
+    to maintain solid records of adherence to industry standards because it shows
+    that an organization is well-researched, organized, prepared, caring, and determined
+    to be at the forefront of its product or service. Having SIEM-generated reports
+    is a way of showing that these principles are in place.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Threat intelligence integration
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The most updated and advanced SIEM technologies will have the ability to integrate
+    with external data sources such as threat intelligence feeds. Examples include
+    AT&T’s AlienVault **Open Threat eXchange** (**OTX**), the **Structured Threat
+    Information eXpression** (**STIX**), and **Trusted Automated eXchange of Indicator
+    Information** (**TAXII**). There are also databases and other non-live sources
+    of intelligence that might prove useful for a SIEM to access. This can help with
+    the data enrichment and correlation processes. When the external integrations
+    involve access to developing or up-to-date threat intelligence, then the SIEM
+    will more readily be able to identify known malicious actors as well as emerging
+    threat actors, malicious IP addresses, or domains, along with other indicators
+    of compromise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Besides the threat intelligence feeds, there’s also the **Any.Run** and **Cuckoo**
+    automated sandbox analysis utilities, which technically aren’t a part of Kali
+    Purple but you can integrate with Purple’s tools for a more robust SOC experience.
+    This is what Any.Run looks like:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.15 – Any.Run malware analysis home page](image/B21223_01_15.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.15 – Any.Run malware analysis home page
+  prefs: []
+  type: TYPE_NORMAL
+- en: While Kali Purple offers many tools for defensive security, the SIEM is what
+    seems to have attracted most people to the platform initially because now users
+    have a single system where offensive security actions (Kali Linux) and defensive
+    security can proactively monitor and manage real security events, detect real
+    threats, and begin the process of incident response – and they can get it free
+    of charge.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sometimes, you will find a SIEM combined with an IDS or IPS. To effectively
+    navigate the entire cybersecurity defense process, we are not going to do that
+    here. We’ve spoken about the Elastic stack and how with some additions, such as
+    agents, we can convert it into a fully functioning SIEM – and indeed we are going
+    to do that. Now, let’s look at a couple of IDS that are part of the Kali Purple
+    package. Later, we will take some concepts from the *Offensive security* section
+    and apply those against Suricata and/or Zeek to give you a hands-on use case approach
+    to what cyber defenses look like. Let’s discuss Suricata.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suricata
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Suricata is an open source product that can function as either an IDS or IPS.
+    What’s the difference? Glad you asked. It’s explained in the terms themselves.
+    An IDS does just that – it detects anomalous or potentially malicious behavior.
+    That’s all it does. It doesn’t act against this behavior. It simply detects it
+    and lets you know. There’s a reason for that and we will discuss it in a bit.
+    An IPS will also detect anomalous or potentially malicious behavior, but it will
+    take the additional step of proactively blocking or taking some other action against
+    that behavior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A question you might ask is, “*Why wouldn’t we just want the system to prevent
+    the behavior for us instead of allowing extra work to be created?*” The answer
+    is simple. Not all behavior that presents as anomalous or malicious is malicious!
+    These types of alerts are called false positives, and they are commonplace in
+    the field of cybersecurity. They are so common that there’s another term to describe
+    having to deal with them – alert fatigue. A properly set up IPS will reduce alert
+    fatigue. However, it might also prevent or block authentic benign activity and
+    that’s not good either. Remember the CIA triad? Remember that we discussed how
+    the *A* is the most misunderstood? Blocking otherwise valid activity can be just
+    as damaging or even more so to organizations’ bottom lines than failing to block
+    malicious activity. Within some organizations, this is a non-issue, and accidentally
+    blocking benign activity would have little to no effect on them. For this reason,
+    both IDS and IPS technologies exist. You need to choose the one that is right
+    for your situation. Suricata offers both.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is a very robust and highly scalable tool that analyzes network traffic for
+    suspicious or malicious attributes. It operates with a multi-threaded performance
+    approach. This allows for parallel processing instructions, giving it the ability
+    to work with high-speed network traffic efficiently. Suricata, like Wireshark,
+    captures network packets in real time. Unlike Wireshark, it automatically analyzes
+    these packets to include the headers and payload and makes alerting determinations
+    based on this analysis. By default, it’s designed to alert users to network intrusions
+    fitting criteria that match exploitation, malware, policy violations, and anomalous,
+    or suspicious, behavior. Of course, Suricata can also perform the regular protocol
+    analysis functions of Wireshark to include HTTP, DNS, FTP, SMTP, and more, which
+    it uses to detect attacks that might be specifically targeting a particular protocol.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It uses two primary manners of detection: signature and anomaly-based. With
+    signature detection, Suricata matches network traffic against predefined rules
+    or patterns, known as signatures, to assist in identifying known threats. With
+    anomaly detection, Suricata first establishes a baseline of normal network behavior.
+    It then alerts whenever there are any deviations from this established baseline.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suricata can integrate with threat intelligence sources, which is an unwritten
+    requirement for any worthy IDS/IPS solution. These can be external public feeds
+    or an internally maintained threat feed. These feeds greatly assist the system
+    in identifying emerging threats, thus creating an enhanced detection capability
+    overall.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Zeek
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Zeek (formerly known as Bro) is not a full-fledged IDS product. However, it
+    contains features and capabilities allowing it to function as one. By default,
+    Zeek is a network analysis framework that’s used for monitoring and analyzing
+    network traffic. Like a few other tools already shared in both the *Offensive
+    security* and *Defensive security* sections of this chapter, Zeek captures and
+    analyzes network packets in real time, where it attempts to extract useful information
+    about protocols, active connections, and overall behavior. In addition to the
+    protocol analysis that other tools also offer, Zeek focuses on connection details
+    and file transfer information. It might be described as a hybrid of Wireshark
+    and Suricata in terms of functionality.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It allows users to work with its scripting language, giving them the ability
+    to create custom rules and policies to alert on in the manner of an IDS. However,
+    it is more work-intensive than many *pre-packaged* IDS solutions available today.
+    Nevertheless, that could provide value to a cybersecurity analyst who might wish
+    to develop or hone skills in preparation for advancement into the cybersecurity
+    engineering direction. Another IDS personality of Zeek is its event-driven model.
+    Events are generated based on network activity, which provides a flexible and
+    customizable framework to be used for monitoring and analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: While these detection, prevention, logging, and alerting products are core tools
+    of a solidly designed SOC, sometimes analysts need to manually inspect the traffic
+    in a particular scenario to determine whether the alerting is a true or false
+    positive. This can help the team fine-tune the detection and logging rules to
+    help reduce unnecessary alerting, and therefore alert fatigue, in the future.
+    Kali Purple offers such tools with its distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Arkime
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Arkime – formerly known as Moloch – is one such tool. It is an end-to-end traffic
+    analysis application that was designed to capture large volumes of network packet
+    information and index it for manual exploration by an analyst. It offers real-time
+    searching/queries, customizable dashboards, and a variety of advanced data analyses.
+    Like most traffic analysis utilities, Arkime is most used for network security
+    monitoring, incident response, and data analysis. Its specialty is in processing
+    massive amounts of network information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This application supports a variety of packet capture methods, including passive
+    listening, **packet capture** (**PCAP**) file import, and even direct capture
+    with network **test access points** (**TAPs**). A PCAP file is a standardized
+    file format that is widely accepted with packet capture utilities such as Wireshark.
+    A TAP is typically – but not always – a hardware device that provides a way for
+    analysts to monitor network traffic by creating a copy of the data that is passing
+    through the network link. Software versions of this function are known as **Virtual
+    TAPs** or **vTAPs**. These allow the original traffic to flow without interference.
+    A TAP is usually placed between network devices such as switches and routers.
+    While Arkime itself does not provide a vTAP, it is set up for integration with
+    such software applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Arkime also offers advanced searching capabilities. This includes searching
+    across all indexed fields, packet payloads, and metadata with support for regular
+    expressions, range searches, and contextual queries.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Whenever an application offers advanced query abilities, it’s always good to
+    also offer ways for the user to present this information in ways that best suit
+    them. That will help the user bond with the application and create a natural comfort
+    using it. Arkime accomplishes that goal by allowing customizable dashboards so
+    that the operator can personalize how the network data is displayed to them by
+    focusing on the data that is most valuable to the user at the time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Arkime also supports plugins with its architecture so that its operators can
+    extend its functionality. As with most large-scale software applications offering
+    this feature – such as Burp Suite – there is a community of Arkime users who have
+    already developed various plugins to support additional analytics, integrations
+    with external tools, and customizations and are offering these prebuilt plugins
+    for use by other Arkime operators. We will explore this application in greater
+    detail at the beginning of [*Chapter 6*](B21223_06.xhtml#_idTextAnchor098).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Malcolm
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Malcom is a similar traffic analysis tool that has a particular focus on visualizing
+    network traffic. Along with the same network monitoring that Arkime offers, Malcom
+    is also popularly used for threat hunting, file extraction, and metadata extraction,
+    giving it a unique area of emphasis over other network analysis tools. Though
+    known for its simplicity, Malcolm’s claim to fame is its ability to extract and
+    analyze files from the network traffic. In Malcom’s case, this is an automated
+    feature.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It also provides support as a collaboration tool by allowing multiple users
+    to work together on the same investigation, providing functionality for sharing
+    and commenting on the data that is captured. This feature is uncommon with traffic
+    analysis tools and makes a convincing case for SOC teams to select Malcolm over
+    other traffic analysis tools because it supports real-time collaboration with
+    incident response and analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you have seen, Kali Purple offers a robust array of defensive security tools.
+    They are largely built around the ELK stack, which we will detail in [*Chapter
+    2*](B21223_02.xhtml#_idTextAnchor039). When integrating the IDS tools we’ve discussed,
+    such as Suricata or Zeek, the full toolset starts to form the SOC required for
+    our security posture. That’s the entire purpose of Kali Purple. That’s the reason
+    Kali Purple was created!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we discovered a solid base of actions and knowledge that led
+    to the cybersecurity stage as we see it today. We were able to follow a brief
+    history of security developments and events that created the protective needs
+    businesses have today. In doing so, we examined Stuxnet, one of the world’s first
+    uses of modern computing technology for weaponization and cyberwarfare. From there,
+    we looked at a cyberattack that affected individuals in the masses with the Target
+    attack of 2013\. We saw how these two attacks led to much of the technology we
+    are about to work with throughout the rest of this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we navigated both the red and blue team tools included in the Kali Purple
+    distribution or made available to add to it, we started to piece together the
+    full picture of a well-rounded cybersecurity system. We were able to begin seeing
+    the greater potential of Kali Purple and watch it slowly emerge as a comprehensive
+    *one-stop-shop* capable of providing a great level of universality in business
+    security solutions, training for analysts, and proof of concept.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now equipped with a solid base of understanding, we will begin to unpack this
+    *SOC-in-a-Box* in the next chapter by drilling down slightly on Kali Linux and
+    sharply on what is arguably the most highly anticipated and popular feature of
+    Kali Purple – the SIEM.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Questions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Answer the following questions to test your knowledge of this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is a SOC?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Special operations command
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Standard of operational conduct
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Security operations center
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A piece of fabric someone wears on their foot
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is the primary difference between Hydra and John the Ripper?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Hydra’s focus is on password cracking from a hash list and John the Ripper’s
+    is on brute-forcing with network applications
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: John the Ripper’s focus is on password cracking from a hash list and Hydra’s
+    is on brute-forcing with network applications
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Hydra has many heads whereas John the Ripper only has one
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: All the above
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: None of the above
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is the downside of being known for having top-tier security?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You become a target for adversaries looking to prove their mettle
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Your security budget is outrageous
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You’re so protected that your own mother cannot contact you
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Everybody expects you to share your secrets
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which pocket-sized tool was used to deliver sabotage against Iran’s nuclear
+    enrichment program?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A Swiss Army knife
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A butane lighter
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A paperclip
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A USB thumb drive
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When a SIEM combines freshly acquired data with pre-existing data sources, this
+    is known as what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Data corruption
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Data enrichment
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Data pollution
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A chaotic mess
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The CIA triad stands for confidentiality, integrity, and _______________.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Availability
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Accessibility
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Accountability
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Assumability
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which OS was the first successful mass-market OS distributed with a desktop
+    personal computer?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Linus Torvald’s Linux
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Microsoft’s Windows
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Thompson and Ritchie’s Unix
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Apple’s MacIntosh
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which application feature in Elastic, Arkime, and other tools allows the user
+    to customize how information is presented to them?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: GUI
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Dynamic ruleset
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Dashboards
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Whiteboard
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Further reading
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To learn more about the topics that were covered in this chapter, take a look
+    at the following resources:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Kali Linux and Kali Purple release** **page**: [https://www.kali.org/blog/kali-linux-2023-1-release/](https://www.kali.org/blog/kali-linux-2023-1-release/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**NIST Cybersecurity** **Framework**: [https://www.nist.gov/cyberframework](https://www.nist.gov/cyberframework)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Metasploit Framework home** **page**: [https://www.metasploit.com/](https://www.metasploit.com/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '*Mastering Kali Linux for Advanced Penetration Testing: Become a cybersecurity
+    ethical hacking expert using Metasploit, Nmap, Wireshark, and Burp Suite, 4th
+    Edition*, by Vijay Kumar Velu: [https://www.amazon.com/Mastering-Linux-Advanced-Penetration-Testing/dp/1801819777/ref=nav_custrec_signin?crid=2OKNCSTWE085&keywords=kali+purple&qid=1694494113
+    &s=books&sprefix=kali+purple%2Cstripbooks%2C134&sr=1-1&](https://www.amazon.com/Mastering-Linux-Advanced-Penetration-Testing/dp/1801819777/ref=nav_custrec_signin?crid=2OKNCSTWE085&keywords=kali+purple&qid=1694494113&s=books&sprefix=kali+purple%2Cstripbooks%2C134&sr=1-1&)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

@@ -1,0 +1,1539 @@
+- en: '9'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Digital Forensics
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The tools we’ve talked about up until now were designed to analyze, identify,
+    capture, and store digital traffic to aid cybersecurity defense teams in further
+    analyzing and responding. Some of the tools themselves had potential abilities
+    built into their design to respond automatically on behalf of we silly naïve humans.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, no matter how technologically advanced and no matter how well trained
+    we cyber defenders are, there is always going to be someone out there with our
+    level of skillset or greater who is able to find deeply complex and advanced ways
+    to circumvent our methods. These are some of the more damaging cybercriminals
+    in the world; these are the folks who might be trained by big-budget organizations
+    such as nation states or organized crime units. They are experts at playing the
+    long game and taking the time and money – years upon years if need be – to train
+    highly dedicated personnel who might share their employer’s mission and belief
+    system; this is well within their level of patience.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Folks with such advanced levels of skill and training will undoubtedly pass
+    off some of their methods to less trained and experienced folks over time and
+    collectively; this leads us to the top tier of cyber adversaries. Sometimes, the
+    crimes committed by these folks are not digital in nature at all, but digital
+    technology is used as a tool to support or document their activities. When such
+    people are caught, depending on the legal jurisdiction that snatches them up,
+    they may be entitled to due process as well as the default assertation that they
+    are innocent until proven guilty. Getting any proof of wrongdoing, as it relates
+    to technology, is up to digital forensic investigators.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It turns out that Kali Purple either provides or supports several tools that
+    relate to digital forensics and deep analysis. In this chapter, we are going to
+    cover some of the more prominent tools that fall within this realm and how to
+    add them to or activate them within our Kali Purple installation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Additionally, we are going to cover some of the tools that these bad actors
+    use to conduct their business in the first place. Why? So we can understand these
+    tools, which are also very much a part of Kali Purple, and how they can be used
+    will help us learn what the bad actors were trying to do. Not only that, but we
+    can also use these same tools to train the people of our organizations and then
+    run mock campaigns to test what they’ve learned, therefore assessing the quality
+    and effectiveness of any training we give. The following topics will be covered
+    in this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Digital forensics and malware analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Social-Engineer** **Toolkit** (**SET**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Browser Exploitation** **Framework** (**BeEF**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Maltego
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The applications in this chapter are far less resource intensive than in previous
+    chapters. However, if you are working through the full Kali Purple experience,
+    we recommend you keep the more stringent requirements in mind from the other chapters,
+    should you be using any mix of the tools from this endeavor:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Minimum requirements**: A computing device with either amd64 (x86_64/64-bit)
+    or i386 (x86/32-bit) architectures. It should contain at least 4 GB of RAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Recommended requirements**: Based on feedback from cybersecurity field practitioners,
+    aim for amd64 (x86_64/64-bit) architecture with 8 GB of RAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Digital forensics and malware analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Digital forensics** is a career field unto itself. As technology continues
+    to rapidly evolve, so does its uses in criminal behavior. Larger law enforcement
+    agencies employ analysts who specialize in extracting valuable data from digital
+    devices. Kali Purple offers compatibility with some of these utilities that are
+    used to assist in this career field. You too can use these tools alongside many
+    of the ones you’ve already been studying. Consider that not all malicious behavior
+    is going to be realized from the perspective of a law enforcement professional.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Those of you presently working careers in cybersecurity are already very well
+    aware of this. There are going to be a number of times when you, the analyst,
+    are the first point of contact – the original discoverer – with malicious and
+    sometimes overtly criminal, even heinous activity. While nobody wants to be found
+    in the middle of such an experience, imagine if you were. Through the routine
+    of your day-to-day cybersecurity profession, what if you were to discover some
+    incriminating evidence that results in taking a very bad person off the street
+    before they can harm someone else? Just because we sit behind plastic and silicon
+    breadboard devices doesn’t mean our profession isn’t important, and it certainly
+    doesn’t mean we will not potentially save lives and protect innocent people from
+    the evil intentions of others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this section, we’re going to explore some of the tools used to conduct digital
+    forensic extraction and analysis. Let’s begin with a tool that is used to analyze
+    Windows applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Portable Executable Identifier (PEiD)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: PEiD – also known as **PEv** (**PE version**) – is a popular and widely used
+    tool for identifying and analyzing Windows executable files (PE files). It is
+    specifically designed to detect packers, cryptors, and compilers used in executable
+    files. PEv is commonly utilized in the field of malware analysis and reverse engineering
+    to understand the nature of executable files and identify potential malicious
+    traits. When a file is analyzed using PEv, it provides insights into the specific
+    packer or compiler used to create the executable, which aids in understanding
+    the file’s behavior and potential security risks. PEv assists security professionals
+    and analysts in identifying and classifying executable files based on their internal
+    characteristics aiding in the detection and analysis of potentially harmful software.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To install PEv, perform the following steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Type **sudo apt update** and **sudo** **apt upgrade**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then, type **sudo apt** **install pev**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Some older systems and versions might require you to start the PEiD by typing
+    **sudo bash pev** or **sudo ./pev &** but more likely than not, you’ll need to
+    navigate to the directory it was installed – which should be **/usr/bin** – and
+    type **sudo pescan -v <filepath/filename>** and note that the file must be a Windows
+    executable file for this application to work because that’s what this application
+    was designed for.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Alternatively, you can select the icon with the Kali Dragon mascot in the upper
+    left of your Kali Purple desktop, just under **File**, type **pev** into the search
+    bar, and then select the **pev** option from the dropdown menu:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.1 – Use the Kali search function to find an application](image/B21223_09_1.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.1 – Use the Kali search function to find an application
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let us check the next product.
+  prefs: []
+  type: TYPE_NORMAL
+- en: PEScan
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Another digital forensics product that works very well with PEiD is **PEScan**,
+    and you should already have this installed on your system. Whereas PEv is designed
+    specifically for analyzing PE files, PEScan is a separate tool entirely that is
+    designed to serve the purpose of detecting what file type a file is with particular
+    emphasis placed on identifying characteristics of PE file types. It does this
+    by analyzing the structure of the files to determine whether they conform to known
+    specifications of PE files. PEScan can also be used to identify the characteristics
+    of headers, sections, imports, and other attributes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As far as malware analysis is concerned, PEScan is valuable for identifying
+    and analyzing potential threats within the context of Windows executable files.
+    It is commonly deployed in conjunction with other security tools and analysis
+    techniques to gain insight into the functionality and behavior of executable files,
+    aiding in the identification of malicious code.
+  prefs: []
+  type: TYPE_NORMAL
+- en: PEScan is most useful in identifying and confirming the presence of PE files
+    within a system or analyzing suspicious files to determine their nature and potential
+    impact on the host devices and/or network. This tool provides valuable information
+    for aiding in the assessment of the files’ threat level along with assisting in
+    the formulation of appropriate mitigation strategies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use PEScan, open a command terminal on your Kali Purple desktop and first
+    type **pescan** by itself to see a list of additional options. There, you’ll see
+    an example of how to use this tool and that it’s very straightforward. If you
+    wish to use any of the options presented, you will type the first value you see
+    in the line for the option you want between **pescan** and **<filename>**. So,
+    if you would like to show the version of **putty.exe**, for example, you would
+    type **pescan -V putty.exe**, taking special note that the options are case sensitive:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.2 – PEScan usage in a command terminal](image/B21223_09_2.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.2 – PEScan usage in a command terminal
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let us check out the next tool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: IDA Pro
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**IDA Pro** is an advanced, interactive disassembler, widely regarded as one
+    of the most powerful and comprehensive tools for reverse engineering, malware
+    analysis, and binary analysis. Its robust set of features, extensibility, and
+    cross-platform support make it a preferred choice for professionals working in
+    malware analysis, vulnerability research, binary analysis, and where reverse engineering
+    is a part of their profession.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Reverse engineering** is the process of analyzing a system, product, or software
+    application to understand its design, architecture, functionality, and behavior.
+    This is typically done with the goal of reproducing or modifying its features,
+    implementing interoperability, or identifying potential security vulnerabilities.
+    As far as software is concerned, reverse engineering will often involve executable
+    binaries, firmware, or hardware to uncover the underlying logic and functionality
+    – that is, to uncover how the software was built to *think*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'IDA Pro has many key features which include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Disassembly and decompilation**: IDA Pro can disassemble and decompile a
+    wide range of executable files and binaries, providing a human-readable representation
+    of the code and its behavior. It supports various processor architectures, making
+    it versatile for analyzing different types of executables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Graphical user interface (GUI)**: IDA Pro’s GUI allows for interactive exploration
+    of disassembled code, control flow graphs, and data structures, making it intuitive
+    and user friendly for reverse engineers and security analysts. A **data structure**
+    is a type of organization and storing of data within a program itself as opposed
+    to a database so a computer can efficiently access and manipulate the data. Some
+    examples include lists, queues, trees, graphs, and hash tables.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Cross-platform support**: IDA Pro supports the disassembly and analysis of
+    binaries across different operating systems and processor architectures, allowing
+    analysts to work with a wide variety of executable formats and platforms.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Plugin ecosystem**: IDA Pro boasts a robust plugin architecture, enabling
+    users to extend its functionality with custom scripts and plugins. This extensibility
+    allows for the creation of specialized analysis and visualization tools, enhancing
+    IDA Pro’s capabilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Static analysis and data flow analysis**: IDA Pro provides features for static
+    analysis, including tracking data flow through the disassembled code, identifying
+    function calls, and reconstructing high-level constructs such as loops and conditions.
+    A **loop** in this circumstance is when a piece of software runs a section of
+    code over and over again, often iterating some type of variable with each loop.
+    An example might be incrementing or decrementing a numerical value. A **condition**
+    would be when a piece of code is instructed to execute only if a particular set
+    of criteria has been met and is often seen within raw code as **if**, **else**,
+    **if else**, or **elseif** statements.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Binary patching and modification**: IDA Pro enables users to patch binaries
+    and modify their behavior, providing a platform for vulnerability research, exploit
+    development, and binary modification for specific use cases.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Collaborative analysis**: IDA Pro supports collaborative analysis, allowing
+    multiple analysts to work on the same disassembly database and share their findings,
+    annotations, and comments.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scripting and automation**: IDA Pro includes a built-in scripting language
+    that allows users to automate repetitive tasks, create custom analysis routines,
+    and extend the tool’s functionality through scripting. The language is called
+    **IDAPython** and in literal terms is the same as Python. It’s given its own identification,
+    however, because of the specialized APIs and language library options included
+    with it. These are tools focused specifically on reverse engineering.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Debugger integration**: IDA Pro integrates with various debuggers, enabling
+    a seamless transition between static analysis and dynamic debugging, facilitating
+    the correlation of disassembled code with dynamic runtime behavior. Some of these
+    include **GNU Debugger** (**GDB**), **Windows Debugger** (**WinDbg**), OllyDbg,
+    x64dbg, **LLVM Debugger** (**LLDB**), QEMU Debugger, and Radare2 Debugger, as
+    well as the option for advanced users to integrate custom debuggers.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Processor module software development kit (SDK)**: IDA Pro provides a processor
+    module SDK, which enables the creation of custom processor modules for analyzing
+    and disassembling executable files targeting specific architectures. This is a
+    tool provided to IDA Pro by Hex-Rays, the creator of IDA Pro, which assists developers
+    in extending disassembly capabilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**File format support**: IDA Pro supports a wide range of file formats, including
+    ELF, PE, Mach-O, and COFF, amongst others. This makes it a very versatile tool
+    for analyzing executables from different operating systems and platforms.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Extensive community documentation**: IDA Pro benefits from a very active
+    user community, extensive documentation, and online resources, making it a well-supported
+    and widely adopted tool in reverse engineering and security research communities.
+    If you’d like to explore more about this product and its online community, just
+    follow the link ahead and we’ll toss a copy of the link to Hex-Rays in the *Further
+    reading* section for your future reference also.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'To acquire a copy of IDA Pro, log into your Kali Purple environment, and within
+    that environment, open a web browser, pointing the URL to [https://hex-rays.com/ida-pro/](https://hex-rays.com/ida-pro/).
+    Don’t let the prompt to buy a license scare you. They have a free version for
+    you to try out before deciding if you want to spend the dollar. To find that free
+    version, simply scroll down the page until you see the **Which version of IDA
+    is the best for you?** section. There, you will see a demo version or a barebones
+    free version. Select which option you prefer, and you’ll be taken to a page where
+    you can grab your SHA256 hash value. By now, you know what to do. Record your
+    hash value and download the Linux version (assuming you’re within your Kali Purple
+    environment):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.3 – IDA Pro website download page](image/B21223_09_3.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.3 – IDA Pro website download page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After the file downloads, you will want to open a command line terminal window
+    and go through your usual motions of **sudo apt** updating and upgrading if you
+    haven’t done that yet. Perform the following steps from there (replace **<filename>**
+    with your actual filename – ours is **idafree84_linux.run**):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Navigate to your **Downloads** folder by typing **cd Downloads**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **ls** and press *Enter* to confirm your IDA Pro downloaded successfully.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sha256sum <filename>** to confirm that hash value, changing the filename
+    if you have a newer version.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compare the hash value that prints to your screen with the value you recorded
+    from the download page – the example is shown in *Figure 9**.3*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Give your file the proper permissions so Kali can run it successfully by typing
+    **chmod +****x <filename>**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To extract the file and formally install IDA Pro, type **./<filename>**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You’ll get a small GUI popup, as seen in *Figure 9**.4*. Follow those prompts,
+    accepting default values:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.4 – IDA Pro download extraction](image/B21223_09_4.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.4 – IDA Pro download extraction
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To run IDA Pro:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Navigate to the directory where Kali placed the extracted files (ours is **~/idafree-8.4**).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **./ida64**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you receive an error, try typing **chmod +****x ida64**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Retry typing **./ida64**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Read and accept the EULA if you agree with it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Read the **User interface telemetry** popup and decide if you want to share
+    data (entirely your choice).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Follow the prompts from there and IDA Pro should be up and running.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Being able to deconstruct and reverse engineer any piece of modern technology
+    is a braggable feat in and of itself. Be careful, though! No matter how innocent
+    your intentions are, much in the world is based on perception and it may not be
+    fair, but people do find themselves in hot legal water even over circumstantial
+    evidence. Make sure when you – understandably so – show off your super skill of
+    disassembly and reverse engineering to your friends or technology-challenged family
+    members that you are very clear about your learning endeavor and that you are
+    fully respecting the intellectual property rights of the creator. Also, make sure
+    you review the license agreement of any product you might wish to disassemble
+    very closely before doing so because many license agreements strictly forbid it
+    for any reason and you can find yourself in legal trouble even if your intentions
+    are innocent and pure.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Volatility3
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: According to The Volatility Foundation’s website, the **Volatility Framework**
+    was first publicly released in the year 2007 at Black Hat DC. **Volatility** is
+    an open-source memory forensics framework used for analyzing volatile memory,
+    such as RAM, in a digital system. This is a type of memory that a system uses
+    to store and process variables and other information needed to run as intended
+    while the system is in use. Once the system is turned off, the memory empties;
+    gone forever. Volatility enables incident responders, forensic analysts, and security
+    researchers to extract valuable information from memory dumps to investigate security
+    incidents, malware infections, and system compromises.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you might guess, Volatility has key features that make it a critical tool
+    within the field of digital forensics. It provides valuable insights into volatile
+    memory contents, which helps to assist in the identification, analysis, and response
+    to security incidents, whether they be traditional security or cybersecurity incidents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Some of these features include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Cross-platform support**: In this case, “platform” refers to the operating
+    system brand/type – often called a platform. Volatility supports all mainstream
+    operating systems, such as Windows, Linux, MacOS, and Android. This makes it an
+    appealing option for forensic analysts who need to be prepared to conduct their
+    memory analysis and other forensic investigations across a diverse environment.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Memory forensics**: This is the primary focus of Volatility; it’s what the
+    product is all about. Volatility was built especially for memory forensics by
+    providing tools and plugins to extract and analyze volatile information – which
+    is information that can rapidly go away if the system being analyzed is shut down
+    – from memory dumps. Conducting this type of analysis can produce results that
+    help in identifying running processes, network connections, registry hives, and
+    more.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Plugin architecture**: Volatility is modular in design and extensible through
+    its plugin architecture. **Modular** means the code that is the product itself
+    is separated into independently functioning chunks, called **modules**. This allows
+    certain portions of a product’s programming code to be updated and tested without
+    affecting the rest of the code. Having a modular architecture means that users
+    can more easily develop custom plugins for Volatility or utilize existing ones
+    to extract specific information from memory dumps more efficiently and with much
+    less risk to the overall product’s code.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Process and malware analysis**: Volatility enables the analysis of running
+    processes, identifying malicious processes, command history, loaded modules, and
+    injected code. Running processes are quite likely actively using volatile memory,
+    RAM, because this is how programs can remain running. RAM stores critical values
+    that processes will need to access to perform the tasks they were programmed to
+    do. This feature aids in malware analysis and understanding system behavior.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Networking analysis**: The framework allows analysts to extract network-related
+    information from memory dumps, such as open ports, established connections, network
+    configurations, and communication activities. A memory dump, which is also sometimes
+    called a core dump or crash dump, is a quick copy of a system’s volatile memory
+    at a specific point in time. When a system crashes or errs in some way, it will
+    attempt to grab copies of volatile memory very quickly. The system sometimes only
+    has a tiny fraction of a second to perform this operation and there are no guarantees
+    it will succeed. Because of this, these copies are often referred to as **snapshots**.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Registry analysis**: Volatility supports the analysis of registry hives in
+    memory dumps, helping analysts retrieve system configurations, user profiles,
+    installed software, and artifacts related to user activity. A registry hive is
+    a core component in the Windows operating system’s architecture. The Windows registry
+    is a centralized database that stores configuration settings, options, and information
+    related to the operating system itself, along with hardware, software, and individual
+    user settings. It indeed will play a crucial role in system initialization, application
+    settings, device configuration, user preferences, and the individual device’s
+    system security.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**File system analysis**: Volatility provides tools to extract information
+    about files, directories, and file system structures such as FAT, FAT16, FAT32,
+    NTFX, and EXT APFS, as well as file handles present in memory dumps. Those of
+    you with software engineering experience will recognize a file handle as something
+    coders will call a file descriptor. A **file descriptor** is a unique numerical
+    value assigned to open files or **input/output** (**I/O**) resources within an
+    application. It helps a system keep track of and manage multiple file accesses
+    simultaneously and having this information could be quite valuable to digital
+    forensic investigators. It will assist them in understanding file access patterns
+    and identifying file-based artifacts.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Timeline analysis**: The framework offers timeline analysis capabilities
+    to reconstruct the sequence of events on a system by correlating timestamped memory
+    artifacts. That goes beyond simply knowing when an action or activity occurred.
+    Investigators and analysts can reconstruct events and learn the order in which
+    certain things might have happened and knowing the order itself can help determine
+    whether the activity is malicious in nature. Even if maliciousness has already
+    been determined, it can help identify the purpose or root cause of the activity.
+    In other words, Volatility aids in incident reconstruction and timeline recreation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Community support and updates**: Like most of the resources included in the
+    Kali Purple distribution, Volatility has an active community of users and developers
+    who contribute new plugins, provide support, and continuously update the framework
+    to address evolving forensic challenges and support new operating system versions.
+    Today, Volatility is primarily managed by a 501(c) non-profit corporation called
+    The Volatility Foundation. They do offer online training courses for a fee.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Integration with other tools**: Volatility seamlessly integrates with IDA
+    Pro and other forensic tools such as Wireshark and the class of debuggers we previously
+    spoke of. As with all security integrations, this helps to enhance the overall
+    capabilities of the product, in this case, memory forensics investigations, and
+    enables interoperability with existing workflows.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'To grab a copy of Volatility, open up your Kali Purple command line terminal
+    window and go through the motions of updating and upgrading as needed. When ready,
+    perform the following actions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Type **sudo git** **clone** [https://github.com/volatilityfoundation/volatility3.git](https://github.com/volatilityfoundation/volatility3.git).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Navigate to the installation by typing **cd volatility3**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **pip3 install -****r requirements.txt**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **python3 vol.py -h** to verify the installation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo mkdir memory_dumps** to create a directory for storing your memory
+    dump actions.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **cd memory_dumps** to enter the directory.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Create a memory dump file for Volatility3 to report to by typing **sudo touch
+    firstdump.raw**. (You can name it whatever you like as long as you remember the
+    name for executing Volatility3.)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Let’s make sure all user and file permissions are set – type **pwd** to get
+    the full file path of your **memory_dump** directory, record that value, and then
+    type **cd** to return to the root directory.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo chmod -R 777 /home/misp/volatility3/memory_dumps/firstdump.raw**,
+    replacing the file path with the path you recorded in the previous step.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now, let’s run Volatility3 by typing **python3 vol.py -f /****home/misp/volatility3/memory_dumps/firstdump.raw
+    linux.pslist**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.5 – Running Volatility3 limited test for educational purposes](image/B21223_09_5.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.5 – Running Volatility3 limited test for educational purposes
+  prefs: []
+  type: TYPE_NORMAL
+- en: Type **python3 vol.py -h** to get a list of all the plugins you can use with
+    Volatility3.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Remember, the default command template for using Volatility3 is **python3 vol.py
+    -f <path/to/memory_image.ext> <****plugin_name> [options]**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Have fun playing with your volatile memory extraction! Next, we’re going to
+    look at a lesser-known, but still quite valuable, tool that analyzes **Domain
+    Name System** (**DNS**) activity from a forensic perspective.
+  prefs: []
+  type: TYPE_NORMAL
+- en: ApateDNS
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**ApateDNS** is a tool designed for simulating DNS-related attacks and testing
+    defensive capabilities in cybersecurity scenarios. It allows users to create a
+    virtual DNS server that can mimic various DNS behaviors and threats to assess
+    how systems and security tools respond to such attacks. The primary purpose of
+    ApateDNS is to emulate DNS-based attacks in a controlled environment for defensive
+    testing and evaluation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Overall, it’s a valuable tool for conducting DNS-related security assessments.
+    It is also used for testing defensive mechanisms and improving the resilience
+    of networks and systems against DS-based attacks. By leveraging its features and
+    capabilities, cybersecurity professionals can enhance their preparedness and response
+    to DNS threats in today’s evolving threat landscape.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Key features unique to ApateDNS include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**DNS attack simulation**: ApateDNS enables users to simulate different types
+    of DNS attacks, including DNS spoofing, DNS cache poisoning, DNS amplification
+    attacks, and DNS tunneling, among others. By recreating these attack scenarios,
+    security professionals can evaluate the effectiveness of their defenses and responses.
+    You likely know that a DNS server translates the numerical IP addresses to human-readable
+    domain names (**something.com**). DNS spoofing and cache poisoning are attacks
+    whereby the offender injects fake records into the DNS server’s cache files, causing
+    users to be redirected to fake, malicious websites.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**DNS amplification attacks** are a type of **distributed denial of service**
+    (**DDoS**) attack that exploits vulnerabilities within the domain name server/system
+    in an effort to overwhelm a target server or network with a very large volume
+    of malicious traffic. In such a case, the attacker sends a small number of specially
+    crafted DNS queries to open up DNS servers that support recursion. They do so
+    in the hopes that these servers are misconfigured or are publicly accessible –
+    which they often are – and that causes the servers to respond with significantly
+    larger volumes of information in their responses to the target/victim’s IP address.'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**DNS tunneling** is a manner of transferring data to and from DNS systems
+    that has both legitimate and malicious uses. It’s simply encoding the data in
+    some manner so that it bypasses security controls. This can be done intentionally
+    for legitimate covert communications but is also used by malicious actors for
+    data exfiltration as well as simply creating a pathway into and out of a DNS system
+    for a plethora of other malicious desires.'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Customizable DNS responses**: Users can configure ApateDNS to generate custom
+    DNS responses, redirect DNS queries to specific IP addresses, alter DNS resource
+    records, and manipulate DNS packet data. This flexibility allows for detailed
+    testing of DNS-related security measures. This might include such adjustments
+    as changing the **Canonical Name** (**CNAME**), which is more or less setting
+    the response for a specific domain name to redirect the requester to another domain
+    name. Sometimes, organizations want to reserve domain names that are similar to
+    their brand to prevent competing organizations from using them to confuse and
+    mislead customers. So, they will register many like-named domains and have them
+    all pointed to the main organizational website. Organizations with deep enough
+    pockets will sometimes do this, anticipating common typographical errors when
+    users input web addresses. The DNS will detect the registered misspelled domain
+    and redirect it to the correct one.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Testing DNS security controls**: ApateDNS can be used to test the resilience
+    of DNS security controls, such as DNS firewalls, **intrusion detection systems**
+    (**IDS**)/**intrusion prevention systems** (**IPS**), and DNS monitoring tools.
+    We talked about some of those systems in [*Chapter 7*](B21223_07.xhtml#_idTextAnchor108).
+    By simulating attacks, organizations can identify vulnerabilities and gaps in
+    their DNS security posture. This is part of the beauty of Kali Purple. It gives
+    all the tools to set up a proof-of-concept scenario and then it also gives you
+    the tools to test against those scenarios.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Network defense assessment**: In a broader scope than the previous item,
+    security teams can use ApateDNS to assess the effectiveness of network defenses
+    against DNS-based threats and attacks. As we have drilled down thus far, ApateDNS,
+    as the name implies, is all about the forensic testing and analysis of DNS products
+    and DNS is an integral part of any fully fleshed-out organizational network. By
+    evaluating how well security solutions detect and respond to simulated attacks,
+    organizations can enhance their overall cybersecurity posture.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Education and training**: As is the theme for the entire Kali Purple distribution,
+    ApateDNS can also serve as a training tool for cybersecurity professionals to
+    develop skills in identifying and mitigating DNS threats. You might think of this
+    as a sort of containerized training. Since you know ApateDNS is built with DNS
+    in focus then you know this tool can be added to any training curriculum that
+    is DNS focused. It’s not such a bad idea to break down your cybersecurity training
+    into smaller chunks – themes – like this. Having hands-on experience with simulated
+    attacks can help individuals understand DNS security concepts and practice response
+    strategies. When you believe your team has developed solid DNS skills, then you
+    can move on to another topic.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Open-source and cross-platform capable**: ApateDNS is open-source software,
+    which allows users to access and modify its source code for customization and
+    research purposes. It is compatible with multiple operating systems, including
+    the big three – Windows, Linux, and macOS. This helps with maximum flexibility
+    for testing across a diverse span of environments.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Unfortunately, the advancement of cybersecurity tools across the board makes
+    stand-alone specialty applications such as ApateDNS less appealing to some professionals.
+    This is likely because if users can get the same or similar features bundled with
+    other applications, then why not do that instead? At the time of this writing,
+    many of the traditionally known download locations and repositories were not functional,
+    including the well-known Mandiant and FireEye/Trellix locations. That’s okay!
+    We’ve talked about this since the beginning of this title. Being an analyst, being
+    a cybersecurity professional, means you need to always be prepared for the unexpected.
+    Sometimes, things like this happen. Being an effective researcher will be one
+    of your greatest assets. In our case, we found a copy of ApateDNS at the established
+    **Softpedia** repository. Softpedia is not inherently malicious. However, it can
+    be risky to grab software from there given the lack of security oversight. Proceed
+    with caution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One location to grab ApateDNS is the following link: [https://www.softpedia.com/get/Network-Tools/Misc-Networking-Tools/ApateDNS.shtml](https://www.softpedia.com/get/Network-Tools/Misc-Networking-Tools/ApateDNS.shtml).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It should be pretty straightforward from there. You know the routine. When
+    you launch ApateDNS, it should look similar to what you see in *Figure 9**.6*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.6 – ApateDNS launch screen](image/B21223_09_6.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.6 – ApateDNS launch screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this section, you learned five different tools to conduct deep forensic analysis
+    in five different ways, from extracting volatile memory to examining Windows executables,
+    to complete application disassembly and reverse engineering to DNS behavioral
+    activity. Each of these resources helps a digital forensic investigator do their
+    job and takes them one step closer to solving their case or developing evidentiary
+    support to put bad folks away.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Have you ever wondered how those bad folks were able to do what they did in
+    the first place? This is a critical thought in our field. Knowing how this is
+    done helps us develop mock campaigns to test and train the workers in our organizations.
+    In the next section, we are going to examine three tools used to do the damage
+    the previous tools in this book are built to identify and respond to.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Throughout this book, we’ve covered various tools that are either included with
+    or have support built into Kali Purple, covering a full cyber defense environment.
+    These are tools we’ve used to set up cybersecurity defenses to help us grab information,
+    organize it, store it, evaluate it, respond to it, and, in this chapter, conduct
+    forensic investigations. All of these are the *Blue* side of the Kali Purple family.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we near completion of our Kali Purple experience, we’re going to take a look
+    at some of the supported and included tools that we can use to put the utilities
+    we’ve already covered to use! Indeed, Kali Purple also has an abundance of tools
+    that can be used offensively. We will discuss some of the more prominent Red Team
+    tools in [*Chapter 10*](B21223_10.xhtml#_idTextAnchor161) along with some tools
+    that might fall into either the *Blue* or *Red* category but were part of Kali
+    Linux before the Purple distribution. Wireshark is a good example of such a tool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the meantime, let’s take a look at how cyber activity all begins. While
+    there are several variations of the process of hacking or the process of conducting
+    a cyberattack, we are working off the generic steps listed ahead:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reconnaissance
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Scanning
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Gaining access
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Maintaining access
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Covering your tracks
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This isn’t a hacking or pen testing manual but if you decide you’d like to learn
+    more about such topics, we’ve included several links in the *Further reading*
+    section for you. For our purposes here, we’re going to focus on the beginning;
+    we’re going to focus on reconnaissance. Let’s dive in.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SET
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Reconnaissance** – or **recon** – is an information-gathering stage of an
+    operation. It is commonly used in the context of military and intelligence operations
+    worldwide, but you will also often see references to it in cybersecurity since
+    it is one of the initial stages of most cyberattack frameworks. Depending on the
+    framework you follow, to include custom frameworks, some might include planning
+    and design phases before reconnaissance. It might include the discovery of security
+    flaws, or potential entry points for attackers. It plays a vital role in the overall
+    success of a penetration test – for that matter, also for the success of criminal
+    activity. The process involves collecting data about the target to better understand
+    its infrastructure, weaknesses, and overall assets.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the most popular vectors of attack is the people who operate those resources.
+    If a pentester or attacker can successfully compromise any person, or person’s
+    credentials then, they can compromise any system associated with that person without
+    leaving a single digital artifact behind.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are two basic types of reconnaissance activities. The first is **passive
+    reconnaissance**. This is where the attacker begins collecting information about
+    the target person or system without directly interacting with them. They will
+    make liberal use of **open-source intelligence** (**OSINT**) sources, such as
+    publicly posted information on websites, social media accounts, job postings,
+    domain registration information, and a multitude of other items. The other type
+    is called **active reconnaissance**, which involves direct interaction with the
+    target person, system, or network. This can sometimes slide into the second stage
+    of hacking we previously listed, which is scanning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As it relates to people, one of the most common **active reconnaissance** activities
+    involves a person as the target and the use of social engineering to attempt to
+    compromise the person and/or otherwise trick them into revealing protected information,
+    such as login credentials for organizational systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Enter the SET. This is one you really want to – and most assuredly will enjoy
+    – invest some time playing with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s grab a copy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fire up your Kali Purple VM and open a command line terminal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo apt update** and if you see any upgrades from the list, take care
+    of that first.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo git** **clone** [https://github.com/trustedsec/social-engineer-toolkit.git](https://github.com/trustedsec/social-engineer-toolkit.git).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After the cloning process completes, navigate to the installation by typing
+    **cd social-engineer-toolkit**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You may or may not need to type the following command to complete the installation:
+    **sudo ./setup.py**.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Upon completion or if you receive an error suggesting it’s not needed, type
+    **sudo ./setoolkit**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Press *Y* to agree to the terms (unless for some unbeknownst reason, you decide
+    not to agree to the terms).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If your installation and launch were successful, you should see something resembling
+    *Figure 9**.7*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.7 – SET](image/B21223_09_7.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.7 – SET
+  prefs: []
+  type: TYPE_NORMAL
+- en: This wonderful product gives you everything you could ever want in a text-based
+    product’s lobby box / start menu screen. You have credits, additional resources,
+    *follow-us* fan clubs, updating instructions, and an abundance of options for
+    using the product. If that’s not enough, these clever developers even provide
+    you with a remarkably beautiful piece of ASCII text art for your visual satisfaction.
+    We are focused on social engineering, so type **1** to select **1** and press
+    *Enter*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will see that SET offers a generous supply of potential social engineering
+    attack vectors, as seen in *Figure 9**.8*. Go ahead and navigate through the menus.
+    Each one will give you the option to go backward:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.8 – SET social engineering attack list](image/B21223_09_8.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.8 – SET social engineering attack list
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is the real deal, folks! It is of absolute paramount importance before
+    you proceed to use this product that you have advanced permission – in writing
+    – to perform the actions you are planning to take. There should be a type of document
+    that lays out the boundaries of precisely what you are or are not allowed to do.
+    This might be called a **pen testing scope** document, a **rules of engagement**
+    (**RoE**) document, or something similar. If you don’t have that document, don’t
+    do anything further with this tool other than attack yourself! If you fail to
+    adhere to this warning, you may very well find both of your wrists bound by a
+    couple of oversized stainless steel bracelets with a very short chain linking
+    them together.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you navigate through the various menus, take note of the information provided
+    to you on each screen. SET tells you every single thing you need to know if you
+    want to learn to create your own exploits. In some cases, they have exploits already
+    prepared for you and all you have to do is provide the necessary information,
+    such as the system addresses of the target after you invoke the option. This along
+    with **Metasploit** and **Mimikatz** (both Red Team tools) are some of the most
+    powerful – and most dangerous – cybersecurity tools you will encounter in your
+    career. Please use them carefully and responsibly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: BeEF
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The BeEF is a powerful tool for testing the security of web browsers and conducting
+    client-side attacks. It allows security professionals to assess the security posture
+    of web applications, attempt to exploit client-side vulnerabilities, and demonstrate
+    the risks associated with browser-based attacks. Like SET, BeEF should only be
+    used for ethical purposes, such as penetration testing, security assessments,
+    and educational demonstrations, and only with proper written authorization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By now, you’ve probably sensed a trend with the applications that are part
+    of the Kali Purple family, be they part of the distribution or compatible with
+    the Kali Purple environment. You’ll notice nearly every application in *Introduction
+    to Kali Purple* has some level of extensibility allowing for user customizations,
+    real-time or near-real-time responsiveness, cross-platform compatibility, and
+    some type of online and/or community support. This is no different. These concepts
+    are also reflected in some of BeEF’s key features which include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Browser exploitation**: As mentioned, BeEF allows you to exploit vulnerabilities
+    in web browsers to demonstrate the impact of client-side attacks. Some of these
+    vulnerabilities can include **cross-site scripting** (**XSS**), **Cross-Site Request
+    Forgery** (**CSRF**), clickjacking, browser fingerprinting, browser exploitation,
+    and remote command execution.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: XSS is a type of security vulnerability that occurs when an attacker injects
+    malicious scripts into web pages. Those scripts will execute when those pages
+    are viewed by others. Usually, the scripts are written in JavaScript code since
+    that’s a common web programming language used by developers. CSRF is similar except
+    its focus is on taking advantage of the trust that a website has in a user’s browser.
+    The attacker tricks the user into making a web request from the site without the
+    user’s knowledge while they are authenticated – logged in – to the website.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Clickjacking** is when an attacker places an invisible layer on top of a
+    legitimate web page with an invisible link on top of an otherwise valid link on
+    the site, such as a submit button or like button. When the users go to click on
+    what they believe is the legitimate action, they are actually clicking an invisible
+    link to a malicious entity. The invisible layer is just another layer of content
+    with the transparency set to 100% and a priority level set to display on top of
+    all other elements.'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Persistent client-side hooks**: BeEF provides the ability to create persistent
+    client-side hooks that remain active even when the target navigates away from
+    the initial attack page. Hooks might be described as a type of backdoor to an
+    application. There are too many different styles of hooks to mention here but
+    one that is commonly seen is when they are employed as secret backdoors for developers
+    to quickly gain access to a system. They have noble purposes as well in that developers
+    and security professionals can use them to test an application and monitor how
+    the data is flowing. However, we’d advise against using them if it is practical
+    for your situation and if at all possible for those of you who work in development
+    due to the inherent security risks. By deploying persistent hooks, an attacker
+    can maintain access to the target’s browser and continue to interact with the
+    hooked browser. If you refer back to the beginning of this section, maintaining
+    access is one of the key steps of the hacking / pen testing process.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Extension framework**: Like other applications we’ve covered, BeEF offers
+    an extension framework that allows you to extend its capabilities through custom
+    modules and plugins. They even hold your hand a bit if you’re new to developing
+    your own extensions for applications. You can develop custom modules to enhance
+    BeEF’s functionality, integrate with other tools, and automate browser-based attacks.
+    In fact, at the very bottom of the default page, after you log in to the system,
+    there is a **Learn More** section providing additional instructions to help you
+    do just that, as seen in *Figure 9**.9*:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 9.9 – The Learn More section at the bottom of the BeEF default page](image/B21223_09_9.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.9 – The Learn More section at the bottom of the BeEF default page
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Social engineering**: Something BeEF has in common with SET is that it supports
+    social engineering tactics, and it does this by complementing the email phishing
+    campaigns produced with SET. With BeEF, you can craft the most convincing phishing
+    pages and lure targets to visit additional malicious websites. You can use these
+    crafted pages to harvest user credentials. If you’re wondering how this can possibly
+    be considered anything other than criminal, then please understand that using
+    every tool and technique that the actual cybercriminals use in a lab environment
+    to either reproduce or test human behavior will always serve as a powerful training
+    ground for your organization’s people. What we mean by that is that you can set
+    up mock phishing campaigns and test how much your organizational members might
+    have learned and what information they might have gained after providing phishing
+    training. This is becoming a more and more common practice in the business world
+    as phishing itself is becoming more and more creative, tricky, and aggressive.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Real-time control and monitoring**: BeEF provides real-time control and monitoring
+    of hooked browsers, allowing you to interact with the target’s browser environment
+    and execute commands remotely. To test this feature, you can simply follow the
+    directions on the login page after logging into BeEF after you install it per
+    the instructions that are followed shortly hereafter. The directions for how to
+    hook a browser are right there in the second paragraph. All you need to do is
+    drag the link they provide for you into the bookmarks bar of any browser you wish
+    to monitor and then refresh your BeEF instance. You’ll see the data in the left
+    column. Feel free to click around and check all of the incredibly in-depth information
+    you can get. As you can see, with BeEF, you can view detailed information about
+    the hooked browsers, launch attacks, collect data, and analyze the impact of client-side
+    vulnerabilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Cross-platform support**: BeEF is designed to work across different operating
+    systems, including the big three (Linux, macOS, and Windows) but it also can work
+    with VMs, Docker, and cloud services such as **Amazon Web Services** (**AWS**),
+    **Google Cloud Platform** (**GCP**), and Microsoft’s Azure. Within those platforms,
+    it can work with multiple browsers such as Chrome, Edge, Firefox, Internet Explorer,
+    Opera, and Safari.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To take advantage of these features and apply them in practice, you will first
+    want to acquire, install, and start the BeEF application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Acquiring BeEF requires a few more steps than we’re used to:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If not there from the previous section, boot your Kali Purple VM and open a
+    command line terminal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo apt update** and if you see any upgrades from the list, take care
+    of that first.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: BeEF is written in the **Ruby language**, so make sure **Ruby** is installed
+    by typing **sudo apt** **install ruby**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo git** **clone** [https://github.com/beefproject/beef.git](https://github.com/beefproject/beef.git).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After the cloning process completes, navigate to the install by typing **cd
+    beef**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You may or may not need to type the following command to complete the installation:
+    **sudo apt** **install bundler**.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo** **bundle install**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Unlike every other application we’ve covered thus far, BeEF will not allow
+    you to log in unless you first change the default credentials as seen in *Figure
+    9**.10*. We also want to set BeEF to have an accessible address. Therefore, you
+    will need to edit the configuration file before logging in for the first time
+    by typing **sudo** **nano config.yaml**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.10 – BeEF error requiring default credentials to be changed](image/B21223_09_10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.10 – BeEF error requiring default credentials to be changed
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you have the file open in your nano editor, scroll down to **beef:** and
+    then in the tabbed column, scroll a little further until you see **credentials:**,
+    where you will change either one or both of the values to something unique. Because
+    we’re going to blow away our test copy after grabbing some screenshots for you,
+    we decided to change the **user:** value to **"roast"** and leave the **passwd:**
+    value as **"beef"** but you can change it to **"chicken"**, **"turkey"**, or your
+    neighbor’s bank account number if you prefer. Just make sure if you’re setting
+    this up in a production environment that you actually select a solid password
+    as we briefly discussed in [*Chapter 3*](B21223_03.xhtml#_idTextAnchor052).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After changing the default credentials, you’ll want to scroll down just a molecule
+    further where you should see **restrictions:**, which should be directly under
+    the **#** **Interface / IP restrictions** heading. Change the values for **permitted_hooking_subnet:**
+    from **["0.0.0.0/0", "::/0"]** to **["127.0.0.1/32", "::/128"]** and repeat this
+    step by changing the same values for **permitted_ui_subnet**. Scroll down a little
+    further until you see http: and change the **host:** value from **"0.0.0.0"**
+    to **"127.0.0.1"**.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Make sure you edit the highlighted areas to match this image:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.11 – The BeEF configuration file with navigation and edits highlighted](image/B21223_09_11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.11 – The BeEF configuration file with navigation and edits highlighted
+  prefs: []
+  type: TYPE_NORMAL
+- en: Press *Ctrl* + *X*, select *Y*, and press *Enter* to complete the file edit.
+    Now, you’re ready to boot BeEF and log in for the first time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To start BeEF and log in for the first time, do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Type **sudo ./beef** to start the application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Load a browser within your environment and type [http://127.0.0.1:3000/ui/authentication](http://127.0.0.1:3000/ui/authentication).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the credentials you set in the file and press **Login**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once there and you’re logged in, we recommend taking some time to familiarize
+    yourself with the interface by selecting the different tabs and studying the social
+    engineering, persistent hook, and control options. Don’t hesitate to go down a
+    rabbit hole researching items that grab your attention. Take some time to practice
+    creating and deploying hooks to target your own browsers and monitor their activity.
+    Go ahead and load those browsers and do some random searching. Maybe even pick
+    a unique topic for each browser, select something out of this book of interest
+    that you want to learn more about, or select an item from the *Further reading*
+    section from any chapter to research further. Do whatever you want but be active
+    in the browser so you can return to your BeEF environment and see what it looks
+    like. Perhaps consider using some custom modules, or, depending on your level
+    of technical acumen, create some of your own. Do make sure, no matter what you
+    do, that you operate ethically because this product possesses the ability to do
+    legitimate damage to a target system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Maltego
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Maltego is a data mining tool that can also be used for link analysis and data
+    visualization. Users have the ability to track connections between entities, identify
+    patterns, and uncover hidden relationships between entities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Key features of Maltego include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Information gathering**: This is the core feature of Maltego. Its purpose
+    is to gather information. Then, as a bonus, the product was further refined to
+    offer a plethora of helpful ways to work with that data as you will see in the
+    following key features. Maltego facilitates the collection of OSINT data, social
+    media platforms, websites, and other sources as seen in *Figure 9**.12*.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Maltego offers a free version, which may be used so long as it’s not used for
+    commercial use:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '![Figure 9.12 – Maltego sample dataset based on self-identifying entities](image/B21223_09_12.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.12 – Maltego sample dataset based on self-identifying entities
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Entity recognition**: Maltego can recognize different types of entities such
+    as people, organizations, and locations, and it categorizes different types of
+    data points in relation to them. This is a critical step for the application because
+    it helps to discover deep and hidden relationships between entities. That, in
+    turn, provides the necessary information Maltego needs to map out the connections,
+    patterns, and any likely dependencies within the datasets.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Data correlation**: As a result of entity recognition, Maltego can then correlate
+    information from the various sources that it has mapped. Some of the ways it accomplishes
+    this is by looking for common attributes and associations or any shared interactions
+    between entities. That is sometimes referred to as **link analysis**.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Network mapping**: You can see by the example presented in *Figure 9**.12*
+    that Maltego helps in mapping out network structures and creating a visualization
+    between the connections and between different entities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Collaboration tools**: Maltego is designed for collaborative teams to have
+    the ability to function within the same project simultaneously. The users can
+    share their results in real time, which gives an avenue for instant feedback.
+    It also offers a collaborative workspace so team members can work on the same
+    project concurrently. Administrators will have the permission to set different
+    levels of permissions and access levels so that team members only have access
+    to the data they need for their roles while higher-level supervisory or team lead
+    users can have additional access to keep things running smoothly. Overall, Maltego
+    was built with collaboration in mind, be it a team of one or a team of one hundred.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Integration with data sources**: It integrates with various data sources,
+    including online APIs such as WHOIS, geospatial and geolocation services, threat
+    intelligence feeds, public records, law enforcement and other databases, financial
+    data providers social media platforms to pull relevant information.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Unless something went awry with your initial Kali Purple installation, Maltego
+    should already be installed and ready to run on your system. You can check by
+    logging into a command line terminal within your Kali Purple instance, doing the
+    usual **sudo apt update** and **upgrade**, and then trying to install a fresh
+    copy by typing **sudo apt install maltego**. Odds are you’ll get some sort of
+    statement that Maltego is already the newest version. If not, then at least now
+    you’ll get the application!
+  prefs: []
+  type: TYPE_NORMAL
+- en: That said, if we assume that you have Maltego installed, you can start the software
+    by selecting the Kali Linux dragon icon in the top left of your Kali Purple environment
+    directly under **File**. Then, you can either type **Maltego** in the search bar
+    and it should populate, or you can move your cursor down and hover over the **Information
+    Gathering** field, and a new column will populate to the right showing all the
+    applications involved with information gathering and that list should include
+    Maltego.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select the Kali dragon logo and then **01 – Information Gathering** | **maltego**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.13 – Kali Purple menu of tools drill down to Maltego](image/B21223_09_13.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.13 – Kali Purple menu of tools drill down to Maltego
+  prefs: []
+  type: TYPE_NORMAL
+- en: When Maltego first loads, it will ask for login credentials. If you don’t recall
+    having any, that’s okay – just select the register here link near the top of the
+    main windowpane to create an account and then log in with that account. After
+    you create an account, you’ll be prompted to select which Maltego version you
+    want, and you’ll be presented with a screen that shows five different Maltego
+    versions. The first three presented are paying options. We recommend selecting
+    the fourth one down on the list – Maltego CE – which stands for community edition.
+    That will give you the most options to play around with and learn from and it
+    is free. You’ll be given the option to load a sample dataset when you boot it
+    and that’s what we did with the information you see in *Figure 9**.12*. That’s
+    perfect for training!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There you have it. As they say in late-night infomercials: *but wait… there’s
+    more!* While you have Maltego loaded and running with sample data, load a web
+    browser and point it to [https://www.maltego.com/learning/#pricing-plans](https://www.maltego.com/learning/#pricing-plans).
+    You can ignore those scary words, *pricing* and *plans*, unless you’re far enough
+    along in your setup, your personal situation calls for it, and you’re ready to
+    take the dive to learn and master this product. Otherwise, you can see, in the
+    left column of the page that loads, there is a free option that includes a Maltego
+    foundations course, handbooks, articles, blogs, and additional documentation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this section, you learned about social engineering and exploit development
+    with respect to the hacking / pentesting process using three prominent Kali Purple
+    utilities. You learned about reconnaissance and where to go if you want to create
+    phishing campaigns or conduct other types of social engineering using SET. Then,
+    you learned how to gain and maintain access using the persistent hook browser
+    exploit with BeEF. Finally, you learned how Maltego can help you become a cyber-spy
+    through gathering intelligence from OSINT sources. Put on your Fedora and shades.
+    You’re a step closer to being selected from the Central Intelligence Agency’s
+    monthly applicant pool of ten thousand strong.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we slipped a little into the dark side of cybersecurity but
+    at the same time, we learned how it is necessary to understand how the bad actors
+    do what they do. Police will often say, “If you want to learn how to catch a criminal
+    then, you need to learn how to think like a criminal.” The same is true in the
+    field of cybersecurity. If you want to learn how to catch a hacker, then you need
+    to learn how to think like a hacker. That makes sense, right? We started down
+    that path of cybersecurity when we took some time to begin learning how to use
+    the same tools and develop the same skills the bad actors do. Now, we can use
+    these resources to train the people in our respective organizations and then we
+    can create mock campaigns to test them!
+  prefs: []
+  type: TYPE_NORMAL
+- en: We immediately examined five deep analysis tools that dealt with examining Microsoft
+    Windows executables, file and file system analyzation, disassembly and reverse
+    engineering, grabbing and analyzing volatile memory – memory in RAM, and deep
+    analysis of the DNS.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Concluding the chapter, we got to play with the very dangerous tools used by
+    cybercriminals, which we previously mentioned. We looked at SET, which is used
+    for social engineering to include building emails and other types of phishing
+    campaigns. We saw how BeEF used persistent hooks to compromise web browsers and
+    we enjoyed the subtle science of legal espionage by seeing how Maltego can be
+    used to harness the full value of OSINT resources.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Questions
+  prefs: []
+  type: TYPE_NORMAL
+- en: What happens if we use any of the utilities on a system not owned by us without
+    permission?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You are likely to receive a letter of commendation for your innovative thinking
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You’ll jump ahead of other candidates being considered for the role due to showcasing
+    your skills instead of just talking about them
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You might learn a thing or two and gain experience
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It’s a criminal action and you could face charges or be jailed depending on
+    the jurisdiction
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is BeEF?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: BovinE Exotic Foodstuff
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Browser Exploitation Framework
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: British Exploration and Expeditionary Force
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Browser edition of Educational Features
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As it relates to software, what is another term for disassembly?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Reverse engineer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compile
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Isolate
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Distemper
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Information stored in RAM is considered to be stored in what kind of memory?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Solid state memory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Liquid state memory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Volatile memory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Stable memory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I can’t remember
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the most literal use case, what is Maltego?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A complex geospatial-oriented tool used for conducting forensic analysis
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A data mining tool
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An island in the Caribbean where social engineering was invented
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An extremely arrogant beverage
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Further reading
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Tracee home** **page**: [https://aquasecurity.github.io/tracee/latest](https://aquasecurity.github.io/tracee/latest)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**IDA Pro creator Hex-Rays official** **website**: [https://hex-rays.com/ida-pro/](https://hex-rays.com/ida-pro/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**The Volatility** **Foundation**: [https://volatilityfoundation.org/about-volatility/](https://volatilityfoundation.org/about-volatility/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Reconnaissance for Ethical** **Hackers**: [https://www.packtpub.com/product/reconnaissance-for-ethical-hackers/9781837630639](https://www.packtpub.com/product/reconnaissance-for-ethical-hackers/9781837630639)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**The Complete Ethical Hacking Bootcamp: Beginner to** **Advanced**: [https://www.packtpub.com/product/the-complete-ethical-hacking-bootcamp-beginner-to-advanced-video/9781801077989](https://www.packtpub.com/product/the-complete-ethical-hacking-bootcamp-beginner-to-advanced-video/9781801077989)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Learn Ethical Hacking From A-Z: Beginner To Expert** **Course**: [https://www.packtpub.com/product/learn-ethical-hacking-from-a-z-beginner-to-expert-course-video/9781801072991](https://www.packtpub.com/product/learn-ethical-hacking-from-a-z-beginner-to-expert-course-video/9781801072991)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Becoming the** **Hacker**: [https://www.packtpub.com/product/becoming-the-hacker/9781788627962](https://www.packtpub.com/product/becoming-the-hacker/9781788627962)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

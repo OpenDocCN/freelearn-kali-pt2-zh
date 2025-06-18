@@ -1,0 +1,1329 @@
+- en: '8'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Evidence Acquisition Tools
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In the previous chapter, we learned that documentation and proper DFIR procedures
+    are key in any investigation. These ensure the integrity of the investigation
+    by providing proof of data authenticity and preservation of the original evidence
+    and documentation, which can be used to achieve the same exact results if the
+    usage of tools and methods is repeated.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this chapter, we will focus on and demonstrate forensically sound techniques
+    for the acquisition of data by creating bitstream copies of evidence inclusive
+    of data hashes, and also perform evidence acquisition of the drives, RAM, and
+    paging files using various tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is the first technical step in DFIR investigations, so it is very important
+    to familiarize yourself with the tools and processes for evidence acquisition
+    that are covered in this chapter. Upon completion of this chapter, you will know
+    how to perform formal evidence acquisitions for analysis, which will be covered
+    in later chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the **fdisk** command for partition recognition
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating strong hashes for evidence integrity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Drive acquisition using DC3DD
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Drive acquisition using DD
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Drive acquisition using Guymager
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Drive and memory acquisition using FTK Imager in Wine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: RAM and paging file acquisition using Belkasoft RAM Capturer in Wine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using the fdisk command for partition recognition
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'For anyone using Kali as a standalone operating system, the process of mounting
+    a removable drive is straightforward, where you insert the removable storage drive
+    and then run the **fdisk** command. However, for those using Kali as a virtual
+    machine or VM, you will first need to ensure that the removable storage is recognized
+    by VirtualBox. To do so, follow these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on **Devices** in the VirtualBox window running Kali Linux, and then click
+    on the **USB** option, as seen in the following screenshot, which will display
+    a list of all detected USB devices. You can take a screenshot or photo of this
+    list for comparison purposes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.1 – The VirtualBox Manager devices menu](image/Figure_8.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.1 – The VirtualBox Manager devices menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding step, there are eight detected devices. You can now plug in
+    your 2-GB microSD card and click on **Devices** | **USB** again to see what your
+    microSD card is listed as. In the following screenshot, we can see a new entry
+    on our list of USB devices, **Generic Mass Storage Device [0100]**. Click on this
+    entry in the list to mount the device in Kali Linux.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.2 – The VirtualBox Manager USB devices menu](image/Figure_8.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.2 – The VirtualBox Manager USB devices menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the device is recognized by VirtualBox and mounted in Kali, you should
+    see your device showing as an icon on your Kali desktop. In the following screenshot,
+    we can see that the 8-GB microSD card is now mounted and available for use by
+    Kali.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.3 – The storage media desktop icon](image/Figure_8.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.3 – The storage media desktop icon
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once our disk has been mounted, we can now use the **fdisk** command to view
+    the drive partition details.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Now that we’ve successfully mounted our removable storage drive, we will learn
+    how to identify the device and partitions using the **fdisk** command in the next
+    section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Device identification using the fdisk command
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For this exercise, an 8-GB Sony Pro Duo card was connected via an external USB
+    3.0 card reader to my standalone Kali Linux desktop. Feel free to use any other
+    type of storage media device for this exercise, as the process is exactly the
+    same regardless of the device type used. Before we begin any acquisition processes,
+    we will first run the **sudo fdisk -l** command to list all the attached storage
+    devices to differentiate between them. This is necessary, as we will not be using
+    the storage device names given to them and will, instead, be using their disk
+    identification information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open a new Terminal, type the following command, and press *Enter*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the following screenshot, the primary drive is listed as **sda** and the
+    attached Sony Pro Duo card is listed as **sdb**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.4 – The fdisk –l command output](image/Figure_8.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.4 – The fdisk –l command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As seen in the preceding screenshot, the details of the Sony ProDuo card are
+    as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Disk**: **sdb**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Size**: **7.4 GB**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Sector size**: **512 bytes**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Filesystem**: **FAT32**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'As seen in the previous screenshot, Kali Linux recognizes two devices:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**sda**: The primary hard disk with three partitions'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**sdb**: The storage drive to be forensically acquired or imaged'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Users new to Kali or any Linux version or variation may find that the drive
+    and partition recognition and naming conventions in Kali are different from those
+    on Windows devices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A typical device in Linux can be addressed or recognized as **/dev/sda**, whereas
+    drives in Windows are usually recognized as **Disk 0** and **Disk 1**, and so
+    on:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**/dev**: This refers to the path of all devices and drives that can be read
+    from or written to, recognized by Linux'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**/sda**: This refers to **SCSI** (short for **Small Computer Systems Interface**),
+    SATA, and USB devices'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**sd** stands for **SCSI Mass-Storage Driver**, with the following letter (for
+    example, a, b, etc.) representing the drive number:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**sda**: Drive **0** or the first drive recognized'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**sdb**: The second drive or storage media'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'While Windows recognizes partitions as primary, logical, and extended, Linux
+    partitions are recognized as numbers that follow the drive letter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**sda1**: Partition 1 on the first disk (**sda**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**sda2**: Partition 2 on the first disk'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**sdb1**: Partition 1 on the second disk (**sdb**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**sdb2**: Partition 2 on the second disk'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: More information on Linux device naming conventions can be found at [https://www.dell.com/support/kbdoc/en-tt/000132092/ubuntu-linux-terms-for-your-hard-drive-and-devices-explained#:~:text=Under%20Linux%2C%20the%20original%20naming,address%2Dwise%20and%20so%20on](https://www.dell.com/support/kbdoc/en-tt/000132092/ubuntu-linux-terms-for-your-hard-drive-and-devices-explained#:~:text=Under%20Linux%2C%20the%20original%20naming,address%2Dwise%20and%20so%20on).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we can identify the drives and partitions within a Linux file system,
+    let’s learn how to create hashes of the evidence for integrity purposes in the
+    next section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating strong hashes for evidence integrity
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To provide proof that evidence was not tampered with, a cryptographic algorithm
+    must be run against the evidence drive before, during, and after a forensic acquisition.
+    These algorithms produce an output string (or hash output) of hexadecimal characters
+    (a–f and 0–9) of various lengths, depending on their strength.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Common cryptographic algorithms are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**MD5**: Message Digest 5'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SHA-1**: Secure Hash Algorithm version 1'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SHA-256**: SHA-2 256-bit'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: More information on cryptographic hashes can be found at [https://www.tutorialspoint.com/cryptography/cryptography_hash_functions.htm](https://www.tutorialspoint.com/cryptography/cryptography_hash_functions.htm).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In Kali Linux, we can use the **md5sum**, **sha1sum**, or **sha256sum** commands,
+    followed by the path of the device, to create a hash output of the evidence/input
+    file. For example, to create a **SHA-256** hash, we would use the following command,
+    where **sdx** represents the drive we are trying to acquire or image:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Although I mentioned the **md5sum** command, I recommend using a stronger algorithm,
+    such as **SHA-1** or **SHA-256**, as **MD5** is much older and can be compromised:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**MD5 strength**: 128-bit hash value'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SHA-1 strength**: 160-bit hash value'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SHA-256 strength**: 256-bit value'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SHA-3 strength**: 256-bit value (but faster than SHA-2)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'To create an **MD5** hash output against my Pro Duo card (**sdb**), I used
+    the following command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To create an **SHA-1** hash output against my Pro Duo card (**sdb**), I used
+    the following command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To create an **SHA-256** hash output against my Pro Duo card (**sdb**), I used
+    the following command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the following screenshot, I have run all the preceding commands. Note that
+    the **SHA-256** output is the longest.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.5 – Cryptographic algorithm output hashes](image/Figure_8.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.5 – Cryptographic algorithm output hashes
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important note
+  prefs: []
+  type: TYPE_NORMAL
+- en: When performing forensic acquisition or forensic imaging of any drive or storage
+    media, the hash output of the original file must always match the output of the
+    forensically acquired forensic image, which assures the integrity of the evidence
+    and the copy of the evidence (the forensic image).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve distinguished between drives and are certain of which drive is
+    to be imaged (**sdb**), we can begin the forensic imaging using DC3DD. Although
+    I have used an older 8-GB Pro Duo storage drive to demonstrate the usage of DC3DD,
+    you can use any drive (portable or otherwise) to practice using the tools in this
+    chapter. Be sure to use the **fdisk -l** command to identify your drives and partitions
+    before continuing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Drive acquisition using DC3DD
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The first tool we will use for acquisition is called **DC3DD** (developed by
+    the **department of Defense Cyber Crime Center**). DC3DD is a patch of the very
+    popular **Data Dump** (**DD**) tool, used for forensic acquisition and hashing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'These are the features of DD:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bitstream (raw) disk acquisition and cloning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Copying disk partitions
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Copying folders and files
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hard disk drive error checking
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Forensic wiping or forensic and secure deletion of all data on hard disk drives
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'DC3DD is updated whenever DD updates. DC3DD offers the best of DD with more
+    features, including the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: On-the-fly hashing (or hashing done instantly by the tool), using more algorithm
+    choices (**MD5**, **SHA-1**, **SHA-256**, and **SHA-512**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A meter to monitor progress and acquisition time
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Writing of errors to a file
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Splitting of output files
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Verification of files
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Wiping of output files (pattern wiping)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DC3DD must be installed manually in Kali Linux. First, we’ll update our version
+    of Kali Linux by using the **apt-get** **update** command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.6 – Updating Kali Linux](image/Figure_8.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.6 – Updating Kali Linux
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once Kali updates, you can manually install DC3DD by typing the **sudo apt-get
+    install** **dc3dd** command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.7 – Installing dc3dd](image/Figure_8.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.7 – Installing dc3dd
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'DC3DD is a CLI tool and can be easily run in Kali Linux by first opening a
+    Terminal and typing **dc3dd**. To start with, I recommend using the **dc3dd --help**
+    command, which lists the available parameters used with **dc3dd**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.8 – The dc3dd help option](image/Figure_8.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.8 – The dc3dd help option
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As shown in the previous screenshot that shows the use of the **dc3dd --help**
+    command, typical usage of the DC3DD command looks like this:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To create a forensic image of my 8-GB drive, I’ve used the following options
+    within **dc3dd**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.9 – The drive acquisition command within dc3dd](image/Figure_8.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.9 – The drive acquisition command within dc3dd
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following list explains the output of the screenshot shown in *Figure 8**.9*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**if**: This specifies the *input file*, which is the device we will be imaging.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**hash**: This specifies the type of hash algorithm we will be using for integrity
+    verification. In this case, I have used the older **MD5** hash.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**log**: This specifies the name of the log file that logs the details of the
+    device and the acquisition, including errors.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**of**: This specifies the output file name of the forensic image created by
+    DC3DD. Although a **.dd** image file type was specified in this example, other
+    formats are recognized by DC3DD, including **.img**, as shown in a later example.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The device size (in sector and bytes) should be noted and later compared to
+    the output results for the device field. Once the acquisition process has been
+    completed, the input and output results are displayed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In *Figure 8**.10*, the last line displays the progress and status of the acquisition
+    process, showing the amount of data copied, the elapsed time in seconds, and the
+    speed of the imaging process in Mbps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.10 – The completed dc3dd output](image/Figure_8.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.10 – The completed dc3dd output
+  prefs: []
+  type: TYPE_NORMAL
+- en: The larger the drive or file to be acquired, the lengthier the time taken to
+    do so. Might I suggest you get yourself a cup of coffee or a refreshing beverage,
+    or even have a look at some other wonderful titles available from Packt at [https://www.packtpub.com/](https://www.packtpub.com/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Analyzing the results in *Figure 8**.10*, we can see that the same amount of
+    sectors (**15630336**) have been imaged, with no bad sectors being replaced by
+    zeros. We can also see that the exact **SHA1** hash was created for the image,
+    assuring us that an exact copy was created without modification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the Terminal, we can also use the **ls** command to list the directory contents
+    to ensure that the DC3DD output file (**8gbproduo.dd**) and log (**dc3dd8gb**)
+    have been created:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.11 – The home directory listing using the ls command](image/Figure_8.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.11 – The home directory listing using the ls command
+  prefs: []
+  type: TYPE_NORMAL
+- en: To access our forensic image and log file, we can go to our **/home** directory
+    by clicking on the folder icon (in the top-left corner) on the desktop and then
+    clicking on **Open Folder**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Within the **Home** folder, the first file, **8gbproduo.dd**, is the output
+    image created by DC3DD using the **of=8gbproduo.dd** command. The last file, **dc3dd8gb**,
+    is the log file, created when we used the **log=dc3dd8gb** command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.12 – The forensic image and log file in the Home folder](image/Figure_8.12_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.12 – The forensic image and log file in the Home folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It’s important to keep this log file to have a record of the acquisition process
+    and its results, which were displayed on the screen upon completion:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.13 – The contents within the log file](image/Figure_8.13_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.13 – The contents within the log file
+  prefs: []
+  type: TYPE_NORMAL
+- en: In [*Chapter 12*](B19441_12.xhtml#_idTextAnchor225), *Autopsy Forensic Browser,*
+    and [*Chapter 13*](B19441_13.xhtml#_idTextAnchor234), *Performing a Full DFIR
+    Analysis with the Autopsy 4 GUI*, we will analyze acquired forensic images using
+    Autopsy; however, the acquired evidence images can also be copied or directly
+    cloned to another device if an investigator so wishes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As an example, we could clone the forensic image acquired previously (**8gbproduo.dd**)
+    onto a new drive, recognized as **sdc**. The command used to perform this task
+    would be as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: When copying an image to a drive, the destination drive size should be of equal
+    size or larger than the image file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Verifying the hash output of image files
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To verify the hash output of **sdb**, the following command can be used:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.14 – sha1sum output](image/Figure_8.14_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.14 – sha1sum output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can also use the following command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.15 – cat sha1sum output](image/Figure_8.15_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.15 – cat sha1sum output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Erasing a drive using DC3DD
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: We’ve seen the power of DC3DD as a very impressive forensic acquisition tool,
+    but I’d also like to go one step further and introduce you to its capabilities
+    as a data-wiping tool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'DC3DD can wipe data and erase drives by overwriting data in three ways:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Overwriting and filling data and drives with zeroes. The command used is as
+    follows:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.16 – dc3dd wipe command output](image/Figure_8.16_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.16 – dc3dd wipe command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Overwriting and filling data and drives, using a hexadecimal pattern and the
+    **pat** option. The command used is as follows:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.17 – The dc3dd wipe command with pattern output](image/Figure_8.17_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.17 – The dc3dd wipe command with pattern output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Overwriting and filling the data and drives, using a text pattern and the **tpat**
+    option. The command used is as follows:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.18 – The dc3dd wipe command with text pattern output](image/Figure_8.18_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.18 – The dc3dd wipe command with text pattern output
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ve covered the usage of the **dc3dd** tool and the various methods to forensically
+    wipe media. Let’s now look at another tool called DD that can also be used for
+    forensic data copying and wiping.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Drive acquisition using DD
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Before we get started using DD, I need to again draw your attention to one of
+    the features of DD, the ability to wipe data, partitions, and drives. Hence, you
+    may find that DD is sometimes fondly referred to as the **data destroyer**. Be
+    sure to always first identify your devices, partitions, input and output files,
+    and parameters when using DD and DC3DD.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the exercises in this chapter, I’ll be using an older but functional 2-GB
+    flash drive for the acquisition process using DC3DD.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Should you also wish to use the DD tool, the commands and usage are very much
+    the same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You may want to first ensure that you can access the dd tool by running **dd
+    –-help**. If the **dd** command cannot be found, update Kali by running the **apt-get
+    update** command, and then run the **dd –-help** command again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.19 – dd help options](image/Figure_8.19_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.19 – dd help options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To perform image acquisition, I’ve used this command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.20 – Drive acquisition using dd](image/Figure_8.20_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.20 – Drive acquisition using dd
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s do a breakdown of the individual options in the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**If**: The input file (**sdb** device)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Of**: The output file (the name of the forensic image)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Bs**: The block size (the default size is 512)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**conv=noerror, sync**: Continue the imaging even if there are errors (**noerror**),
+    and if there are errors, null-fill the blocks (**sync**).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the preceding command, the**.img** output file extension was specified; however,
+    you can use another format, such as **.iso**, by specifying the file extension
+    in the output file’s **(****of)** option.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can view the created files by using the **ls** command, where we can also
+    see the two images.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.21 – The evidence acquisition files in the Home directory](image/Figure_8.21_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.21 – The evidence acquisition files in the Home directory
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will now explore another very popular acquisition tool called Guymager, which
+    offers many of the same features in a **Graphical User** **Interface** (**GUI**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Drive acquisition using Guymager
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Guymager is another standalone acquisition tool that can be used to create forensic
+    images and also perform disk cloning. Developed by Guy Voncken, Guymager is completely
+    open source, has many of the same features as DC3DD, and is also only available
+    for Linux-based hosts. While some investigators may prefer CLI tools, Guymager
+    is a GUI tool and for beginners, so it may be preferred.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For this acquisition, I’ll also use the very same 2-GB flash drive used in the
+    DC3DD examples, at the end of which we can compare results. It’s also important
+    to remember to continue using your write-blocker when acquiring and creating forensic
+    images of evidence and drives, in an effort to not write data to the drives or
+    modify the original evidence files.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As previously done in the DC3DD acquisition, we should first ensure that we
+    are familiar with the devices attached to our machine, using the **fdisk -l or
+    sudo fdisk -****l** command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Running Guymager
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Guymager can be started by using the menu in Kali and clicking on the **Applications**
+    menu at the top, then the **11 - Forensics** option, and then expanding the **Forensic
+    Imaging Tools** menu, as shown in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.22 – The Kali Linux forensics menu](image/Figure_8.22_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.22 – The Kali Linux forensics menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The Guymager application runs and then displays the existing drives recognized
+    in Kali Linux. As shown in the following screenshot, the details of the 2-GB flash
+    drive being used are shown, including the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Linux device**: Recognized as **/dev/sdb**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Model**: **USB_Flash_Memory**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**State**: Shown as **Idle**, as the image acquisition has not yet begun'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Size**: **2.0GB**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Serial number**: **001CC0C60D…** (this will be unique for each drive)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Hidden** **areas**: **unknown**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 8.23 – Guymager interface](image/Figure_8.23_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.23 – Guymager interface
+  prefs: []
+  type: TYPE_NORMAL
+- en: Should your device not be listed in Guymager or you need to add an additional
+    device, click the **Rescan** button in the top-left corner of the application
+    to detect the device.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Acquiring evidence with Guymager
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To begin the acquisition process, right-click on the evidence drive (**/dev/sdb**
+    in this example) and select **Acquire image**. Note that the **Clone device**
+    option is also available if you wish to clone the evidence drive to another. Again,
+    as previously mentioned, when cloning a device, the capacity of the destination
+    device must be equal to or exceed that of the source (original) evidence drive:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.24 – Acquisition and clone options in Guymager](image/Figure_8.24_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.24 – Acquisition and clone options in Guymager
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before the actual acquisition process starts, the investigator is prompted
+    to enter details about themselves and the evidence under the following two sections:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**File format**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**File extensions**: **.dd**, **.xxx**, and **.Exx**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Split size**: Allows the investigator to choose the size of multiple image
+    parts'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Case management information**: The case number, evidence number, examiner
+    name, description, and notes'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 8.25 – Guymager file format options](image/Figure_8.25_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.25 – Guymager file format options
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Destination**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Image directory**: The location of the created image file and log (the info
+    file)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Image filename**: The name of the image file'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 8.26 – Guymager destination folder options](image/Figure_8.26_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.26 – Guymager destination folder options
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hash calculation/verification
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Multiple hashing algorithms can be selected and calculated, allowing the investigator
+    to choose from **MD5**, **SHA-1**, and **SHA-256**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **Re-read source after acquisition for verification** option verifies the
+    source.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **Verify image after acquisition** option verifies the destination.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.27 – Guymager cryptographic algorithm options](image/Figure_8.27_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.27 – Guymager cryptographic algorithm options
+  prefs: []
+  type: TYPE_NORMAL
+- en: At the bottom of *Figure 8**.27*, note that there are two grayed-out options.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Guymager adds a convenient **Duplicate image...** button (grayed-out in *Figure
+    8**.27*) to create duplicate copies without having to repeat the data entry process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For new users, you may want to specify the directory where the image file will
+    be saved. In the destination section, click on the **Image directory** button
+    and choose your location. For this acquisition, I’ve chosen the **Desktop** directory
+    as the location for both the image and the log/info file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the data that I’ve used for the Guymager acquisition,
+    having chosen **Desktop** as the image directory and the **MD5** and **SHA-1**
+    hashing algorithms:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.28 – Guymager acquisition image folder options](image/Figure_8.28_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.28 – Guymager acquisition image folder options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the **Start** button is clicked (refer to *Figure 8**.29*), note that
+    the state changes from **Idle** to **Running**. The **Progress** field also now
+    displays a progress bar:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.29 – The Guymager drive acquisition process](image/Figure_8.29_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.29 – The Guymager drive acquisition process
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Taking a closer look at the details in the lower-left corner of the screen,
+    we can see the size, image and info file paths, names and extensions, current
+    speed, and chosen hash calculations. We also see that **Image verification** is
+    turned **on**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.30 – Guymager process details](image/Figure_8.30_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.30 – Guymager process details
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the acquisition process is completed, the color of the **State** field
+    button changes from blue to green, indicating that the acquisition process is
+    finished, and it also displays **Finished - Verified & ok** if verification options
+    were selected in the **Hash verification / calculation** pane. The progress bar
+    also displays **100%**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.31 – The Guymager completed acquisition process](image/Figure_8.31_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.31 – The Guymager completed acquisition process
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our output file and info file can be found on the desktop, as this was specified
+    in the the evidence. We’ll now look into this by verifying and comparing hash
+    algorithms next.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploring the .info file
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Double-clicking on the info file in the image directory window allows us to
+    inspect a variety of details about the acquisition process, from start to completion,
+    including the hashed outputs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This info file contains much more data than the log file produced by DC3DD,
+    including the case management details.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s have a closer look at the hash details within the **.****info** file:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can see that the **MD5** and **SHA-1** hashes have been created and verified,
+    as shown in the last line of the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.32 – Guymager log file hash outputs](image/Figure_8.32_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.32 – Guymager log file hash outputs
+  prefs: []
+  type: TYPE_NORMAL
+- en: This completes the evidence and drive acquisition processes using Guymager,
+    which can be much simpler to use than the previous command-line tools, namely
+    **dc3dd** and **dd**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s have a look at another acquisition tool called FTK Imager, which can also
+    be used within Kali Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Drive and memory acquisition using FTK Imager in Wine
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are several tools for Windows systems that you may wish to take advantage
+    of to be able to capture the memory and paging files on a Windows device. The
+    forensic images can then be opened on your Kali machine for analysis, using **Volatility
+    3** for memory analysis and **Autopsy** for drive analysis. Let’s first look at
+    installing and using FTK Imager within Wine in Kali Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing FTK Imager
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**FTK** (**Forensic Toolkit**) Imager is a free Windows tool for the live acquisition
+    of memory (RAM), the paging file, and drive images.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Follow these steps to install FTK Imager in Kali Linux to create forensic acquisitions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, download FTK Imager from the official website at [https://go.exterro.com/l/43312/2022-08-23/f7rytx](https://go.exterro.com/l/43312/2022-08-23/f7rytx).
+    Enter all relevant detail on the registration page. Once all fields are completed,
+    click on the **Submit** button, and you will be prompted to download the application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once downloaded, click on the **Home** folder icon, then the **Downloads**
+    folder, and then select **Open Folder**, as shown here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.33 – The Kali folder menu](image/Figure_8.33_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.33 – The Kali folder menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, right-click on the **AccessData_FTK_Imager** file you downloaded, choose
+    **Open With**, and then select **Open with “Wine Windows Program Loader”**, as
+    shown in the following screenshot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.34 – Opening FTK Imager in Wine](image/Figure_8.34_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.34 – Opening FTK Imager in Wine
+  prefs: []
+  type: TYPE_NORMAL
+- en: FTK Imager will now begin installing on your Kali Linux machine. Click **Next**
+    to proceed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.35 – The FTK Imager installer](image/Figure_8.35_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.35 – The FTK Imager installer
+  prefs: []
+  type: TYPE_NORMAL
+- en: Accept the license agreement, accept the destination folder by clicking **Next**,
+    and then click on the **Install** button. Once the installation is complete, click
+    on the **Finish** button to launch FTK Imager, as shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.36 – FTK Installation complete](image/Figure_8.36_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.36 – FTK Installation complete
+  prefs: []
+  type: TYPE_NORMAL
+- en: You may be prompted to download the Wine Gecko installer, which is required
+    for some applications to run correctly. Click on **Install** to continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.37 – The Wine Gecko Installer](image/Figure_8.37_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.37 – The Wine Gecko Installer
+  prefs: []
+  type: TYPE_NORMAL
+- en: FTK Imager should now be installed and running on your Kali Linux machine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.38 – The FTK Imager interface in Kali Linux](image/Figure_8.38_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.38 – The FTK Imager interface in Kali Linux
+  prefs: []
+  type: TYPE_NORMAL
+- en: To view the options for imaging and acquisition, click on **File**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.39 – The FTK Imager File menu](image/Figure_8.39_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.39 – The FTK Imager File menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: Within the **File** menu, we are presented with several options within FTK Imager
+    for evidence acquisition and analysis. The **Create Disk Image…** option allows
+    you to perform a forensic acquisition of physical and logical drives, contents
+    of a folder, and CDs and DVDs. Click on the **Create Disk** **Image…** option.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.40 – FTK Imager source selection options](image/Figure_8.40_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.40 – FTK Imager source selection options
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on **Next** to continue. I’ve selected a 32-GB Kingston physical drive
+    to acquire. You can select any drive of your choice. Once selected, click on **Finish**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.41 – Source Drive Selection](image/Figure_8.41_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.41 – Source Drive Selection
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we’ll need to choose a destination to save the image file. Click on **Add**,
+    choose the image type (**Raw**, **SMART**, **E01**, or **AFF**), and then click
+    on **Next**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.42 – Image acquisition type](image/Figure_8.42_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.42 – Image acquisition type
+  prefs: []
+  type: TYPE_NORMAL
+- en: Complete the form by filling in the **Evidence Item Information** fields, and
+    then click on **Next**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.43 – Acquisition evidence details](image/Figure_8.43_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.43 – Acquisition evidence details
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lastly, select the image destination folder and type a filename with an extension.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.44 – The image destination folder](image/Figure_8.44_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.44 – The image destination folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ve specified the image fragment size to be a value of **0**. This tells the
+    software to not fragment or split the image file. Click on **Finish** and then
+    **Start** to begin the acquisition process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.45 – The FTK Imager evidence acquisition process](image/Figure_8.45_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.45 – The FTK Imager evidence acquisition process
+  prefs: []
+  type: TYPE_NORMAL
+- en: The created disk image can now be analyzed using tools of your choice, such
+    as Autopsy, which will be covered in [*Chapter 10*](B19441_10.xhtml#_idTextAnchor191),
+    *Memory Forensics and Analysis with Volatility 3,* and [*Chapter 11*](B19441_11.xhtml#_idTextAnchor211),
+    *Artifact, Malware, and* *Ransomware Analysis*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: RAM acquisition with FTK Imager
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'We can also perform live acquisition with FTK Imager, whereby we acquire the
+    RAM and paging file:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on **File** and **Memory Capture**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.46 – The FTK Imager memory and paging file acquisition process](image/Figure_8.46_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.46 – The FTK Imager memory and paging file acquisition process
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, select the destination path, and specify a filename for the memory dump
+    (**.mem**) file. To include the pagefile, check the **Include** **pagefile** checkbox.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Click on **Capture Memory** to begin the acquisition process.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The status bar indicates when the process is completed. This is usually not
+    a lengthy process compared to the static dive acquisition process. Using this
+    within a VM may be problematic; however, it can be used on your standalone installation
+    of Kali with Wine installed or any Windows machine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.47 – The FTK memory acquisition process](image/Figure_8.47_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.47 – The FTK memory acquisition process
+  prefs: []
+  type: TYPE_NORMAL
+- en: This was a fairly simple process of acquiring RAM using FTK Imager. Let’s look
+    at another tool called RAM Capturer that can also be used for RAM acquisition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: RAM and paging file acquisition using Belkasoft RAM Capturer
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Belkasoft** is a company that creates forensic tools and also has a full
+    suite of tools available for forensic acquisition and analysis, along with its
+    free RAM capturer tool, which can be downloaded at [https://belkasoft.com/ram-capturer](https://belkasoft.com/ram-capturer).
+    This tool is best used in Windows but is mentioned here because of its popularity
+    and speed when performing memory and paging file analysis.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: After browsing the https://belkasoft.com/ram-capturer page, click on the **Download
+    Now** button, enter your email address, and click on **Proceed**. An email with
+    the download link should be sent to you within 24 hours.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once downloaded and extracted on your Windows machine, choose the appropriate
+    version (**x86** or **x64**) and launch the environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The GUI is as simple as it gets with Belkasoft RAM Capturer. You are prompted
+    to specify an output folder path, and from there, it captures the memory and paging
+    file after clicking on **Capture!**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.48 – Belkasoft Live RAM Capturer acquisition](image/Figure_8.48_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.48 – Belkasoft Live RAM Capturer acquisition
+  prefs: []
+  type: TYPE_NORMAL
+- en: The tool takes a few minutes to perform the acquisition, and from there, you
+    can hash and analyze using the tools of your choice. This concludes our usage
+    of RAM Capturer, one of the simplest tools available for RAM acquisition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we covered several tools that can be used natively in Kali
+    Linux and another tool called FTK Imager, which is native to Windows but can be
+    installed in Kali Linux once Wine has been installed, for the acquisition of digital
+    evidence. We first learned about the importance of being able to identify your
+    devices so that you can accurately acquire a forensic copy or image of an evidence
+    file using the **fdisk - l** command. For forensic analysis, bitstream copies
+    of the evidence are needed, as these provide an exact copy of the evidence, bit
+    by bit, which is why we used tools such as DC3DD, DD, and Guymager.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firstly, we used DC3DD, an enhancement of the data dump tool, and through the
+    Terminal, we performed quite a few tasks, including device imaging, hashing, verification,
+    and drive wiping. We also performed acquisition using DD, which is very similar
+    to DC3DD.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our third tool, Guymager, has built-in case management abilities and also has
+    many functional similarities to DC3DD, but it comes as a GUI tool and may be easier
+    for beginners.
+  prefs: []
+  type: TYPE_NORMAL
+- en: All the tools covered in this chapter deliver accurate and forensically sound
+    results. For those that may not constantly work with Guymager, DD, and DC3DD,
+    Guymager may be the easier tool to use, given that all acquisition options including
+    cloning are readily available through the GUI, along with an easy-to-read log,
+    which provides case management details. For advanced uses such as drive wiping,
+    however, you may wish to use DC3DD. In the end, however, the choice remains yours.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We also looked at FTK Imager and Belkasoft Ram Capturer. FTK Imager runs on
+    Windows and can acquire RAM and disk images, but it can easily be installed in
+    Kali using Wine, whereas Belkasoft RAM Capturer (also for Windows) performs only
+    RAM acquisition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Not bad for our first forensics tools in Kali Linux! Next, we’ll move on to
+    some analysis and file recovery tools. Exciting stuff!
+  prefs: []
+  type: TYPE_NORMAL

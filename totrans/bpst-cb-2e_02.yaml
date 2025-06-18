@@ -1,0 +1,907 @@
+- en: '2'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Getting to Know the Burp Suite of Tools
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This chapter provides overviews of the most commonly used tools within Burp
+    Suite. The chapter begins by establishing the **target** scope within the **Target**
+    | **Site map**. This is followed by an introduction to the message editor. Then,
+    there will be some hands-on recipes using **OWASP Mutillidae II** to get acquainted
+    with **Proxy**, **Repeater**, **Decoder**, and **Intruder**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting the Target Site Map
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding the message editor
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Repeating with **Repeater**
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Decoding with **Decoder**
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Intruding with **Intruder**
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To complete the recipes in this chapter, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Burp Proxy Community or Professional ([https://portswigger.net/burp/](https://portswigger.net/burp/))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Firefox browser configured to allow Burp to proxy traffic ([https://www.mozilla.org/en-US/firefox/new/](https://www.mozilla.org/en-US/firefox/new/))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Setting the Target Site Map
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we have traffic flowing between your browser, Burp, and the OWASP **Broken
+    Web Applications** (**BWA**) **virtual machine** (**VM**), we can begin setting
+    the scope of our test. For this recipe, we will use the OWASP Mutillidae II link
+    (**http://<Your_VM_Assigned_IP_Address>/mutillidae/**) available in the OWASP
+    BWA VM as our target application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Looking more closely at the **Target** tab, you will notice there are two subtabs
+    available: **Site map** and **Scope**. From the initial proxy setup between your
+    browser, Burp, and the web server, you should now have some URLs, folders, and
+    files shown in the **Target** | **Site map** tabs. You may find the amount of
+    information overwhelming, but setting the scope for our project will help to focus
+    our attention better.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the **Target** | **Site map** and **Target** | **Scope** tabs, we will
+    assign the URL for Mutillidae (**http://<Your_VM_Assigned_IP_Address>/mutillidae/**)
+    as the scope.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Execute the following steps to set the Target Site Map:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Search for the **mutillidae** folder and then right-click on it, and select
+    **Add to scope** from the drop-down list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 2.1 – Setting the scope for the target application](image/B21173_Figure_2.1.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.1 – Setting the scope for the target application
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Upon adding the **mutillidae** folder to your scope, you may be presented with
+    a **Proxy history logging** dialog box, as follows. You may choose to avoid collecting
+    messages out of your scope by clicking **Yes**, or you may choose to continue
+    to have the **Proxy HTTP History** tab collect any messages passing through Burp,
+    even if those messages fall outside the scope you’ve identified. For our purposes,
+    we will select **Yes**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 2.2 – Proxy history prompt](image/B21173_Figure_2.2.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.2 – Proxy history prompt
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Clicking the **Target** | **Scope settings** tabs, after the pop-out menu displays,
+    you should now see the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 2.3 – Clicking the Scope settings to have a pop-out display appear](image/B21173_Figure_2.3.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.3 – Clicking the Scope settings to have a pop-out display appear
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The full URL for OWASP Mutillidae II is shown in the **Include in scope** table
+    of **Project** | **Scope**, as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.4 – Pop-out display showing scope set to target applicatio\uFEFF\
+    n](image/B21173_Figure_2.4.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.4 – Pop-out display showing scope set to target application
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Setting scope is important for a clearer understanding of traffic flow through
+    Burp from your target. Once properly scoped, all HTTP traffic can be seen in your
+    **Target** | **Site map** and Burp’s **Proxy** | **HTTP history** tabs. Details
+    within individual requests and responses can be viewed using the message editor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding the message editor
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: On almost every tool and tab within Burp Suite that displays an HTTP message,
+    you will see an editor identifying the request and response. This is commonly
+    referred to as the **message editor**. The message editor allows viewing and editing
+    HTTP requests and responses with specialties.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Within the message editor are multiple subtabs. The subtabs for a request message,
+    at a minimum, include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pretty**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Raw**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Hex**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The subtabs for a response message include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pretty**: The **Pretty** subtab gives you the same information as **Raw**
+    but in a more readable format. Please note the **Pretty** subtab may be disabled.
+    This is due to the supported formats. For the **Pretty** subtab to be enabled,
+    the message must be in one of the following formats:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: JSON
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: XML (including image/SVG + XML content)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: HTML
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: CSS
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: JavaScript
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Raw**: The **Raw** subtab gives you the message in its raw HTTP form.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Hex**: The **Hex** subtab, which presents the message in hexadecimal format;
+    it is, in essence, a hex editor. You are permitted to edit individual bytes within
+    tools such as **Proxy** and **Repeater**, but those values must be given in two-digit
+    hexadecimal form, from **00** through **FF**.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Render** (sometimes): Finally, the **Render** subtab can be grayed out or
+    viewable depending on the HTTP response content type. This subtab is only enabled
+    when the response returned is HTML, giving you the same view as if seen from a
+    browser.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Let’s explore the multiple tabs available in the message editor for each request
+    and response captured in Burp. An important distinction to note—messages inside
+    the message editor from the **Target** | **Site map** and the **Proxy** | **HTTP
+    History** tabs are *not* editable. Both of these areas preserve the state of traffic
+    flowing through Burp. If you wish to *edit* any message, you must send the individual
+    message to some other tool within Burp—such as **Repeater**, **Intruder**, and
+    so on—where you are able to *edit* values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Ensure you have traffic flowing between your browser, Burp, and the OWASP BWA
+    VM.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Looking at the **Target** | **Site map** tab, notice the message editor section.
+    Let’s focus on the **Request** side of the message first:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 2.5 – Message editor viewing a request](image/B21173_Figure_2.5.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.5 – Message editor viewing a request
+  prefs: []
+  type: TYPE_NORMAL
+- en: When viewing a request, note that the subtabs available include **Pretty**,
+    **Raw**, and **Hex**. To see other values, such as cookies, attributes, and parameters,
+    use the **Inspector** side tab. The **Inspector** tab can be expanded or collapsed
+    by clicking the three lines above the word **INSPECTOR**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The **Inspector** tab is now collapsed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.6 – Message editor with Inspector collapsed](image/B21173_Figure_2.6.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.6 – Message editor with Inspector collapsed
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The **Inspector** tab is now expanded:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.7 – Message editor with Inspector expanded](image/B21173_Figure_2.7.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.7 – Message editor with Inspector expanded
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once expanded, attributes, parameters, cookies, and headers are enumerated.
+    Each section can be expanded as a dropdown to display the individual section information.
+    For example, to see all cookies used in this request, expand the **Request cookies**
+    subsection showing the number **4** to indicate there are four cookies used in
+    this request:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.8 – Inspector view with Request cookies subsection expanded](image/B21173_Figure_2.8.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.8 – Inspector view with Request cookies subsection expanded
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The other side of the message is the **Response** tab, containing the **Pretty**,
+    **Raw**, and **Hex** subtabs and, sometimes, **Render**. If the content is HTML,
+    then the **Render** subtab provides an HTML display as it would be presented in
+    a browser. The **Inspector** side tab is also available with the same information
+    as previously described in the **Request** portion of the message:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 2.9 – Message editor viewing a response with Inspector collaps\uFEFF\
+    ed](image/B21173_Figure_2.9.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.9 – Message editor viewing a response with Inspector collapsed
+  prefs: []
+  type: TYPE_NORMAL
+- en: Repeating with Repeater
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Repeater** allows for slight changes or tweaks to a request, and it is displayed
+    in the left-hand window. The **Send** button allows a request to be reissued,
+    and the response is displayed in the right-hand window.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Details related to your HTTP request include standard message editor details
+    such as **Pretty**, **Raw**, and **Hex** as subtabs along with the **Inspector**
+    side tab.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Details related to the HTTP response include standard message editor details
+    including **Pretty**, **Raw**, and **Hex** as subtabs along with the **Inspector**
+    side tab and, sometimes, **Render**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At the bottom of each panel is a search box, allowing the tester to quickly
+    find a value present in a message:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.10 – Search box at the bottom of the request in Repeater](image/B21173_Figure_2.10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.10 – Search box at the bottom of the request in Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are additional search box settings available when the gear icon is clicked,
+    including **Case sensitive**, **Regex**, and **Auto-scroll to match when text
+    changes**. When searching for text, if case sensitivity is necessary, then the
+    option can be toggled ON. In addition to searching for plain text strings, users
+    can use **regular expression** (**regex**) patterns when matching a value present
+    in a message. Finally, the auto-scroll feature, when checked, will automatically
+    move to the position of the value the user is searching:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.11 – Additional search box settings availa\uFEFFble](image/B21173_Figure_2.11..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.11 – Additional search box settings available
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Repeater** allows you to manually modify and then re-issue an individual
+    HTTP request, analyzing the response that you receive.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'From the **Target** | **Site map** or **Proxy** | **HTTP history** tabs (shown
+    in the following screenshot), right-click a message and select **Send** **to Repeater**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 2.12 – Contextual menu to send the request to Repeater from Proxy
+    HTTP history](image/B21173_Figure_2.12..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.12 – Contextual menu to send the request to Repeater from Proxy HTTP
+    history
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch over to the **Repeater** tab. The **Request** is now in **Repeater**
+    and is ready for parameter tweaking.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 2.13 – Request in Repeater, ready for tweaking](image/B21173_Figure_2.13..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.13 – Request in Repeater, ready for tweaking
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will use **Repeater** quite a bit throughout this book. This chapter is just
+    an introduction to **Repeater** and to understand its purpose. With regard to
+    purpose, please note the main difference between **Repeater** and **Intruder**
+    is the number of requests you can send at one time. If you are experimenting with
+    slight changes to identify exposure points, **Repeater** is very handy. Once a
+    pattern is established, **Intruder** can then be used to brute-force your vulnerable
+    parameter over and over again with many requests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Decoding with Decoder
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Burp Decoder** is a tool that allows the tester to convert raw data into
+    encoded data or to take encoded data and convert it back to plain text. **Decoder**
+    supports several formats, including URL encoding, HTML encoding, Base64 encoding,
+    binary code, hashed data, and others. **Decoder** also includes a built-in hex
+    editor.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As a web penetration test progresses, a tester might happen upon an encoded
+    value. Burp eases the decoding process by allowing the tester to send the encoded
+    value to **Decoder** and try the various decoding functions available.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Let’s try to decode the value of the **PHPSESSID** session token found in the
+    OWASP Mutillidae II application. When a user initially browses to the URL (**http://<Your_VM_Assigned_IP_Address>/mutillidae/**),
+    that user will be assigned a **PHPSESSID** cookie. The **PHPSESSID** value appears
+    to be encrypted and then wrapped in Base64 encoding. Using **Decoder**, we can
+    unwrap the value:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Browse to the **http://<Your_VM_Assigned_IP_Address>/mutillidae/** application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Find the HTTP request you just generated from your browser within the **Proxy**
+    | **HTTP history** tab (shown in the next screenshot). Highlight the **PHPSESSID**
+    value itself, not the parameter name, right-click, and then select **Send** **to
+    Decoder**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 2.14 – Contextual menu to send \uFEFFthe highlighted value in \uFEFF\
+    the request to Decoder from \uFEFFthe Proxy HTTP history](image/B21173_Figure_2.14..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.14 – Contextual menu to send the highlighted value in the request to
+    Decoder from the Proxy HTTP history
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the **Decoder** tab, in the **Decode as…** dropdown shown as follows, select
+    **Base64**. Note the results are encrypted:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 2.15 – Highlighted value from request in Decoder and encode/decode
+    options available](image/B21173_Figure_2.15..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.15 – Highlighted value from request in Decoder and encode/decode options
+    available
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this example, we cannot proceed any further. We can confirm the value was,
+    indeed, wrapped in Base64\. However, the value that is unwrapped is encrypted.
+    The purpose of this recipe is to show you how you can use **Decoder** to manipulate
+    encoded values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s more...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'PortSwigger added **Decoder** functionality to the **Inspector** side tab as
+    well. This makes the manipulation of values easier to see within the full context
+    of the request or response when viewed through the message editor:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.16 – Using Inspector to perform encoding/dec\uFEFFoding](image/B21173_Figure_2.16..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.16 – Using Inspector to perform encoding/decoding
+  prefs: []
+  type: TYPE_NORMAL
+- en: Intruding with Intruder
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Burp Intruder** allows a tester to brute-force or fuzz specific portions
+    of an HTTP message, using customized payloads.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To properly set up customized attacks in **Intruder**, a tester will need to
+    use the settings available in the four subtabs of **Intruder**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.17 – Intruder and subtabs avai\uFEFFlable](image/B21173_Figure_2.17..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.17 – Intruder and subtabs available
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A tester may wish to fuzz or brute-force parameter values within a message.
+    Burp **Intruder** eases this process by providing various intruder attack styles,
+    payloads, and options.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Browse to the login screen of Mutillidae and attempt to log in to the application.
+    For example, type a username of **admin** and an invalid password of **adminpass**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Find the login attempt in the **Proxy** | **HTTP history** tab. Your request
+    number (that is, the **#** sign on the left-hand side) will be different from
+    the one shown next. Select the message that captured your attempt to log in.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'As the login attempt message is highlighted in the **HTTP history** table,
+    right-click the **Request** tab, and select **Send** **to Intruder**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 2.18 – Contextual menu to send the request to Intruder from Proxy\
+    \ HTTP hi\uFEFFstory](image/B21173_Figure_2.18..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.18 – Contextual menu to send the request to Intruder from Proxy HTTP
+    history
+  prefs: []
+  type: TYPE_NORMAL
+- en: Positions
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The **Positions** subtab identifies where the payload markers are to be defined
+    within the **Payload** | **Positions** section. The **Positions** subtab also
+    identifies the Attack type and the default setting is Sniper, which will work
+    for us in this recipe. For our purposes, click the **Clear §** button (that is,
+    payload markers) from the right-hand side menu. Manually select the password field
+    by highlighting it with your cursor. Now, click the **Add §** button on the right-hand
+    side menu. You should have the payload markers wrapping around the password field
+    as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.19 – Substitution marker placed on password value in the\uFEFF request](image/B21173_Figure_2.19..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.19 – Substitution marker placed on password value in the request
+  prefs: []
+  type: TYPE_NORMAL
+- en: Payloads
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'After the **Positions** subtab is the **Payloads** subtab:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.20 – Intruder Payloads subtab](image/B21173_Figure_2.20..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.20 – Intruder Payloads subtab
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **Payloads** subtab identifies wordlist values or numbers you wish to be
+    inserted into the positions you identified on the previous tab. There are several
+    sections within the **Payloads** subtab, including **Payload sets**, **Payload
+    options**, **Payload processing**, and **Payload encoding**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Payload sets
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Payload sets** allows for the setting of the number of payloads as well as
+    the type. For our purposes, we will use the default settings for **Sniper**, seen
+    on the previous subtab, **Positions**. This configuration will allow us to use
+    one payload with a **Payload type** value of **Simple list**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.21 – Payloads subtab allows Payload sets to be\uFEFF configured](image/B21173_Figure_2.21..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.21 – Payloads subtab allows Payload sets to be configured
+  prefs: []
+  type: TYPE_NORMAL
+- en: Payload options
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: In the **Payload options** section, a tester can configure a custom payload
+    or load a preconfigured one from a file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For our purposes, we will add one value to our payload. In the textbox, type
+    **admin**, and then click the **Add** button to create our custom payload:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.22 – Values can be set in the simple list of this \uFEFFpayload\
+    \ set](image/B21173_Figure_2.22..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.22 – Values can be set in the simple list of this payload set
+  prefs: []
+  type: TYPE_NORMAL
+- en: Payload processing
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Payload processing** is useful when configuring special rules to be used
+    while **Intruder** substitutes payloads into payload marker positions. For this
+    recipe, we do not need any special payload-processing rules:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.23 – Payload processing allows for rules to be applied to payloads\
+    \ as they run through an intr\uFEFFuder attack](image/B21173_Figure_2.23..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.23 – Payload processing allows for rules to be applied to payloads
+    as they run through an intruder attack
+  prefs: []
+  type: TYPE_NORMAL
+- en: Payload encoding
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Payload encoding** is applied to the payload value prior to sending the request
+    to the web server. Many web servers may block offensive payloads (for example,
+    **<script>** tags), so the encoding feature is a means to circumvent any blacklist
+    blocking.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this recipe’s purpose, leave the default box checked:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.24 – Payload encoding to be applied to the payload value substituted\
+    \ at the substitution marker within e\uFEFFach request](image/B21173_Figure_2.24..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.24 – Payload encoding to be applied to the payload value substituted
+    at the substitution marker within each request
+  prefs: []
+  type: TYPE_NORMAL
+- en: Resource pool
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'After the **Payloads** subtab is the **Resource** **pool** subtab:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.25 – Intruder Resource pool subtab](image/B21173_Figure_2.25..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.25 – Intruder Resource pool subtab
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The **Resource pool** subtab is used to assign the number of threads to be
+    used during an intruder attack. The default pool size is **10**, which is resource-dependent.
+    This tab allows the creation and management of various pool sizes combined with
+    throttling of fixed or random delays:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.26 – Default resource pool configured in Intruder](image/B21173_Figure_2.26..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.26 – Default resource pool configured in Intruder
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Depending upon your target application’s level of fortitude, you may wish to
+    create a new resource pool with less intrusive behavior and network noise:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.27 – Creation of custom resource po\uFEFFol in Intruder](image/B21173_Figure_2.27..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.27 – Creation of custom resource pool in Intruder
+  prefs: []
+  type: TYPE_NORMAL
+- en: Settings
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Finally, the **Intruder** | **Settings** tab provides attack table customizations,
+    particularly related to responses captured such as specific error messages. There
+    are several sections within the **Intruder** | **Settings** tab, including **Save
+    attack**, **Request headers**, **Error handling**, **Attack results**, **Grep
+    - Match**, **Grep - Extract**, **Grep - Payloads**, **Redirections**, and **HTTP
+    version**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.28 – Intrud\uFEFFer Settings tab](image/B21173_Figure_2.28..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.28 – Intruder Settings tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: Save attack
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Save attack** is an option allowing you to save your intruder attacks, configurations,
+    and results to your project file. This feature is turned off, by default, to save
+    space as the accumulation of attack data can become quite large:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.29 – Saving your \uFEFFintruder attacks](image/B21173_Figure_2.29..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.29 – Saving your intruder attacks
+  prefs: []
+  type: TYPE_NORMAL
+- en: Request headers
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Request headers** offers configurations specific to header parameters while
+    **Intruder** is running attacks. For this recipe, leave the default boxes checked:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.30 – Request header\uFEFFs configurations](image/B21173_Figure_2.30..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.30 – Request headers configurations
+  prefs: []
+  type: TYPE_NORMAL
+- en: Error handling
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Error handling** is a configuration to tell **Intruder** how you want to
+    handle network errors during an attack. The default settings are **3** retries
+    and a pause of **2000** milliseconds before each retry.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this recipe, leave the default setting as they are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.31 \uFEFF– Error handling](image/B21173_Figure_2.31..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.31 – Error handling
+  prefs: []
+  type: TYPE_NORMAL
+- en: Attack results
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: After starting the attack, **Intruder** creates an attack table. The **Attack
+    results** section offers some settings around what is captured within that table.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this recipe, leave the default settings as they are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.32 – Attack\uFEFF results options](image/B21173_Figure_2.32..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.32 – Attack results options
+  prefs: []
+  type: TYPE_NORMAL
+- en: Grep - Match
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Grep - Match** is a highly useful feature that, when enabled, creates additional
+    columns in the attack table results to quickly identify errors, exceptions, or
+    even a custom string within the response.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this recipe, leave the default settings as they are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.33 – Grep - M\uFEFFatch on keywords](image/B21173_Figure_2.33..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.33 – Grep - Match on keywords
+  prefs: []
+  type: TYPE_NORMAL
+- en: Grep - Extract
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Grep - Extract**, when enabled, is another option for adding a column in
+    the attack table whose label is specific to a string found in the response. This
+    option differs from **Grep - Match** since **Grep - Extract** values are taken
+    from an actual HTTP response, as opposed to an arbitrary string.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this recipe, leave the default settings as they are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.34 – Grep - Extract b\uFEFFased on response](image/B21173_Figure_2.34..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.34 – Grep - Extract based on response
+  prefs: []
+  type: TYPE_NORMAL
+- en: Grep - Payloads
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Grep - Payloads** provides you with the ability to add columns to the attack
+    table in which responses contain reflections of payloads.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this recipe, leave the default settings as they are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.35 – Grep responses on payload values use\uFEFFd in the request](image/B21173_Figure_2.35..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.35 – Grep responses on payload values used in the request
+  prefs: []
+  type: TYPE_NORMAL
+- en: Redirections
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**Redirections** instructs **Intruder** to never, conditionally, or always
+    follow redirections. This feature is very useful, particularly when brute-forcing
+    logins since a 302 redirect is generally an indication of entry.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this recipe, leave the default settings as they are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.36 – Redi\uFEFFrection behavior](image/B21173_Figure_2.36..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.36 – Redirection behavior
+  prefs: []
+  type: TYPE_NORMAL
+- en: HTTP version
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: '**HTTP version** instructs **Intruder** to use either **HTTP/2** or **HTTP/1**
+    as the protocol during the attack. The default setting will use whichever protocol
+    is currently used by the target server:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.37 – HTTP protocol behavior](image/B21173_Figure_2.37..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.37 – HTTP protocol behavior
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enable this feature if you wish to override the target’s project and use **HTTP/1**
+    instead. Make sure to uncheck **Default to HTTP/2 if the server supports it**
+    to force the **HTTP/1** protocol:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: "![Figure 2.38 – \uFEFFHTTP/2 override](image/B21173_Figure_2.38..jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.38 – HTTP/2 override
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start attack button
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Finally, we are ready to start **Intruder**. On either the **Payloads** or
+    the **Settings** subtab, click the **Start attack** button to begin:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.39 – Intruder’s Start attack button](image/B21173_Figure_2.39..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.39 – Intruder’s Start attack button
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When the attack starts, an attack results table will appear as a pop-out screen.
+    This allows the tester to review all requests using the payloads within the payload
+    marker positions. It also allows us to review all responses and columns showing
+    **Status code**, **Error**, **Timeout**, **Length**, and **Comment**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.40 – Attack results table](image/B21173_Figure_2.40..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.40 – Attack results table
+  prefs: []
+  type: TYPE_NORMAL
+- en: For this recipe, we note that the payload of admin in the **password** parameter
+    produced a status code of **302**, which is a redirect. This means we logged in
+    to the Mutillidae application successfully.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Looking at **Response** | **Render** within the attack table allows us to see
+    how the web application responded to our payload. As you can see, we are successfully
+    logged in as an admin:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 2.41 – The result of the intruder attack is a logged-in session](image/B21173_Figure_2.41..jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 2.41 – The result of the intruder attack is a logged-in session
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1013 @@
+- en: Vulnerability Scanning
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'This chapter contains the following recipes for performing automated vulnerability
+    scanning:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with the Nmap Scripting Engine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with MSF auxiliary modules
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating scan policies with Nessus
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with Nessus
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with OpenVAS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validating vulnerabilities with HTTP interaction
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validating vulnerabilities with ICMP interaction
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: While it is possible to identify many potential vulnerabilities by reviewing
+    the results of service fingerprinting and researching exploits associated with
+    identified versions, this can often take an extraordinarily large amount of time.
+    There are more streamlined alternatives that can usually accomplish a large part
+    of this work for you. These alternatives include the use of automated scripts
+    and programs that can identify vulnerabilities by scanning remote systems. Unauthenticated
+    vulnerability scanners work by sending a series of distinct probes to services
+    in attempt to solicit responses that indicate that a vulnerability exists. Alternatively,
+    authenticated vulnerability scanners will directly query the remote system using
+    the credentials provided for information regarding installed applications, running
+    services, filesystem, and registry contents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with the Nmap Scripting Engine
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **Nmap Scripting Engine (NSE)** provides a large number of scripts that
+    can be used to perform a range of automated tasks to evaluate remote systems.
+    The existing NSE scripts that can be found in Kali are classified into a number
+    of different categories, one of which is vulnerability identification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To perform vulnerability analysis with NSE, you will need to have a system that
+    is running network services over TCP or UDP. In the example provided, a Windows
+    XP system with a vulnerable SMB service is used for this task. For more information
+    on setting up a Windows system, refer to the *Installing Windows Server* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To get all the vulnerability information with the Nmap Scripting Engine, perform
+    the following steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are a number of different ways in which one can identify the functions
+    associated with any given NSE script. One of the most effective ways is to reference
+    the `script.db` file that is located in the Nmap script directory. To see the
+    contents of the file, we can use the `cat` command, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00093.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This `script.db` file is a very simple index that shows each NSE script''s
+    filename and the categories it falls into. These categories are standardized and
+    make it easy to grep for specific types of script. The category name for vulnerability
+    scanning scripts is `vuln`. To identify all vulnerability scripts, one would need
+    to grep for the `vuln` term and then extract the filename for each script with
+    the `cut` command. This can be seen in the following truncated output:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00467.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To further evaluate the use of any given script in the preceding list, one
+    can use the `cat` command to read the `.nse` file that is contained within the
+    same directory as the `script.db` file. Because most of the descriptive content
+    is generally at the beginning of the file, it is recommended that you pipe the
+    content over to the `more` utility so that the file can be read from top to bottom,
+    as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00535.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, we can see that the `smb-vuln-ms10-054.nse` script
+    checks for a remote memory corruption vulnerability associated with the SMB service.
+    Here, one can find a description of the vulnerability and references to the **Common
+    Vulnerabilities and Exposures** (**CVE**) number that can be queried online for
+    additional information. By reading further, one can learn even more about the
+    script, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00600.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By reading further down, we can find details on script-specific arguments, appropriate
+    usages, and an example of the expected script output. It is important to take
+    note of the fact that there is an unsafe argument that can be set to the value
+    of `0` (not activated) or `1` (activated). This is actually a common argument
+    in Nmap vulnerability scripts and it is important to understand its use.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: By default, the `unsafe` argument is set to `0`. When this value is set, Nmap
+    does not perform any tests that could potentially result in a denial-of-service
+    condition. While this sounds like the optimal choice, it often means that the
+    results of many tests will be less accurate, and some tests will not be performed
+    at all. Activating the `unsafe` argument is recommended for a more thorough and
+    accurate scan, but this should only be performed against production systems in
+    authorized testing windows. To run the vulnerability scan, the specific NSE script
+    should be defined with the `nmap --script` argument, and all script-specific arguments
+    should be passed using the `nmap --script-args` argument.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Also, to run the vulnerability scan with minimal distracting output, Nmap should
+    be configured to only scan the port corresponding to the scanned service, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00652.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'There is one more NSE script that I would like to draw attention to, because
+    it teaches an important lesson about the practice of vulnerability scanning. This
+    script is `smb-vuln-ms10-061.nse`. The details of this script can be seen by reading
+    the script from the top down with the `cat` command piped over to `more`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00032.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: This vulnerability was one of four vulnerabilities that were exploited by the
+    Stuxnet worm. The script checks for the vulnerability in a safe way without the
+    possibility of crashing the remote system, as this is not a memory corruption
+    vulnerability. In order for the check to work, it needs access to at least one
+    shared printer on the remote system. By default, it tries to enumerate printers
+    using the LANMAN API, which on some systems is not available by default. In that
+    case, a user should specify the printer share name as a printer script argument.
+    To find a printer share, `smb-enum-shares` can be used.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Also, on some systems, accessing shares requires valid credentials, which can
+    be specified with the `smb` library arguments: `smbuser` and `smbpassword`. What
+    makes this vulnerability interesting is the fact that there are multiple factors
+    that must be true before it can actually be exploited:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: First, a system must be running one of the implicated operating systems (XP,
+    Server 2003 SP2, Vista, Server 2008, or Windows 7).
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Second, it must be missing the `MS10-061` patch, which addresses the code-execution
+    vulnerability.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Finally, a local print share on the system must be publicly accessible. What
+    is interesting about this is that it is possible to audit the remote SMB print
+    spooler service to determine whether the system is patched regardless of whether
+    there is an existing printer share on the system. Because of this, there are varying
+    interpretations of what a vulnerable system is. Some vulnerability scanners will
+    identify non-patched systems as vulnerable, though in reality the vulnerability
+    cannot be exploited. Alternatively, other vulnerability scanners, such as the
+    NSE script, will evaluate all the required conditions to determine whether the
+    system is vulnerable.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'In the example provided, the scanned system is not patched, but it also does
+    not have a remote printer share. Have a look at the following example:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00101.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, Nmap has determined that the system is not vulnerable
+    because it does not have a remote printer share. While it is true that the vulnerability
+    cannot be exploited, some would still claim that the vulnerability still exists
+    because the system is unpatched and can be exploited in case an administrator
+    decides to share a printer from that device. This is why the results of all vulnerability
+    scanners must be evaluated to fully understand their results.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Some scanners will choose to evaluate only limited conditions, while others
+    will be more thorough. It's hard to say what the best answer is here. Most penetration
+    testers would probably prefer to be told that the system is not vulnerable because
+    of environmental variables, so that they do not spend countless hours attempting
+    to exploit a vulnerability that cannot be exploited.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Alternatively, a system administrator might prefer to know that the system is
+    missing the `MS10-061` patch so that the system can be totally secured, even if
+    the vulnerability cannot be exploited under the existing conditions.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Most vulnerability scanners will operate by evaluating a number of different
+    responses to attempt to determine whether a system is vulnerable to a specific
+    attack. In some cases, a vulnerability scan may be as simple as establishing a
+    TCP connection with the remote service and identifying a known vulnerable version
+    by the banner that is self disclosed. In other cases, a complex series of probes
+    and specially crafted requests may be sent to a remote service in an attempt to
+    solicit responses that are unique to services that are vulnerable to a specific
+    attack. In the example NSE vulnerability scripts provided, the vulnerability scan
+    will actually try to exploit the vulnerability if the `unsafe` parameter is activated.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with MSF auxiliary modules
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Similar to the vulnerability scanning scripts available in NSE, Metasploit also
+    offers a number of useful vulnerability scanners. Like Nmap's scripts, most of
+    these are fairly targeted and are used to scan a particular service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To perform vulnerability analysis with Metasploit auxiliary modules, you will
+    need to have a system that is running network services over TCP or UDP. In the
+    example provided, a Windows XP system with an RDP service is used for this task.
+    For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s perform the vulnerability scan using the MSF auxiliary modules:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are a number of different ways that one can identify the vulnerability
+    scanning auxiliary modules in Metasploit. One effective way is to browse to the
+    `/auxiliary/scanner` directory, as this is the location where most vulnerability
+    identification scripts will be found. Have a look at the following example:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00166.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The layout of these scripts is fairly standardized, and a description of any
+    given script can be identified by reading the script from top to bottom using
+    the `cat` command and then piping the output over to the more utility. In the
+    example provided, we can see that the script tests an authentication bypass vulnerability
+    that exists in MySQL database services. Alternatively, one can search for vulnerability
+    identification modules within the MSF console interface. To open this, one should
+    use the `msfconsole` command.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The `search` command can then be used in conjunction with keywords that specifically
+    relate to the service, or one can use the `scanner` keyword to query all scripts
+    within the `auxiliary/scanner` directory, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00242.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Upon identifying a script that looks promising, one can use the `use` command
+    in conjunction with the relative path to activate that script. Once activated,
+    the following `info` command can be used to read additional details about the
+    script to include details, description, options, and references:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00316.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the module has been selected, the `show options` command can be used to
+    identify and/or modify scan configurations. This command will display four column
+    headers: `Name`, `Current Setting`, `Required`, and `Description`. The `Name`
+    column identifies the name of each configurable variable. The `Current Setting`
+    column lists the existing configuration for any given variable. The `Required`
+    column identifies whether a value is required for any given variable. And the
+    `Description` column describes the function of each variable. The value of any
+    given variable can be changed by using the `set` command and providing the new
+    value as an argument, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00403.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In this particular case, the system is found to be vulnerable. Given that a
+    vulnerable system has been identified, there is a corresponding exploitation module
+    that can be used to actually cause a denial of service on the vulnerable system.
+    This can be seen in the example provided:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00485.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Most vulnerability scanners will operate by evaluating a number of different
+    responses to attempt to determine whether a system is vulnerable to a specific
+    attack. In some cases, a vulnerability scan may be as simple as establishing a
+    TCP connection with the remote service and identifying a known vulnerable version
+    by the banner that is self-disclosed. In other cases, a complex series of probes
+    and specially crafted requests may be sent to a remote service in an attempt to
+    solicit responses that are unique to services that are vulnerable to a specific
+    attack. In the preceding example, it is likely that the author of the script identified
+    a way to solicit a unique response that would only be generated by either patched
+    or non-patched systems and then used this as a basis to determine the exploitability
+    of any given remote system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating scan policies with Nessus
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nessus is one of the most powerful and comprehensive vulnerability scanners.
+    By targeting a system or group of systems, it will automatically scan for a large
+    range of vulnerabilities on all identifiable services. Scan policies can be built
+    in Nessus to more granularly define the types of vulnerability that it tests for
+    and the types of scan that are performed. This recipe will explain how to configure
+    unique scan policies in Nessus.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To configure scan policies in Nessus, one must first have a functional copy
+    of Nessus installed on the Kali Linux penetration-testing platform. Because Nessus
+    is a licensed product, it does not come installed by default in Kali. For more
+    information on how to install Nessus on Kali, refer to the *Installing Nessus
+    on Kali Linux* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to create scan policies using the Nessus:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To configure a new scan policy in Nessus, you will first need to access the
+    Nessus web interface at `https://localhost:8834` or `https://127.0.0.1:8834`.
+    Alternatively, if you are not accessing the web interface from the same system
+    that is running Nessus, you should specify the appropriate IP address or hostname.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once the web interface has loaded, you will need to log in with the account
+    that was configured during the installation process or with another account built
+    after install. After logging in, the Policies tab at the top of the page should
+    be selected. If no other policies have been configured, you will see an empty
+    list and a single button that says New Policy. Click on that button to start building
+    your first scan policy.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Upon clicking on New Policy, the Policy Wizards screen will pop up with a number
+    of preconfigured scan templates that can be used to speed up the process of creating
+    a scan policy. As you can see in the following screenshot, each of the templates
+    includes a name and then a brief description of its intended function:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00550.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In most circumstances, at least one of these preconfigured scan profiles will
+    resemble what you are trying to accomplish. Probably the most commonly used of
+    all of these is Basic Network Scan. Keep in mind that after selecting any one
+    of these options, you can still modify every detail of the existing configurations.
+    They are just there to get you started faster. Alternatively, if you do not want
+    to use an existing template, you can scroll down and select the Advanced Scan option,
+    which will allow you to start from scratch.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If you select any one of the preconfigured templates, you will go through a
+    quick three-step process to complete your scan profile. The process is summarized
+    in the following steps:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Step 1 allows you to configure the basic details to include the profile Name,
+    Description, and Visibility (public or private). Public profiles will be visible
+    to all Nessus users, while private ones will only be visible to the users that
+    created them.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Step 2 will simply ask whether the scan is internal or external. External scans
+    will be those performed against publicly accessible hosts, usually sitting in
+    the DMZ of an enterprise network. External scans do not require you to be on the
+    same network but can be performed across the Internet. Alternatively, internal
+    scans are performed from within a network and require direct access to the LAN
+    of the scan targets.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Step 3, the final step, requests for authentication credentials for scanned
+    devices, using either SSH or Windows authentication. Once completed, the new profile
+    can be seen in the previously empty list shown when the Profiles tab is accessed.
+    This is shown in the following screenshot:'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00616.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This approach makes it quick and easy to create new scan profiles, but doesn''t
+    give you a whole lot of control over the vulnerabilities tested and the types
+    of scans performed. To modify more detailed configurations, click on the newly
+    created policy name and then click on the Advanced Mode link. The options in this
+    configuration mode are very comprehensive and specific. There are four different
+    menus that can be accessed on the left-hand side of the screen. These include
+    the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'General Settings: This menu provides basic configurations, detailed port scanning
+    options that define how discovery and service enumeration are performed, and performance
+    options that define policies regarding speed, throttling, parallelism, and so
+    on.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Credentials: This menu allows the configuration of Windows credentials, SSH,
+    Kerberos, and even a number of clear-text protocol options (not encouraged).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Plugins: This menu provides extremely granular control over Nessus plugins.
+    Plugins is the term used in Nessus for the specific audits or vulnerability checks
+    performed. You can enable or disable groups of audits based on their type of function
+    or even manipulate specific plugins one by one.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Preferences: This menu covers the configurations for all of the more obscure
+    operational functions of Nessus, such as HTTP authentication, brute force settings,
+    and database interaction.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Scan policies are what define the values that are used by Nessus to define how
+    a scan will be run. These scan policies can be as simple as the three steps required
+    to complete the simple scan wizard setup or complicated to the extent that each
+    unique plugin is defined and custom authentication and operational configurations
+    are applied.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with Nessus
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nessus is one of the most powerful and comprehensive vulnerability scanners
+    available. By targeting a system or group of systems, it will automatically scan
+    for a large range of vulnerabilities on all identifiable services. Once scan policies
+    have been configured to define the configurations for the Nessus scanner, the
+    scan policy can be used to execute scans on remote targets for evaluation. This
+    recipe will explain how to perform vulnerability scanning with Nessus.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To configure scan policies in Nessus, one must first have a functional copy
+    of Nessus installed on the Kali Linux penetration-testing platform. Because Nessus
+    is a licensed product, it does not come installed by default in Kali. For more
+    information on how to install Nessus on Kali, refer to the *Installing Nessus
+    on Kali Linux* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, at least one scan policy will need to be created
+    prior to scanning with Nessus. For more information on creating scan policies
+    in Nessus, refer to the preceding recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s perform vulnerability scan with the help of Nessus:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To get started with a new scan in Nessus, you will need to ensure that the
+    Scans tab is selected at the top of the screen. If no scans have been run in the
+    past, this will generate an empty list at the center of the screen. To execute
+    an initial scan, you will need to click on the blue New Scan button on the left-hand
+    side of the screen, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00664.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This will require some basic configuration information. You will be prompted
+    with a series of fields, including Name, Policy, Folder, and Targets:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The Name field is simply used as a unique identifier to distinguish the scan
+    results from other scans. If you are performing a large number of scans, it will
+    be helpful to be very specific with the scan name.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The second field is the Policy field. It is what really defines all of the details
+    of the scan. This field allows you to select which scan policy will be used. If
+    you are not familiar with how scan policies work, refer to the preceding recipe.
+    Any public or private scan policies that the logged-in user has created should
+    be visible in the Policy drop-down menu.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Folder field defines which folder the scan results will be placed in. Organizing
+    your scans in folders can be helpful when you need to sort through a large number
+    of scan results. New scan folders can be created from the main Scans menu by clicking
+    on New Folder.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The last field is Targets. This field shows how one defines what systems will
+    be scanned. Here, you can enter a single host IP address, a list of IP addresses,
+    a sequential range of IP addresses, a CIDR range, or a list of IP ranges. Alternatively,
+    you can use hostnames, assuming the scanner is able to properly resolve them to
+    IP addresses using DNS.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Finally, there is also an option to upload a text file containing a list of
+    targets in any of the aforementioned formats, as shown in the following screenshot:'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00047.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After configuring the scan, it can be executed using the Launch button at the
+    bottom of the screen. This will immediately add the scan to the list of scans,
+    and the results can be viewed in real time, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00134.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Even while the scan is running, you can click on the scan name and begin viewing
+    the vulnerabilities as they are identified. Color-coding is used to quickly and
+    easily identify the number of vulnerabilities and their levels of severity, as
+    shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00555.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: After clicking on the example scan, we can see two of the hosts that are being
+    scanned. The first indicates that the scan is complete, and the second host is
+    at 2% completion. The bar graphs shown in the Vulnerabilities column show the
+    number of vulnerabilities associated with each given host. Alternatively, one
+    can click on the Vulnerabilities link at the top of the screen to organize the
+    findings by discovered vulnerability and then the number of hosts for which that
+    vulnerability was identified.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To the right-hand side of the screen, we can see a similar pie chart, but this
+    one corresponds to all hosts scanned, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00261.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This pie chart also clearly defines the meanings for each of the colors, ranging
+    from critical vulnerabilities to informational details. By selecting the link
+    for any particular host IP address, you can see the specific vulnerabilities that
+    were identified for that host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00338.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This list of vulnerabilities identifies the plugin name, which generally provides
+    a brief description of the finding and the level of severity. As a penetration
+    tester, the critical and high vulnerabilities will usually be the most promising
+    if you are seeking to achieve remote code execution on the target system. By clicking
+    on any one of the distinct vulnerabilities, you can get a large amount of information
+    on that vulnerability, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00428.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In addition to description and patching information, this page will also provide
+    alternative sources for further research, and most importantly (for penetration
+    testers, anyway) reveal whether or not an exploit exists. This page will also
+    often indicate whether an available exploit is a public exploit or whether it
+    exists within an exploitation framework such as Metasploit, CANVAS, or Core Impact.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Most vulnerability scanners will operate by evaluating a number of different
+    responses to attempt to determine whether a system is vulnerable to a specific
+    attack. In some cases, a vulnerability scan may be as simple as establishing a
+    TCP connection with the remote service and identifying a known vulnerable version
+    by the banner that is self-disclosed. In other cases, a complex series of probes
+    and specially crafted requests may be sent to a remote service in an attempt to
+    solicit responses that are unique to services that are vulnerable to a specific
+    attack. Nessus sequences a large number of tests together to attempt to generate
+    a complete picture of the attack surface for a given target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with OpenVAS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Open Vulnerability Assessment System** (**OpenVAS**) is freeware that is
+    a vulnerability scanner and management suite. OpenVAS and Nessus are similar;
+    in fact, OpenVAS was forked from the last free version of Nessus before it went
+    proprietary. In this recipe, we will cover how to install and perform a scan with
+    OpenVAS.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use OpenVAS to perform vulnerability scanning, you will need to have a remote
+    system available for scanning. In the examples provided, an instance of Metasploitable2
+    is used to perform this task. For more information on how to set up Metasploitable2,
+    refer to [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to perform vulnerability scan with the help
+    of OpenVAS:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'OpenVAS does not come preinstalled on Kali Linux, but it is a simple process
+    to get it installed and running. To begin, we will use the `apt-get` command to
+    install the software; when prompted to continue, type `Y`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00502.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once successfully installed, run the `openvas-setup` command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00568.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'It will take a while for the set up to configure itself and install the vulnerability
+    test scripts. At the conclusion of the configuration, take note of the password
+    created. This will be needed when logging into the OpenVAS web interface:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00629.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once OpenVAS has been installed and configured we can start it using the `openvas-start`
+    command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00677.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can now access the OpenVAS web interface by navigating to `https://127.0.0.1:9392/`
+    with our local browser. We can authenticate using `admin` as our Username and Password
+    we received at the conclusion of the `openvas-setup` process:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00065.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Upon successful authentication you are presented with the OpenVAS dashboard.
+    Here (if you have any) you can see statistics on your scans and vulnerabilities.
+    Given that we have just installed OpenVAS we do not currently have any data to
+    display. We can change this by running a scan. To do this, go to Scans in the
+    top menu and select Tasks:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00130.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once on the the Tasks page, go to the wand icon in the top-left corner of the
+    page and select Task Wizard:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00208.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'From the Task Wizard screen we are prompted to enter an IP address or hostname.
+    For our example, we will use the IP address of our Metasploitable2 machine, `172.16.69.128`,
+    and click on the Start Scan button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00279.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'On completion of the wizard, OpenVAS will begin scanning the target assigned.
+    It will take some time for it to run the various scans and tests on your target
+    machine. Upon completion, you should see a summary:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00357.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To view the results of the OpenVAS scan, navigate to the Scans section of the
+    menus and select Results:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00451.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Here you can see the results of your scans. There are helpful charts showing
+    the number of vulnerabilities by class (High, Medium, Low, Log) and by **Common
+    Vulnerability Scoring System** (**CVSS**). Following the charts mentioned, we
+    can see a list of each vulnerability, its severity, and its location:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00521.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Most vulnerability scanners will operate by evaluating a number of different
+    responses to attempt to determine whether a system is vulnerable to a specific
+    attack. In some cases, a vulnerability scan may be as simple as establishing a
+    TCP connection with the remote service and identifying a known vulnerable version
+    by the banner that is self-disclosed. In other cases, a complex series of probes
+    and specially crafted requests may be sent to a remote service in an attempt to
+    solicit responses that are unique to services that are vulnerable to a specific
+    attack. OpenVAS sequences a large number of tests together to attempt to generate
+    a complete picture of the attack surface for a given target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validating vulnerabilities with HTTP interaction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As a penetration tester, the best outcome of any given exploit is to achieve
+    remote code execution. However, there are cases in which we might just want to
+    determine whether a remote code-execution vulnerability is exploitable but don't
+    want to actually follow through the entire exploitation and post-exploitation
+    process. One way to do this is to create a web server that will log interaction
+    and use a given exploit to execute code that would cause the remote host to interact
+    with the web server. This recipe will demonstrate how to write a custom script
+    for validating remote code-execution vulnerabilities with HTTP traffic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To validate vulnerabilities using HTTP interaction, you will need to have a
+    system that is running software with a remote code execution vulnerability. Additionally,
+    this section will require a script to be written to the filesystem using a text
+    editor such as Vim or GNU nano. For more information on writing scripts, refer
+    to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s validate vulnerabilities with the help of HTTP interaction:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before actually exploiting a given vulnerability, we must deploy a web server
+    that will log interaction with it. This can be done with a simple Python script,
+    as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The provided Python script uses the `socket` library to generate a web server
+    that listens on TCP port `8000` of all local interfaces. Upon receiving a connection
+    from a client, the script will return the client's IP address and the request
+    sent.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To use this script to validate a vulnerability, we need to execute code that
+    will cause the remote system to interact with the hosted web service. But before
+    doing this, we need to launch our script with the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00103.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, we need to exploit a vulnerability that will yield remote code execution.
+    By reviewing the Nessus scan results of the Metasploitable2 box, we can see that
+    the FTP service running has a backdoor that can be triggered by supplying a username
+    with a smiley face in it—no joke! This was actually included in a production FTP
+    service. To attempt to exploit this, we will first connect to the service with
+    an appropriate username, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00169.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After attempting to connect with a username with a smiley face included, a
+    backdoor should have opened on the remote host''s TCP port `6200`. We need not
+    even enter a password. Instead, *Ctrl* + *C* can be used to exit the FTP client
+    and then Netcat can be used to connect to the opened backdoor, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00245.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After establishing a TCP connection with the open port, we can use our script
+    to verify that we can perform remote code execution. To do this, we attempt to
+    use the `wget` command with the URL of the HTTP detection server. After attempting
+    to execute this code, we can verify that the HTTP request was received by looking
+    back to the script output:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00319.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This script works by identifying attempted connections from remote hosts. By
+    executing code that causes a remote system to connect back to our listening server,
+    it is possible to verify that remote code execution is possible by exploiting
+    a particular vulnerability. If `wget` or `curl` are not installed on the remote
+    server, another means of identifying remote code execution may need to be employed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validating vulnerabilities with ICMP interaction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As a penetration tester, the best outcome of any given exploit is to achieve
+    remote code execution. However, there are cases in which we might only want to
+    determine whether a remote code-execution vulnerability is exploitable but don't
+    want to actually follow through the entire exploitation and post-exploitation
+    process. One way to do this is to run a script that logs ICMP traffic and then
+    execute a `ping` command on the remote system. This recipe will demonstrate how
+    to write a custom script for validating remote code-execution vulnerabilities
+    with ICMP traffic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To validate vulnerabilities using ICMP traffic logging, you will need to have
+    a remote system that is running an exploitable code-execution vulnerability. Additionally,
+    this section will require a script to be written to the filesystem using a text
+    editor such as Vim or GNU nano. For more information on writing scripts, refer
+    to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Performing vulnerabilities validation operation using ICMP interaction:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before actually exploiting a given vulnerability, we must deploy a script to
+    log incoming ICMP traffic. This can be done with a simple Python script using
+    Scapy, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The provided Python script sniffs all incoming traffic and flags the source
+    of any ICMP traffic directed toward the scanning system as vulnerable. To use
+    this script to validate that a vulnerability can be exploited, we need to execute
+    code that will cause the remote system to ping our scanning system. To demonstrate
+    this, we can use Metasploit to launch a remote code-execution exploit. But prior
+    to doing this, we need to launch our script, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00408.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, we need to exploit a vulnerability that will yield remote code execution.
+    By reviewing the Nessus scan results of the Windows XP box, we can see that the
+    system is vulnerable to the `MS08-067` exploit. To validate this, we will exploit
+    the vulnerability with a payload that executes a `ping` command back to the scanning
+    system, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00099.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The exploit in Metasploit was configured to use the `windows/exec` payload
+    that executes code in the exploited system. This payload was configured to send
+    a single ICMP echo request to our scanning system. After execution, we can confirm
+    that the exploit was successful by referring back to the original script that
+    was still listening, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00553.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This script works by listening for incoming ICMP traffic from remote hosts.
+    By executing code that causes a remote system to send an `echo` request to our
+    listening server, it is possible to verify that remote code execution is possible
+    by exploiting a particular vulnerability.
+  prefs: []
+  type: TYPE_NORMAL

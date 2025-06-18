@@ -1,0 +1,568 @@
+- en: '14'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Network Discovery Tools
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, I’d like to go over some common tools that aid in the network
+    discovery and network information gathering and reconnaissance processes and,
+    overall, aid in network forensic analysis. Specific network forensic analysis
+    tools such as Xplico and NetworkMiner will be covered in [*Chapter 15*](B19441_15.xhtml#_idTextAnchor251),
+    *Packet Capture Analysis with Xplico*, and [*Chapter 16*](B19441_16.xhtml#_idTextAnchor262),
+    *Network Forensic Analysis* *Tools*, respectively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this chapter, we will first perform network host discovery by detailing specifics
+    of the hosts themselves, such as **operating systems** (**OSes**) and open ports,
+    and then use an online tool to discover external and publicly identifiable hosts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will learn about the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using netdiscover in Kali Linux to identify devices on a network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use **Network Mapper** (**Nmap**) in Kali Linux to identify devices on a network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use Nmap to fingerprint host details (ports, OSes, etc.)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use Shodan.io to find external IoT devices, including firewalls, CCTV systems,
+    and servers
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: By the end of this chapter, you will be able to use these tools to assist in
+    DFIR investigations that require you to collect information about locally and
+    remotely connected devices, such as IP addresses, device types, OS details, open
+    ports, and more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using netdiscover in Kali Linux to identify devices on a network
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We’ll start off our network host discovery by first using a very simple tool
+    known as **netdiscover**. The netdiscover tool comes preinstalled in Kali Linux;
+    however, you can install it on almost any version of Linux using the following
+    command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: netdiscover, as the name suggests, is used to discover online hosts on a wired
+    or wireless network by broadcasting **Address Resolution Protocol** (**ARP**)
+    requests. What makes netdiscover easy to use is that it allows users to automatically
+    scan an entire range or subnet of IP addresses on a network to detect online hosts.
+    Another very useful feature of netdiscover is that it displays the **Media Access
+    Control** (**MAC**) address along with the vendor of the device or **Network Interface
+    Card** (**NIC**), which can make host discovery much simpler when trying to differentiate
+    between end user, server, and networking devices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we start using netdiscover, we should take note of the network interfaces
+    on our scanning device. This also tells us what our IP, subnet mask, and network
+    range are.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To do so, type the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the following output in *Figure 14**.1*, we can see that there are two interfaces,
+    namely the Ethernet (**eth0**) and loopback (**lo**) interfaces:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.1 – ifconfig command output](image/Figure_14.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.1 – ifconfig command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the **eth0** interface details, we can see that my IP address is listed as
+    **10.10.170.105**, with a subnet mask of **255.255.0.0**. We will use this interface
+    with the **netdiscover** command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that we know which interface and IP range we will use, we can proceed to
+    use netdiscover to identify network hosts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will first start netdiscover and use the help option to view all available
+    options and switches in netdiscover. To do so, type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: To use netdiscover to automatically scan for devices on our network, we will
+    use the **–r** option to specify the subnet or range of IP addresses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.2 – netdiscover options](image/Figure_14.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.2 – netdiscover options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’ll now scan my entire **10.10.0.0** network range using the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Please ensure that you are using your own network range, as yours may be different
+    from mine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, press *Enter*. After pressing *Enter*, netdiscover will run. Allow it
+    a minute to complete and compile a list of IPs, MAC addresses, and vendor/hostnames,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: For privacy purposes, I have blocked parts of the MAC addresses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.3 – netdiscover output](image/Figure_14.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.3 – netdiscover output
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding output, we can see that netdiscover has captured **468** ARP
+    packets and detected **151** live hosts, listed with their IPs, MAC addresses,
+    and vendor/hostnames.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s now look at using Nmap to also perform host discovery.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Nmap to find additional hosts and devices on a network
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Created by Gordon Lyon aka *Fyodor*, **Nmap** is one of the most common tools
+    for network scanning and enumeration during vulnerability assessments and penetration
+    tests. It is also quite useful for DFIR tasks and investigations when investigating
+    network communications that require disclosure of host details on a network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap is also a bit of a celebrity and was used in popular movies such as *The
+    Matrix Reloaded*, *The Bourne Ultimatum*, *Die Hard 4*, and *The Girl with the
+    Dragon Tattoo*, and also the very popular TV series *Mr. Robot*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap is a **Command-Line Interface** (**CLI**) tool and comes pre-installed
+    in Kali Linux. There is also a **Graphical User Interface** (**GUI**) for Windows
+    and Mac devices, but I personally think you can access more options and features
+    using the CLI.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Nmap has many switches and requires prior knowledge of ports, **Transmission
+    Control Protocol/Internet Protocol** (**TCP/IP**) protocols, and TCP flags, all
+    of which you should read more about before proceeding if you are unfamiliar with
+    those topics. Please visit this link for more information on TCP: [https://en.wikipedia.org/wiki/Transmission_Control_Protocol](https://en.wikipedia.org/wiki/Transmission_Control_Protocol).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s follow these steps to use Nmap to find additional hosts and devices on
+    a network:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To start nmap and view the available switches and options, we can use the following
+    command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: As stated in the preceding output, the general format and usage of nmap is **nmap
+    [Scan Type(s)] [Options] {****target specification}**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.4 – A snippet of the nmap help option output](image/Figure_14.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.4 – A snippet of the nmap help option output
+  prefs: []
+  type: TYPE_NORMAL
+- en: To start us off, I’ll try a basic ping scan using the **–sn** option to list
+    hosts that can be further scanned, in the same way that netdiscover found online
+    hosts on my network in the previous section.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To perform a basic ping scan, we can type **sudo nmap –sn** followed by the
+    network range, which in my case is **10.10.0.0/24**. Yours may be different, so
+    please make sure you use your own network range.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can also use the **–v** option to list output verbatim as it happens in
+    nmap:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the specific preceding Nmap command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.5 – nmap ping scan output](image/Figure_14.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.5 – nmap ping scan output
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we scroll down through the nmap output, we can see listed hosts that were
+    discovered online via our ping scan. Though not as well organized as netdiscover,
+    nmap still displays the same results, as shown here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.6 – nmap output showing discovered live hosts](image/Figure_14.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.6 – nmap output showing discovered live hosts
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this section, we learned the basics of Nmap, and we are now capable of scanning
+    internal networks using this CLI tool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s go a bit further with our Nmap scanning now and learn how to identify
+    ports and services of discovered devices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Nmap to fingerprint host details
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we’re familiar with how to view nmap switches and run a basic scan,
+    let’s perform host enumeration by discovering running services, ports, and even
+    the OSes of discovered hosts, which may be useful artifacts within our DFIR investigation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As shown in the previous section, nmap is fairly simple to use once you are
+    aware of the various switches that can be used. Feel free to again run the **sudo
+    nmap –h** command to view the available switches and options.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For our purposes, an **–A** option in nmap can perform the following tasks
+    when enumerating a host or an entire network:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OS detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Service version detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Script scanning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Traceroute
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The **–A** option can take a while to run on an entire network, so I’ll run
+    it against a single host, which was shown as alive when I previously ran the ping
+    scan on my network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To run this service scan as it is called, I’ll run the following command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the **-A** option within Nmap.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.7 – nmap service scan](image/Figure_14.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.7 – nmap service scan
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scrolling through the service scan output, nmap has also displayed a list of
+    open ports and has identified the running service and service versions, as shown
+    here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.8 – nmap output displaying open ports and running services](image/Figure_14.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.8 – nmap output displaying open ports and running services
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scrolling a bit further down through the very same output, nmap displays details
+    of the host, such as the host (target) name, domain, and computer name, as shown
+    here. For privacy purposes, I’ve blurred some of the output.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.9 – nmap output displaying host information](image/Figure_14.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.9 – nmap output displaying host information
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Scrolling almost to the very bottom of the nmap output, I can also see the
+    host OS details, as shown here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.10 – nmap output showing the host OS details](image/Figure_14.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.10 – nmap output showing the host OS details
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding output, we can see that the host is a Dell device running Windows
+    10 (**1507 -** **1607**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: We now know how to scan internal networks and identify live systems and details
+    about those systems, such as their OS, MAC address, uptime, and even open ports,
+    all using just Nmap.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s now move outside the local network and learn how to locate and identify
+    external and IoT devices using Shodan.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Shodan.io to find IoT devices including firewalls, CCTV, and servers
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Quickly think of a website that allows you to search for anything. Without being
+    a psychic, I’m guessing you thought of Google. Maybe I’ll stick to my day job.
+    In the same way that Google crawls and scours the main parts of the internet and
+    indexes websites and resources, Shodan takes a similar approach to scanning the
+    internet and IP addresses and indexes useful information about devices that can
+    be accessed across the web.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**IoT** (short for **Internet of Things**) devices are those that can connect
+    to the internet but may not be traditional computers, such as laptops and desktops.
+    IoT devices include smart devices, such as wearable fitness devices and trackers,
+    smart microwaves and ovens, Amazon Echo, doorbell cameras, and even smart cars.
+    IoT devices also extend to industrial systems and are referred to as **Industrial
+    IoT** (**IioT**) devices. Think of a large soft drink manufacturing company as
+    an example. There need to be systems and devices in place to count bottles, caps,
+    and labels, check temperatures, and facilitate communications between sensors
+    that need to be networked with each other via **Programmable Logic Controllers**
+    (**PLCs**), **Supervisory Control and Data Acquisition** (**SCADA**), and **Industrial
+    Control Systems** (**ICS**). This applies to every industrial sector, even nuclear
+    power plants! It’s also not uncommon to combine this **Operational Technology**
+    (**OT**) with IioT, known as **OT-IIoT**, as OT devices can be remotely controlled
+    via IIoT systems.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The issue here lies in securing IoT and IIoT devices as well as access, particularly
+    remote access, to devices. As a penetration tester, I use **Shodan.io** frequently
+    to find systems belonging to companies of different types, particularly larger
+    organizations. This skill is also useful when conducting DFIR investigations,
+    as information about external and IoT devices can easily be found using Shodan.io.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The team at Shodan claims that Shodan can find all devices that are connected
+    to the internet and reveal important metadata about the devices. This can be beneficial
+    because it allows companies to use Shodan to find out whether their devices can
+    be publicly accessed, but it also shows attackers the same information. This is
+    not to say that Shodan is a bad or malicious tool, as there are hundreds of other
+    tools that can be used together to divulge the same information. Shodan just makes
+    it much easier.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Shodan is a paid subscription; however, you can use it for free, which gives
+    very limited results, or register a free account and gain access to two pages
+    of results when performing IoT and IIoT searches. If you don’t want to purchase
+    one of their subscription packages, you can wait around for their annual sale
+    (usually around Black Friday and Thanksgiving), when a limited lifetime subscription
+    for personal use is available for $5\. For this exercise, I’ll be using the paid
+    $5 subscription, but I encourage you to register with the site so that you at
+    least have access to two pages of results at a time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Shodan filters for IoT searches
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Shodan searches aren’t as clear-cut as a Google search, but it’s not difficult
+    to do a search for Shodan filters and try to search for specific devices. You
+    can view the Shodan Filter Reference at [https://beta.shodan.io/search/filters](https://beta.shodan.io/search/filters).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are some basic search filters you can use:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**product**: Search the name of the hardware manufacturer or software developer'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**hostname**: Find devices based on the searched hostname'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**os**: Search for devices by OS'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**port**: Find open ports on devices'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**city**: Find devices within a specific city'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**country**: Find devices within a specific country'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**geo**: Find devices by GPS coordinates'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Let’s try a few searches of our own. I live on a small island in the Caribbean
+    called Trinidad. If want to view a list of devices within Trinidad, I can use
+    the **country** filter followed by the country code in the Shodan search bar:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: If unsure of your own country code, a simple web search should help you figure
+    it out. A site that I have found to be helpful is [https://www.countrycode.org/](https://www.countrycode.org/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the following screenshot, we can see the results of the country filter where
+    **TT** represents the country code for Trinidad and Tobago. To the left of the
+    screen, we can see a total of **124, 921** results for IoT devices found, under
+    which there is a list of **TOP CITIES**, with the number of devices listed for
+    each city, followed by the top open ports, top organizations, and so on. To the
+    middle and right of the screen, we can see actual IPs and information about those
+    devices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.11 – Shodan country filter results](image/Figure_14.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.11 – Shodan country filter results
+  prefs: []
+  type: TYPE_NORMAL
+- en: Due to privacy and legal concerns, I won’t be clicking on the results, as this
+    will carry us to another page, showing the company and host details and even disclosing
+    open ports and the OSes of the devices. Be sure to do a web search and review
+    the laws of your country and state before proceeding any further. If unsure, you
+    may wish to first reach out to law enforcement or someone knowledgeable about
+    your local laws and legislation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s try another search for **Fortinet** firewalls within Trinidad, using
+    the **country** filter and a **product** filter by typing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the following search results, we can see that Shodan returned 54 results
+    for Fortinet firewalls in Trinidad. Again, for legal and privacy purposes, I won’t
+    be clicking on the IP address, as this will show even more details about the devices
+    other than what is listed on the main page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.12 – The product filter for Fortinet firewalls in Trinidad](image/Figure_14.12_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.12 – The product filter for Fortinet firewalls in Trinidad
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can also look for specific servers using Shodan. Let’s say that I want to
+    search for Apache web servers that use version **2.2.3**. This can be achieved
+    using the **server** filter followed by the server version by typing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: Here, we see that Shodan has displayed 11 results, mainly found in Port of Spain
+    and Chaguanas in Trinidad.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.13 – Finding web servers with Shodan](image/Figure_14.13_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.13 – Finding web servers with Shodan
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For our last search, I’d like to search for CCTV IP cameras using Shodan. For
+    this, we can again use the **product** filter. I’ll specify the **Hikvision**
+    camera system, as this is a very common CCTV system, by typing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: As seen in this final instance, Shodan has returned 7,689 instances of Hikvision
+    cameras. This can also be very useful if your DFIR investigation requires CCTV
+    camera footage by alerting you to where cameras may be located nearby, and it
+    may give a company name that you may be able to contact and ask permission to
+    view their footage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 14.14 – CCTV camera discovery using Shodan](image/Figure_14.14_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 14.14 – CCTV camera discovery using Shodan
+  prefs: []
+  type: TYPE_NORMAL
+- en: Feel free to try out more Shodan filters, but please check your local legislation
+    where applicable to ensure that these searches are legal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we looked at the networking and enumeration tools netdiscover
+    and nmap and learned how to scan networks for open hosts and view details such
+    as IPs, MAC addresses, and hostnames and went a bit further with Nmap to further
+    discover more host details, such as open ports, running services and their versions,
+    computer names, and domains. We then moved on to finding IoT devices using Shodan.io
+    and used various search filters to find firewalls, servers, and CCTV cameras.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These tools can be very useful to anyone gathering information on local and
+    remote devices that may be part of a network DFIR investigation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next up, we’ll look at a **Network Forensics Analysis Tool** (**NFAT**) called
+    **Xplico**. See you in the next chapter.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,748 @@
+- en: '15'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Packet Capture Analysis with Xplico
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we’ll look into Xplico, which is an automated **Network Forensic
+    Analysis Tool** (**NFAT**). Xplico can be found in Kali Linux; however, I’ve found
+    that within the last few releases (2019–2022), there are issues when trying to
+    run Xplico, possibly due to upgrades within Kali itself.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although I will explain how to start Xplico in Kali Linux for those who may
+    have the good fortune of running it without issues, we will be using Xplico within
+    a virtual machine running DEFT Linux 8.1, for those of us who may have difficulties
+    running Xplico within Kali itself.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will be covering the following main topics in this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Xplico in Kali Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing DEFT Linux 8.1 in VirtualBox
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Downloading sample analysis files
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Starting Xplico in DEFT Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Xplico to automatically analyze web, email, and voice traffic
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Xplico in Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Follow these steps to install Xplico in Kali Linux:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If Xplico does not come with the version of Kali Linux you are currently using,
+    you can first update Kali Linux and install the Kali forensics repository by typing
+    the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Next, update your Kali by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Once Kali has updated, install Xplico in Kali by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: Press *Y* when prompted to click on **Yes** and download and install the necessary
+    files.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then, we need to start the Apache and Xplico services.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Start the **apache2** service by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Start the Xplico service by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'To run Xplico with full administrative privileges as the root user, type the
+    following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Type **Xplico** in the search bar and click on the first Xplico option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.1 – Xplico options within the search menu](image/Figure_15.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.1 – Xplico options within the search menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Xplico interface will open in a browser. You can also do this manually by
+    entering **http://localhost:9876/** in the browser of your choice.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If the preceding steps do not work, you can use Xplico in DEFT Linux, which
+    we will cover in the next section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing DEFT Linux 8.1 in VirtualBox
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Installing DEFT Linux is very simple and only takes a few minutes. We’ll have
+    Xplico up and running in no time. For those of you who were able to start Xplico
+    in Kali Linux, you can skip this process and go straight to the *Downloading sample
+    analysis files* section, where we will download and begin analyzing our sample
+    files using Xplico.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To those of you opting to install DEFT so you are able to use Xplico, let’s
+    get to it without further delay:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: DEFT is very user-friendly and based on a lightweight version of Ubuntu called
+    Lubuntu. You can download the DEFT Linux ISO image file at [https://archive.org/details/deft-8.2](https://archive.org/details/deft-8.2).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once downloaded, open VirtualBox and click on the **New** option to create a
+    new virtual machine, as shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.2 – The New option in VirtualBox](image/Figure_15.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.2 – The New option in VirtualBox
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter the details in the relevant fields, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.3 – New virtual machine details](image/Figure_15.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.3 – New virtual machine details
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ve allocated 6 GB of memory for the DEFT VM.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 15.4 – VirtualBox memory allocation](image/Figure_15.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.4 – VirtualBox memory allocation
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the **Hard Disk** selection, choose the **Create virtual hard disk now**
+    option and click on **Create**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For the **Hard disk file** type selection, choose the **VDI** (**VirtualBox
+    Disk Image**) option and click on **Next**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For the **Storage on physical hard disk** selection, choose the **Dynamically
+    allocated** option, click on **Next**, and then click on **Create**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, click on the **DEFT Linux** entry in the VirtualBox manager window and
+    click on the green **Start** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.5 – DEFT details in the VirtualBox manager window](image/Figure_15.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.5 – DEFT details in the VirtualBox manager window
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we select the DEFT ISO image by clicking on the yellow folder icon in
+    the bottom-right corner of the **Select start-up** **disk** window.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Don’t click on **Start** just yet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 15.6 – Virtual optical disk file selection](image/Figure_15.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.6 – Virtual optical disk file selection
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then, click on the blue **Add** button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.7 – Optical disk selection](image/Figure_15.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.7 – Optical disk selection
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, browse to the folder where you downloaded the **deft-8.2.iso** file, click
+    on the file, and then click on **Open**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.8 – Selecting the DEFT.iso file](image/Figure_15.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.8 – Selecting the DEFT.iso file
+  prefs: []
+  type: TYPE_NORMAL
+- en: You should now see **deft-8.2.iso** listed in the disk selector window.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on **deft-8.2.iso** and then click on the **Choose** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.9 – Selecting the optical disk](image/Figure_15.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.9 – Selecting the optical disk
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once chosen, you should now see the **deft-8.2.iso** file as the entry in the
+    **Select start-up disk** window. You can now click on the **Start** button to
+    start DEFT Linux 8.2.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.10 – The Select start-up disk selection window](image/Figure_15.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.10 – The Select start-up disk selection window
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once all the preceding steps have been completed, you will now be presented
+    with the DEFT Linux start-up screen. Select the **DEFT Linux 8 Live** option and
+    press *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.11 – The DEFT Linux splash screen](image/Figure_15.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.11 – The DEFT Linux splash screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: After all the processes have loaded, you will now have access to the DEFT Linux
+    desktop, as shown here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 15.12 – The DEFT Linux desktop interface](image/Figure_15.12_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.12 – The DEFT Linux desktop interface
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hopefully, you’ve arrived here without any issues. Before proceeding with our
+    analysis, let’s now download our sample files for analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Downloading sample analysis files
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Let’s now download three sample files for automated analysis in Xplico. We
+    will be downloading three sample packet capture (**.pcap**) files for analysis.
+    All three files and many others are available at [https://wiki.wireshark.org/SampleCaptures](https://wiki.wireshark.org/SampleCaptures);
+    however, you can click on the following direct links to download the three required
+    packet capture files now:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'http_with_jpegs.cap.gz: https://wiki.wireshark.org/uploads/__moin_import__/attachments/SampleCaptures/http_with_jpegs.cap.gz'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**smtp.pcap**: [https://wiki.wireshark.org/uploads/__moin_import__/attachments/SampleCaptures/smtp.pcap](https://wiki.wireshark.org/uploads/__moin_import__/attachments/SampleCaptures/smtp.pcap)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**nb6-telephone.pcap**: [https://wiki.wireshark.org/uploads/__moin_import__/attachments/SampleCaptures/nb6-telephone.pcap](https://wiki.wireshark.org/uploads/__moin_import__/attachments/SampleCaptures/nb6-telephone.pcap)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Now that we have all our sample files downloaded and ready to use, let’s finally
+    start Xplico.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Starting Xplico in DEFT Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We already learned how to start Xplico in Kali Linux at the beginning of the
+    chapter, so let’s now do the same for DEFT Linux:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In your DEFT Linux VM, click on the DEFT menu button at the bottom-left corner
+    of the DEFT desktop, which looks like the letter **d** next to a black eightball.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.13 – The DEFT Linux menu button](image/Figure_15.13_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.13 – The DEFT Linux menu button
+  prefs: []
+  type: TYPE_NORMAL
+- en: The DEFT menu will open.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on the **Service** option and then click on the **Apache start** button.
+    A Terminal will open and the service will be started.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, go back to the **Service** option and click on the **Xplico Start** button.
+    A Terminal will open and start the Xplico service.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Finally, we can start Xplico by clicking on the **DEFT** menu button/icon, navigating
+    upward to the **DEFT** menu, going across to the **Network Forensics** menu, and
+    then selecting **Xplico**, as shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.14 – Starting Xplico in DEFT](image/Figure_15.14_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.14 – Starting Xplico in DEFT
+  prefs: []
+  type: TYPE_NORMAL
+- en: Xplico will now open in the default browser, and it can also be accessed by
+    typing **localhost:9876** in the URL bar.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Important note
+  prefs: []
+  type: TYPE_NORMAL
+- en: The username and password are both **xplico** (all lowercase).
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 15.15 – The Xplico interface login](image/Figure_15.15_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.15 – The Xplico interface login
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’re logged into Xplico, let’s start creating a case and session to
+    analyze.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Xplico to automatically analyze web, email, and voice traffic
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Once we have Xplico up and running in either Kali Linux or DEFT Linux, we can
+    begin creating and analyzing our **.pcap** files. Xplico has a very intuitive
+    user interface and also allows for case management of individual cases and sessions.
+    We must first create a case and session before the **.pcap** file is uploaded
+    and analyzed automatically for us:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To create a new case, click on the **New Case** option to the left of the Xplico
+    window.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.16 – The New Case option in Xplico](image/Figure_15.16_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.16 – The New Case option in Xplico
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, give your case a name. I’ve named my case **CFSI-HTTP-2023**, as in this
+    case, we will be analyzing the HTTP **.pcap** file we previously downloaded:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.17 – Case name creation](image/Figure_15.17_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.17 – Case name creation
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click on **Create** to continue and then click on the created case name to proceed.
+    As shown here, the case name is listed as **CFSIHTTP2023**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.18 – Case lists](image/Figure_15.18_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.18 – Case lists
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that a new case has been created, we must create a new session. Click on
+    the **New Session** button in the left-hand menu in Xplico, as shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.19 – New Session in Xplico](image/Figure_15.19_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.19 – New Session in Xplico
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Give your session a different name than the case name and then click on **Create**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.20 – Case session creation](image/Figure_15.20_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.20 – Case session creation
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the case session has been created, click on the session name, listed in
+    red text. As shown here, my session is listed as **CFSIHTTPAnalysis**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.21 – Case session details](image/Figure_15.21_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.21 – Case session details
+  prefs: []
+  type: TYPE_NORMAL
+- en: This will bring us to our main Xplico window, where we can upload our files
+    for analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: For each downloaded **.pcap** sample file, you will need to create a new case.
+    Feel free to review this section as needed when creating new cases and sessions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once our case has been created, we can move on to the actual packet analysis
+    using Xplico.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Automated web traffic analysis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In this section, we will use Xplico to perform automated web traffic and HTTP
+    analysis:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s continue our **CFSIHTTPAnalysis** session. For this session, we will be
+    analyzing the **http_witp_jpegs.pcap** file, which is contained within the **http_witp_jpegs.gz**
+    file that we downloaded. To extract the **.pcap** file, right-click on the downloaded
+    **http_witp_jpegs.gz** file and click on **Extract Here**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once extracted, you will now see the **http_witp_jpegs.pcap** file listed with
+    the other downloaded files, as shown here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 15.22 – All downloaded and extracted sample files](image/Figure_15.22_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.22 – All downloaded and extracted sample files
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s now return to the Xplico web interface within our browser and click on
+    the **Browse…** button in the **Pcap set** section, as shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.23 – The Pcap set section in Xplico](image/Figure_15.23_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.23 – The Pcap set section in Xplico
+  prefs: []
+  type: TYPE_NORMAL
+- en: Go to **http_witp_jpegs.pcap** and click on **Open**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then, click on the **Upload** button in the **Pcap set** section to upload the
+    file for analysis. The file may take a couple of seconds to upload, which will
+    be displayed as a message in red text, as shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.24 – Pcap file decoding](image/Figure_15.24_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.24 – Pcap file decoding
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the file has been decoded and analyzed, you will see the words **DECODING
+    COMPLETED** in the **Session Data** area of Xplico, as shown here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 15.25 – Decoding completed](image/Figure_15.25_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.25 – Decoding completed
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important note
+  prefs: []
+  type: TYPE_NORMAL
+- en: This process to upload and decode a file must also be done for each **.pcap**
+    file. Feel free to return to this section as needed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To analyze our uploaded files, we will utilize the menu on the left side, which
+    allows us to inspect web, mail, **VoIP** (**Voice over Internet Protocol**), and
+    other artifacts.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.26 – The Xplico Analysis menu bar](image/Figure_15.26_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.26 – The Xplico Analysis menu bar
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s start our analysis by clicking on the **Web** menu and clicking on the
+    **Site** option. Xplico has displayed a list of websites visited. We can also
+    click on each website to visit them.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.27 – Websites decoded by Xplico](image/Figure_15.27_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.27 – Websites decoded by Xplico
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s also click on the **Images** option on the side menu. We can see that
+    Xplico has decoded and processed four images for us, as shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.28 – Decoded images](image/Figure_15.28_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.28 – Decoded images
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we know how to perform automated HTTP analysis and find various web
+    artifacts, including images that were viewed and downloaded over the web, let’s
+    move on to some automated SMPT and email analysis using Xplico.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Automated SMTP traffic analysis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Let’s create a new case to perform **Simple Mail Transfer Protocol** (**SMTP**)
+    analysis. SMTP is used to send emails, and analysis of SMTP traffic can reveal
+    the sender, recipient, and other details of an email, including attachments. So,
+    let’s get started with the new case creation and SMTP traffic analysis:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this exercise, I’ve repeated the preceding steps to create a new case and
+    session. Details of the case are as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Case name: **CFSI-SMTP-2023**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'External reference: **SMTP analysis**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Session name: **CFSI SMTP** **Analysis 2023**'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Once our case and session have been created, click on the session to continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.29 – The SMTP session](image/Figure_15.29_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.29 – The SMTP session
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can now browse the **smtp.pcap** file and upload it for processing, decoding,
+    and analysis. You will again be notified when decoding has been completed, as
+    shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.30 – Decoding complete](image/Figure_15.30_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.30 – Decoding complete
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s click on the **Email** option under the **Mail** menu in the sidebar to
+    reveal what has been decoded by Xplico.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.31 – The decoded email](image/Figure_15.31_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.31 – The decoded email
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding screen, we can see that Xplico decoded an email from **gurupartap@patriots.in**
+    to **raj_deo2002in@yahoo.com**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we click on the word **SMTP**, as shown in *Figure 15**.31*, we can view
+    the contents of the email, as shown in *Figure 15**.32*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.32 – Contents of the decoded email](image/Figure_15.32_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.32 – Contents of the decoded email
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s move on to another analysis exercise now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Automated VoIP traffic analysis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Xplico can also decode VoIP traffic if captured and saved in a **.pcap** file.
+    Follow these steps for this analysis:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s again create a new case and session first.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Here are the case and session details:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Case name: **CFSI-Voice-2023**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'External reference: **CFSI** **Voice Analysis**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Session name: **CFSIVoice2023**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Once our case and session have been created, we can then navigate to and upload
+    the **nb6-telephone.pcap** file that we downloaded earlier.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.33 – The decoded VoIP file](image/Figure_15.33_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.33 – The decoded VoIP file
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s see what was revealed by Xplico by clicking on the **Sip** option in the
+    **Voip** menu bar.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.34 – The decoded VoIP traffic](image/Figure_15.34_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.34 – The decoded VoIP traffic
+  prefs: []
+  type: TYPE_NORMAL
+- en: As shown previously, Xplico has automatically decoded a captured VoIP conversation.
+    You can also click on the call duration to play back the conversation, as shown
+    in the following screenshot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 15.35 – The decoded VoIP call](image/Figure_15.35_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 15.35 – The decoded VoIP call
+  prefs: []
+  type: TYPE_NORMAL
+- en: You may need to install plugins to listen to the audio file. You will be prompted
+    to install the relevant plugins automatically, as shown in *Figure 15**.35*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we learned how to use Xplico in both Kali Linux and DEFT Linux,
+    which we installed separately in VirtualBox. DEFT can be a great substitute for
+    those who may have encountered issues when installing Xplico in Kali, and it also
+    offers many other tools that you can explore if you so wish. We learned that a
+    new case and session must be created for each packet capture (**.pcap**) file
+    analysis, and that Xplico does automatic decoding and analysis of **.pcap** files
+    to reveal artifacts that are useful to our DFIR investigations. Lastly, we learned
+    how to use Xplico to find useful artifacts such as visited websites, viewed and
+    downloaded images, emails, and VoIP conversations. I hope you enjoyed using this
+    automated tool. We will next look at other NFAT tools in our last chapter. See
+    you in the next chapter.
+  prefs: []
+  type: TYPE_NORMAL

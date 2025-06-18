@@ -1,0 +1,24 @@
+- en: 'Part 2: Digital Forensics and Incident Response Fundamentals and Best Practices'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this section, you will learn about the **Digital Forensics and Incident Response**
+    (**DFIR**) processes and best practices for conducting investigations inclusive
+    of the Order of Volatility, Chain of Custody, Evidence Acquisition, and other
+    incident procedures, to be able to conduct your own investigations in accordance
+    with international best practices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This part has the following chapters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 6*](B19441_06.xhtml#_idTextAnchor093), *Understanding File Systems
+    and Storage*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 7*](B19441_07.xhtml#_idTextAnchor120), *Incident Response, Data Acquisitions,
+    and DFIR Frameworks*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

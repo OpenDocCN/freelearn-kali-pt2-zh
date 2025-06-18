@@ -1,0 +1,1846 @@
+- en: 'Appendix: Answer Key'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Chapter 1
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What is a SOC?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Special operations command
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Standard of operational conduct
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Security** **operations center**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A piece of fabric someone wears on their foot
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – SOC stands for security* *operations center*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is the primary difference between Hydra and John the Ripper?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Hydra’s focus is on password cracking from a hash list and John the Ripper’s
+    is on brute-forcing with network applications
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**John the Ripper’s focus is on password cracking from a hash list and Hydra’s
+    is on brute-forcing with** **network applications**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Hydra has many heads whereas John the Ripper only has one
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: All the above
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: None of the above
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – John the Ripper is famous for cracking* *password hashes.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is the downside of being known for having top-tier security?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**You become a target for adversaries looking to prove** **their mettle**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Your security budget is outrageous
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You’re so protected that your own mother cannot contact you
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Everybody expects you to share your secrets
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – Top-tier hackers with top-tier egos will take your top-tier
+    security as a top-tier challenge to* *be overcome.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Which pocket-sized tool was used to deliver sabotage against Iran’s nuclear
+    enrichment program?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A Swiss Army knife
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A butane lighter
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A paperclip
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A USB** **thumb drive**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – A USB* *thumb drive.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: When a SIEM combines freshly acquired data with pre-existing data sources, this
+    is known as what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Data corruption
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Data enrichment**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Data pollution
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A chaotic mess
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B –* *Data enrichment.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: The CIA triad stands for confidentiality, integrity, and _______________.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Availability**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Accessibility
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Accountability
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Assumability
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A –* *Availability.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Which operating system was the first successful mass-market operating system
+    distributed with a desktop personal computer?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Linus Torvald’s Linux
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Microsoft’s Windows
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Thompson and Ritchie’s Unix
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Apple’s MacIntosh**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – Apple’s MacIntosh. The key takeaway here is the mass market.
+    UNIX was not a mass market and Linux’s popularity to the masses was long after
+    MacIntosh, which, by the way, was also* *before Windows.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Which application feature in Elastic, Arkime, and other tools allows the user
+    to customize how information is presented to them?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: GUI
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Dynamic ruleset
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Dashboards**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Whiteboards
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – Dashboards. Whiteboards allow total customization but are
+    usually physical objects that are not a part of software tools. GUIs display data
+    visually but don’t usually allow customizations of the data aside from subtle
+    end* *user cosmetic*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 2
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What is the ELK stack?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A herd of wild deer standing on top of each other
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A group of open source software** **working together**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Environmental Linux knowledge
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – Elasticsearch, Logstash, Kibana* *and Beats.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'True or false: Beats is a commercial product that is part of the ELK but costs
+    money to use.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'True'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**False**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – Beats is free, though it is rapidly being replaced by* *Elastic
+    Agent.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is the primary difference between a pipeline versus other aggregations?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**This type of aggregation utilizes the results of** **other aggregations**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Other aggregations depend on this one being conducted first
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This aggregation revolves around a long, thin linear set of criteria
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The EPA must be notified in the event of a pipeline breach
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – Pipeline aggregations are one result aggregating with* *further
+    data.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Where is data enriched within the Elastic stack pipeline (you may select more
+    than one)?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**When one of the Beats agents collects the data before** **shipping it**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Kibana enriches the data only if it is passed through both Logstash and Elasticsearch
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Logstash**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Elasticsearch
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A, C – Sort of a trick question. Kibana’s ability to display the
+    data in the unique ways that it does technically qualify as enrichment; however,
+    the option presented suggests that’s only possible if it first passes through
+    both Logstash and Elasticsearch, which is not true. Beats agents do not enrich
+    data by default but can be configured to do so* *using processors.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Which ELK stack component helps the user visualize the data?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Elasticsearch
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Logstash
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Kibana**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Beats
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: X-Pack
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – Kibana dashboards are all* *about visualization.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What are conditionals as they relate to the ELK stack?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Devices that process the airflow, keeping it cool
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An agreement between the operator of the Kali Purple instance and their customer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An Elasticsearch process that only executes if all its demands are met
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A set of commands that will control the data flow based on whether predefined
+    criteria** **are met**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – You can control the data flow based on* *pre-determined criteria.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What is a hash value?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A breakfast dish involving corned beef and diced potatoes
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A metric used to measure your feelings of nausea
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A fixed length one-way mathematical** **encryption result**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A variable length one-way mathematical encryption result
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – Hash values are fixed length and intended to be one-way* *mathematical
+    operations.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Why should we download the Kali Purple **.iso** file before configuring VirtualBox?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: VirtualBox is dependent upon Kali Purple to run
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**VirtualBox can install Kali Purple immediately after configuring a new**
+    **virtual machine**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once installed, VirtualBox will block all external downloads for security purposes
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – Entirely for efficiency’s sake. VirtualBox can skip a step
+    or two for you and get it installed* *right away.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: The Java SDK is required by Kali Purple. True or false?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: True – it is an integral part of keeping the OS functional
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**False – it is not required, but many applications within Kali Purple will
+    not run properly** **without it**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: True – it is not a necessary application, but the creators of Kali Purple wanted
+    to offer it in case it might someday be deemed necessary
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: False – it is not required but every single application within Kali Purple needs
+    it to function
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – It’s not required but good luck getting anything done* *without
+    it.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: How much RAM, CPU, and disk space should we allocate to any new VM?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: About 10% of the host machine’s total values
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The entire amount of the host machine’s values; we need every amount of power
+    and storage we can get!
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**The recommended values of the applications we intend to run, provided they
+    do not exceed what’s reasonably available** **to us**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The minimum specifications required for the applications we intend to run to
+    preserve resources for future host machine operations
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C is the preferred answer, though an argument can be made for
+    D as well – it’s a good idea to take as much as you can get provided you leave
+    enough for the host machine to use on* *its own.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: When using the APT, we no longer need to check hash values. True or false?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Generally, this** **is true**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: False, we always need to check hash values
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This is completely always true
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – APT takes care of data integrity* *for us.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What’s the difference between selecting **New** versus **Add** on the VM’s lobby?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Nothing, they are one and the same
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**New** creates a new VM while **Add** merges two or more VMs together'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Add will look for a .vBox file or other compatible file and establish a VM
+    based** **on it**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: They both create a new VM, but selecting **New** tells VirtualBox you’re a new
+    user and need a tutorial walk-through
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – Add will look for compatible files to establish a new virtual
+    machine with; it does not, however, merge* *virtual machines.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 4
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Which ELK stack component covered in this chapter relies on the JDK we installed?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Kibana
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Elasticsearch
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Logstash
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C –* *Logstash.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'True or false: Logstash can be installed through the Kibana GUI.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**True**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'False'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A –* *True.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is the significance of the password that’s provided during the very first
+    Elasticsearch run?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**It is a service account password that is used to integrate the ELK** **stack
+    components**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It can never be changed
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It’s used to integrate the ELK stack components but is not technically a service
+    account
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It can be changed a maximum of four times.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – It’s used to integrate ELK stack components but is also used
+    to authenticate and manage Elasticsearch services and configurations, making it
+    technically a service* *account password.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is the primary function of a service account?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It manages running background services
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**It’s a non-human account to assist applications integrating with** **each
+    other**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It holds services accountable for their actions
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It sends you an automated text to notify you when your car is due for an oil
+    change
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – It’s a non-human account that’s used for integrations* *and
+    maintenance.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is the default port Elasticsearch binds to?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**5601**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**5400**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**9201**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**9200**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – 9200 for HTTP, but it binds to 9300 for internal* *node-to-node
+    communications.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Which of the following commands cleans up residual configuration files?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**sudo apt** **purge <package>**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**sudo apt** **remove <package>**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**sudo apt** **disable <package>**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**sudo apt** **disintegrate <package>**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – sudo apt* *purge <package>.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 5
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What is port forwarding?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When a marine facility redirects incoming vessels to another location
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A computer networking technique that redirects traffic from one machine to
+    another based on** **communication ports**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When a user physically removes the **network interface card** (**NIC**) and
+    places it in another device
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – When traffic is redirected from one device tangible or virtual
+    based on* *communication ports.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'True or false: port forwarding must use the same port number on both sending
+    and receiving devices.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'True'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: False, they must be different
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**False, but they may be** **the same**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – They aren’t required to be the same but they might be. In
+    our examples throughout this book, they have all* *been matching.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: How many different Beats can a user have on a single device?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**As many as they like, so long as they aren’t colliding on ports or** **other
+    resources**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Not more than one at a time, ever
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Two, so long as they’re not the same Beat type
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – So long as they aren’t conflicting with each other or other
+    resources, a user can have as many beats as* *they like.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Pronounced *Yaml*, the **.yml** files are used for what type of operation?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: They are used for developing hard-coded add-on instructions for the application
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: They provide recipes for a type of vegetable that is often served with green
+    eggs
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**They are used to configure variable settings for the applications to which**
+    **they belong**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – They are used to configure* *variable settings.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is a filter?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It’s a piece of code that’s designed to prevent your device from displaying
+    offensive language
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: They keep the air flowing through your physical device, clean and free of debris
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**They provide additional tables to be applied to incoming data for parsing
+    and enriching** **the data**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An American grunge rock back from the 1990s
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**All of** **the above**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *E – because technically, they are all true. However, C is what
+    we had in mind when we wrote the question – they provide additional tables that
+    are used for data enrichment. Though each prospective answer is at least a* *little
+    correct.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 6
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Arkime is a network traffic capture and analyzer that used to be known as what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Malcolm
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Molotov Cocktail
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Moloch**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C –* *Moloch.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What does it mean when a NIC operates in promiscuous mode?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**The NIC captures all traffic passing through it, regardless of the** **final
+    destination**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The NIC is extra friendly with the data that passes through it
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The NIC only captures data passing through where the device itself is the final
+    destination
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – Promiscuous mode means the NIC captures everything, even traffic
+    not intended* *for it.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is real-time traffic analysis?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Sitting on an overpass to study the different makes and models of automobiles
+    as they pass by
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Analyzing network traffic that is time-stamped in Zulu time on a Gregorian calendar
+    format
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**The ability to analyze network traffic as it is** **actively occurring**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Examining any traffic that has occurred within the previous 20 minutes
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – real-time means live and in stereo – as things* *are occurring.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: CyberChef is also known as what by its creator?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**The Cyber Swiss** **Army Knife**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The British Top Chef
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The Irish Army Universal Utility
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The Royal Marine Entrenching Tool
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – The Cyber Swiss* *Army Knife.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What type of threat detection occurs after the administrator captures a baseline
+    and compares future traffic for deviations from this baseline?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Irregular expression detection
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Abnormal detection
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Pattern matching
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Anomaly detection**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D –* *Anomaly detection.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 7
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What is the difference between an IDS and an IPS?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An IDS proactively blocks malicious activity whereas an IPS only detects it
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**An IPS proactively blocks malicious activity whereas an IDS only** **detects
+    it**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Nothing – they are the same
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Thousands of dollars in potential overhead costs
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – An IDS only “detects” whereas an IPS takes action to “prevent”*
+    *malicious activity.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Which potential threat is network activity occurring at precise intervals a
+    potential symptom of?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An extremely rigid employer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A potential configuration error on a device
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Automation and scripting
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A bot that is beaconing to an external** **C2 server**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – An isolated bot that is communicating to a remote C2 server
+    indicating that it’s likely a part of a* *larger botnet.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: The process of converting a programmer’s code into machine language is known
+    as what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Compiling**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compelling
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Controlling
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Careful translation
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A –* *Compiling.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is a HIDS?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An IDS that is funded by a single entity
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An IDS that also can be configured to serve as an IPS
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**An IDS that is placed on a single endpoint to protect only** **that device**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: All of the above
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – A HIDS is effectively an IDS that is placed on a single endpoint,*
+    *or “host.”*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Is programming/coding or software development necessary for a career in cybersecurity?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Without a doubt. You can’t function effectively without this knowledge.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**No, but it can have great value in advancing your skillset and helping you**
+    **create automation.**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: No, not at all. Never. Absolutely not. That’s too much. Stop picking on me!
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – While it’s not necessary, at least at the beginner/entry levels,
+    it will eventually become necessary if you want to succeed at the higher levels,
+    and simply knowing can add significant value to your analysis and* *investigative
+    results.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 8
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Cortex and TheHive were created by the same company, which is called…
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Bumblebee
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Sweatbee
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Strangebee**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Leavemebee
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C –* *Strangebee.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: A pre-defined series of steps for orchestrated patterns of activity that are
+    often repeatable is what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: IR circuit
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Workflow**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Container
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Code library or **.****dll** file
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B –* *Workflow.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Something that defines the rules for how two different software systems will
+    communicate with each other is known as what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Application programming** **interface (API)**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: International Cybersecurity Communication Law (ICCL)
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A constitutional monarchy
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: International Standards of Technological Security Controls (ISTSC)
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – An API assists with* *inter-app communications.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is multi-tenancy?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When two or more people work on the same computer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**An application that can distinguish between and manage more than one customer**
+    **or organization**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Similar to multi-tasking except performed in secret
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An octopus or other member of the animal kingdom with more than 2 arms or legs
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – multi-tenancy is a critical factor in developing software
+    applications for customers because customers themselves will have* *customers,
+    right?*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: The MISP facilitates the sharing of information about what type of technology?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**All** **known threats**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Database
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Digital
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Malware
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – Though the M in MISP stands for malware, this threat-sharing
+    platform can integrate with and consolidate information from other threat feeds
+    and share threat data of* *all types.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 9
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What happens if we use any of the utilities on a system not owned by us without
+    permission?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You are likely to receive a letter of commendation for our innovative thinking
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You’ll jump ahead of other candidates being considered for the role due to showcasing
+    your skills instead of just talking about them.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You might learn a thing or two and gain experience.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**It’s a criminal action and you could face charges or be jailed depending
+    on** **the jurisdiction**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – Using the utilities discussed in this chapter on a system
+    that is not owned by us and without permission from the system owner can cause
+    significant damage to the system, as well as violate personal and professional*
+    *privacy boundaries.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is BeEF?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: BovinE Exotic Foodstuff
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Browser** **Exploitation Framework**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: British Exploration and Expeditionary Force
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Browser Edition of Educational Features
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – Browser* *Exploitation Framework.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: As it relates to software, what is another term for disassembly?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Reverse engineer**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compile
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Isolate
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Distemper
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – Reverse engineering is a manner of disassembling something
+    to better understand how* *it works.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Information stored in RAM is considered to be stored in what kind of memory?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Solid state memory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Liquid state memory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Volatile memory**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Stable memory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I can’t remember
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – RAM is considered* *volatile memory.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: In the most literal use case, what is Maltego?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A complex geospatial-oriented tool that’s used for conducting forensic analysis
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A data** **mining tool**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An island in the Caribbean where social engineering was invented
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An extremely arrogant beverage
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – Maltego is used for data mining, which is useful for forensic
+    analysis. However, data mining is done for a plethora of reasons beyond forensic
+    investigations. It is often used in determining effective* *marketing strategies.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 10
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Which stage of a cyberattack would be using the scanning tools we discussed
+    belong to?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Payload delivery
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Exploitation
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Recovery
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Reconnaissance**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – Scanning activity is part of* *reconnaissance operations.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is Wireshark?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A** **protocol analyzer**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A Mafia-linked loan officer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A physical cable tap
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A network packet generator
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – Wireshark is a premier protocol analyzer. You’ll often see
+    job postings asking for experience in protocol analysis that name* *Wireshark
+    specifically.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What is John the Ripper?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Jack’s older brother
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**A password and** **hash-cracking utility**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A network packet disassembler
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A WAF bypass exploit
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – John the Ripper is known for password and* *hash cracking.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: What do you suppose would happen if the password you are trying to crack isn’t
+    on the wordlist that’s being invoked by your cracking utility?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The utility will automatically restart using values from the next wordlist in
+    the directory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The utility will complete the scan from the wordlist and then just make random
+    stuff up, trying to guess the password
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**The password will not be successfully cracked, and you’ll need to find another
+    list or method to complete** **your objective**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The password-cracking utility will become enraged and automatically switch to
+    brute force via dictionary and fuzz value testing
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – Without prior instruction to do otherwise, the utility will
+    just stop waiting for your* *next command.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Which utility is most like ZAP?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Google Chrome
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Mozilla Firefox
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Portswigger
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Burp Suite**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – Burp Suite and ZAP have* *similar functions.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Chapter 11
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What is Kali Autopilot?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An application used to hack drones
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**An application used to automate pentesting and mock cyber-attacks against**
+    **digital defenses**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An application used by airline pilots flying out of California
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – Kali Autopilot is used for automating* *cyberattack sequences.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: If you want to learn how to catch a hacker then, you need to do what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Watch Swordfish over and over until it sinks in
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Eat like a hacker; diet is critical!
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Go to hacker school and complete a four-year degree in hacking
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Think like** **a hacker**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *D – The other options are all great, but the answer* *is D.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: How do you distinguish between Python code and text meant for human eyes?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**All data after the # symbol is ignored by the compiler/interpreter and meant
+    for** **human eyes**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Python statements all end in **Sssssssssss**…
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: All data after the **#** symbol is processed by the compiler/interpreter and
+    everything else is for humans
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Only members of Slytherin house can read Python
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *A – The scripting engine is programmed to ignore all text that
+    resides after the #* *symbol.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: How do you define a function in Python?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **define func** followed by the function’s name
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type the name of the function and append it with **.py**
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Type the word def followed by the function’s name and function parameters**
+    **in parenthesis**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Look it up in Webster’s Dictionary
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *C – Example: def myFunc (**filename, username).*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: For the first time since its creation, NIST has released an update to the CSF.
+    What is the new sixth function that has been added to the framework?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Identify
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Govern**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Rule
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Protect
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *B – The new NIST CSF pillar is Govern. It’s meant for CISOs and
+    other leaders operating within* *cybersecurity roles.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Who’s your favorite author (only one correct answer)?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Carl Laehn
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Karl Layne
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Karl Lane
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Carl Lane
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Carl Layne
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Karl Laehn
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**James Patterson**'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Answer**: *G – James* *Patterson. Duh.*'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL

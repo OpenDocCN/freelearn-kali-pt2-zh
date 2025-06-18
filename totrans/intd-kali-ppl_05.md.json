@@ -1,0 +1,1 @@
+["```\ntar -czvf backup.tar.gz /<path_to_file_needing_backup>/\n```", "```\nrsync -avzh /<path_to_original_source>/<path_to_backup-medium>/\n```", "```\n2771187E06ECFAAA0B343D9C6808C503923DAF5323477B8B0BC0F39FEEF74CFA\n```", "```\n3491BDDE067911CA8ACE3B1E8319A9A7817356008498C92E195B9B412D5452F2\n```", "```\n2D4CCDC3F62901AAD8A6D65B02C1D9F48EA83913209DD41AB5F3EC6F83BECDA9\n```"]

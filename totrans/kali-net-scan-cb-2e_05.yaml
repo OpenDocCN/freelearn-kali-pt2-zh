@@ -1,0 +1,1824 @@
+- en: Fingerprinting
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'After identifying live systems in the target range and enumerating open ports
+    on those systems, it is important to start gathering information about them and
+    the services that are associated with the open ports. In this chapter, we will
+    discuss different techniques used to fingerprint systems and services with Kali
+    Linux. These techniques will include banner grabbing, service probe identification,
+    operating system identification, SNMP information gathering, and firewall identification.
+    Specific recipes in this chapter include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Banner grabbing with Netcat
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Banner grabbing with Python sockets
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Banner grabbing with DMitry
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Banner grabbing with Nmap NSE
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Banner grabbing with Amap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Service identification with Nmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Service identification with Amap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Operating system identification with Scapy
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Operating system identification with Nmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Operating system identification with xprobe2
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Passive operating system identification with p0f
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SNMP analysis with Onesixtyone
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SNMP analysis with SNMPwalk
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Firewall identification with Scapy
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Firewall identification with Nmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Firewall identification with Metasploit
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Prior to addressing the specific recipes mentioned in the list, we should address
+    some of the underlying principles that will be discussed throughout the remainder
+    of the chapter. Each of the recipes in this chapter will address tools that can
+    be used to perform a few specific tasks. These tasks include banner grabbing,
+    service identification, operating system identification, SNMP analysis, and firewall
+    identification. Each of these tasks serves the common objective of gathering as
+    much information about a target system as possible in order to be able to attack
+    that system quickly and efficiently.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before dedicating a large amount of time and resources to attempting to identify
+    a remote service, we should determine whether that remote service will identify
+    itself to us. Service banners consist of output text that is returned immediately
+    when a connection is established with a remote service. It has historically been
+    a very common practice for network services to disclose the manufacturer, software
+    name, type of service, and even version number in service banners. Fortunately,
+    for penetration testers, this information can be extremely useful in identifying
+    known weaknesses, flaws, and vulnerabilities in the software. A service banner
+    can easily be read by merely connecting to a remote Terminal service. However,
+    for this to be an effective information-gathering tool, it should be automated
+    so that we do not have to manually connect to each individual service on a remote
+    host. The tools that will be addressed in the banner-grabbing recipes in this
+    chapter will accomplish the task of automating banner-grabbing to identify as
+    many open services as possible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the event that a remote service does not willingly disclose the software
+    and/or version that is running on it, we will need to go to much greater lengths
+    to identify the service. It is frequently possible to identify unique behaviors
+    or to solicit unique responses that can be used to positively identify a service.
+    It is usually even possible to identify specific versions of a particular service
+    due to subtle variations in response or behavior. However, knowledge of all these
+    unique signatures would be difficult for any human to retain. Fortunately, there
+    are numerous tools that have been created to send large numbers of probes to remote
+    services to analyze the responses and behavior of those target services. Similarly,
+    response variation can also be used to identify the underlying operating system
+    running on a remote server or workstation. These tools will be discussed in the
+    recipes that address service identification and operating system identification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Simple Network Management Protocol** (**SNMP**) is a protocol that is designed
+    to provide remote administrative services for various types of network devices.
+    Management with SNMP is performed using community strings for authentication.
+    It is very common for devices to be deployed with the default community strings.
+    When this happens, it is often possible for an attacker to remotely gather large
+    amounts of information about a target device''s configuration and, in some cases,
+    even reconfigure the devices. Techniques that leverage the use of SNMP for information
+    gathering will be discussed in the recipes addressing SNMP analysis.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: While gathering information about potential targets, it is important to also
+    understand any obstacles that could impact successful reconnaissance or attacks.
+    Firewalls are network devices or software that selectively restrict the flow of
+    network traffic going to or coming from a particular destination or source. Firewalls
+    are often configured to prevent remote access to particular services. The awareness
+    of a firewall, which is modifying the flow of traffic between your attacking system
+    and the target destination, can be instrumental in attempting to identify ways
+    to either evade or bypass its filters. The techniques to identify firewall devices
+    and services will be discussed in the recipes that address firewall identification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Banner grabbing with Netcat
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Netcat is a multipurpose networking tool that can be used to perform multiple
+    information-gathering and scanning tasks with Kali Linux. This recipe will demonstrate
+    how to use Netcat to acquire service banners in order to identify the services
+    associated with open ports on a target system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Netcat to gather service banners, you will need to have a remote system
+    running network services that discloses information when a client device connects
+    to them. In the examples provided, an instance of Metasploitable2 is used to perform
+    this task. For more information on setting up Metasploitable2, refer to the *Installing
+    Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Follow along to gather banner information using Netcat:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use Netcat to grab service banners, one must establish a socket connection
+    to the intended port on the remote system. To quickly understand the usage of
+    Netcat and how it can be used for this purpose, one can call upon the usage output.
+    This can be done using the `-h` option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00501.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By reviewing the various options available for this tool, we can determine
+    that a connection can be made to the desired port by specifying the options, followed
+    by the IP address and then the port number:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00515.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, a connection has been made to port `22` of the Metasploitable2
+    system at `172.16.69.128`. The `-v` option was used to provide verbose output,
+    and the `-n` option was used to connect with the IP address without DNS resolution.
+    Here, we can see that the banner returned by the remote host identifies the service
+    as SSH, the vendor as OpenSSH, and even the exact version as 4.7\. Netcat maintains
+    an open connection, so after reading the banner, you can force to close the connection
+    with *Ctrl* + *C*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00196.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By performing a similar scan on port `21` of the same system, we can easily
+    acquire service and version information of the running FTP service. In each of
+    these cases, a lot of useful information is divulged. Knowledge of the services
+    and versions running on a system can often be a key indicator of vulnerabilities,
+    which can be used to exploit and compromise the system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Netcat is able to grab the banners from these services because the services
+    are configured to self-disclose this information when a client service connects
+    to them. The practice of self-disclosing services and versions was commonly used
+    in the past to assure connecting clients that they were connecting to their intended
+    destination. As developers are becoming more security conscious, this practice
+    is becoming less common. Nonetheless, it is still not uncommon to stumble upon
+    poorly developed or older, legacy services that provide too much information in
+    the form of service banners.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Banner grabbing with Python sockets
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `socket` module in Python can be used to connect to network services running
+    on remote ports. This recipe will demonstrate how to use Python sockets to acquire
+    service banners in order to identify the services associated with open ports on
+    a target system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Python to gather service banners, you will need to have a remote system
+    running network services that discloses information when a client device connects
+    to them. In the examples provided, an instance of Metasploitable2 is used to perform
+    this task. For more information on setting up Metasploitable2, refer to the *Installing
+    Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this recipe will require a script to be written
+    to the filesystem using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it….
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s use Python the collect banner information:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can interact directly with remote network services using the Python interactive
+    interpreter. You can begin using the Python interpreter by calling it directly.
+    Here, you can import any specific modules that you wish to use. In this case,
+    we will import the `socket` module:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00541.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, a new socket is created with the name `bangrab`. The
+    `AF_INET` argument is used to indicate that the socket will employ an IPv4 address,
+    and the `SOCK_STREAM` argument is used to indicate that TCP transport will be
+    used. Once the socket is created, the `connect()` function can be used to initialize
+    a connection. In the example, the `bangrab` socket is connected the to port `21`
+    on the Metasploitable2 remote host at `172.16.69.128`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After connecting, the `recv()` function can be used to receive content from
+    the service to which the socket is connected. Assuming there is information available,
+    it will be printed as output. Here, we can see the banner provided by the FTP
+    service running on the Metasploitable2 server. Finally, the `close()` function
+    can be used to gracefully end the connection with the remote service. If we attempt
+    to connect with a service that is not accepting connections, an error will be
+    returned by the Python interpreter:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00552.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If an attempt is made to connect to the TCP port `443` on the Metasploitable2
+    system, an error will be returned indicating that the connection was refused.
+    This is because there is no service running on this remote port. However, even
+    when there are services running on a destination port, it does not mean that a
+    service banner will necessarily be available. This can be seen by establishing
+    a connection with the TCP port `80` on the Metasploitable2 system:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00566.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The service running on the port `80` of this system is accepting connections,
+    but does not provide a service banner to connecting clients. If the `recv()` function
+    is used but no data is available to be received, the function will hang open.
+    To automate the practice of collecting banners in Python, an alternative solution
+    must be used to identify whether any banner is available to grab prior to calling
+    this function. The `select()` function provides a convenient solution to this
+    problem:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00581.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: A `select` object is created and set to the variable named `ready`. This object
+    is passed four arguments to include a read list, a write list, an exception list,
+    and an integer value defining the number of seconds until timeout. In this case,
+    we only need to identify when the socket is ready to be read from, so the second
+    and third arguments are empty. An array is returned with values that correspond
+    to each of these three lists.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We are only interested in whether the `bangrab` socket has any content to read.
+    To determine whether this is the case, we can test the first value in the array,
+    and if a value exists, we can receive the content from the socket. This entire
+    process can then be automated in an executable Python script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the script provided here, three arguments are accepted as input:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The first argument consists of an IP address to test for service banners
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The second argument indicates the first port number in a range of port numbers
+    to be scanned
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The third and final argument indicates the last port number in a range of port
+    numbers to be scanned
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When executed, this script will use Python sockets to connect to all in-range
+    port values of the remote system indicated and will collect and print all the
+    service banners identified. This script can be executed by modifying the file
+    permissions and then calling it directly from the directory in which it was written:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00594.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Python script that is introduced in this recipe works by utilizing the `socket`
+    library. The script loops through each of the specified target port addresses
+    and attempts to initialize a TCP connection with that particular port. If a connection
+    is established and a banner is received from the target service, the banner will
+    then be printed in the output of the script. If a connection cannot be established
+    with the remote port, the script will then move to the next port address value
+    in the loop. Similarly, if a connection is established but no banner is returned,
+    the connection will be closed and the script will continue to the next value in
+    the loop.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Banner grabbing with DMitry
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: DMitry is a simple yet streamlined tool that can be used to connect to network
+    services running on remote ports. This recipe will demonstrate how to use DMitry
+    scanning to acquire service banners in order to identify the services associated
+    with open ports on a target system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use DMitry to gather service banners, you will need to have a remote system
+    running network services that discloses information when a client device connects
+    to them. In the examples provided, an instance of Metasploitable2 is used to perform
+    this task. For more information on setting up Metasploitable2, refer to the *Installing
+    Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Perform following steps to get banner information using DMitry:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As was previously discussed in the port scanning recipes of this book, DMitry
+    can be used to run a quick TCP port scan on 150 of the most commonly used services.
+    This can be done using the `-p` option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00606.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This port scan option is required in order to perform banner grabbing with
+    DMitry. It is possible to also have DMitry grab any available banners when connections
+    are attempted with each of these 150 ports. This can be done using the `-b` option
+    in conjunction with the `-p` option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00214.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: DMitry is a very simple command-line tool that can perform the task of banner
+    grabbing with minimal overhead. Rather than having to specify the ports that banner
+    grabbing should be attempted on, DMitry can streamline the process by only attempting
+    banner grabbing on a small selection of predefined and commonly used ports. Banners
+    received from services running on those port addresses are then returned in the
+    Terminal output of the script.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Banner grabbing with Nmap NSE
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nmap has an integrated **Nmap Scripting Engine** (**NSE**) script that can be
+    used to read banners from network services running on remote ports. This recipe
+    will demonstrate how to use Nmap NSE to acquire service banners in order to identify
+    the services associated with open ports on a target system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Nmap NSE to gather service banners, you will need to have a remote system
+    running network services that discloses information when a client device connects
+    to them. In the examples provided, an instance of Metasploitable2 is used to perform
+    this task. For more information on setting up Metasploitable2, refer to the *Installing
+    Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s use Nmap NSE to get the banner information:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Nmap NSE scripts can be called using the `--script` option in Nmap and then
+    specifying the name of the desired script. For this particular script, a `-sT`
+    full-connect scan should be used, as service banners can only be collected when
+    a full TCP connection is established. The script will be applied to the same ports
+    that are scanned by the Nmap request:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00216.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the TCP port `22` of the Metasploitable2 system was
+    scanned. In addition to indicating that the port is open, Nmap also used the banner
+    script to collect the service banner associated with that port. This same technique
+    can be applied to a sequential range of ports using the `--` notation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00639.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Another excellent option for performing banner-grabbing reconnaissance is to
+    use the Nmap NSE script. This can be an effective option for streamlining the
+    information-gathering process in two ways: first, because Nmap is already likely
+    going to be among your arsenal of tools that will be used for target and service
+    discovery, and second, because the process of banner grabbing can be run in conjunction
+    with these scans. A TCP connect scan with the additional `--script` option and
+    the `banner` argument can accomplish the task of both service enumeration and
+    banner grabbing.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Banner grabbing with Amap
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Amap is an application-mapping tool that can be used to read banners from network
+    services running on remote ports. This recipe will demonstrate how to use Amap
+    to acquire service banners in order to identify the services associated with open
+    ports on a target system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Amap to gather service banners, you will need to have a remote system
+    running network services that discloses information when a client device connects
+    to them. In the examples provided, an instance of Metasploitable2 is used to perform
+    this task. For more information on setting up Metasploitable2, refer to the *Installing
+    Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to gather service banner information using
+    Amap:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The `-B` option in Amap can be used to run the application in banner mode.
+    This will have it collect banners for the specified IP address and service port(s).
+    Amap can be used to collect the banner from a single service by specifying the
+    remote IP address and service number:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00648.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, Amap has grabbed the service banner from port `21`
+    on the Metasploitable2 system at `172.16.69.128`. This command can also be modified
+    to scan a sequential range of ports. To perform a scan of all the possible TCP
+    ports, all the possible port address values must be scanned. The portions of the
+    TCP header that define the source and destination port addresses are both 16 bits
+    in length, and each bit can retain a value of `1` or `0`. As such, there are 2^(16),
+    or 65,536, possible TCP port addresses.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To scan the total possible address space, a port range of `1-65535` must be
+    supplied:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00655.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The standard output produced by Amap provides some unnecessary and redundant
+    information that can be extracted from the output. Specifically, it might be helpful
+    to remove the scanned metadata, the `Banner on` phrase, and the IP address that
+    remains the same throughout the entire scan. To remove the scan metadata, we must
+    use the `grep` command to output for a phrase that is unique to the specific output
+    entries and does not exist in the scan''s metadata description. To do this, we
+    can use the `grep` command for the word `on`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00665.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can then extract the `Banner on` phrase and the redundant IP address from
+    the output by cutting each line of the output with a colon delimiter and then
+    only retrieving fields `2-5`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00228.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The underlying principle that defines how Amap can accomplish the task of banner
+    grabbing is the same as the other tools discussed previously. Amap cycles through
+    the list of destination port addresses, attempts to establish a connection with
+    each port, and then receives any returned banner that is sent upon connection
+    to the service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Service identification with Nmap
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Although banner grabbing can be an extremely lucrative source of information
+    at times, version disclosure in service banners is becoming less common. Nmap
+    has a service-identification function that goes far beyond simple banner-grabbing
+    techniques. This recipe will demonstrate how to use Nmap to perform service identification
+    based on probe-response analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Nmap to perform service identification, you will need to have a remote
+    system that is running network services that can be probed and inspected. In the
+    examples provided, an instance of Metasploitable2 is used to perform this task.
+    For more information on setting up Metasploitable2, refer to the *Installing Metasploitable2*
+    recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We have the service banner information, now let''s perform the service identification
+    using Nmap:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To understand the effectiveness of Nmap''s service-identification function,
+    we should consider a service that does not provide a self-disclosed service banner.
+    By using Netcat to connect to the TCP port `80` on the Metasploitable2 system
+    (a technique discussed in the *Banner grabbing with Netcat* recipe of this chapter),
+    we can see that no service banner is presented by merely establishing a TCP connection:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00010.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Then, to execute an Nmap service scan on the same port, we can use the `-sV`
+    option in conjunction with the IP and port specification:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00024.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As you can see in the demonstration provided, Nmap was able to identify the
+    service, the vendor, and the specific version of the product. This service-identification
+    function can also be used against a specified sequential series of ports. This
+    can alternatively be done using Nmap without a port specification; the 1,000 common
+    ports will be scanned, and identification attempts will be made for all listening
+    services that are identified:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00037.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nmap service identification sends a comprehensive series of probing requests
+    and then analyzes the responses to those requests in an attempt to identify services
+    based on service-unique signatures and expected behavior. Additionally, you can
+    see at the bottom of the service-identification output that Nmap relies on feedback
+    from users in order to ensure the continued reliability of their service signatures.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Service identification with Amap
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Amap is a cousin of Nmap, and was designed specifically for the purpose of identifying
+    network services. In this recipe, we will explain how to use Amap to perform service
+    identification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Amap to perform service identification, you will need to have a remote
+    system running network services that can be probed and inspected. In the examples
+    provided, an instance of Metasploitable2 is used to perform this task. For more
+    information on setting up Metasploitable2, refer to the *Installing Metasploitable2* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The Amap is designed for service identification, let''s perform the service
+    identification using Amap by the help of these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To perform service identification on a single port, run Amap with the IP address
+    and port number specifications:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00050.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Amap can also be used to scan a sequential series of port numbers using dash
+    notation. To do this, execute the `amap` command with the IP address specification
+    and range of ports indicated by the first port number in the range, a dash (`-`),
+    and then the last port number in the range:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00063.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In addition to identifying any services that it can, it also generates a list
+    at the end of the output indicating any unidentified ports. This list not only
+    includes open ports that are running services that could not be identified, but
+    also all closed ports that are scanned. Although the output is manageable when
+    only 10 ports are scanned, it becomes very annoying when larger port ranges are
+    scanned. To suppress information about unidentified ports, the `-q` option can
+    be used:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00076.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that Amap will indicate matches for general and more specific signatures.
+    In the example provided, the service running on the port `22` is identified as
+    matching the SSH signature, but also as matching the more specific `openssh` signature.
+    It can also be helpful to have the signature matches and service banners displayed
+    side by side for additional confirmation. The banners can be appended to the output
+    associated with each port using the `-b` option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00092.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Service-identification scans on a large number of ports or comprehensive scans
+    on all 65,536 ports can take an exceptionally long time if every possible signature
+    probe is used on every service. To increase the speed of the service-identification
+    scan, the `-1` argument can be used to discontinue the analysis of a particular
+    service after it is matched to a signature:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00244.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The underlying principle that defines how Amap performs service identification
+    is similar to the principle employed by Nmap. A series of probe requests is injected
+    in an attempt to solicit unique responses that can be used to identify the software
+    and version of the service running on a particular port. It should be noted, however,
+    that while Amap is an alternative option for service identification, it is not
+    as frequently updated and well maintained as Nmap. As such, Amap is less likely
+    to produce reliable results.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Operating system identification with Scapy
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There is a wide range of techniques that can be used to attempt to fingerprint
+    the operating system of a device you are communicating with. Truly effective operating
+    system identification utilities are robust and employ a large number of techniques
+    to factor into their analysis. However, Scapy can be used to analyze any of these
+    factors individually. This recipe will demonstrate how to perform operating system
+    identification with Scapy by examining the returned TTL values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Scapy to identify discrepancies in TTL responses, you will need to have
+    both a remote system that is running a Linux/Unix operating system and a remote
+    system that is running a Windows operating system available for analysis. In the
+    examples provided, an installation of Metasploitable2 and an installation of Windows
+    XP are used. For more information on setting up systems in a local lab environment,
+    refer to the *Installing Metasploitable2* and *Installing Windows Server* recipes
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*. Additionally, this section will require a script to be written to the
+    filesystem using a text editor such as Vim or GNU nano. For more information on
+    writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe in
+    [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will help you for the OS identification using Scapy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Windows and Linux/Unix operating systems have different TTL starting values
+    that are used by default. This factor can be used to attempt to fingerprint the
+    type of operating system with which you are communicating. These values are summarized
+    in the following table:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '| **Operating system** | **Standard TTL value** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Microsoft Windows OS | 128 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Linux/Unix OS | 64 |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Some Unix-based systems will start with a default TTL value of `255`; however,
+    for simplicity in this exercise, we will use the provided values as the premise
+    for the tasks addressed within this recipe. To analyze the TTL values of a response
+    from the remote system, we first need to build a request. In this example, we
+    will use an **Internet Control Message Protocol** (**ICMP**) echo request. To
+    send the ICMP request, we must first build the layers of that request. The first
+    layer we will need to construct is the IP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00247.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the IP layer of our request, we should assign the `IP` object to the
+    `i` variable. By calling the `display()` function, we can identify the attribute
+    configurations for the object. By default, both the sending and receiving addresses
+    are set to the loopback address of `127.0.0.1`. These values can be modified by
+    changing the destination address, setting `i.dst` equal to the string value of
+    the address we wish to scan.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'By calling the `display()` function again, we can see that not only has the
+    destination address been updated, but Scapy will also automatically update the
+    source IP address to the address associated with the default interface. Now that
+    we have constructed the IP layer of the request, we should proceed to the ICMP
+    layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00250.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To build the ICMP layer of our request, we will use the same technique we used for
+    the IP layer. In the example provided, the ICMP object was assigned to the `ping`
+    variable. As discussed previously, the default configurations can be identified
+    by calling the `display()` function. By default, the ICMP type is already set
+    to `echo-request`. Now that we have created both the IP and ICMP layers, we need
+    to construct the request by stacking those layers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00142.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The IP and ICMP layers can be stacked by separating the variables with a forward
+    slash. These layers can then be set equal to a new variable that will represent
+    the entire request. The `display()` function can then be called to view the configurations
+    for the request. Once the request has been built, this can then be passed to the
+    `sr1()` function so that we can analyze the response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00156.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This same request can be performed without independently building and stacking
+    each layer. Instead, a single one-line command can be used by calling the functions
+    directly and passing the appropriate arguments to them:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00084.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that the TTL value of the response from the Linux system had a value
+    of `64`. This same test can be performed against the IP address of the Windows
+    system, and the difference in TTL value of the response should be noted:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00086.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that the response returned by the Windows system had a TTL value of
+    `128`. This variation of response can easily be tested in Python:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00090.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By sending the same requests, the integer equivalent of the TTL value can be
+    tested to determine whether it is less than or equal to `64`, in which case, we
+    can assume that the device probably has a Linux/Unix operating system. Otherwise,
+    if the value is not less than or equal to `64`, we can assume that the device
+    most likely has a Windows operating system. This entire process can be automated
+    using an executable Python script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The provided Python script will accept a single argument, consisting of the
+    IP address that should be scanned. Based on the TTL value of the response returned,
+    the script will then make its best guess of the remote operating system. This
+    script can be executed by changing the file permissions with `chmod` and then
+    calling it directly from the directory to which it was written:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00272.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Windows operating systems have traditionally transmitted network traffic with
+    a starting TTL value of `128`, whereas Linux/Unix operating systems have traditionally
+    transmitted network traffic with a starting TTL value of `64`. By assuming that
+    no more than 64 hops should be made to get from one device to another, it can
+    be safely assumed that Windows systems will transmit replies with a range of TTL
+    values between 65 and 128 and that Linux/Unix systems will transmit replies with
+    a range of TTL values between 1 and 64\. This identification method can become
+    less useful when devices exist between the scanning system and the remote destination
+    that intercept requests and then repacks them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Operating system identification with Nmap
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Although TTL analysis can be helpful in identifying remote operating systems,
+    more comprehensive solutions are ideal. Nmap has an operating system identification
+    function that goes far beyond simple TTL analysis. This recipe will demonstrate
+    how to use Nmap to perform operating system identification based on probe-response
+    analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Nmap to perform operating system identification, you will need to have
+    a remote system running network services that can be probed and inspected. In
+    the examples provided, an installation of Windows XP is used to perform this task.
+    For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s perform OS identification using Nmap:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To perform an Nmap operating system identification scan, Nmap should be called
+    with the IP address specification and the `-O` option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00095.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the output provided, Nmap will indicate the operating system running or might
+    provide a list of a few possible operating systems. In this case, Nmap has indicated
+    that the remote system is either running Windows XP or Windows Server 2003.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Nmap operating system identification sends a comprehensive series of probing
+    requests and then analyzes the responses to those requests in attempt to identify
+    the underlying operating system based on operating system-specific signatures
+    and expected behavior. Additionally, you can see at the bottom of the operating
+    system identification output that Nmap relies on feedback from users in order
+    to ensure the continued reliability of their service signatures.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Operating system identification with xprobe2
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **xprobe2** tool is a comprehensive tool that is built for the purpose of
+    identifying remote operating systems. This recipe will demonstrate how to use
+    the `xprobe2` command to perform operating system identification based on probe-response
+    analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the `xprobe2` command to perform operating system identification, you
+    will need to have a remote system running network services that can be probed
+    and inspected. In the examples provided, an instance of Metasploitable2 is used
+    to perform this task. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'These steps will guide you to perform OS identification using the `xprobe2`
+    command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To execute an operating system identification scan on a remote system with
+    the `xprobe2` command, the program needs to be passed a single argument that consists
+    of the IP address of the system to be scanned:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00097.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The output of this tool can be somewhat misleading. There are several different
+    Linux kernels that indicate a 100% probability for that particular operating system.
+    Obviously, that cannot be correct.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The xprobe2 tool actually bases this percentage on the number of possible signatures
+    associated with that operating system that were confirmed on the target system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Unfortunately, as can be seen with this output, the signatures are not granular
+    enough to distinguish between minor versions. Nonetheless, this tool can be a
+    helpful additional resource in identifying a target operating system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The underlying principle that defines how xprobe2 identifies remote operating
+    systems is the same as the principle used by Nmap. The xprobe2 operating system
+    identification sends a comprehensive series of probing requests and then analyzes
+    the responses to those requests in an attempt to identify the underlying operating
+    system based on operating system-specific signatures and expected behavior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Passive operating system identification with p0f
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **p0f** tool is a comprehensive tool that was developed for the purpose
+    of identifying remote operating systems. This tool is different from the other
+    tools discussed here because it is built to perform operating system identification
+    passively and without directly interacting with the target system. This recipe
+    will demonstrate how to use the `p0f` command to perform passive operating system
+    identification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the `p0f` command to perform operating system identification, you will
+    need to have a remote system that is running network services. In the examples
+    provided, an instance of Metasploitable2 is used to perform this task. For more
+    information on setting up Metasploitable2, refer to the *Installing Metasploitable2*
+    recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will help you to perform passive OS identification using the `p0f`
+    command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you execute the `p0f` command directly from the command line without any
+    prior environmental setup, you will notice that it will not provide much information
+    unless you are directly interacting with some of the systems on your network:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00100.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: This lack of information is evidence of the fact that unlike the other tools
+    we have discussed, `p0f` will not go out and actively probe devices in an attempt
+    to determine their operating system. Instead, it just quietly listens.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We could generate traffic here by running an Nmap scan in a separate Terminal,
+    but that defeats the entire purpose of a passive operating system identifier.
+    Instead, we need to determine a way to route traffic through our local interface
+    for analysis so that we can passively analyze it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Ettercap provides an excellent solution for this by offering the capability
+    to poison ARP caches and create a **man-in-the-middle** (**MITM**) scenario. To
+    have the traffic traveling between two systems rerouted through your local interface,
+    you need to ARP poison both of those systems:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00102.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the `ettercap` command is executed at the command line.
+    The `-M` option defines the mode specified by the `arp:remote` arguments. This
+    indicates that ARP poisoning will be performed and that traffic from remote systems
+    will be sniffed. The IP addresses contained within the opening and closing forward
+    slashes indicate the systems to be poisoned. The `-T` option indicates that operations
+    will be conducted entirely in the text interface, and the `-w` option is used
+    to designate the file to dump the traffic capture.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once you have established your MITM, you can execute `p0f` once again in a
+    separate Terminal. Assuming the two poisoned hosts are engaged in communication,
+    you should see the following traffic:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00104.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'All packets that cross the `p0f` listener are flagged as either unknown or
+    are associated with a specific operating system signature. Once adequate analysis
+    has been performed, you should gracefully close the Ettercap text interface by
+    entering `q`. This will re-ARP the victims so that no disruption of service occurs:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00011.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: ARP poisoning involves the use of gratuitous ARP responses to trick victim systems
+    into associating an intended destination IP address with the MAC address of the
+    MITM system. The MITM system will receive traffic from both poisoned systems and
+    will forward the traffic on to the intended recipient. This will allow the MITM
+    system to sniff all traffic off the wire. By analyzing this traffic for unique
+    behavior and signatures, p0f can identify the operating system of devices on the
+    network without directly probing them for responses.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SNMP analysis with Onesixtyone
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Onesixtyone** is an SNMP analysis tool that is named for the UDP port upon
+    which SNMP operates. It is a very simple SNMP scanner that only requests the system
+    description value for any specified IP address(es).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Onesixtyone to perform SNMP analysis, you will need devices that have
+    SNMP enabled and can be probed and inspected. In the examples provided, an installation
+    of Windows XP is used to perform this task. For more information on setting up
+    a Windows system, refer to the *Installing Windows Server* recipe in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s perform the SNMP analysis using the `onesixtyone` command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use the `onesixtyone` command, you can pass the target IP address and the
+    community string as arguments:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00107.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the community string `public` is used to query the
+    device at `172.16.69.129` for its system description. This is one of the most
+    common default community strings used by various network devices. As indicated
+    by the output, the remote host replied to the query with a description string
+    that identifies itself.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: SNMP is a protocol that can be used to manage networked devices and facilitate
+    the sharing of information across those devices. The usage of this protocol is
+    often necessary in enterprise network environments; however, system administrators
+    frequently fail to modify the default community strings that are used to share
+    information across SNMP devices. In situations where this is the case, information
+    can be gathered about network devices by correctly guessing the default community
+    strings used by those devices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SNMP analysis with SNMPwalk
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**SNMPwalk** is a more complex SNMP scanner that can be used to gather a wealth
+    of information from devices with guessable SNMP community strings. SNMPwalk cycles
+    through a series of requests to gather as much information as possible from the
+    service.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use SNMPwalk to perform SNMP analysis, you will need devices that have SNMP
+    enabled and can be probed and inspected. In the examples provided, an installation
+    of Windows XP is used to perform this task. For more information on setting up
+    a Windows system, refer to the *Installing Windows Server* recipe in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to perform SNMP analysis using the `snmpwalk`
+    command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To execute the `snmpwalk` command, the tool should be passed a series of arguments
+    to include the IP address of the system to be analyzed, the community string to
+    be used, and the version of SNMP employed by the system:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00110.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To use SNMPwalk against the SNMP-enabled Windows XP system, the default community
+    string of `public` is used and the version is `2c`. This generates a large amount
+    of output that has been truncated in the demonstration displayed here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Notice that by default, all identified information is preceded by the queried
+    OID values. This output can be cleaned up by piping it over to a `cut` function
+    to remove these identifiers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00222.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that far more than just the system identifier is provided in the output
+    from SNMPwalk. In examining the output, some pieces of information may seem obvious
+    while others might seem more cryptic. However, by analyzing it thoroughly, you
+    can gather a lot of information about the target system:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00114.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In one segment of the output, a series of hexadecimal values and IP addresses
+    can be seen in a list. By referencing the network interfaces of known systems
+    on the network, it becomes apparent that these are the contents of the ARP cache.
+    It identifies the IP address and MAC address associations stored on the device:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00116.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Additionally, a list of running processes and installed applications can be
+    located in the output as well. This information can be extremely useful in enumerating
+    services running on the target system and in identifying potential vulnerabilities
+    that could be exploited.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Unlike Onesixtyone, SNMPwalk is able to not only identify the usage of common
+    or default SNMP community strings, but is also able to leverage this configuration
+    to gather large amounts of information from the target system. This is accomplished
+    through the use of a series of SNMP `GETNEXT` requests to essentially brute-force
+    requests for all information made available by a system through SNMP.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firewall identification with Scapy
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: By evaluating the responses that are returned from select packet injections,
+    it is possible to determine whether remote ports are filtered by a firewall device.
+    In order to develop a thorough understanding of how this process works, we can
+    perform this task at the packet level using Scapy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Scapy to perform firewall identification, you will need a remote system
+    running network services. Additionally, you will need to implement some type of
+    filtering mechanism. This can be done with an independent firewall device or with
+    host-based filtering such as Windows Firewall. By manipulating the filtering settings
+    on the firewall device, you should be able to modify the responses for injected
+    packets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s use Scapy to perform firewall identification:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To effectively determine whether a TCP port is filtered or not, both a TCP
+    SYN packet and a TCP ACK packet need to be sent to the destination port. Based
+    on the packets that are returned in response to these injections, we can determine
+    whether the ports are filtered. Most likely, the injection of these two packets
+    will result in one of the four different combinations of responses. We will discuss
+    each of these scenarios, what they indicate about filtering associated with the
+    destination port, and how to test for each. These four possible combinations of
+    responses include the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: SYN solicits no response, and ACK solicits an RST response
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SYN solicits a SYN+ACK or SYN+RST response, and ACK solicits no response
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SYN solicits a SYN+ACK or SYN+RST response, and ACK solicits an RST response
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SYN solicits no response and ACK solicits no response
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'In the first scenario, we should consider a configuration in which an injected
+    SYN packet solicits no response and an ACK packet solicits an RST response. To
+    test this, we should first send a TCP ACK packet to the destination port. To send
+    the TCP ACK packet to any given port, we must first build the layers of the request.
+    The first layer we will need to construct is the IP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00048.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the IP layer of our request, we should assign the `IP` object to the
+    `i` variable. By calling the `display()` function, we can identify the attribute
+    configurations for the object. By default, both the sending and receiving addresses
+    are set to the `127.0.0.1` loopback address. These values can be modified by changing
+    the destination address, setting `i.dst` equal to the string value of the address
+    we wish to scan.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'By calling the `display()` function again, we can see that not only has the
+    destination address been updated, but Scapy will also automatically update the
+    source IP address to the address associated with the default interface. Now that
+    we have constructed the IP layer of the request, we should proceed to the TCP
+    layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00429.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the TCP layer of our request, we will use the same technique we used
+    for the IP layer. In the example provided, the `TCP` object was assigned to the
+    `t` variable. As discussed previously, the default configurations can be identified
+    by calling the `display()` function. Here, we can see that the default value for
+    the source port is set to the port `21` (FTP), and the default value of the destination
+    port is set to the port `80` (HTTP).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The destination port value can be modified by setting it equal to the new port
+    destination value, and the `flags` value should be set to `A` to indicate that
+    the ACK flag bit should be activated. Now that we have created both the IP and
+    TCP layers, we need to construct the request by stacking those layers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00123.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The IP and TCP layers can be stacked by separating the variables with a forward
+    slash. These layers can then be set as equal to a new variable that will represent
+    the entire request. The `display()` function can then be called to view the configurations
+    for the request. Once the request has been built, this can then be passed to the
+    `sr1()` function so that we can analyze the response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00126.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This same request can be performed without independently building and stacking
+    each layer. Instead, a single one-line command can be used by calling the functions
+    directly and passing the appropriate arguments to them:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00127.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that in this particular scenario, an RST packet is received in response
+    to the injected ACK packet. The next step in testing is to inject a SYN packet
+    in the same manner:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00128.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Upon sending the SYN request in the same manner, no response is received and
+    the function is discontinued when the timeout value is exceeded. This combination
+    of responses indicates that stateful filtering is in place. The socket is rejecting
+    all inbound connections by dropping SYN requests, but ACK packets are not filtered
+    to ensure that outbound connections and sustained communication remains possible.
+    This combination of responses can be tested in Python to identify statefully filtered
+    ports:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00162.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: After formulating each of the requests with Scapy, the test that can be used
+    to evaluate these responses determines whether a response is received from either
+    the ACK or the SYN injection, but not both. This test is effective for identifying
+    both this scenario and the next scenario in which a reply will be received from
+    the SYN injection but not the ACK injection. A scenario in which a SYN+ACK or
+    RST+ACK response is solicited by the SYN injection, but no response is solicited
+    from the ACK injection, is also an indication of stateful filtering. The testing
+    for this remains the same.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'First, an ACK packet should be sent to the destination port:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00131.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Notice that in the example provided, no response is solicited by this injection.
+    Alternatively, if a SYN packet is injected, a response is received with the SYN+ACK
+    flag bits activated if the port is open and the RST+ACK flag bits activated if
+    the port is closed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00133.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The exact same test can be performed in the event of this scenario, since the
+    test identifies that stateful filtering is in place by determining whether one
+    of the two injections solicits a response, but not both:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00397.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This combination of responses indicates that stateful filtering is being performed
+    on ACK packets, and any ACK packets sent outside the context of a proper session
+    are dropped. However, the port is not totally filtered, as evidenced by the responses
+    to the inbound connection attempt. Another possible scenario would be if both
+    the SYN and ACK injections solicited their expected responses. In such a scenario,
+    there is no indication of any sort of filtering. To perform the testing for this
+    scenario, an ACK injection should be performed and the response should be analyzed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00138.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the event that the port is unfiltered, an unsolicited ACK packet sent to
+    the destination port should result in a returned RST packet. This RST packet indicates
+    that the ACK packet was sent out of context and is intended to discontinue the
+    communication. Upon sending the ACK injection, a SYN injection should also be
+    sent to the same port:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00140.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the event that the port is unfiltered and is open, a SYN+ACK response will
+    be returned. Notice that the actual value of the TCP `flags` attribute is a long
+    variable with the value of `18`. This value can easily be converted to an integer
+    using the `int` function. This value of `18` is the decimal value of the TCP flag
+    bit sequence. The SYN flag bit carries a decimal value of `2`, and the ACK flag
+    bit carries a decimal value of `16`. Assuming there is no indication of stateful
+    filtering, we can test in Python whether the port is unfiltered and open by evaluating
+    the integer conversion of the TCP `flags` value:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00613.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'A similar test can be performed to determine whether a port is unfiltered and
+    closed. An unfiltered closed port will have the RST and ACK flag bits activated.
+    As discussed previously, the ACK flag bit carries a decimal value of `16`, and
+    the RST flag bit carries a decimal value of `4`. So, the expected integer conversion
+    of the TCP `flags` value for an unfiltered and closed port should be `20`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00144.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Finally, we should consider a scenario in which no response is received from
+    the SYN or ACK injections. In this scenario, both instances of the `sr1()` function
+    will be discontinued when the supplied timeout value is exceeded:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00147.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This lack of response from either of the injections is likely an indication
+    that the port is unstatefully filtered and is just dropping all incoming traffic
+    regardless of the state, or it could be an indication that the remote host is
+    down. One''s first thought might be that this could be tested for in Python by
+    appending an execution flow for `else` at the end of the previously developed
+    testing sequence. This `else` operation would, in theory, be executed if a response
+    were not received by one or both injections. In short, the `else` operation would
+    be executed if no response were received:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00149.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'While this may seem like it would work in theory; it is less effective in practice.
+    Python will actually return an error if value testing is performed on a variable
+    that has no value. To avoid this problem, the first conditional that should be
+    examined will be whether or not any reply is received at all:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00151.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: This entire sequence of testing can then be integrated into a single functional
+    script. The script will accept two arguments to include the destination IP address
+    and the port to be tested. An ACK and SYN packet will then be injected and the
+    responses, if any, will be stored for evaluation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Then, a series of four tests will be performed to determine whether filtering
+    exists on the port. Initially, a test will be performed to determine whether any
+    response is received at all. If no response is received, the output will indicate
+    that the remote host is down or the port is unstatefully filtered and discarding
+    all traffic. If any response is received, a test will be performed to determine
+    whether it was a response to one injection but not both. If such is the case,
+    the output will indicate that the port is statefully filtered.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Finally, if responses are received from both injections, the port will be identified
+    as unfiltered, and the TCP `flags` value will be assessed to determine whether
+    the port is open or closed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Upon creating the script in the local filesystem, the file permissions will
+    need to be updated to allow execution of the script. The `chmod` command can be
+    used to update these permissions, and the script can then be executed by calling
+    it directly and passing the expected arguments to it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00155.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Both SYN and ACK TCP flags play an important role in stateful network communications.
+    SYN requests allow the establishment of new TCP sessions, while ACK responses
+    are used to sustain a session until it is closed. A port that responds to one
+    of these types of packets, but not the other, is most likely subject to filters
+    that restrict traffic based on the session state. By identifying cases such as
+    this, it is possible to infer that stateful filtering exists on the port in question.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firewall identification with Nmap
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nmap has a streamlined firewall filtering identification function that can be
+    used to identify filtering on ports based on ACK probe responses. This function
+    can be used to test a single port or multiple ports in sequence to determine filtering
+    status.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Nmap to perform firewall identification, you will need to have a remote
+    system that is running network services. Additionally, you will need to implement
+    some type of filtering mechanism. This can be done with an independent firewall
+    device or with host-based filtering such as Windows Firewall. By manipulating
+    the filtering settings on the firewall device, you should be able to modify the
+    results of the scans.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'These steps will help you to identify firewall using the Nmap:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To perform an Nmap firewall ACK scan, `nmap` should be called with the IP address
+    specification, the destination port, and the `-sA` option:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00333.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'On performing this scan on the Metasploitable2 system in my local network without
+    routing the traffic through a firewall, the response indicates that the TCP port
+    `22` (SSH) is unfiltered. A port-filtering assessment can be made on Nmap''s 1,000
+    common ports by performing the same scan without providing a port specification:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00158.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When performed against the Metasploitable2 system on the local network that
+    is not sitting behind any firewall, the results indicate that all scanned ports
+    are unfiltered. If the same scan is performed against a target sitting behind
+    a packet-filtering firewall, all ports are identified to be filtered except for ports
+    where the firewall does not restrict traffic. When scanning a range of ports,
+    the output only includes unfiltered ports.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To perform a scan of all possible TCP ports, all possible port address values
+    must be scanned. The portions of the TCP header that define the source and destination
+    port addresses are both 16 bits in length, and each bit can retain a value of
+    `1` or `0`. As such, there are 2^(16), or 65,536, possible TCP port addresses.
+    To scan the total possible address space, a port range of `1-65535` must be supplied:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00163.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In addition to the many other functions that Nmap provides, it also can be used
+    to identify firewall filtering. The means Nmap performs this type of firewall
+    identification largely by using the same techniques that were previously discussed
+    in the Scapy recipe. A combination of SYN and unsolicited ACK packets are sent
+    to the destination port, and the responses are analyzed to determine the state
+    of filtering.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Firewall identification with Metasploit
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Metasploit has a scanning `auxiliary` module that can be used to perform multithreaded
+    analysis of network ports to determine whether those ports are filtered, based
+    on SYN/ACK probe-response analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Metasploit to perform firewall identification, you will need to have
+    a remote system that is running network services. Additionally, you will need
+    to implement some type of filtering mechanism. This can be done with an independent
+    firewall device or with host-based filtering such as Windows Firewall. By manipulating
+    the filtering settings on the firewall device, you should be able to modify the
+    results of the scans.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s use Metasploit to perform firewall identification:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use the Metasploit ACK scan module to perform firewall and filtering identification,
+    you must first launch the MSF console from a Terminal in Kali Linux and then select
+    the desired `auxiliary` module with the `use` command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00081.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the module has been selected, the `show options` command can be used to
+    identify and/or modify scan configurations. This command will display four column
+    headers to include: `Name`, `Current Setting`, `Required`, and `Description`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The `Name` column identifies the name of each configurable variable
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `Current Setting` column lists the existing configuration for any given
+    variable
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `Required` column identifies whether a value is required for any given variable
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `Description` column describes the function of each variable
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The value for any given variable can be changed using the `set` command and
+    providing the new value as an argument:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00146.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the `RHOSTS` value was changed to the IP address of
+    the remote system that we wish to scan. Additionally, the number of threads is
+    changed to `25`. The `THREADS` value defines the number of concurrent tasks that
+    will be performed in the background. Determining thread values consists of finding
+    a good balance that will noticeably improve the speed of the task without overly
+    depleting system resources. For most systems, `25` threads is a fast and reasonably
+    safe number of concurrent processes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After updating the necessary variables, the configurations can be verified
+    using the `show options` command again. Once the desired configurations have been
+    verified, the scan can be launched:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00402.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Results have been truncated for space. The following is the conclusion of our
+    scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00296.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In this instance, the only output provided is the metadata about the scan to
+    indicate the number of systems scanned and that the module execution has completed.
+    This lack of output is due to the fact that the responses associated with the
+    SYN and ACK injections were exactly the same from port to port because the Metasploitable2
+    system that was being scanned is not behind any firewall.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Metasploit offers an `auxiliary` module that performs firewall identification
+    through many of the same techniques that have been discussed in the previous recipes.
+    However, Metasploit also offers the capability to perform this analysis within
+    the context of a framework that can be used for other information gathering, and
+    even exploitation.
+  prefs: []
+  type: TYPE_NORMAL

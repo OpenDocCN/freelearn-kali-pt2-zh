@@ -1,0 +1,1333 @@
+- en: '11'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Autopilot, Python, and NIST Control
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: After a thorough examination of the Blue Team side of the Kali Purple family,
+    we grabbed a taste of some of the Red Team aspects in the previous chapter. The
+    reason these are put together in the Purple distribution is because the offensive
+    tools are used to test the defensive tools and provide quality training as well
+    as proof of concept to cybersecurity analysts through penetration testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this chapter, we are going to look at the automation aspect of these penetration
+    testing utilities through a Kali Linux-provided tool called **Autopilot**. Just
+    as the name suggests, Autopilot is used to automate attacks, which helps to improve
+    the efficiency of penetration testing teams. Through Autopilot, you gain some
+    subtle references to scripting languages – in particular, Python.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We are going to take a peek at the Python scripting language, but not in the
+    manner you might think. This isn’t a learn-to-code training manual and we’re not
+    here to teach you that. However, if it is something of interest to you, we will
+    provide links to an abundance of references. What we are going to do is look at
+    the key components of what you might see within a block of Python code. We’re
+    going to teach you how to recognize what is going on within the code. This will
+    help you to understand what any piece of software, both good and bad, might be
+    attempting to do and if it’s a case of software that you have the ability to edit,
+    then you may even have enough knowledge to change certain items for the sake of
+    testing and manipulating the code to your liking.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After that, we will take a look at the freshly updated **NIST Cybersecurity
+    Framework** (**CSF**), which released version 2.0 in February of 2024, adding
+    a new core function – *Govern* – directed at high-level cybersecurity managers
+    that helps to regulate the other five core functions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, you can expect to cover the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Autopilot
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Python
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: NIST Control
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The requirements for this chapter are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Minimum requirements**: A computing device with either the *amd64 (x86_64/64-bit)*
+    or *i386 (x86/32-bit)* architecture. It should contain at least *4 GB* of RAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Recommended requirements**: Based on feedback from cybersecurity field practitioners,
+    aim for the *amd64 (x86_64/64-bit)* architecture with *8 GB* of RAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Autopilot
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Kali Autopilot** is a cybersecurity framework and application created with
+    Red and Purple team exercises in mind. It is aimed at enhancing offensive and
+    defensive security operations in unison. Autopilot focuses on automation and streamlining
+    various tasks within cybersecurity operations for the purpose of improving both
+    the efficiency and effectiveness of the exercises.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Key features of Kali Autopilot include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Automation capabilities**: Kali Autopilot offers robust automation capabilities
+    for executing predefined attack scenarios, security assessments, penetration testing
+    tasks, and defensive measures in red team and purple team exercises. This automation
+    streamlines complex processes and saves time for cybersecurity professionals.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scenario creation and execution**: The framework allows users to create and
+    execute customized attack scenarios, simulation exercises, and cybersecurity assessments
+    to test and improve the organization’s security posture. This includes emulating
+    real-world threats and tactics to identify vulnerabilities and weaknesses.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Red team operations**: Kali Autopilot facilitates red team operations by
+    providing tools and functionalities for reconnaissance, exploitation, privilege
+    escalation, lateral movement, and post-exploitation activities. It enables red
+    teams to simulate sophisticated cyber-attacks and assess the effectiveness of
+    defensive measures.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Purple team collaboration**: The framework supports purple teaming initiatives
+    by fostering collaboration between red and blue teams. Kali Autopilot enables
+    joint exercises where offensive and defensive security teams work together to
+    simulate attacks, detect threats, respond to incidents, and enhance overall security
+    resilience.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Reporting and documentation**: Kali Autopilot includes features for generating
+    detailed reports, documenting findings, and tracking the progress of red team
+    and purple team activities. These reports can be utilized for compliance purposes,
+    risk assessment, incident response planning, and security improvement initiatives.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Tool integration**: The framework integrates a wide range of security tools,
+    scripts, and frameworks commonly used in red team and purple team engagements.
+    This seamless integration enhances the toolkit available to cybersecurity professionals
+    and ensures comprehensive coverage of security assessment tasks.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Customization and flexibility**: Users can customize and fine-tune the behavior,
+    parameters, and configuration settings of Kali Autopilot to align with specific
+    red teaming and purple teaming objectives. This flexibility allows for tailored
+    approaches to cybersecurity assessments and exercises.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Training and skill development**: Kali Autopilot serves as a valuable platform
+    for cybersecurity professionals to enhance their skills, knowledge, and expertise
+    in offensive and defensive security practices. It offers hands-on experience in
+    simulated environments to improve proficiency in handling cyber threats and vulnerabilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scalability and enterprise deployment**: The framework is designed to be
+    scalable and adaptable to different organizational sizes, security environments,
+    and operational requirements. Kali Autopilot supports enterprise-level deployment
+    for managing and coordinating red teaming and purple teaming activities at scale.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Community support and updates**: Kali Autopilot benefits from a vibrant community
+    of cybersecurity professionals, red teamers, and purple teamers who contribute
+    to its development, enhancement, and support. Users can leverage community-driven
+    resources, updates, and collaboration opportunities to maximize the framework’s
+    effectiveness.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: There is no additional downloading, installing, or activating for Kali Autopilot.
+    If you installed Kali Purple, it should be already set up and raring to go!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To launch Kali Autopilot, take these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Launch and log in to your Kali Purple VM instance
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select the Kali Linux dragon icon at the top left of your screen, under the
+    word **File**
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Move your cursor down the left column and hover over **08 -** **Exploitation
+    Tools**
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select **Kali Autopilot** from the second column that appears, as seen in *Figure
+    11**.1*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.1 – Launch Kali Autopilot from the menu](image/B21223_11_01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.1 – Launch Kali Autopilot from the menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: Alternatively, if for some odd reason Kali Autopilot is not already installed
+    in your Kali Purple instance – that really, truly should not be the case – then
+    you can open a terminal window and type **sudo apt install kali-autopilot**, making
+    sure you include the dash.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you complete the preceding steps, the **Kali Autopilot - Automated Attack
+    Generator** will load, showing two rows of content. The first row will have three
+    columns. The left column will be a windowpane to manage your attack scripts, to
+    include options to add, delete, import, export, or save them. The middle column
+    will be a windowpane you will use to manage your variables for the selected script.
+    The right windowpane will be networking and communication settings for the product
+    to do its job. The second row has only one column, spanning the distance. It contains
+    the attack sequence:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.2 – Kali Autopilot default GUI](image/B21223_11_02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.2 – Kali Autopilot default GUI
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that you’ve learned how to launch it the hard way, we should tell you that
+    you can also open the command terminal and simply type **kali-autopilot** to load
+    the Autopilot GUI. Let’s go ahead and create our very first automated attack script
+    using Autopilot. If you’ve never written code or created a script before, fear
+    not! Autopilot does most of the hard work for you. We will guide you through it
+    all.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we get too much further along, let’s make sure we have a utility called
+    **Dirb** available to us. Make sure you have this tool by going to your command
+    line and typing **sudo apt-get install dirb**. Dirb is often referred to as **Directory
+    Buster** or **Directory Brute-Forcer**. Its purpose is to find hidden web content,
+    directories, and files on web servers by performing dictionary attacks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, let’s start making our attack script. To create a test script, go to
+    the **Attack Scripts** windowpane in the upper left of Autopilot. Within the **Script**
+    field at the bottom of that pane, type **MyFirstAutopilotScript** or any name
+    you want – just remember it’s the name of your script. Then select the **Add**
+    button, as you see in *Figure 11**.3*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.3 – Creating your first Kali Autopilot script](image/B21223_11_03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.3 – Creating your first Kali Autopilot script
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will notice the middle windowpane will automatically populate with your
+    new script name, as seen in *Figure 11**.6*. All we’re going to do here is make
+    a simple script to scan our host machine and a web server, which we will set up
+    now. You may already have it on your system, but in case you don’t, type **sudo
+    apt install apache2** and follow any prompts. If you have it, you’ll get a message
+    saying as much. If not, it will install. It’s very quick, painless, and should
+    not involve the loss of blood. If you do lose blood from installing the Apache
+    Web Server, stop what you’re doing immediately because you are doing something
+    very, very wrong. Seek medical attention and then find a Linux install professional
+    in your area before proceeding.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When medically and technologically cleared to return, start the web server you
+    just installed by typing **sudo systemctl start apache2** and follow that up by
+    typing **sudo systemctl status apache2** to ensure everything was successful.
+    Now, we’re going to create two variables. The first, we’ll call **Subnet** and
+    that will be to scan our host system. The second will be **Webserver** and that
+    will be to scan the web server we just installed. We are going to set the values
+    of these variables as their respective IP addresses. This way, if those IP addresses
+    ever change, we don’t need to rewrite the entire script. We can simply return
+    to this middle windowpane, change their values, and ask Autopilot to regenerate
+    the script. It will substitute the new values in place of the old ones.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To create these variables, we first need to grab the default values, which
+    are the present IP address. Drop into your host system and open the command terminal.
+    Return to [*Chapter 3*](B21223_03.xhtml#_idTextAnchor052) and review it if you
+    don’t remember how to do this. If your host is Windows, type **ipconfig** and
+    look for the IPv4 value, as you see highlighted in *Figure 11**.4*. If it’s macOS
+    or Linux, you would type **ifconfig** to grab the same information:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.4 – Windows system ipconfig command](image/B21223_11_04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.4 – Windows system ipconfig command
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Record that information and then, within a terminal window in your Kali Purple
+    instance, type **ifconfig** to get information for your web server. Your web server
+    is hosted on your Kali Purple instance. You’ll want to grab your eth0 IP address
+    as highlighted in *Figure 11**.5*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.5 – VM system ifconfig command](image/B21223_11_05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.5 – VM system ifconfig command
+  prefs: []
+  type: TYPE_NORMAL
+- en: Return to your Autopilot application and create two variables.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To create a variable, you will want to place your cursor on the first empty
+    row (in this case, it’s row 1) in the first column of the middle windowpane, just
+    under the **Name** header. With the field highlighted, simply start typing the
+    content you wish to enter and then press *Enter*. Name the first one **Subnet**
+    and the second one **Webserver**. Place the value of your host machine’s IP address,
+    adding a slash and the number 24 after it, as seen in *Figure 11**.6*. The usage
+    of that slash is known as a **Classless Inter-Domain Routing** (**CIDR**) notation.
+    It’s a shortcut manner of defining a range of IP addresses without having to list
+    each and every single one. We’ll toss a link in the *Further reading* section
+    if you’d like to study in more depth about the mechanics of CIDR notations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this case, you’ll note that each IP address is comprised of four groups
+    of numbers separated by a dot. This is known as an octet – because the dot itself
+    is part of the code and there are four dots. The final dot, at the end of every
+    IP address, is invisible. It’s not really – we just leave it out when writing
+    IP addresses for readability. Each non-dot octet – also 4 of them – is a number
+    ranging from 0 to 255, which is a maximum of 256 numbers (zero plus 1 – 255).
+    So here, we’re telling the code that 24 of a maximum possible 32 bits are not
+    available, leaving only 8 bits to work with, and that means your variable is going
+    to scan a total of 256 IP addresses because those 8 bits can be manipulated by
+    256 different combinations of ones and zeros. The 256 IP addresses are **10.0.0.0**
+    – **10.0.0.255** with only the final numerical octet changing in value:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.6 – Setting variables in Autopilot](image/B21223_11_06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.6 – Setting variables in Autopilot
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once our variables are set, we have the option in the top-right windowpane to
+    add some randomization to our attack script. Why would we do this? Well, if you
+    ask any experienced SOC analyst, you will learn that they notice things such as
+    patterns. Patterns such as precise actions occurring with identical precise timing
+    intervals are an obvious sign of automation. Automation will nearly always trigger
+    a deeper dig and there is a high probability that the attack will be noticed.
+    Why do we care if we are only operating ethically? Because part of being a pentester
+    or ethical hacker is doing whatever you can to evade defenses in very much the
+    same way a real cybercriminal does. That will help us to learn from our vulnerabilities
+    and work to discover or develop new ways to identify potentially malicious behavior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Those of you working in law enforcement or who have law enforcement backgrounds
+    have probably heard something along the lines of *“If you want to learn how to
+    catch a criminal, then you need to learn how to think like a criminal”* at some
+    point in your training. The same is true in the cybersecurity profession. If you
+    want to learn how to catch a hacker, then you need to learn how to think like
+    a hacker.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It’s pretty much self-explanatory in the **Settings** pane. The values for
+    **Delay** are the range between the minimum milliseconds versus the maximum milliseconds
+    you want the script to randomly delay between each action. The **Interface** field
+    is a reference to the network interface you are running the attack against. We
+    will leave ours at **eth0**. We will also leave the API port set to **80** since
+    we’re launching an attack against a web server:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.7 – Settings windowpane allows for randomization](image/B21223_11_07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.7 – Settings windowpane allows for randomization
+  prefs: []
+  type: TYPE_NORMAL
+- en: We have our script name, variables, and settings set. Now, let’s write the actual
+    attack script. Autopilot works in stages, with stage zero being the first. We
+    don’t write instructions for stage zero. That’s internal, which Autopilot can
+    use to set up the main attack. That said, let’s identify the beginning of our
+    instructions as stage one. On line 1 of **Scripted Attack Sequence**, write **STAGE**
+    in all caps under the first column – **Action**. It’s actually not necessary to
+    write it in all caps, this is just something that is done for readability. Under
+    the second column – **Refer** – input the number **1** to reflect which stage
+    we are talking about.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On lines two and three, we are going to perform two scanning actions – one against
+    our host operating system and the other against the web server we set up. Therefore,
+    we will name the actions very precisely according to which action we are taking,
+    and we are taking the action of scanning. Type **Scanning** on rows two and three
+    under the **Action** column. Now that we’ve identified the action, let’s input
+    the actual command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On row two, under the **Command** column, type **nmap -sn {Subnet}**. The braces
+    indicate that we are inputting a variable in our instructions. The value inside
+    those braces is the name of the variable. In this case, we’ve input **Subnet**,
+    which is the first variable we created in Autopilot. So, the **nmap -sn {Subnet}**
+    command could just as easily have been written as **nmap -sn {10.0.0.192/24}**,
+    except by doing it this way, if we want to change the range or IP address we are
+    scanning, we only need to change the value in the **Variables** windowpane for
+    **Subnet**, without having to touch the actual attack sequence code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.8 – Autopilot attack sequence](image/B21223_11_08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.8 – Autopilot attack sequence
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **–** symbol, which is often referred to as a *tack* symbol (it can also
+    be called a dash, hyphen, or minus sign but has gained popularity as tack, which
+    comes from the military), means these are extra instructions added to Nmap. The
+    **s** is telling Nmap to apply the values in this command to a scanning activity.
+    This is because Nmap has many uses other than scanning. The **n** is telling Nmap
+    that this is a no-port scan. It’s telling Nmap to be broader in its scan and send
+    ICMP echo requests to determine the online or offline status of the target without
+    taking the time to scan for open ports.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On row three, under the **Command** column, type **nmap -PS -sV {Webserver}**.
+    Note that we do not need to add the port number to this command because that was
+    set in the top-right **Settings** windowpane. In this case, the **-PS** is telling
+    Nmap to perform a TCP SYN ping scan. It’s telling Nmap to perform this scan by
+    sending TCP SYN packets to the target hosts to determine whether they are reachable.
+    It evaluates whether they are by this scan discovering whether the hosts are active
+    and responding. The **-sV** option enables version detection. It tries to determine
+    the version of the services running on the target host. This can be very valuable
+    information to an attacker because older versions of any particular service could
+    have documented vulnerabilities associated with them, which could tell the attacker
+    they have more attack vectors than originally expected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: On row four, we are going to attempt to enumerate, therefore the value in the
+    **Action** column should be **Enumeration**. Then, in the **Command** column,
+    type **dirb http://{Webserver}**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When finished, click the **Generate** button at the bottom of Autopilot and
+    it will automatically generate the Python attack script for you. You’ll get a
+    popup showing the location at which Autopilot placed your attack script, as seen
+    in *Figure 11**.9*. Navigate to that location using the **cd** utility:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.9 – Autopilot Python script generation](image/B21223_11_09.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.9 – Autopilot Python script generation
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In our case, the command is **cd kali-autopilot/MyFirstAutopilotScript**. Next,
+    we will issue a command to invoke our web server with Python and get it running.
+    Type **python3 -m http.server** to make that happen. You can press *Ctrl* + *Z*
+    to break out of the loop and then type **ps ux** to look for and confirm that
+    the server is running. It will show up on a row near the bottom of your active
+    process listing as the exact command you typed – **python3 -m http.server** –
+    in the far-right column, as seen in *Figure 11**.10*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.10 – PS ux command showing our server is running](image/B21223_11_10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.10 – PS ux command showing our server is running
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Leaving that terminal window open, double-click on the terminal icon to open
+    another terminal window and navigate to your Python script by typing the same
+    **cd kali-autopilot/MyFirstAutopilotScript** command as the preceding step. Naturally,
+    if you named your script something else, then the path will be adjusted to match
+    what you named it. Once there, type **ls** to see if your script is in the folder
+    – and it very well should be. Type **./MyFirstAutopilotScript.py** to run the
+    script. You may get an error for a missing module. To get a missing module, you
+    would type **pip install <module name>**. So, in our case, we typed **pip install
+    paramiko**, as seen in *Figure 11**.11*. Once you’ve installed any missing modules,
+    attempt to start your script by again typing **python3 ./<scriptname>**, and,
+    if successful, you’ll get the input you see in *Figure 11**.11*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.11 – Install missing modules and start the Autopilot script](image/B21223_11_11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.11 – Install missing modules and start the Autopilot script
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: If not successful, read any errors very carefully. Often, they will tell you
+    what needs to be done. There are an indefinite number of possibilities as to why
+    one might receive an error that others don’t. Almost always, it’s something specific
+    to your technology. One of the best modern-day recommendations we can give when
+    it comes to Linux shells, scripts, and compiling errors is to simply copy and
+    paste that error into your favorite AI chatbot. We highly recommend Google’s Gemini
+    for anything Linux- or code-related.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At this point, your script has been launched but has not yet been put into
+    play by us. It is at stage zero. To move it along, we will open a web browser
+    and go to [http://localhost/check](http://localhost/check). When you get there,
+    you’ll be asked to sign in with a username and password. The default username
+    and password for Autopilot are both **offsec**. Then, when the page loads, you’ll
+    get a very simple text report that confirms the attack is at stage zero. In this
+    case, it says it’s at stage zero of one because we only established one stage
+    in our script. If we had twelve stages, it would’ve said **Attack is at Stage
+    0 of 12**. You get the point:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.12 – Browser confirms attack is at stage 0 out of the maximum stages
+    in the script](image/B21223_11_12.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.12 – Browser confirms attack is at stage 0 out of the maximum stages
+    in the script
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To push our attack along, we will select the **URL** field in the browser and
+    change the address to read [http://localhost/set?mutex=1](http://localhost/set?mutex=1)
+    to set the attack stage to 1\. Return to the terminal where you typed the command
+    to invoke your script and you’ll see your script beginning its magic, as seen
+    in *Figure 11**.13*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.13 – Browser confirms attack is at stage 0 out of the maximum stages
+    in the script](image/B21223_11_13.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.13 – Browser confirms attack is at stage 0 out of the maximum stages
+    in the script
+  prefs: []
+  type: TYPE_NORMAL
+- en: There you have it! If you made it this far, congratulations! You’ve just successfully
+    created and run your very own automated cyber-attack script! There are many programming
+    languages that developers will use for scripting. While there are no hard rules
+    for when to use which scripting language, you are most likely to find JavaScript,
+    for example, within a web developer’s toolbox. In cybersecurity, you’ll find a
+    lot of Bash within the *nix family of operating systems, which includes Linux.
+    However, cybersecurity is not restricted to *nix operating systems. Probably the
+    most likely and most universal scripting language you’ll find for cybersecurity
+    purposes is Python. In fact, you’ve seen dependencies for Python numerous times
+    already within this book alone. This is because Python is versatile, easy to learn
+    compared to other languages, and filled with a very rich set of libraries and
+    frameworks, which make it suitable for tasks such as penetration testing, network
+    security monitoring, automation, and general scripting. That said, let’s take
+    a look at the Python scripting language.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Python
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Our Python lessons here are going to be unlike any other programming language
+    lessons you’ve likely encountered thus far. They are going to be very quick and
+    concise. That’s because we are not here to teach you how to code. There are already
+    a plethora of resources out there for that. While learning how to write your own
+    code is something that has great value, especially at the middle to higher levels
+    of cybersecurity, knowing how to do so from the start is not a necessity. What
+    is a necessity, however, is being able to read and understand code. That requires
+    a much less stringent lesson plan.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One of the most important aspects of Python is knowing when the language in
+    the script is part of the code itself versus being part of the coder’s instructions
+    for humans to read. This is done by entering the **#** symbol, which tells any
+    Python compiler to ignore all the text that comes after it on that line. So, if
+    you have a large amount of non-code information to share, you will need to precede
+    each line with the **#** symbol:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'One of the strengths of any programming language is having the ability to define
+    and use variable information. That is information that can change over time. In
+    Python, this is simple. You decide what you want to name your variable, add an
+    equals sign, and then add a default (starting) value:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This means that any time you see the word **awesomeSauce** in the code, it
+    is either the value of **0** or the new value if a mathematical operation has
+    been applied to it in the code:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: In that context, you’ve also noted that if you want your Python code to print
+    something to the user’s screen, you will simply use the word **print**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'What if you wanted to have a variable that is a word instead of a number? That
+    is just as simple. You would simply place the value inside quotation marks to
+    tell the compiler that the characters inside of the quote, whether letters or
+    numbers, are text characters and not numbers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: You’ll notice the string, that is text characters, is reflected by using quotations.
+    Both mathematical values and calling a variable, as seen inside the **print**
+    function, do not use quotes. You can use plus symbols to piece together the different
+    pieces of a phrase in the event a variable is used within a sentence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You’ll notice the plus signs are not adding numbers per se but they are adding
+    something. They are adding pieces of the string together. Rest assured, when you
+    see the usual mathematical operators within Python code, they are performing the
+    mathematical operations you think they are in some capacity. These include the
+    following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Title** | **Symbol** | **Operation** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Plus | **+** | Addition |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Minus | **-** | Subtraction |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Asterisk | ***** | Multiplication |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Forward Slash | **/** | Division |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Percent | **%** | Modulus (the remainder of division) |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Double asterisk | ****** | Exponents |'
+  prefs: []
+  type: TYPE_TB
+- en: Table 11.1 – Python mathematical operators
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are others but this is just an introductory lesson to help you understand
+    a basic piece of code written in Python. Along those lines, you will also want
+    to familiarize yourself with comparison operators. This is when you compare one
+    piece of data to another. These include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Comparison** **Operator Name** | **Symbol** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| --- | --- |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Equal | a == b |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Not equal | a != b |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Less than | a < b |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Less than or equal to | a <=b |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Greater than | a > b |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Great than or equal to | a >=b |'
+  prefs: []
+  type: TYPE_TB
+- en: Table 11.2 – Python comparison operator
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Using these mathematical and comparison operators, you can control the flow
+    of information. So when reading Python code, you can examine such statements as
+    follows to get an idea of what the code might do based on the identified conditions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the preceding code, **elif** stands for *“or else if the previous statement
+    isn’t true but if this statement is true, then do the following line”* and **else**
+    stands for *“or else if none of the previous statements are true, then perform
+    the following action no* *matter what.”*
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can also control the flow of information with loops. The first is called
+    a **while** loop. It just means that while a condition is true, continue to perform
+    the following action over and over and over until it is no longer true. Consider
+    the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: What do you think the preceding code would do? If you said it would print the
+    line **"The beatings will continue"** 10 times before printing the line **"Morale
+    has improved! The beatings will stop."** just one time, you are correct. That’s
+    because the **morale** variable starts at the value of **0** and the final line
+    of the code means to increment the value of that variable by **1** and then run
+    through the loop again. It will continue to run through the loop until the initial
+    condition becomes false. That happens when **morale** reaches the value of **11**
+    because the **while** loop clearly states that it is only to run if the value
+    is less than **11**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The next kind of loop is called a **for** loop. In Python, this is a little
+    bit different from many other languages. It’s much simpler. It more or less means
+    *“as long as”* and can be done with strings or numbers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The core of any programming language is the function. In Python, functions
+    are declared pretty much the same as in any other language, with just a subtle
+    change in syntax. Creating a function in Python is done by using the word **def**,
+    which stands for define. Then, on the same line, you state the name of the function,
+    and within parentheses, any parameters you wish to set for that function. If you
+    later wish to call that function, you simply type the function name with any value
+    you want to apply to it within the parentheses. The following code sets the parameter
+    of **cname** to serve as a variable for any information that is passed to the
+    function whenever it is called from somewhere else in the code. We call the function
+    six times, passing six different text variables to the original function parameter
+    of **cname** to be processed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The preceding code creates a function called **security_clearance** and accepts
+    a parameter that it has named **cname**. When the function is called, it executes
+    the commands within. In this case, the only command is to take the parameter of
+    **cname**, which will be entered when the function is called, and append the text
+    **** CLASSIFIED **** to it. The following six lines are all examples of calling
+    the function and passing the data that is within the parentheses to the function,
+    making it the **cname** variable. So, for each line, it takes the value in parentheses
+    and adds the text **** CLASSIFIED **** after it. The first line, for example,
+    would print **"Confidential ** CLASSIFIED **"** to your screen.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When reading Python code, any time you see **def <sometext>(<value>)**, then
+    you can assume that’s a function being defined. Any time you see **<sometext>(<value>)**,
+    without the word **def** in front of it, that’s an example of calling the function
+    and taking the value in parentheses and passing it to the function definition
+    where the instructions are located about what to do with the information you are
+    passing to it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you see the following in a Python script, you can safely conclude that the
+    code is trying to read the file that you see listed at the location of the file
+    path you see listed. Of course, if you’re trying to open that file, hopefully,
+    it means you’re working for the FBI and looking to save some lives. Otherwise,
+    you might find yourself in a very bad place:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You should also look for the Python code to create new files or write to them:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If you see code that looks like the following, that’s Python connecting to
+    a database. In this case, it’s connecting to MySQL, which is a very popular database
+    folks use:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Okay, so there’s a whole lot more to Python folks; an exponentially greater
+    number of features. However, the purpose of this lesson is not to teach you Python.
+    It’s how to recognize the most basic components of Python code so that, as you
+    navigate through others’ Python scripts, you can glean a basic understanding of
+    what the code is doing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s put your newly acquired Python identification skills to use. Consider
+    the following code, which checks for specific keywords in log files and raises
+    an alert if it finds a match:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: As we near the end of our journey, we’ve begun to cover automation and have
+    taken a look at the Python code that Autopilot uses – and many of Kali Purple’s
+    utilities use, for that matter. We should now take a look at the framework that
+    guides Kali Purple’s structure. We introduced it briefly in [*Chapter 1*](B21223_01.xhtml#_idTextAnchor013).
+    It is the NIST CSF, which was updated by NIST for the first time on February 26,
+    2024, to version 2.0.
+  prefs: []
+  type: TYPE_NORMAL
+- en: NIST Control
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'When Kali Purple was developed, initially as a proof of concept (which rapidly
+    evolved into a total framework and platform), the developers based it on five
+    basic cyber defense stages: *Identify*, *Protect*, *Detect*, *Respond*, and *Recover*.
+    These five stages themselves were developed by the **National Institute of Standards
+    and Technology** (**NIST**). In February of 2024, NIST added a sixth stage, *Govern*,
+    to the framework.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: NIST is actually an agency within the US Department of Commerce and was founded
+    way back in the year 1901 when most technology was likely to be manifested within
+    the factory industry. The great irony of NIST creating a cyber framework is that
+    it was originally established as a physical science laboratory. However, it has
+    expanded its area of coverage over the years and its purpose as it relates to
+    cybersecurity is to establish best practices to improve the security and resilience
+    of information systems as well as the protection of sensitive data. NIST regularly
+    conducts research and provides resources to help organizations address cybersecurity
+    challenges so they can maintain a strong cybersecurity posture.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you boot up your Kali Purple VM instance and log in to the desktop, you’ll
+    see an icon in the upper-left corner, just underneath the word **File**, with
+    the Kali Linux dragon mascot and a purple background. Select that icon and notice
+    the organization of the drop-down menu:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.14 – Kali Purple tools menu](image/B21223_11_14.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.14 – Kali Purple tools menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: The full NIST framework consists of three main – or parent – components, the
+    Core, Implementation Tiers, and Profiles. For the purposes of Kali Purple, we
+    are only going to focus on the Core. More specifically, we are going to focus
+    on the five main functions of the Core. Those functions are *Identify*, *Protect*,
+    *Detect*, *Respond*, and *Recover*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Identify
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The *Identify* function in the NIST CSF is a critical component that focuses
+    on developing an understanding of the organization’s assets, business environment,
+    cybersecurity risks, and processes. It involves establishing the foundation for
+    effective cybersecurity risk management by identifying and documenting the following
+    elements in great detail:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Asset management
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Business environment
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Governance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Risk management and strategy
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Supply chain risk management
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cybersecurity roles and responsibilities
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Can you think of any tools we’ve covered that might apply to any of these areas?
+    There indeed are some that will loosely fall under this category but the majority
+    of Kali Purple’s *Identify* tools can be found on the Red Team – the strictly
+    Kali Linux – side of the family. We’ve talked about several of those previously
+    and in this chapter. They include the likes of GVM, Kali Autopilot, Maltego, and
+    ZAP.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Protect
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The *Protect* function within the NIST CSF focuses on implementing safeguards
+    to ensure the security, integrity, and resilience of an organization’s assets
+    and infrastructure. It aims to develop and implement appropriate safeguards to
+    ensure the protection and privacy of sensitive data, as well as to respond to
+    cybersecurity risks in a timely and effective manner. Some of the core aspects
+    of this function include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Access control
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Awareness and training
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Data security
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Information protection, processes, and procedures
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technology maintenance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Secure tech configurations
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The tools we’ve covered definitely contribute to this function as well as some
+    of the Kali Linux-specific tools. Keep in mind that the classification of these
+    tools can fall under multiple core functions, and where a tool falls may be subjective
+    in nature, depending on how you use it. Under *Protect*, you’ll find Suricata
+    and Zeek; the latter will also fall under *Detect*, which we speak of next.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Detect
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The *Detect* function of the NIST CSF involves the ongoing identification of,
+    detection of, and timely response to cybersecurity events. It focuses on developing
+    and implementing systems, processes, and capabilities to identify the occurrence
+    of cybersecurity threats, unauthorized activities, and potential vulnerabilities
+    within an organization’s environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The primary goal of this function is to enable organizations to promptly and
+    effectively recognize and respond to security incidents, intrusions, and anomalous
+    activities that may pose risks to their assets, data, and operations. Some of
+    the key components associated with the *Detect* function include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Continuous monitoring
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Anomaly detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Threat intelligence integration
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Incident response preparedness
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Vulnerability scanning and assessment
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Security event correlation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Endpoint detection and response
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Threat hunting and analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: As you might well have guessed, most of the tools we’ve covered definitely fall
+    into this category, such as the ELK Stack, depending on how you configure and
+    use it, and Arkime and Zeek, the IDS and IPS systems we just talked about in the
+    previous section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Respond
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The *Respond* core function pertains to the development and implementation
+    of measures and processes to respond promptly and effectively to cybersecurity
+    incidents, breaches, and disruptions. It emphasizes the capability to contain,
+    mitigate, and recover from security events, while also ensuring the restoration
+    of normal operations and the preservation of critical assets. The *Respond* function
+    focuses on coordinated actions, communication, and strategic decision-making to
+    address the impact of security incidents and minimize their consequences. The
+    core features of this function include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Incident response planning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Containment and eradication
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Communication and reporting
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Evidence preservation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Recovery and remediation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Post-incident analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Legal and regulatory compliance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Business continuity and resilience
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Stakeholder coordination
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The tools and topics we discussed in [*Chapter 8*](B21223_08.xhtml#_idTextAnchor134)
+    are directly related to this function, such as Cortex, MISP, and TheHive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Recover
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'The *Recover* core function within the NIST CSF focuses on developing and implementing
+    strategies and processes to restore, recover, and reconstitute critical capabilities
+    and services following cybersecurity incidents, disruptions, or breaches. It aims
+    to minimize the impact of incidents, improve response effectiveness, and facilitate
+    the timely recovery of operations, systems, and data. This function emphasizes
+    continuity and restoration of normal business operations while simultaneously
+    addressing the root causes of incidents to prevent future reoccurrences. Key recovery
+    components include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Continuity planning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Resource restoration
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Data recovery and integrity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Infrastructure reconstitution
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Resilience and redundancy
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Post-incident analysis and improvement
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Stakeholder communication
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Legal and regulatory compliance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Vendor and supply chain coordination
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Business impact assessment
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Several of the tools we’ve covered would contribute to the *Recover* function
+    of the NIST CSF. However, it’s important to recognize that Kali Linux itself provides
+    over 600 preinstalled tools, and Kali Purple – which includes the default Kali
+    Linux – adds an additional 100 or so tools. In this book, we’ve covered some of
+    the most common, well-known tools and added coverage of others that are similar
+    or supportive of those. Most of the data collection tools assist in recovery,
+    such as Elasticsearch, Suricata, Zeek logs, and especially TheHive/Cortex group
+    of utilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Govern
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The *Govern* function in the NIST CSF was added to the framework in version
+    2.0, which was released in February 2024\. It was created with **Chief Information
+    Security Officers** (**CISOs**) in mind. As the role of cybersecurity as a self-contained
+    profession expanded and the tools, teams, and challenges grew, so did the gaps
+    in policy, transparency, and the ability to manage as such. *Govern* is designed
+    to improve transparency, provide organizational context, establish clear definitions
+    of roles in cybersecurity functions, and promote adherence to policies, procedures,
+    and processes. We won’t delve too deeply into this function here because this
+    book is about learning about and understanding a suite of technologies. However,
+    those technologies are based upon the other five NIST CSF functions and those
+    five functions are now considered to fall under the all-encompassing sixth function
+    of *Govern*. *Govern* establishes the pathways and parameters of what an organization
+    may do to achieve the other five functions. It helps CISOs to understand the full
+    organization context as it relates to risk management, roles, responsibilities,
+    authority, and policy. It is very much an oversight function. We will provide
+    a direct link to the NIST CSF 2.0 in *Further reading*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What a journey! Here in this final chapter of *Introduction to Kali Purple*,
+    you evaluated the process of automating pentesting through the simulation of cyber-attacks
+    by setting up Kali Autopilot and providing a simple scanning script. Now, you
+    know the basics of creating your own automated attack script.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We also covered a very high-level overview of the Python scripting language,
+    with the expectation that you’d recognize the core components of the majority
+    of Python scripts out there. This should enable you to understand what is going
+    on within any particular script and even give you the ability to edit the script
+    so that it performs to your liking without having to actually know how to write
+    Python code!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, we covered the updated NIST CSF 2.0, which includes the newly added
+    *Govern* function, and grabbed a basic understanding of each of the NIST functions,
+    including *Govern*. We learned that the Kali Purple distribution was created with
+    the NIST CSF in mind and the idea that a well-rounded set of tools would be most
+    useful for cybersecurity professionals from either the Red or Blue team.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you continue to negotiate your cybersecurity career, whether you are on the
+    Blue Team, the Red Team, or are a true Purple Teamer who utilizes concepts and
+    technologies from both to better understand and master both, you will always encounter
+    new challenges, and with them, new solutions. Remember, the learning never stops
+    because the bad actors never stop. They will always find new exploits for which
+    the good actors will always find cures. Perhaps, eventually, someday we will have
+    a foolproof world where bad deeds will no longer be possible. However, until such
+    a world comes to fruition, there will always be a need for folks like you and
+    us.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We are a community of professional problem solvers, and we emphasize the use
+    of the word professional. We are not here to pick on others or boost our own egos
+    (well… maybe a little), but instead, we are here to hold each other up; build
+    each other up; empower each other; and create a unified, safer world using nothing
+    but our brains and ability to solve problems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We leave you with this final instruction as you embark on upskilling your cyber
+    careers: No matter what your knowledge and skill level, always be kind, humble,
+    and curious. Master those three things and the rest of your path will present
+    itself before you.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Questions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: What is Kali Autopilot?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An application used to hack drones
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An application used to automate pentesting and mock cyber-attacks against digital
+    defenses
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An application used by airline pilots flying out of California
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you want to learn how to catch a hacker then, you need to…
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Watch Swordfish over and over until it sinks in
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Eat like a hacker; diet is critical!
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Go to hacker school and complete a four-year degree in hacking
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Think like a hacker
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How do you distinguish between Python code and text meant for human eyes?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: All data after the **#** symbol is ignored by the compiler/interpreter and meant
+    for human eyes
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Python statements all end in **Sssssssssss**…
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: All data after the **#** symbol is processed by the compiler/interpreter and
+    everything else is for humans
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Only members of Slytherin House can read Python
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How does one define a function in Python?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **define func** followed by the function name
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type the name of the function and append it with **.py**
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type the word **def** followed by the function name and function parameters
+    in parenthesis
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Look it up in Webster’s Dictionary
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For the first time since its creation, NIST has released an update to the CSF.
+    What is the new sixth function that has been added to the framework?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Identify
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Govern
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Rule
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Protect
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Who’s your favorite author (only one correct answer)?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Carl Laehn
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Karl Layne
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Karl Lane
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Carl Lane
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Carl Layne
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Karl Laehn
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: James Patterson
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Further reading
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Understanding CIDR** **Notation**: [https://www.w3schools.com/training/aws/understanding-cidr-notation.php](https://www.w3schools.com/training/aws/understanding-cidr-notation.php)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Learn to code in** **Python**: [https://www.packtpub.com/search?query=introduction%20to%20python](https://www.packtpub.com/search?query=introduction%20to%20python)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**NIST CSF 2.0** **publication**: [https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

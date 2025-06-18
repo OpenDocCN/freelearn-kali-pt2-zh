@@ -1,0 +1,921 @@
+- en: '10'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Memory Forensics and Analysis with Volatility 3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In the previous chapters, we looked at the various methods for data carving
+    and file recovery. In this chapter, we’ll look at the analysis of content stored
+    in **Random Access Memory** (**RAM**) using the very powerful Volatility 3\. RAM
+    is volatile, meaning that the data in RAM is easily lost when there is no longer
+    an electrical charge or current going to the RAM. With the data on RAM being the
+    most volatile, it ranks high in the order of volatility and must be forensically
+    acquired and preserved as a matter of high priority.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Many types of data and forensic artifacts reside in RAM and the paging file.
+    As discussed in previous chapters, login passwords, user information, running
+    and hidden processes, malware, and even encrypted passwords are just some of the
+    many types of interesting data that can be found when performing RAM analysis,
+    further compounding the need for memory forensics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will look at the very powerful Volatility framework and
+    its many uses in memory forensics, including the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What’s new in Volatility 3
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Downloading a sample memory dump file for analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Volatility 3 in Kali Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Memory dump analysis using Volatility 3
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What’s new in Volatility 3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Volatility framework is an open source, cross-platform incident response
+    framework that comes with many useful plugins that provide the investigator with
+    a wealth of information from a snapshot of memory, also known as a **memory dump**.
+    The concept of Volatility has been around for a decade, and apart from analyzing
+    running and hidden processes, it is also a very popular choice for malware analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To create a memory dump, several tools, such as **Belkasoft RAM Capturer**,
+    **FTK Imager**, **dd**, **dc3dd**, **CAINE**, **Helix**, and **LiME** (short for
+    **Linux Memory Extractor**), can be used to acquire the memory image or memory
+    dump (which we previously did in [*Chapter 8*](B19441_08.xhtml#_idTextAnchor147),
+    *Evidence Acquisition Tools*) and then analyzed using various tools known as plugins
+    within the Volatility framework.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The Volatility framework can be run on any **Operating System** (**OS**), that
+    is, 32- and 64-bit, that supports Python, including the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Windows XP, 7, 8, 8.1, and Windows 10
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows Server 2003, 2008, 2012/R2, and 2016
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Linux 2.6.11-4.2.3 (including Kali, Debian, Ubuntu, and CentOS) and macOS Leopard
+    (10.5.x) and Snow Leopard (10.12.x)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Volatility supports several memory dump formats (both 32- and 64-bit), including
+    the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Windows crash and hibernation dumps (Windows 7 and earlier)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: VirtualBox
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: VMware – **.****vmem** dump
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: VMware saved state and suspended dumps – **.****vmss**/**.vmsn**
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Raw physical memory – **.****dd**
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Direct physical memory dump over IEEE 1394 FireWire
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Expert Witness Format** (**EWF**) – **.****E01**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**QEMU** (**Quick Emulator**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Volatility even allows for conversion between these formats and boasts of being
+    able to accomplish everything similar tools can.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In previous editions of this book, we used Volatility 2, which was based on
+    the now-deprecated Python 2\. Volatility 3 is based on Python 3 and has the following
+    changes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Faster scans and processing of memory dumps
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Support for newer OSs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: More efficient plugins
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Operating-specific plugins
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Before we begin using Volatility 3, let’s first download all the sample memory
+    dump files that we will be analyzing using Volatility.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Downloading sample memory dump files
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: For this chapter, we’ll be using a memory dump called **cridex.vmem**, which
+    we will be analyzing using a variety of Volatility 3 plugins. The file can be
+    downloaded from [http://files.sempersecurus.org/dumps/cridex_memdump.zip](http://files.sempersecurus.org/dumps/cridex_memdump.zip).
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are many other images that are publicly available for analysis at [https://github.com/volatilityfoundation/volatility/wiki/Memory-Samples](https://github.com/volatilityfoundation/volatility/wiki/Memory-Samples).
+    To practice working with the Volatility framework and further enhance your analytical
+    skills, you may wish to download as many images as you like and use the various
+    plugins available in Volatility.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s first download and extract our sample memory dump, which we will later
+    move to our Volatility installation folder for analysis. If you haven’t already
+    downloaded the file, please do so now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ve downloaded the **cridex.vem** sample file to my **Downloads** folder. To
+    extract the file, right-click on the file and click on **Extract Here** as you
+    have done with previously downloaded files.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will now install Volatility 3 and then copy the **cridex.vmem** memory dump
+    file to our installation folder for analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we have downloaded all our sample files, let’s install Volatility 3
+    on our Kali machines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Volatility 3 in Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Volatility is no longer installed in Kali Linux by default and instead must
+    be manually installed:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s first download Volatility 3 from the official site at [https://www.volatilityfoundation.org/releases-vol3](https://www.volatilityfoundation.org/releases-vol3).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Be sure to click on the **.zip** file link within the **Volatility 3** tab,
+    as seen in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.1 – Volatility downloads page](image/Figure_10.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.1 – Volatility downloads page
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ve chosen to save the file in my **Downloads** folder. I’ve also extracted
+    the files by right-clicking on the **.zip** file and then selecting **Extract
+    Here**, as seen in the following screenshot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.2 – Extracting the Volatility 3 ZIP file](image/Figure_10.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.2 – Extracting the Volatility 3 ZIP file
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ve also renamed the extracted folder **volatility3** to simplify things. Be
+    sure to take note of the folder name exactly as it is typed as it will be required
+    later.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before installing Volatility 3, I highly recommend updating your Kali installation
+    to ensure that all files are the most current. Run the **sudo apt-get update**
+    command to do this.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.3 – Updating Kali Linux](image/Figure_10.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.3 – Updating Kali Linux
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that our system has been updated, let’s install Python 3 by typing the
+    following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when installing
+    Volatility 3.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.4 – Installing Python 3 in Kali](image/Figure_10.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.4 – Installing Python 3 in Kali
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Volatility 3 also requires dependencies that must be installed for full functionality.
+    To install all the required dependencies, type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when installing
+    Python tools in Volatility 3.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.5 – Installing Volatility 3 dependencies](image/Figure_10.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.5 – Installing Volatility 3 dependencies
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s now change directories to the folder containing all Volatility 3 files.
+    In this instance, I have renamed my folder **volatility3** within the **Downloads**
+    folder. To change to that directory, I’ll use the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.6 – Changing directories](image/Figure_10.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.6 – Changing directories
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can then use the **ls** command to list and show all files within the **volatility3**
+    folder:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.7 – ls command output](image/Figure_10.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.7 – ls command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding screenshot, we can see all files required to set up and run
+    Volatility 3.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Within my **volatility3** folder, I can now install Volatility 3 by typing
+    the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when installing
+    Python 3.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.8 – Installing Volatility 3](image/Figure_10.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.8 – Installing Volatility 3
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that Python 3 and all the Volatility packages and prerequisites have been
+    installed, we can verify the installation by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.9 – Volatility installation verification](image/Figure_10.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.9 – Volatility installation verification
+  prefs: []
+  type: TYPE_NORMAL
+- en: Volatility contains many plugins that you will need to occasionally reference.
+    I recommend having the list of all plugins open in a separate Terminal for easy
+    reference as this is much easier than having to scroll to the top of the Terminal
+    to find the Volatility plugin commands.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open a new Terminal within the **volatility3** directory and type the following
+    command to view all plugins:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.10 – Volatility help command](image/Figure_10.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.10 – Volatility help command
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Volatility 3 now uses **OS-specific** plugins for Linux, Mac, and Windows,
+    as seen in the snippet of the **python3 vol.py –h** output here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.11 – OS-specific plugins in Volatility 3](image/Figure_10.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.11 – OS-specific plugins in Volatility 3
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we begin the analysis of our previously downloaded **cridex.vmem** sample
+    memory dump file, let’s copy the file from its current directory in the **Downloads**
+    folder and paste it into the **volatility3** folder. This makes access to our
+    memory dump file easier by not having to specify a lengthy path to the file each
+    time we need to use a plugin.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Keeping the previous Terminal open, let’s open a new Terminal and change directories
+    to our **volatility3** folder and issue the **ls** command to ensure that our
+    **cridex.vmem** memory dump sample can be found within that directory, as seen
+    in the following screenshot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.12 – Contents of the volatility3 directory](image/Figure_10.12_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.12 – Contents of the volatility3 directory
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the exciting part. Let’s do some DFIR analysis using Volatility 3 and
+    see what we can find!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Memory dump analysis using Volatility 3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: For those of you who may have read previous editions of this book where we used
+    Volatility 2, or are just familiar with using Volatility 2, you will notice that
+    Volatility 3 is a bit different as far as the plugins are concerned. You may also
+    notice that the speed at which the plugins work is also faster in Volatility 3.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For this lab, we’ll take a very structured approach using the various plugins
+    in Volatility 3\. We’ll first look at process and service identification, gather
+    some user information, have a look at registry information, and discover any malware
+    that may be running on the device.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Volatility 3 is quite simple. Once you are in the Volatility directory,
+    the commands to use the plugins are essentially the same apart from the plugin
+    name.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The syntax is as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the preceding example, **-f** specifies the filename of the dump, which in
+    our case is **cridex.vmem**, and **OS.plugin** will be the plugin that we would
+    like to run against our memory dump. Let’s use the **info** plugin as our first
+    analysis task.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Image and OS verification
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Although no longer required in Volatility 3, it is useful to identify the version
+    of the OS of the device from which the memory dump was created to ensure that
+    we use the correct plugins, as they are now specific to various OSs, which we
+    learned earlier on in this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s find out what OS was running on the system by using the **info** plugin:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.13 – Volatility 3 info plugin output](image/Figure_10.13_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.13 – Volatility 3 info plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The output for the **info** plugin is lengthy; however, I’ve included a snippet
+    of the output in the following figure, where we can see that this memory dump
+    was taken from a Windows XP Service Pack 3 machine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.14 – info plugin snippet](image/Figure_10.14_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.14 – info plugin snippet
+  prefs: []
+  type: TYPE_NORMAL
+- en: This tells us that we must only use Windows plugins against this dump for our
+    analysis. Let’s now attempt to identify running processes and services.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Process identification and analysis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Let’s officially start our DFIR memory dump analysis by attempting to identify
+    and link connected processes, their IDs, times started, and offset locations within
+    the memory image. We will be using several plugins but will begin with the following
+    three plugins to get us started:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**pslist**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**pstree**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**psscan**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The pslist plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: This tool not only displays a list of all running processes but also gives useful
+    information such as the **Process ID** (**PID**) and the **Parent PID** (**PPID**),
+    and shows the time the processes were started.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The command to run the **pslist** plugin is as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the following screenshot, we can see that the **System**, **smss**, **csrss**,
+    **winlogon.exe**, **services.exe**, **lsass.exe**, **svchost.exe**, and **explorer.exe**
+    services were all started first and then followed by a few others. Notice any
+    suspicious-looking services?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.15 – The plslist plugin output](image/Figure_10.15_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.15 – The plslist plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: The PID identifies the process and the PPID identifies the parent of the process.
+    Looking at the **pslist** output, we can see that the **winlogon.exe** process
+    has a PID of **608** and a PPID of **368**. The PPIDs of the **services.exe**
+    and **lsass.exe** processes (directly after the **winlogon.exe** process) are
+    both **608**, indicating that **winlogon.exe** is in fact the PPID for both **services.exe**
+    and **lsass.exe**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For those new to PIDs and processes themselves, a quick Google search can assist
+    with identification and description information. It is also useful to become familiar
+    with many of the startup processes to be able to readily point out processes that
+    may be unusual or suspect.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The timing and order of the processes should also be noted as these may assist
+    in investigations. If we scroll down a bit, we can also tell that **explorer.exe**
+    with a PID of **1484** is the PPID of **reader_sl.exe**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s dig a bit deeper using the **pstree** plugin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The pstree plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Another process identification command that can be used to list processes is
+    the **pstree** plugin. This plugin shows the same list of processes as the **pslist**
+    plugin but indentation is also used to identify child and parent processes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Run the **pstree** plugin by typing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the following screenshot, the asterisks represent the tree structure. One
+    asterisk indicates the PID and more than one asterisk indicates it is a child
+    process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.16 – pstree plugin output](image/Figure_10.16_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.16 – pstree plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s look at the first asterisk, which represents the **smss.exe** process
+    with a PID of **386**. We can see that under this process, there are other processes
+    with more than one asterisk that have a PPID of **386**, indicating that they
+    are all child processes of **smss.exe**. Similarly, if we look further down, we
+    can see that **explorer.exe** with a PID of **1484** is the parent process of
+    **reader_sl.exe** with a PPID of **1484**. It takes some time to adjust to this
+    format but it helps simplify parent and child processes in DFIR analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The psscan plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The **psscan** command displays inactive and even hidden processes that can
+    be used by malware, such as rootkits, and are well known for doing just that to
+    evade discovery by users and antivirus programs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s run the **psscan** plugin by typing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when running
+    the **psscan** plugin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.17 – psscan output](image/Figure_10.17_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.17 – psscan output
+  prefs: []
+  type: TYPE_NORMAL
+- en: So far, there’s nothing that stands out. Let’s keep digging.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The modscan plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The **modscan** plugin displays a list of all modules present in the memory
+    image. This helps us identify the path and directory for processes, system files,
+    and **Dynamic Link Library** (**DLL**) files.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Run the **modscan** plugin by typing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: As seen in the following screenshot, the **modscan** plugin lists all modules
+    running that were not available in the previous process scans.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.18 – modscan plugin output](image/Figure_10.18_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.18 – modscan plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s keep looking.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The getsids plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: All users can also be uniquely identified by a **Security Identifier** (**SID**).
+    The **getsids** command has four very useful items in the order in which the processes
+    were started (refer to the **pslist** and **pstree** command screenshots in *Figures
+    10.15* and *10.16*).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The format for the **getsids** command output is as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**[Process] (PID) [****SID] (User)**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The first result in the list, for example, lists the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**System (4) : S – 1 – 5-** **18 (User)**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Where:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**System** is the process'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**(4)** is the PID'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**S - 1 - 5- 18** is the SID'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**User** is the local system'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'To run the **getsids** plugin, type the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when running
+    the **getsids** plugin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.19 – getsids plugin output](image/Figure_10.19_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.19 – getsids plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we scroll further down, we can see that the **reader_sl.exe** process was
+    started by a user named Robert with the SID of **S-1-5-21**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.20 – getsids output snippet](image/Figure_10.20_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.20 – getsids output snippet
+  prefs: []
+  type: TYPE_NORMAL
+- en: The envars plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Let’s continue our analysis using the **envars** plugin, which displays process
+    environment variables and nicely maps all processes to paths and users.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Run the **envars** plugin by typing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![Figure 10.21 – envars plugin output](image/Figure_10.21_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.21 – envars plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scrolling through the lengthy output down to the **reader_sl.exe** process,
+    we can find some very useful information about the process, path and directories,
+    computer name architecture, drive information, and temporary file location. Good
+    stuff.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.22 – envars output snippet](image/Figure_10.22_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.22 – envars output snippet
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s do a bit of registry analysis and see what we can come up with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The hivelist plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The **hivelist** plugin lists the registry hives present at the time the memory
+    dump was taken and will also show logged-in users. The **hivelist** command shows
+    the details of virtual and physical addresses along with the easier readable plaintext
+    names and locations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To run this plugin, type the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when running
+    the **hivelist** plugin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.23 – hivelist plugin output](image/Figure_10.23_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.23 – hivelist plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Password dumping
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The location of the **Security Accounts Manager** (**SAM**) file is also listed
+    using the **hivelist** plugin, shown in the following screenshot (*Figure 10**.24*).
+    The **SAM** file contains hashed passwords for usernames in Windows machines.
+    The path to the **SAM** file is seen in the following screenshot: **Windows\system32\config\SAM**.
+    This file cannot be accessed by users within Windows while the system is on. This
+    can be further used to acquire the hashed passwords in the **SAM** file to crack
+    passwords using a wordlist along with password-cracking tools such as John the
+    Ripper, also available in Kali Linux:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.24 – SAM file location](image/Figure_10.24_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.24 – SAM file location
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s expand on this a bit further using the **userassist** plugin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The userassist plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The **userassist** plugin displays more registry information and, as we can
+    see in the following screenshot, displays much more details about users, file
+    locations, files accessed, and timestamps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To run the **userassist** plugin, type the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when running
+    the **userassist** plugin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.25 – userassist plugin output](image/Figure_10.25_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.25 – userassist plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lastly, for this chapter, let’s see whether we can find any malicious code or
+    applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The malfind plugin
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The **malfind** plugin, as the name suggests, scans the dump for any malicious
+    embedded code. This will be covered more in detail in [*Chapter 11*](B19441_11.xhtml#_idTextAnchor211),
+    *Artifact, Malware, and Ransomware Analysis*, but let’s see whether we can find
+    any embedded code within our current DFIR investigation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To run the **malfind** plugin, type the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when running
+    the **malfind** plugin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.26 – malfind plugin output](image/Figure_10.26_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.26 – malfind plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This plugin is a bit more complex to understand but very useful once you understand
+    the basics. The column names that we need to focus on are the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**PID**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Process**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**CommitCharge**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**PrivateMemory**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s look closer at the **reader_sl.exe** details in the **malfind** output,
+    as follows.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.27 – malfind snippet](image/Figure_10.27_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.27 – malfind snippet
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s analyze the output of the first line of the preceding **malfind** snippet:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**PID**: **1640**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Process**: **reader_sl.exe**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**CommitCharge**: **PAGE_EXECUTE_READWRITE**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**PrivateMemory**: **33**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**File** **output**: **1**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the preceding output, we see that **reader_sl.exe** is executable code and
+    is writing hidden code in memory. We will dive deeper into malware analysis in
+    the next chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we looked at memory forensics and analysis using some of the
+    many plugins available within the Volatility 3 framework. We were able to successfully
+    perform process, registry, DLL, and even malware analysis using this versatile
+    tool. As we’ve seen, Volatility can perform several important functions in DFIR
+    analysis and should be used together with other tools we’ve used previously to
+    perform in-depth and detailed forensic analyses and investigations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Be sure to download more publicly available memory images and samples to test
+    your skills in this area. Experiment with as many plugins as you can and, of course,
+    be sure to document your findings and consider sharing them online.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next up, we’ll be going even deeper into Volatility as we perform ransomware
+    analysis and use many other tools to discover and analyze various DFIR artifacts.
+    See you in the next chapter!
+  prefs: []
+  type: TYPE_NORMAL

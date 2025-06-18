@@ -1,0 +1,1024 @@
+- en: '7'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Incident Response, Data Acquisitions, and DFIR Frameworks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sometimes, it’s difficult to ascertain exactly what qualifies as evidence, especially
+    at the very start of an investigation when all the facts on what occurred may
+    not have yet been collected or stated. As in any investigation, we should be aware
+    of and follow the guidelines, practices, and procedures for acquiring evidence
+    in such a way that it is not tampered with or, in a worst-case scenario, lost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At the scene of a crime, let’s say a shooting, there are specific items that
+    may immediately qualify as evidence. The physical evidence is easily collected,
+    put into evidence bags, labeled, and then shipped off to the labs and secure storage
+    areas for safekeeping. This evidence may include spent bullet casings, perhaps
+    a gun, fingerprints, and blood samples. Let’s not forget witness statements and
+    **Closed Circuit Television** (**CCTV**) footage too. It’s also of interest to
+    consider the individuals from law enforcement agencies that would be at the scene
+    and the order in which they may have arrived. Seems simple enough.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, when a breach or crime involving a computer or smart device is reported,
+    collecting the evidence is sometimes not as simple, as there are many factors
+    to consider before labeling any items as evidence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For example, if a desktop was involved in the act, do we take the tower alone,
+    or do we also seize the monitor, keyboard, mouse, and speakers? What about the
+    other peripherals such as printers and scanners? Are there any additional fixed
+    or removable storage media at the scene, and do we also seize them?
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This chapter answers all these questions and provides guidelines and best practices
+    for incident response, evidence acquisition, and other topics, including the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Evidence acquisition procedures
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Incident response and first responders
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Evidence collection and documentation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Live versus post-mortem acquisition
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The **Chain of** **Custody** (**CoC**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The importance of write blockers
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Data imaging and maintaining evidence integrity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Data acquisition best practices, guidelines, and DFIR frameworks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Evidence acquisition procedures
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As we covered in the last chapter, data can be stored on both fixed and removable
+    storage media. However, data can easily be deleted or completely lost depending
+    on a multitude of factors that must be considered if we are to ensure the preservation
+    of data. It might even be argued that there are more threats to digital storage
+    than paper-based storage. The following lists detail some comparisons of threats
+    to both.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Threats to paper-based storage include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Water
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Fire and humidity bugs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Age
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Natural disasters—floods, earthquakes, tornadoes, hurricanes, and more
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Human-error and negligence
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Threats to data on storage media include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Human-error and negligence
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Magnetism and electromagnetic fields
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Water and condensation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Heat dust
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Impact Voltage
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Static electricity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Natural disasters—floods, earthquakes, tornadoes, hurricanes, and more
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: So, when exactly does data become evidence? Specific data might have a value
+    that is relative to an investigation when considering the events that transpired.
+    This should be considered when performing DFIR as the scope might then extend
+    beyond just devices and storage media, as we will discuss further in this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s move on to incident response and the technical roles assumed by first
+    responders.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Incident response and first responders
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Preserving evidence does not begin only at the acquisition of data, but as early
+    on as the physical viewing of the suspect device. There should be some structured
+    response to the suspected crime or breach in the same manner as a crime reported
+    to the police. In the same way, a person makes a call to the emergency services
+    who then dispatch the police, fire services, ambulance personnel, and other first
+    responders who might then escalate the issue to the FBI or other agencies. There
+    should also be a similar chain of command when dealing with reports that require
+    digital investigation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When a breach or crime is discovered or suspected, there should be a dedicated
+    first responder who is alerted and called to the scene. Usually, this person has
+    some knowledge or understanding of the workings of devices, networks, and even
+    of the IT infrastructure in the organization if applicable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'First responder personnel can include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: HelpDesk and IT technicians
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Systems administrators
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network administrators
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Security administrators
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: IT managers and directors
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: While the individuals in the preceding roles might not be trained or skilled
+    in digital forensics or digital investigations, they will be responsible for securing
+    the scene and ensuring that the data, peripherals, equipment, and storage are
+    not used, tampered with, removed, or compromised by unauthorized individuals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The duties of first responders include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Being the first to respond to the scene (as the name suggests) and making an
+    initial assessment
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Documenting the scene and room fully in a circular fashion using the center
+    of the room as a focal point
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Securing the scene by not allowing unauthorized users or suspects, access to
+    the devices or area, and especially to volatile data and storage media
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Preserving and packaging evidence for transportation, ensuring the use of theCoC
+    forms that allow for tracing the exchange of evidence between persons
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Now, let’s look at examples of evidence, its collection, and documentation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Evidence collection and documentation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The documentation of the scene should also be performed by the first responders
+    to aid in investigations. The documentation of the scene should include photographs,
+    video, voice recording, and manual documentation of the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The room that the device is located in (desk, ceiling, entrance/exit, windows,
+    lighting, electrical outlets, and data drops)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: State of the device (on, off, power light blinking)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Screen contents, if the device is on (operating system, running programs, date
+    and time, wired and/or wireless network connectivity)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Books, notes, or pieces of paper
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Connected and disconnected cables
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Peripherals such as printers, scanners, and external drives in close proximity
+    (whether connected or not)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Once the scene has been secured and documented by the first responders, the
+    forensic investigator should also be alerted and called in to further examine
+    and assess the situation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If the first responder has been trained in evidence collection and preservation,
+    they can also begin the process of acquiring what can be considered physical evidence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Examples of physical evidence include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Desktops and computer towers
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Laptops
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Tablets
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Smartphones
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: IoT devices
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: General smart devices
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Fixed and removable storage media:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hard drives
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Optical media
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Tape storage
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Memory cards
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Card readers
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Adapters
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Docking stations
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Printers
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scanners
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Mobile phones
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: iPods
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Media and MP3 players and other devices that might have been used in carrying
+    out the breach. Routers and switches might also contain evidence such as connectivity
+    logs, source, and destination addresses, and even visited websites.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cables and chargers
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Here’s a budget but portable and very well-organized screwdriver kit that I
+    keep in my DFIR first responder toolkit. It has all the attachments for opening
+    desktops, laptops, and tablets, and also for removing and even opening removable
+    storage media such as hard disk drives, optical drives, and even floppy drives
+    if encountered:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.1 – Toolkit with various tips for opening devices and drives](image/Figure_7.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.1 – Toolkit with various tips for opening devices and drives
+  prefs: []
+  type: TYPE_NORMAL
+- en: Physical acquisition tools
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Apart from your toolkit such as the one shown earlier, what other tools would
+    we need for the forensic acquisition and extraction of digital evidence? Remember
+    when we covered the different types of storage media back in [*Chapter 6*](B19441_06.xhtml#_idTextAnchor093),
+    *Understanding File Systems and Storage*? We saw that many of them had their own
+    connectors of various sizes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s a list of just some of the equipment required when performing evidence
+    acquisitions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Write blockers (these can be hardware- and/or software-based)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Card readers (preferably USB 3)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Various adapters (USB to SATA and EIDE, USB to various types of USB, and VGA
+    to HDMI)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Device cables such as power, SATA, EIDE, HDMI, and VGA
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Networking cables straight-through, crossover, and console
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following photograph shows a collection of various USB adapters, all costing
+    under $10, and they are all available on Amazon:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.2 – Various USB adapters](image/Figure_7.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.2 – Various USB adapters
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For laptop drives, I also use a **Serial Advanced Technology Attachment** (**SATA**)
+    to USB 3.0 adapter, as shown in the following photograph. This device is also
+    self-powered and comes with a removable power adapter so that it can be used to
+    power full-sized hard drives, DVDs, and Blu-ray drives with SATA connectors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.3 – USB 3.0 to SATA self-powered adapter for both 2.5-inch and 3.5-inch
+    drives](image/Figure_7.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.3 – USB 3.0 to SATA self-powered adapter for both 2.5-inch and 3.5-inch
+    drives
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For connecting to routers and switches, console cables and serial to USB cables
+    can also be included in your kit, like the ones shown here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.4 – Serial to JJ-45 (left) and Serial to USB (right) cables](image/Figure_7.04_B19441_.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.4 – Serial to JJ-45 (left) and Serial to USB (right) cables
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'All mobile devices including phones and tablets can also connect to laptops
+    and desktops via USB ports. The following photograph shows an OTG cable, which
+    can connect a USB device to phones or tablets with OTG capabilities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.5 – OTG (on-the-go) cable](image/Figure_7.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.5 – OTG (on-the-go) cable
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here is a list of guidelines for physical collection and preservation:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Label all cables and connectors
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Use labeled evidence collection bags as needed
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Special stronghold bags might have to be used when storing devices with wireless
+    and radio capabilities, preventing communication with other devices
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Store sensitive equipment such as hard drives and flash drives in anti-static
+    bags and protective casings
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Label containers used for storage during transportation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Maintain the CoC forms when passing evidence from one person/handler to another
+    (discussed later in this chapter)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Now, let’s move on to understanding the order of volatility when collecting
+    evidence and also comparing live versus post-mortem acquisitions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Live versus post-mortem acquisition
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this section, we’ll look at the different procedures for live and post-mortem
+    evidence acquisition. However, before we begin, first, we must understand the
+    **o****rder** **of volatility**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Order of volatility
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: When collecting evidence, we should keep in mind the volatility of data. As
+    mentioned earlier in this chapter, data can be easily lost or destroyed. As such,
+    when collecting data, a well-documented and common best practice is to collect
+    evidence in the order of most volatile to the least volatile if possible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The **Scientific Working Group on Digital Evidence** (**SWGDE**) capture live
+    systems document and lists the order of volatility from most to least volatile
+    and crucial, as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: RAM
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Running processes
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Active network connections
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: System settings
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Storage media
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Powered-on versus powered-off device acquisition
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: When investigating devices that are powered on and powered off, special consideration
+    must be given to the volatility of data. Booting, rebooting, or shutting down
+    a device can cause data to be written to the hard drive or even lost within RAM
+    and the paging file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Powered-on devices
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'When investigating a powered-on device, the following precautions should be
+    taken:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Move the mouse or glide your fingers across the touchpad if you suspect the
+    device might be in a *sleep* state. Do not click on the buttons as this might
+    open or close programs and processes.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Photograph and record the screen and all visible programs, data, time, and desktop
+    items.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Unplug the power cord on desktops and remove the battery, if possible, on portables.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It is of utmost importance that data stored in RAM and paging files be collected
+    with as little modification to the data as possible. More on this will be covered
+    in [*Chapter 8*](B19441_08.xhtml#_idTextAnchor147), *Evidence Acquisition Tools*,
+    using imaging tools such as FTK Imager and Belkasoft RAM Capturer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There are quite a few reasons for imaging and acquiring RAM. As mentioned in
+    the previous chapter, data that might have been encrypted by the user could be
+    stored in an unencrypted state of RAM. Logged-in users, opened programs, accessed
+    files, and running processes can all be extracted and analyzed if the RAM and
+    paging files are analyzed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: However, if the device is switched off or rebooted, this data and evidence can
+    easily be lost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For powered-on portable and powered-on devices, the battery should be removed,
+    if possible. However, some devices might not have a removable battery. In these
+    cases, the power button should be held down for 30 to 40 seconds, which forces
+    the device to power off.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Powered-off devices
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Powered-off devices should never be turned on unless done so by the forensic
+    investigator. Special steps must be taken to ensure that existing data is not
+    erased and that new data is not written.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Often, devices can seem as if they are off, but they can be in a sleep or hibernate
+    state. As a simple test, the mouse can be moved and monitors (if any) can be switched
+    on to determine whether they are in fact in either of those states. Even if they
+    are in an off state, you should still photograph the screen and ports.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When investigating portable and mobile devices in an already off state, it is
+    suggested that the battery is removed (if possible) and placed in an evidence
+    bag to ensure that there will be no accidental way to turn the device on once
+    unplugged. According to the
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**NIST.SP.800-101r1—Guidelines on Mobile Forensics**, it should be noted that
+    removing the battery can alter contents in volatile memory, even when in an off
+    state.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we understand the importance of taking note of the state of the device
+    from which evidence must be acquired, let’s look at the CoC form, which adds another
+    layer of evidence integrity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The CoC
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **CoC** is a form that legally ensures the integrity of evidence as it is
+    exchanged between individuals, and so it also provides a level of accountability
+    as personal identification is required when completing the forms. This form gives
+    an exact log and account of the transportation and exchange between parties, from
+    a collection at the scene to a presentation in a court.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Some of the typical fields on the CoC form are listed as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Case number
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Victim and suspect names
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Date and time seized:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Location when seized
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Item number
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Description of item
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Signatures and IDs of individuals releasing and receiving the evidence
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Authorization for disposal
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Witness to the destruction of evidence
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Release (of evidence) to the lawful owner
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The sample CoC form can be downloaded directly from the **National Institute
+    of Standards and** **Technology** (**NIST**):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[https://www.nist.gov/document/sample-chain-custody-formdocx](https://www.nist.gov/document/sample-chain-custody-formdocx)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I urge you to download the preceding form as you might need it when working
+    on DFIR investigations. Now, let’s look at the importance of write blockers when
+    acquiring data to preserve the integrity of the evidence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The importance of write blockers
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Once our physical evidence has been properly documented and collected, we can
+    begin the forensic acquisition of digital evidence. I’ll mention this a couple
+    of times to drive the point home, but the original evidence should only be used
+    to create forensic copies or images, which will be discussed later in this chapter
+    and again in other chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Examination and analysis should only be performed on forensic copies/images
+    of the data and *not* on the original data or evidence, as working on original
+    evidence can, and usually will, modify the contents of the medium. For instance,
+    booting a seized laptop into its native operating system will allow data to be
+    written to the hard drive and may also erase and modify contents contained in
+    the RAM and paging file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To prevent this from happening, the use of a write blocker must be employed.
+    Write blockers, as the name suggests, prevent data from being written to the evidence
+    media. Write blockers can be found in both hardware and software types. If a hardware
+    write blocker is not available, software versions are readily available as standalone
+    features in forensic operating systems including C.A.I.N.E, as mentioned in [*Chapter
+    2*](B19441_02.xhtml#_idTextAnchor024), *Introduction to Digital Forensics*, and
+    also as a part of some commercial and open-source tools such as EnCase and Autopsy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Again, it is of high importance that a write blocker is used in investigations
+    to protect and preserve the original evidence from being modified. The following
+    photograph shows a cheap and efficient portable SATA and IDE adapter with write-blocking
+    switches, used in drive acquisition and recovery:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.6 – USB to SATA and IDE write-blocker device](image/Figure_7.06_B19441_.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.6 – USB to SATA and IDE write-blocker device
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we are familiar with the purpose and importance of write blockers,
+    let’s learn about data imaging and evidence integrity algorithms.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data imaging and maintaining evidence integrity
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Imaging** refers to the exact copying of data either as a file, folder, partition,
+    or entire storage media or drive. When doing a regular copy of files and folders,
+    not all files may be copied based on their attributes being set to the system
+    or even hidden. To prevent files from being left out, we perform a special type
+    of copy where every bit is copied or imaged exactly as it is on the current medium
+    as if taking a picture or snapshot of the data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a copy of each bit of data exactly as is, is referred to as a **physical
+    or forensic image**. Performing a **bitstream copy** ensures the integrity of
+    the copy. To further prove this, hashing of the original evidence and the physical
+    image is calculated and compared (which we will delve into shortly). If the forensic
+    copy is off by even one bit of data, the hash values created by the respective
+    algorithms will be quite different.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tip
+  prefs: []
+  type: TYPE_NORMAL
+- en: The original evidence should only be handled by qualified and authorized professionals
+    and should also only be used to create forensically sound physical images. The
+    original evidence should otherwise never be used as this compromises evidence
+    integrity and the investigation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Message Digest (MD5) hash
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Hash values are produced by specific algorithms and are used to verify the integrity
+    of the evidence by proving that the data was not modified. Hash values can be
+    thought of as digital fingerprints in that they are unique and play a major role
+    in the identification of evidence and physical images.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One such algorithm, although older and now mainly used to verify the authenticity
+    of downloads from the internet, is the **Message Digest** (**MD5**) cryptographic
+    hashing algorithm, which produces a 128-bit hexadecimal output value.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For a working example, let’s open a browser and head over to [http://passwordsgenerator.net/md5-hash-generator/](http://passwordsgenerator.net/md5-hash-generator/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This site creates hashes of words and sentences as strings. For this example,
+    I’ve entered the **Digital Forensics with Kali Linux** string without the parentheses.
+    The MD5 value automatically calculated was displayed as **7E9506C4D9DD85220FB3DF671F09DA35**,
+    as shown in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.7 – MD5 hash generator results](image/Figure_7.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.7 – MD5 hash generator results
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By removing **K** from **Kali**, from the same string that now reads **Digital
+    Forensics with ali Linux**, the MD5 now reads **7A4C7AA85B114E91F247779D6A0B3022**,
+    as shown in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.8 – Edited MD5 generator results](image/Figure_7.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.8 – Edited MD5 generator results
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As a quick comparison, we can see that just removing **K** from **Kali** yields
+    a noticeably different result:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Digital Forensics with** **Kali Linux**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**7E9506C4D9DD85220FB3DF671F09DA35**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Digital Forensics with** **ali Linux**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**7A4C7AA85B114E91F247779D6A0B3022**'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I encourage you to try it yourself and perhaps add a comma or period to the
+    string to further compare hash values.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Secure Hashing Algorithm (SHA)
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Another cryptographic hash algorithm commonly used in forensics and used in
+    the next chapter is **Secure Hashing Algorithm-1** (**SHA1**). SHA1 is more secure
+    than MD5 as it produces a 160-bit output instead of a 128-bit output as with MD5\.
+    Due to known collision attacks against both MD5 and SHA-1, the safer and more
+    robust option for hashing is now **SHA-2**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: SHA-2 is a group of hashes and not just one, as with SHA-1, with the most common
+    bit-length being SHA-256, which produces a 256-bit output. Alternate bit-length
+    algorithms of SHA-2 are SHA-224, SHA-384, and SHA-512.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The stronger the cryptographic algorithm used, the less chance of it being attacked
+    or compromised. This means that the integrity of the evidence and physical images
+    created remain intact, which will prove useful in forensic cases and expert testimony.
+  prefs: []
+  type: TYPE_NORMAL
+- en: More on creating hashes will be demonstrated in [*Chapter 8*](B19441_08.xhtml#_idTextAnchor147),
+    *Evidence* *Acquisition Tools.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let’s move on to best practices and frameworks for data acquisition and
+    DFIR.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data acquisition best practices and DFIR frameworks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: So far, we’ve covered a general overview of the DFIR procedures when collecting
+    and preserving evidence. There are several official documents that I highly recommend
+    you read and become familiar with, as they all give good details and guidelines
+    on the documentation of the scene, evidence collection, and data acquisition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The SWGDE has several best practice guidelines on forensic acquisition, evidence
+    collection, forensic examination, and more. These very useful documents should
+    be downloaded and kept as part of your DFIR playbook as they are concise and summarize
+    all the necessary steps, which can act as a checklist for DFIR investigations.
+    All documents can be found in the SWGDE’s Forensic Publications section at [https://www.swgde.org/documents/published-by-committee/forensics](https://www.swgde.org/documents/published-by-committee/forensics),
+    but for the purposes of this chapter, I recommend, at the very least, downloading
+    and reading the following two best practices guidelines on evidence collection
+    and forensic acquisitions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The first paper details best practices when collecting digital evidence and
+    the second details best practices when performing data acquisitions from computers:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '2018-07-11 SWGDE Best Practices for Digital Evidence Collection: [https://drive.google.com/file/d/1ScBeRvYikHvu6qtE_Lj3JtbOl94a5FDr/view?usp=sharing](https://drive.google.com/file/d/1ScBeRvYikHvu6qtE_Lj3JtbOl94a5FDr/view?usp=sharing)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '2018-04-25 SWGDE Best Practices for Computer Forensic Acquisitions: [https://drive.google.com/file/d/1ScBeRvYikHvu6qtE_Lj3JtbOl94a5FDr/view?usp=sharing](https://drive.google.com/file/d/1ScBeRvYikHvu6qtE_Lj3JtbOl94a5FDr/view?usp=sharing)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The *SWGDE Capture of Live Systems document, version 2.0*, was released in September
+    2014\. Although quite short and not as detailed, it is still applicable to forensic
+    investigations involving live (powered-on) systems. This document provides guidelines
+    when investigating live systems, including the order of volatility, memory forensics
+    including paging file forensics, and live physical and filesystem acquisition.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This document is only six pages long and can be downloaded from here: [https://drive.google.com/file/d/10MJ9EJAkj6i6Xqpf3IcFb4dDPNUZ2ymH/view](https://drive.google.com/file/d/10MJ9EJAkj6i6Xqpf3IcFb4dDPNUZ2ymH/view)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: DFIR frameworks
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The practice guides mentioned earlier can be used in conjunction with one or
+    more frameworks. Whatever the task, the goals should remain the same with the
+    integrity of evidence always preserved throughout the entire DFIR processes of
+    evidence collection, examination, analysis, and reporting.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although not free, there is an ISO/IEC publication called the *ISO/IEC 27037:2021
+    Information technology — Security techniques — Guidelines for identification,
+    collection, acquisition, and preservation of digital evidence*, which serves as
+    an excellent source of information for best practices on DFIR. A preview of the
+    document can be found at [https://www.iso.org/obp/ui/#iso:std:iso-iec:27037:ed-1:v1:en](https://www.iso.org/obp/ui/#iso:std:iso-iec:27037:ed-1:v1:en).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **National Institute of Science and Technology** (**NIST**) also has an
+    older publication called the *NIST Special Publication (SP) 800-86 Guide to Integrating
+    Forensic Techniques into Incident Response*, which contains 121 pages of very
+    useful information about various types of technologies and data identification,
+    acquisition, and examination. The full document can be freely downloaded at [https://nvlpubs.nist.gov/nistpubs/legacy/sp/nistspecialpublication800-86.pdf](https://nvlpubs.nist.gov/nistpubs/legacy/sp/nistspecialpublication800-86.pdf).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another useful publication is the *NIST Special Publication (SP) 800-61 Revision
+    2 Computer Security Incident Handling Guide*, which specifically focuses on incidents
+    and the appropriate responses to them. This document can be viewed and downloaded
+    in its entirety at [https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-61r2.pdf](https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-61r2.pdf).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Additionally, the *NIST* *Guidelines on Mobile Device Forensics* is another
+    very useful document that applies specifically to mobile devices. Revision one
+    of this document, released in 2014, goes into detail about the aspects of mobile
+    forensics investigations. Its content includes the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Mobile and cellular characteristics
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Evaluation and documentation of the scene
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Device isolation and packaging
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Device and memory acquisition
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Examination, analysis, and reporting
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The full document can be downloaded from:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-101r1.pdf](http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-101r1.pdf)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In relation to investigating cyber-attacks, reference should be made to the
+    D4I – Digital forensics framework for reviewing and investigating cyber-attacks
+    as a proposed framework. It also references the Cyber Kill Chain and its associated
+    phases with cyber-attacks. You can find the 8-page document at:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=929147](https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=929147)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Over the past two decades, there have been significant changes in technology
+    and IT. Added to what we traditionally think of as Information Technology, there
+    is now **Operational Technology** (**OT**). OT mainly deals with devices and machinery
+    traditionally found in the manufacturing and utility sectors, which may be logically
+    managed by IT processes. A good example is **SCADA** (short for **Supervisory
+    Control and Data Acquisition**) systems, which are commonly used by gas and utility
+    companies to monitor operational equipment. Disruption to these services could
+    affect millions of persons and businesses, and formal incident response procedures
+    should be implemented to ensure business continuity and disaster recovery. NIST
+    has recently published the *NISTIR 8428 Digital Forensics and Incident Response
+    (DFIR) Framework for Operational Technology (OT) (June 2022)* as a framework to
+    address these issues, and it covers a very detailed OT DFIR process on asset identification,
+    remote data collection, process monitoring, field analysis, and more. The full
+    document is available for download at:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: https://nvlpubs.nist.gov/nistpubs/ir/2022/NIST.IR.8428.pdf.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope this section was informative, and I encourage you to download and keep
+    these documents within a folder or perhaps even print and bind them to have as
+    reference materials or an entire DFIR playbook.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: If there was only one thing that I’d like you to take away from this chapter,
+    it would be to remember that the original evidence, particularly hard drives,
+    storage media, and RAM images, should only be used to create forensically-sound
+    bitstream copies. The original evidence is never to be worked on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To recap, when a breach is reported, there should be an established first responder
+    who, as per protocol, performs the tasks of documenting and securing the scene
+    as well as collecting and preserving the evidence. The first responder should
+    have a toolkit with various tools and items for the acquisition of evidence, and
+    when handing over the evidence to other parties, ensure that the CoC is maintained.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additionally, we looked at the various procedures and best practices when investigating
+    devices that are powered on and powered off, and we discussed the importance of
+    using a write blocker to prevent the original evidence from being tampered with
+    and then using a hashing tool for integrity verification purposes. Finally, I’ve
+    left you with some very useful DFIR frameworks, which, when combined with the
+    SWGDE guidelines, make for an impressive DFIR playbook.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’ve come this far, and I know it must have been a bit of an information overload,
+    but now we can get to the practical section of this book where we can begin our
+    investigation using digital forensics tools in Kali Linux. Let’s go!
+  prefs: []
+  type: TYPE_NORMAL

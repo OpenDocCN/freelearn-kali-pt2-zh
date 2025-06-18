@@ -1,0 +1,27 @@
+- en: 'Part 5: Network Forensic Analysis Tools'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In the final part, we will use a plethora of installed and online tools to discover
+    and examine network and online activities, including network host discovery and
+    fingerprinting, IoT discovery and investigation, and packet capture analysis to
+    examine network traffic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This part has the following chapters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 14*](B19441_14.xhtml#_idTextAnchor243), *Network Discovery Tools*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 15*](B19441_15.xhtml#_idTextAnchor251), *Packet Capture Analysis
+    with Xplico*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 16*](B19441_16.xhtml#_idTextAnchor262), *Network Forensic Analysis
+    Tools*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

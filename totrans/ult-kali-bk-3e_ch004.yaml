@@ -1,0 +1,1380 @@
+- en: 3 Setting up for Advanced Penetration Testing Techniques
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Join our book community on Discord
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[https://packt.link/SecNet](https://packt.link/SecNet)![Qr code Description
+    automatically generated](../media/file73.png)Learning the methodology and techniques
+    of performing penetration testing is always exciting. While many professionals
+    may focus on specific types of penetration testing, such as internal or external
+    network penetration testing, social engineering penetration testing, or even web
+    application security testing, it''s always beneficial to understand how to perform
+    wireless penetration testing and how to compromise a Microsoft Windows domain
+    in an enterprise environment.In this chapter, you will learn how to setup an Active
+    Directory domain environment that will enable you perform advanced penetration
+    testing exercises such as red teaming techniques to discover security vulnerabilities
+    and compromise the Domain Controller, taking over the domain of the organization.
+    In addition, you will setup a RADIUS access server to provide **Authentication,
+    Authorization and Accounting** (**AAA**) services to our enterprise wireless network.
+    In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Building an Active Directory red team lab
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Setting up a wireless penetration testing lab
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let’s dive in!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Technical Requirements
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'To follow along with the exercises in this chapter, please ensure that you
+    have met the following hardware and software requirements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Oracle VM VirtualBox - [https://www.virtualbox.org/](https://www.virtualbox.org/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows 10 Enterprise - [https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows Server 2019 - [https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2019](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2019)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ubuntu Server 22.04 LTS - [https://releases.ubuntu.com/jammy/](https://releases.ubuntu.com/jammy/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Building an Active Directory red team lab
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Active Directory** is a role within the Microsoft Windows Server operating
+    system that enables IT administrators to centrally manage all users, devices,
+    and policies within a Windows environment. Active Directory ensures that centralized
+    management is available for user accounts across an entire Windows domain, as
+    well as that policies can be created and assigned to various user groups to ensure
+    people have the necessary access rights to perform actions that are related to
+    their job duties.Active Directory is commonly found within many organizations
+    around the world. As an aspiring ethical hacker and penetration tester, it''s
+    important to understand how to discover various security vulnerabilities within
+    a Microsoft Windows domain and leverage those security flaws to compromise an
+    organization''s **Domain Controller** and its systems, services, and shared resources.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To learn more about the role and importance of a Domain Controller, please
+    see: [https://www.techtarget.com/searchwindowsserver/definition/domain-controller](https://www.techtarget.com/searchwindowsserver/definition/domain-controller).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'This section will teach you how to create a Microsoft Windows lab environment
+    with a Microsoft Windows Server 2019 and 2 Windows 10 Enterprise clients as virtual
+    machines. This lab environment will allow you to practice advanced penetration
+    testing techniques such as red teaming exercises on a Windows domain and exploit
+    security flaws in Active Directory environments.The following diagram shows the
+    RedTeamLab environment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file74.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As we can see, our Kali Linux virtual machine is directly connected to the
+    systems within the *RedTeamLab* environment. In later sections of this book, you
+    will learn how to perform exploitation and post-exploitation techniques on targets,
+    so when you''re exploiting the systems within the Windows domain, we will assume
+    you have already broken into the network and have compromised at least one system
+    that’s connected to Active Directory. For now, we will focus on setting up our
+    environment for security testing later.The following table shows the user accounts
+    that we will be setting up in the *RedTeamLab* environment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file75.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As shown in the preceding table, we will create 2 domain users (*gambit* ad
+    *rogue*), an additional domain administrator (*wolverine*) and a service account
+    which domain administrative privileges (*sqladmin*).To get started setting up
+    the red team section of our lab, please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 1 – Setting up Windows Server
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In this section, you will learn how to setup Microsoft Windows Server 2019
+    as a virtual machine. To get started with this exercise, please use the following
+    instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On your host computer, go to [https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2019](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2019),
+    and click on **Download the VHD**, ensure you complete the registration form to
+    access the download links for the **Virtual Hard Disk** (**VHD**) **64-bit edition**
+    file as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file76.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Rather than downloading an ISO image, using a pre-built VHD for Windows Server
+    2019 will reduce the time needed to install the Windows Server 2019 operating
+    system as a virtual machine.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Once the Windows Server 2019 VHD file is downloaded on your host computer, open
+    **Oracle VM VirtualBox Manager** and click on **New** to create a new virtual
+    machine environment.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'When the **Create Virtual Machine** window appears, click on **Expert Mode**
+    and use the following configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Name: Windows Server 2019'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Type: Microsoft Windows'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Version: Windows 2019 (64-bit)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Hard Disk: Use an Existing Virtual Hard Disk File (Click on the folder icon
+    > Add > select the Windows Server 2019 VHD file).'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Click on **Finish** to save the virtual machine
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Once the **Windows Server 2019 virtual machine** is created and saved on **Oracle
+    VM VirtualBox Manager**, select it and click on **Settings**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'On the **Settings** window, select the **Network** category and use the following
+    settings for **Adapter 1**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Adapter 1: Enable network Adapter'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: Internal Network'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: *RedTeamLab* (manually type it in the field)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promiscuous Mode: Allow All'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations for Adapter 1:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file77.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, select the **Windows Server 2019 virtual machine** and click on **Start**
+    to power-on.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once the virtual machine is running, you will prompted to select your home country/region,
+    preferred app language and keyboard layout, click on **Next**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, you will need to read the **License terms** and click on **Accept**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, create a password for the built-in `Administrator` account, use `P@ssword1`
+    as the password and click on **Finish**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, log-in to Windows Server 2019 virtual machine. On the virtual machine
+    menu bar, select **Input** > **Keyboard** > **Insert Ctrl-Alt-Del** to view the
+    login window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file78.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Login using username: `Administrator` and password: `P@ssword1`.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Part 2 – Configuring virtual machine additional features
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Ensure the Windows Server 2019 virtual machine is running and you’re logged-in.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To scale the virtual machine’s desktop resolution to fit your host computer’s
+    monitor, on the virtual machine menu bar, select **Devices** > **Insert Guest
+    Additions CD image** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file79.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, open **Windows Explorer** within Windows Server 2019 and navigate to
+    **This PC** and double-click on the **VirtualBox Guest Additions** virtual disk
+    as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file80.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: When the installation window appears, click on **Next** and ensure that you
+    use the default settings during the installation process. When it's complete,
+    do not reboot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, within the Windows Server 2019, click on the **Start** button (bottom-left
+    corner) and open **Windows PowerShell**. Use the following commands to static
+    assign an IP address and subnet mask to the Ethernet network adapter:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, change the default hostname to `DC1` and reboot the server with the following
+    commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file81.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, after the server reboots, login using the Administrator credentials.
+    The Windows Server desktop interface will automatically scale to fit your monitor''s
+    resolution. If it doesn''t, simply toggle this with the **VirtualBox menu bar**
+    > **View** > **Auto-resize Guest Display** option as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file82.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Part 3 – Setting Active Directory Domain Services
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Active Directory is a very important and popular role within Microsoft Windows
+    Server as it allows IT professionals to centrally manage all users, devices, and
+    policies within a Windows environment. To set up Active Directory within our lab,
+    please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open the **Windows PowerShell** application within the Windows Server 2019 virtual
+    machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Install the **Active Directory Domain Service** and it’s management tools using
+    the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, configure a new Active Directory forest and domain with the name `redteamlab.local`
+    using the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You’ll be prompted to enter a **Safe Mode Administrator Password**, use `P@ssword1`.
+    When prompted to continue the operation, type `Y` and hit **Enter** to continue
+    as shown in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file83.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The setup process takes a few minutes to complete, then the Windows Server will
+    automatically reboot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After the server reboots, login using the Administrator credentials. This time,
+    you’ll be logging-in as a domain administrator on the server.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Part 4 – Creating domain users and administrator accounts
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The following steps will carefully guide you through the process of creating
+    domain users and domain administrators, and assigning the user to various security
+    groups. To ensure these steps are simple and concise, we will be using the Windows
+    PowerShell on Windows Server:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On the Windows Server 2019 virtual machine, open the **Windows PowerShell**
+    application and use the following commands to create 4 domain user accounts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file84.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, let's make the `wolverine` account a high-privilege user account that
+    has the same privileges as the administrator by using the following commands
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file85.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, we will do the same for the `sqladmin` account
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file86.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Part 5 - Disabling antimalware protection and the domain firewall
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Within our lab, we need to ensure the Windows Defender antimalware protection
+    is disabled on client that are connected to the Windows domain. Some techniques
+    are be used to bypass antiviruses that will work today and tomorrow, and it will
+    not afterwards due to the continuous advancement of malware protection and solutions.
+    The following steps will guide you through the process of ensuring Windows Defender
+    and the host-based firewall is disabled on all systems by leveraging **Group Policy
+    Objects** (**GPOs**):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On the Windows Server 2019 virtual machine, open the **Windows PowerShell**
+    application and use the following commands to create a new GPO called `DisableAVGPO`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the expected results when executing the preceding
+    commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file87.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, use the following commands to disable the antimalware service from always
+    running:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'As shown below, the preceding commands successfully updated the `DisableAVGPO`
+    policy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file88.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, turn-off the antimalware real-time protection using the following commands
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the preceding commands updated the policy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file89.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, turn-off Windows Defender Antivirus by using the following commands
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file90.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, turn-off Windows Defender Firewalls with the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'As shown in the following screenshot, the preceding commands executed successfully:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file91.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Part 6 – Setting up for service authentication attacks
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'During our red teaming section, you will learn how to discover file and network
+    sharing resources on a Windows environment. This section demonstrates how to create
+    a network file share on Windows Server 2019 to simulate a vulnerable service that
+    can be exploited by a threat actor.To get started with this exercise, please use
+    the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'On Windows Server 2019, open the **Windows PowerShell** application with administrative
+    privileges and execute the following commands to create a shared folder on the
+    `C:` drive:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshots the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file92.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, we can verify the shared folder by opening **Server Manager** application
+    and selecting **File and Storage Services** > **Shares**, as shown here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file93.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, to ensure we can simulate a cyber-attack to compromise the Kerberos feature
+    on a Windows Server environment, we need to create a **Service Principal Name**
+    (**SPN**) on our Domain Controller, which is our Windows Server. Open the **Windows
+    PowerShell** application with administrative privileges and execute the following
+    commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding command to assign
+    the `sqladmin` account as an SPN:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file94.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To learn more about service principle names on Windows Server, please see:
+    [https://learn.microsoft.com/en-us/windows/win32/ad/service-principal-names](https://learn.microsoft.com/en-us/windows/win32/ad/service-principal-names).'
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Lastly, use the `slmgr /rearm` command on the Windows Server 2019 virtual machine
+    to prevent it from automatically powering-off as it’s a trial version. Reboot
+    the system to ensure the changes take effect, then power-off the virtual machine
+    until it’s needed later.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Part 7 – Installing Windows 10 Enterprise
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In this section, you will learn how to set up two Microsoft Windows 10 client
+    systems within the Red Team lab topology. One virtual machine will be logged on
+    as Bob, while the other user will be logged on as Alice. To get started with this
+    exercise, please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: On your host computer, to download Microsoft Windows 10 Enterprise ISO file,
+    go to [https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise](https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise)
+    and click on **Download the ISO – Enterprise**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, complete the registration form and click on the **Download** button,
+    then select **ISO - Enterprise 64-bit edition** as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file95.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once the Windows 10 Enterprise ISO file downloaded onto your host computer,
+    open **Oracle VM VirtualBox Manager** and click on **New** to create a new virtual
+    machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The **Create Virtual Machine** window will appear, use the following configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Name: Bob-PC'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'ISO Image: Use the drop-down menu, select **Other** > then select the Windows
+    10 Enterprise ISO file and click on Open to attach it.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Type: Microsoft Windows'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Version: Windows 10 (64-bit)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Skip Unattended Installation: Yes (check the box)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file96.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once you’re all set, click on **Finish** to save the virtual environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, select the Bob-PC virtual machine and click on **Settings** as shown
+    below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file97.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Click on the **Network** category and apply the following settings to Adapter
+    1:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Adapter 1: Enable network Adapter'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: Internal Network'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: *RedTeamLab* (manually type it in the field)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Promiscuous Mode: Allow All'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations for Adapter 1:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file98.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, select the newly created virtual machine and click on **Start** to power-on
+    the system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **Windows Setup** window, click on **Next**, then click on **Install
+    now**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Accept the **Applicable notices and license terms**, and click on **Next**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For the installation type, click on **Custom: Install Windows only (advanced)**
+    option.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Then, select **Dive 0: Unallocated Space** and click on **Next** to start the
+    installation. After the installation is completed, the virtual machine will automatically
+    reboot twice.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After the second reboot, you’ll be prompted to select your region, and click
+    on **Yes**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, select your keyboard layout, and click on **Yes**. You can skip the option
+    for adding a second keyboard layout.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'During the setup process of Windows 10, you''ll be asked to connect to a network.
+    Select the **I don''t have internet** option to continue as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file99.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, click on **Continue with limited setup**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, create the username: `bob` with the password: `P@ssword2`.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Disable any unnecessary services on the privacy window and disable Cortana.
+    Afterwards, the setup process continues and will log you in automatically to the
+    Windows 10 desktop.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Install the **VirtualBox Guest Additions** on the Windows 10 virtual machine.
+    Please see *Part 2, steps 2 – 4*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'On Bob-PC, open the **Command Prompt** with administrative privileges and turn
+    on network discovery and file sharing using the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file100.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, use the following commands to change the default hostname to Bob-PC:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: Once this virtual machine is rebooted, the hostname will now be Bob-PC, the
+    Windows network and file sharing will be enabled. Power-off Bob-PC for now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, let’s create another Windows 10 virtual machine and call it **Alice-PC**.
+    Repeat *steps 3 – 20* and ensure you set **Alice-PC** as both the name of the
+    new virtual machine (*step 4*) and the hostname (*step 20*). Create the username:
+    `alice` with the password: `P@ssword2` as the local user during the setup process.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Part 8 – Adding the clients to the domain
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Use the following instructions to joining each Windows 10 virtual machine,
+    Bob-PC and Alice-PC to the Domain Controller:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Power-on the **Windows Server 2019** virtual machine, **Bob-PC** and **Alice-PC**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'On **Bob-PC** and **Alice-PC**, open the **Command Prompt** with administrative
+    privileges (**Run As Administrator**) and use the `ping 192.168.42.40` command
+    to test network connectivity between each Windows 10 system and the Windows Server
+    2019 machine as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file101.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding screenshot, **Bob-PC** was able to communicate with
+    the **Windows Server 2019** virtual machine successfully.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, use the following commands on **Bob-PC** and **Alice-PC** to join the
+    `redteamlab.local` domain:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, the **Windows PowerShell credentials request** window will appear, simply
+    enter the domain administrator account (`Administrator`/`P@ssword1`) to authenticate
+    the request and click as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file102.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the system has rebooted, click on **Other user** at the bottom-left corner
+    of the login window. Then, log in using a domain user account, such as username:
+    `gambit` or `rogue` with the password: `Password1` as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file103.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Part 9 – Setting up for account takeover and file sharing attacks
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'To ensure we can exploit file-sharing services and perform account takeover
+    attacks on Windows clients that are connected to the domain, please use the following
+    instruction:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Login to **Bob-PC** and **Alice-PC** using a domain administrator account,
+    such as username: `redteamlab\Administrator` and password: `P@ssword1` as shown
+    below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file104.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Open the **Command Prompt** with administrative privileges and use the following
+    commands to make the domain user accounts, `gambit` and `rogue`, local administrators
+    on **Bob-PC** and **Alice-PC**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file105.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, using the same **Command Prompt** window, use the following commands
+    to create a local shared folder on each Windows 10 machine, **Bob-PC** and **Alice-PC**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file106.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Lastly, power-down your Windows 10 and Windows Server 2019 virtual machines
+    until they are needed later on.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Having completed this section, you have built a Microsoft Windows lab environment
+    containing the most common type of services and configurations found in many organizations.
+    This environment will enable you to perform advanced exploitation techniques on
+    Active Directory in later sections of this book, which focuses on red team exercises.
+    In the next section, you will learn how to set up a wireless penetration testing
+    lab to practice wireless exploitation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting up a wireless penetration testing lab
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Understanding how to perform wireless penetration testing helps organizations
+    to determine how a real threat actor is able to discover and exploit security
+    vulnerabilities on their company’s wireless network infrastructure.Within many
+    organizations, you will commonly find wireless networks that are implemented to
+    support the wireless mobility for their employees. Employees can connect their
+    smartphones, Internet of Things (IoT) devices, tablets, and laptops to the corporate
+    Wi-Fi network and access the resources on the wired network, such as printers
+    and servers. In small and large organizations, the wireless router or access point
+    is usually configured using one of the following wireless security standards:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Wired Equivalent Privacy** (**WEP**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Wi-Fi Protected Access** (**WPA**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Wi-Fi Protected Access 2** (**WPA2**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Wi-Fi Protected Access 3** (**WPA3**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Most modern wireless networks are usually configured with WPA2 and WPA3 standards.
+    The preceding list of security standards are also designed for small networks
+    and the regular consumer as they are simple to configure using a single shared
+    password, known as a **Pre-Shared Key** (**PSK**). Therefore, anyone who wants
+    to access the wireless network will need the same PSK.In large environments, there
+    is a need to improve the security and centralized management of users on the corporate
+    wireless network. Security professionals typically implement an **Authentication,
+    Authorization, and Accounting** (**AAA**) server such as **Remote Authentication
+    Dial-In User Service** (**RADIUS**) on the network, which handles the centralized
+    management of network users, accounts, and policies. The following are the access
+    methods for wireless networks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Pre-Shared Key** (**PSK**) – This methods enables you to configure a password
+    or passphrase on the wireless router or access point. Anyone with the PSK can
+    access the network.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Enterprise – This method leverages a centralized access server running RADIUS
+    to handle AAA. Each user on the wireless network will require a unique user account
+    to be created on the access server, with policies assigned to the account and
+    logs are generated for accountability.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Wi-Fi Protected Setup** (**WPS**) – This access method removes the need for
+    using passwords and passphrases on the wireless network. It provides an easy method
+    to authenticate to the wireless network using an 8-digit pin. However, there are
+    known security vulnerabilities and attacks on retrieving the WPS pin.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Therefore, in this section, you will learn how to setup a wireless penetration
+    testing lab environment that supports security testing for both personal and enterprise
+    wireless networks. You will need a wireless router or access point that supports
+    WEP to learn how to perform security testing on older security standards, WPA2-Personal
+    for security testing on newer security standards, and WPA2-Enterprise for security
+    testing of enterprise wireless networks. In addition, having a wireless router
+    which supports WPA3 will be beneficial for learning how to compromise WPA3 targeted
+    networks.The following diagram shows the wireless penetration testing lab environment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file107.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding diagram, the RADIUS server (access server) and wireless
+    router/access point is connected to an organization internal network. Therefore,
+    if an attacker is able to compromise the wireless network, the adversary will
+    gain unauthorized access to the corporate network and perform lateral movement.The
+    next section will demonstrate how to set up RADIUS on top a Ubuntu server as a
+    virtual machine on your computer and associate it with a wireless router or access
+    point.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Setting up a RADIUS server
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'In this section, we will be leveraging the power of virtualization to set up
+    a RADIUS server, such as FreeRadius, on our network to handle the AAA processes
+    of the wireless router for testing WPA2-Enterprise.To get started with this exercise,
+    please use the following instructions:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Part 1 – Install a Ubuntu server
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Firstly, you’ll need to download and setup Ubuntu Server as a virtual machine.
+    On your host machine, go to [https://ubuntu.com/download/server](https://ubuntu.com/download/server)
+    to download the **Ubuntu Server 22.04 LTS** ISO image.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, open **Oracle VM VirtualBox Manager** and click on **New** to create a
+    new virtual machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'On the Create Virtual Machine window, ensure you use the following configurations:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Name: Radius Server'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'ISO Image: Use the drop-down menu, select Other, then select the Ubuntu Server
+    ISO file.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Type: Linux'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Version: Ubuntu (64-bit)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Skip Unattended Installation: Check the box'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file108.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: After clicking on **Finish** to save the new virtual machine, select the **Radius
+    Server** virtual machine and click on **Settings**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'On the **Settings** windows, select the Network category and use the following
+    configurations for Adapter 1:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enable the network adapter
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Attached to: Bridged Adapter'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Name: Use the drop-down menu to select your physical network adapter on your
+    host machine that’s connected to your physical network.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Next, power-on the **Radius Server** virtual machine to start the installation
+    process of Ubuntu Server.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the installation window, select **Try or Install Ubuntu Server** option to
+    start the installation process.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, select your preferred language and hit **Enter**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, select your preferred keyboard configuration and select **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **Choose type of install**, select Ubuntu Server and select **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, on the **Network connection** menu, an IP address will automatically be
+    assigned to this Ubuntu Server from your network, ensure you take note of the
+    address and select **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **Configure proxy** menu, leave as default and select **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **Configure Ubuntu archive mirror** menu, leave as default and select
+    **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **Guided storage configuration** menu, leave as default and select **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **Storage configuration** menu, leave as default and select **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When the **Confirm destructive action** window appears, select **Continue**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **Profile setup** menu, create a user account for yourself and select
+    **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **Upgrade to Ubuntu Pro** menu, leave as default and select **Continue**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: On the **SSH Setup** menu, use the spacebar on your keyboard to select **Install
+    OpenSSH server** option, then select **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, the **Featured Server Snaps** menu will appear, leave as default and select
+    **Done**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The installation process will take some time to complete as it will attempt
+    to automatically download and install updates. After this process is completed,
+    select **Reboot Now**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After the reboot, if there’s an error on automatically ejecting the ISO file
+    from the cd-rom drive, simply hit Enter on the console screen to continue.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Part 2 – Setting up FreeRadius
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'In this section, you will learn how to setup FreeRadius on the Ubuntu server,
+    create user accounts for users on the wireless network.Please use the following
+    instruction to get started with this exercise:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ensure the **Radius Server** virtual machine is running in **Oracle VM VirtualBox
+    Manager**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, on your Windows host machine, open the Windows **Command Prompt** application
+    and use the following commands to remotely connect to the virtual machine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshots the expected output when executing the preceding
+    commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file109.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Keep in mind, passwords are invisible when you’re entering them on a terminal
+    interface for security reasons.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Next, use the following commands to update the local package repository list
+    and install FreeRadius:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the execution of the preceding commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file110.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, use the following commands to verify the sub-directories of FreeRadius:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the list of files and directories within the
+    3.0 folder:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file111.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The `users` file contains the user credentials, while the `clients.conf` file
+    contains the AAA client accounts, such as the wireless router within our lab topology.
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'Next, let’s use the Nano command-line text editor to modify the `users` file
+    and create a user account:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Using the directional keys on your keyboard, to the following line:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Then uncomment the line by removing the `#` symbol and change the password
+    from `hello` to `password123` as shown below:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file112.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Next, save the file by pressing `CTRL + X`, then `Y` and Enter.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, let’s create a client account for the wireless router, use the following
+    commands to edit the `clients.conf` file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Using the directional keys, go to the **Defines a RADIUS client** section and
+    insert the following code:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshots shows the preceding code within the `clients.conf`
+    file:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file113.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The client IP address (`172.16.17.123`) is the IP address of the wireless router,
+    please sure you check the IP address of your wireless router and substitute with
+    the one in the preceding code. If the client IP address is not the same as your
+    wireless router, the user (bob) will not be able to authenticate to the RADIUS
+    server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Press `CTRL + X`, then `Y` and Enter to save the file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, use the following commands to restart the FreeRadius service and verify
+    it’s status:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the `freeradius` service is active and running:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file114.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Additionally, use the `sudo lsof -i -P -n | grep freerad` command to verify
+    ports `1812` and `1813` are open for the FreeRadius services as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file115.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Part 3 – Setting the wireless router with RADIUS
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'This section will show you how to configure a wireless router to operate query
+    a RADIUS server on the network. For this section, you will need a physical wireless
+    router that supports the WPA2-Personal, and WPA-Enterprise security modes. The
+    following diagram shows the IP addresses of the RADIUS server and wireless router,
+    keep in mind the IP addresses may be different on your personal network:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file116.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To get started configuring the wireless router with RADIUS, please use the
+    following guidelines:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Power-on the wireless router and login to the management dashboard.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, go to the **Wireless** tab and change the **Network Name** (**SSID**)
+    to `Target_Net`, as shown below:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../media/file117.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, on the Wireless Security menu, use the following configuration to enable
+    the wireless router to query the RADIUS server on the network:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Security Mode: WPA2-Enterprise'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Encryption: AES'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'RADIUS Server: Enter the IP address of the RADIUS server virtual machine'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'RADIUS Port: 1812'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Shared Secret: radiusclientpassword1'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The following screenshot shows the preceding configurations when applied to
+    the wireless router:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file118.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Keep in mind, you need to ensure the IP address on your wireless router matches
+    the IP address within the `clients.conf` file on the RADIUS server, as well as
+    the IP address of the RADIUS server matches the IP address on the wireless security
+    configuration on the wireless router.Having completed this section, you have learned
+    how to set up a wireless penetration testing lab environment to perform advanced
+    penetration testing techniques.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: During this chapter, you have gained the hands-on skills to build a Windows
+    environment that simulates a typical enterprise organization with domain users,
+    various service accounts, administrators, and shared network resources. Additionally,
+    you have learnt how to create a wireless network lab that contains a RADIUS server
+    to provide AAA services, which help replicate an enterprise wireless network within
+    a large organization. These lab environments will be utilized later in this book
+    when you learn about advanced penetration testing techniques such as red team
+    exercises.I trust that the knowledge presented in this chapter has provided you
+    with valuable insights, supporting your path towards becoming an ethical hacker
+    and penetration tester in the dynamic field of cybersecurity. May this newfound
+    understanding empower you in your journey, allowing you to navigate the industry
+    with confidence and make a significant impact. In the next chapter, *Reconnaissance
+    and Network Penetration Testing*, you will learn how to perform **Open Source
+    Intelligence** (**OSINT**) to passively collect sensitive information on a target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further Reading
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Active Directory Domain Services - [https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Wireless security standards - [https://www.techtarget.com/searchnetworking/feature/Wireless-encryption-basics-Understanding-WEP-WPA-and-WPA2](https://www.techtarget.com/searchnetworking/feature/Wireless-encryption-basics-Understanding-WEP-WPA-and-WPA2)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding FreeRadius - [https://www.techtarget.com/searchsecurity/definition/RADIUS](https://www.techtarget.com/searchsecurity/definition/RADIUS)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

@@ -1,0 +1,1556 @@
+- en: 1 Introduction to Ethical Hacking
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Join our book community on Discord
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '[https://packt.link/SecNet](https://packt.link/SecNet)![Qr code Description
+    automatically generated](../media/file0.png)Cybersecurity is one of the most exciting
+    and rapidly growing fields in the world. Each day, security professionals and
+    researchers are discovering new and emerging threats at an increasing rate, and
+    many organizations are discovering their systems and networks are compromised
+    by malicious actors, while there are so many companies without proper cyber defenses
+    to detected threats and determine whether their assets are compromised or not.
+    Due to the increase in cyber-attacks and threats around the world, there are more
+    cybersecurity-related jobs are being created within many organizations who seeks
+    to acquire industry experts and skilled professionals who can help improve their
+    cyber defenses and safeguard their assets from cyber criminals. This book is designed
+    with the intention to provide you with the skills, knowledge, and wisdom that
+    are needed by aspiring ethical hackers and penetration testers for the cybersecurity
+    industry. During the course of this book, you will develop new skills and learn
+    techniques on simulating real-world cyber-attacks on systems and networks as a
+    cybersecurity professional with the intent to discovery hidden security vulnerabilities
+    within organizations, while understanding the **Tactics, Techniques and Procedures**
+    (**TTPs**) used by real attackers to compromise their targets. In addition, you
+    will learn how to leverage one of the most popular Linux distributions within
+    the cybersecurity industry, *Kali Linux* to perform ethical hacking and penetration
+    testing assessments on targeted systems and network infrastructure. The Kali Linux
+    operation system has tons of pre-installed Linux packages (applications) and security
+    tools that are commonly used by industry experts, hence it’s an arsenal packed
+    with everything you’ll need as an ethical hacker and penetration tester. Throughout
+    this book, we’ll be using a student-centric and learner-friendly approach, filled
+    with a lot of practical and hands-on exercises to help you to gradually start
+    from beginner-friendly to intermediate, and to advanced topics.In this chapter,
+    you will learn about various types of threat actors, and their intentions/motives
+    behind their attacks on targets. Furthermore, you will discover how various key
+    factors play an important role to attackers when planning a cyber-attack, and
+    how such factors determine the level of complexity to compromise a targeted system,
+    network or organization as compared to cybersecurity professionals such as ethical
+    hackers and penetration testers who are hired to discover hidden vulnerabilities
+    within a company. Furthermore, you will learn about the various phases in ethical
+    hacking, and penetration testing approaches which are commonly used by industry
+    professionals. Lastly, you will gain a solid understanding on how the **Cyber
+    Kill Chain** framework is used to help cybersecurity professionals to better understand
+    cyber-attacks, and how each phase can be aligned with penetration testing techniques.
+    In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding the need for cybersecurity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding what matters to threat actors
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exploring the importance for penetration testing
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Discovering penetration testing approaches
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exploring penetration testing methodologies
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding the Cyber Kill Chain
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: I hope you’re excited as I am to begin this awesome journey. Let’s dive in!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding the need for cybersecurity
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Cybersecurity focuses on protecting systems, networks and organizations from
+    specialized attacks and threats that are designed by cyber criminals with the
+    intention to cause harm or damages, these cyber criminals are commonly referred
+    to as **threat actors**. As time continues, more users and organizations are connecting
+    their systems and networks to the largest network in the world, the internet,
+    and cyber criminals are developing new strategies to steal money from potential
+    victims. For instance, many cyber criminals are developing more sophisticated
+    threats such as ransomware, which is a type of crypto-malware that’s designed
+    to encrypt all data found on a victim’s system, except the host operating system.
+    The intention is to encrypt the victim’s most valuable asset on the compromised
+    system, the data stored on local storage media, and request a ransom payment in
+    the form of cryptocurrencies to obtain the decryption keys to recover the data.The
+    longer the ransomware is on a compromised system, the ransomware agent would establish
+    a **Command and Control** (**C2**) communication channel with either one or more
+    C2 servers that are owned and managed by the cyber criminals to receive updates
+    and additional instructions. The threat actor can push updates to the ransomware
+    agent to frequently update the cryptographic keys that are used to encrypt the
+    victim’s data. Therefore, reducing the likelihood the victim is able to safely
+    recover their data from the ransomware. During this time, the threat actor is
+    also exfiltrating the data found on the victim’s system and selling it on various
+    marketplaces on the *Dark Web* to the highest bidder. Cyber criminals are intelligent,
+    they are very aware that organizations knows the value of data that are stored
+    on their computers and servers, and will do almost anything to recover their data
+    as soon as possible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important Note
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Ransomware has the capabilities of also compromising the data stored on various
+    cloud storage that is linked to the infected system. For instance, imagine a user's
+    system has a cloud storage agent running to ensure the user’s data is constant
+    synchronized. If the system is infected with a ransomware, the infection will
+    encrypt all data on the local storage drives, including those that are synchronized
+    to the cloud service provider platform. However, various cloud storage providers
+    have built-in protection against these types of threats.
+  prefs:
+  - PREF_BQ
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: From a cybersecurity perspective, it’s not recommended to pay the ransom as
+    there’s no guarantee or reassurance the threat actors will release the encrypted
+    data or even provide the right decryption key to recover your data. For instance,
+    there are many organizations around the world with a reactive approach to cybersecurity,
+    such that, they will only react to when their systems and network are compromised
+    to a cyber-attack rather than implementing mitigation and countermeasures to prevent
+    future threats. However, if an organization does not implement proper cyber defenses
+    with an effective incident response plan, when a ransomware compromises a vulnerable
+    system within a network, it has the potential to automatically spread to other
+    vulnerable systems within the organization to expand its foothold. Therefore,
+    the longer it takes to contain/isolate the threat on the network, the more damages
+    can be done.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important Note
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: In the previous edition of the book, Mr. Rishalin Pillay mentioned during his
+    time at Microsoft, he had seen how attackers "may" give the decryption key to
+    victims, however, the threat actors 110% implant additional malware to return
+    later for more cash gains. Essentially, the targeted organization becomes a "cash
+    cow" for the threat actors (attacking group).
+  prefs:
+  - PREF_BQ
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Therefore, without cybersecurity professionals, researchers and security solutions,
+    many organizations and users are left unprotected from various types of threats.
+    For instance, many banks provide an online banking system which enables their
+    customers to perform various types of transactions such as making payments, transferring
+    funds, and so on. Imagine, if cyber criminals were to discover weak security controls
+    on a bank’s customer login portal and found a way to take advantage of the security
+    weakness to gain unauthorized access to multiple customers’ accounts, steal their
+    **Personally Identifiable Information** (**PII**) and transfer fund out of their
+    accounts. Even leverages the customers’ data as new and potential targets for
+    future cyber-attacks, hence organizations also need to provide their customers’
+    data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Identifying threat actors and their intent
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'As an aspiring cybersecurity professional, it’s important to develop a good
+    moral compass and understand the differences between various types of threat actors
+    and their motives behind their cyber-attacks. Let’s take a closer look at the
+    following list of common types of threat actors in the cybersecurity industry:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Script kiddie** – A script kiddie is a common type of threat actor who is
+    not necessarily a young adult or kid. Rather, they are someone who does not fully
+    understand the technical details of cybersecurity to perform a cyber-attack or
+    develop a threat on their own. However, a script kiddie usually follows the instructions
+    or tutorials of real hackers to perform their own attacks against a targeted system
+    or network.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: While you may think a script kiddie is harmless because the person does not
+    have the required knowledge and skills, they can create an equal amount or more
+    damage as real hackers, simply by following the instructions and tutorials of
+    malicious actors on the internet. This type of hacker make use of tools they have
+    no knowledge of how they properly work, thus causing more harm and damage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Hacktivist** – Across the world, there are many social and political agendas
+    in many countries, and there are many persons and groups who are either supportive
+    or not supportive of these agendas. You will commonly find protesters who will
+    organize rallies, marches, or even perform illegal activities such as the defacement
+    of public property. There is a type of threat actor who uses their hacking skills
+    to perform malicious activities in support of a political or social agenda. This
+    person is commonly referred to as a *hacktivist*. While some hacktivists use their
+    hacking skills for good reasons, keep in mind, hacking is still an illegal act
+    and the threat actor can face legal actions against them by law enforcement.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Insider** – Many threat actors know it''s more challenging to break into
+    an organization through the internet and it''s easier to do it from the within
+    the targeted organization’s network. Some threat actors will create a fake identity
+    and curriculum vitae with the intention of applying for a job within their targeted
+    organization and becoming an employee. Once this type of threat actor becomes
+    an employee, the person will have access to the internal network and gain better
+    insights into the network architecture and security vulnerabilities of the company.
+    Therefore, this type of threat actor can implement network implants on the network
+    and create backdoors for remote access to critical systems. This type of threat
+    actor is commonly known as an insider or insider threat.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**State-sponsored** – This type of threat actor is commonly referred to as
+    **nation state actors**. While many nations will send their army of soldiers to
+    fight a war, many battles are now fought within cyberspace, this is known as **cyber
+    warfare**. Many nations have realized the need to develop and enhance their cyber
+    defenses to protect their citizens, national assets and critical infrastructure
+    from cyber criminals and other nations with malicious intent. Therefore, a government
+    will hire *state-sponsored hackers* who are responsible for performing reconnaissance
+    (intelligence gathering) on other countries and protecting their own country from
+    cyber-attacks and threats. Some nations use this type of threat actor to gather
+    intelligence on other countries and even compromise the systems that control the
+    infrastructure of public utilities or other critical resources.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Organized crime** – Around the world, we commonly read and hear about many
+    crime syndicates and organized crime groups. Within the cybersecurity industry,
+    there are also crime organizations made up of a group of people with the same
+    goals in mind. Each person within the group is usually an expert or has a specialized
+    skillset, such as one person may be responsible for performing extensive reconnaissance
+    on the target, while another is responsible for developing an **Advanced Persistent
+    Threat** (**APT**). Within this organized crime group, there is usually a person
+    who is responsible for financially funding the group to provide the best available
+    resources money can buy to ensure the attack is successful. The intention of this
+    type of threat actor is usually big, such as stealing their target''s data and
+    selling it for financial gain.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Black hat** – The black hat hacker is a threat actor who uses their hacking
+    skills for malicious reasons. These hackers can be anyone and their reason for
+    performing a hack against a targeted system or network can be random. Sometimes
+    they may hack to destroy their target''s reputation, steal data, or even as a
+    personal challenge to prove a point for fun.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**White hat** – White hat hackers are the industry''s good guys and girls.
+    This type of hacker uses their skills to help organizations and people secure
+    their networks and safeguard their assets from malicious hackers. Ethical hackers
+    and penetration testers are examples of white hat hackers as these people use
+    their skills to help others in a positive and ethical manner.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Gray hat** – This is a person who metaphorically sits between the boundary
+    of a white hat and black hat hacker. This means the gray hat hacker has a hacking
+    skillset and uses their skills to help people and organizations during the day
+    as a cybersecurity professionals but uses their skills at night for malicious
+    reasons.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: With the continuous development of new technologies, the curious minds of many
+    will always find a way to gain a deeper understanding of the underlying technologies
+    of a system. This often leads to discovering security flaws in the design and
+    eventually enabling a person to exploit the vulnerability. Having completed this
+    section, you have discovered the characteristics of various threat actors and
+    their intentions for performing a cyber-attack. In the next section, we will take
+    a deep dive into understanding what matters to a threat actor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploring cybersecurity terminologies
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'During your journey in the field of cybersecurity, you’ll be discovering various
+    jargons and terminologies that are commonly used within various research papers,
+    articles, literature, discussions and learning resources. As an aspiring cybersecurity
+    professional, it’s important to be aware of and gain a solid understanding on
+    common terminologies and how they are related to ethical hacking and penetration
+    testing.The following are the most common terminologies within the cybersecurity
+    industry:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Asset** – Within the field of cybersecurity, we usually define an asset to
+    be anything that has value to an organization or person. For instance, assets
+    are systems within a network that can be interacted with and potentially expose
+    an organization’s network infrastructure to security weaknesses that could be
+    compromised and enabling unauthorized access to a cyber criminal, while providing
+    a way to escalate their privileges on the compromised system from standard user
+    to administrator-/root-level privileges. However, it’s important to mention that
+    assets are not and should not be limited to technical systems. In addition, other
+    forms of assets include people (humans), physical security controls, and even
+    the data that resides within the network and systems we aim to protect.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Assets are commonly assorted into the following categories:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Tangible**: Tangible assets are simply described as any physical object with
+    value, such as computers, servers, networking devices (routers, switches, etc.)
+    and security appliances (firewalls). Computers and other end devices helps typical
+    users and employees to access the resources on a network, and perform their daily
+    duties within an organization. Servers are typically used to store and host applications
+    and provide services that are needed within typical network infrastructures.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: While networking devices contains configurations that are used to forward network
+    traffic between systems, and security appliances are implemented to filter unwanted
+    traffic and prevent threats between networks and systems. If these systems and
+    devices are compromised, cyber criminals will be able to redirect network traffic
+    to malicious websites that are owned by the malicious actors and expand their
+    operations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Intangible**: Intangible assets are things without a physical form that has
+    value, such as applications, software license keys, intellectual property, business
+    plans and models, and data.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**People**: This type of asset are the customers and employees of an organization.
+    Protecting the customers’ data from being stolen and leaked on the *Dark Web*,
+    and safeguarding the employees from various types of threats.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It important to identify all the assets of an organization and potential threats
+    that can cause harm and damages to them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Threat** – In the context of cybersecurity, a threat is anything that has
+    the potential to cause harm or damages to a system, network, or person. Whether
+    you’re focusing on the offensive or defensive path in cybersecurity, it’s important
+    to identify various types of threats. Many organizations around the world encounter
+    different types of threats each day, and their cybersecurity team works around
+    the clock to ensure their company’s assets are safeguarded from cyber criminals.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: One of the most exciting, but also overwhelming aspects of cybersecurity is
+    industry professionals always need to stay one step ahead of threat actors to
+    quickly find security weaknesses in systems, networks, and applications, and implement
+    countermeasures to mitigate any potential threats against those assets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Vulnerability** – A vulnerability is a security weakness or flaw that exists
+    within technical, physical, or human systems that hackers can exploit in order
+    to gain unauthorized access or control over systems within a network. Common vulnerabilities
+    that exist within organizations include human error (the greatest of vulnerabilities
+    on a global scale), misconfiguration of devices, using weak user credentials,
+    poor programming practices, unpatched operating systems, outdated applications
+    on host systems, using default configurations on systems, and so on.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A threat actor will look for the *lowest-hanging fruits* such as the vulnerabilities
+    that are the easiest to exploit on a targeted system. The same concept applies
+    to penetration testing. During a security assessment, the penetration tester will
+    use various techniques and tools to discover vulnerabilities and will attempt
+    to exploit the easy ones before moving onto more complex security flaws on a targeted
+    system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Exploit** – An exploit is anything such as tool or code that is used to take
+    advantage of a security vulnerabilities on a system. For instance, take a hammer,
+    a piece of wood and a nail. The vulnerability is the soft, permeable nature of
+    the wood, and the exploit is the act of hammering the nail onto the piece of the
+    wood. Once a security vulnerability is found on a targeted system, the threat
+    actor or penetration tester will either acquire an exploit from various online
+    sources or develop one on their own that has the capabilities of taking advantage
+    of the security weakness.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you’ve acquired or developed an exploit, it’s important you should test the
+    exploit on a system to ensure it has the capabilities to compromise the targeted
+    system and works as expected. Sometimes, an exploit may work on one system and
+    does not on another. Hence, it’s a common practice that seasoned penetration testers
+    will test and ensure their exploits are working as expected and graded on their
+    rate of success for a vulnerability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Attack** – The attack is simply the method or technique which is used by
+    a threat actor to take advantage (exploit) a security vulnerability within a system.
+    There are various types of attacks which are commonly used by cyber criminals
+    to compromise the confidentiality, integrity and/or availability of a targeted
+    system. For instance, the LockBit 3.0 ransomware focuses on exploiting the security
+    vulnerabilities that are found on internet-facing systems that does not have their
+    language settings configured to match a specific exclusion list. The attack is
+    launching a ransomware on the internet, it will automatically seek and compromise
+    vulnerable systems.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Important Note
+  prefs:
+  - PREF_IND
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_IND
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'To learn more about the LockBit 3.0 ransomware, please see the official Cybersecurity
+    and Infrastructure Security Agency (CISA) advisory at: [https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-075a](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-075a).'
+  prefs:
+  - PREF_IND
+  - PREF_BQ
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: '**Attack vector** – The attack vector is simply the areas or paths at which
+    a targeted system, network or organization can be compromised a threat actor.
+    Common attack vectors include: direct access, wireless, email, supply chain, social
+    media, removable media and the cloud; these are the infrastructure that an attacker
+    can deliver a malicious payload to a target.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Risk** – Risk is the potential impact that a vulnerability, threat, or attack
+    presents to the assets of an organization and the likelihood an attack or threat
+    has to cause harm systems. Evaluating risk helps to determine the likelihood of
+    a specific issue causing a data breach that will cause harm to an organization''s
+    finances, reputation, or regulatory compliance. Reducing risk is critical for
+    many organizations. There are many certifications, regulatory standards, and frameworks
+    that are designed to help companies understand, identify, and reduce risks.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: While it may seem like ethical hackers and penetration testers are hired to
+    simulate real-world cyber-attacks on a target organization, the goal of such engagements
+    is much deeper than it seems. At the end of the penetration test, the cybersecurity
+    professional will present all the vulnerabilities and possible solutions to help
+    the organization mitigate and reduce the risk of a potential cyber-attack while
+    reducing the attack surface of the company.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Attack surface** – This is all vulnerable points of entry into a system,
+    network or organization that can be exploited by a threat actor to gain unauthorized
+    access and expand their foothold on the network. Ethical hackers and penetration
+    testers focuses on identifying these vulnerability points of entry to determine
+    the attack surface of an organization and how a cyber-criminal would potentially
+    exploit those weaknesses to compromise their target.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Zero-day** – A zero-day is when a threat actor discovers a security vulnerability
+    within a product or application, and is able to exploit it before the vendor is
+    either aware of the vulnerability and has time to develop a security patch to
+    resolve the issue. These attacks are commonly used in nation-state attacks, APT
+    groups, as well as large criminal organizations. The discovery of a zero-day vulnerability
+    can be very valuable to ethical hackers and penetration testers, and can earn
+    them a bug bounty. These bounties are fees paid by vendors to security researchers
+    that discover unknown vulnerabilities in their applications.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: There are many bug bounty programs which allows security researches, professionals
+    and anyone with the right skillset to discover security vulnerabilities within
+    an application or system owned by a vendor and report it for a reward. The person
+    who reports the security vulnerability, usually a zero-day flaw, is often given
+    a financial reward. However, there are threat actors who intentionally attempt
+    to exploit the targeted system for personal gain, this commonly referred to as
+    the *hack value* of the target.During this section, you have learnt about the
+    importance and need for cybersecurity within various industries around the world.
+    In addition, you learned about various types of threat actors and their motives
+    behind their cyber-attacks, and have gain the knowledge of common security-related
+    terminologies in the industry. Next, you will gain a deeper understand on what
+    matters to threat actors when planning a cyber-attack on a target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding what matters to threat actors
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: From a cybersecurity perspective, hacking into a system or device has always
+    been interesting and fascinating to many people around the world. Reverse engineering
+    a system to better understand how it works has always attracted the curious minds.
+    Similarly, hacking focuses on gaining a better understanding on how a system operates
+    and function, if there are any flaws within its programming or design, and whether
+    these security flaws can be exploited to alter the functionality of the system
+    that enables the curious mind to take advantage of it. However, before a cyber-criminal
+    launches any attack on a targeted organization, it’s important to plan the attack,
+    evaluate the time and resources that are needed to perform the cyber-attack. Furthermore,
+    the complexity of the attack and hack value of the target helps the threat actor
+    to determine whether it’s worth moving forward with the plan of attack or not.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Time
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Determining the amount of time it will take from starting with gathering information
+    about the target to meeting the objectives of the attack is important. Sometimes,
+    a cyber-attack can take a threat actor anything from days to a few months of careful
+    planning to ensure each phase is successful when executed in the proper order.
+    Threat actors also need to consider the possibility that an attack or exploit
+    might not work on the targeted system and this will create an unexpected delay
+    during the process, which increases the time taken to meet the goals of the hack.
+    Similarly, this concept can be applied to both ethical hackers and penetration
+    testers as they need to determine how long it will take to complete a penetration
+    test for a customer and present the report with the findings and security recommendations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Resources
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Without the right set of resources, it will be a challenge to complete a task.
+    Threat actors need to have the right set of resources, these are software- and
+    hardware-based tools. While skilled and seasoned hackers can manually discover
+    and exploit security weaknesses on targeted systems, it can be a time-consuming
+    process. However, using the right set of tools can help automate these tasks and
+    improve the time taken to find security flaws and exploit them. Additionally,
+    without the right skillset, a threat actor may experience some challenges in being
+    successful in performing the cyber-attack. This can lead to seeking the support
+    of additional persons with the skills needed to assist and contribute to achieving
+    the objectives of the cyber-attack. Once again, this concept can be applied to
+    security professionals such as penetration testers within the industry. Not everyone
+    has the same skills and a team may be needed for a penetration test security assessment
+    for a customer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Financial factors
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Another important resource is financial factors. Sometimes a threat actor does
+    not need any additional resources and can perform a successful cyber-attack and
+    compromise their targets. However, there may be times when additional software-
+    or hardware-based tools are needed to increase the potential of compromising the
+    target. Having a budget allows the threat actors to purchase the additional resources
+    needed. Similarly, penetration testers are well-funded by their employers to ensure
+    they have access to the best tools within the industry to excel at their jobs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hack value
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Lastly, the hack value is simply the motivation or the reason for performing
+    a cyber-attack against a targeted system, network and organization. For a threat
+    actor, it's the value of accomplishing the objectives and goals of compromising
+    the system. Threat actors may not target an organization if they think it's not
+    worth the time, effort, or resources to compromise its systems. Other threat actors
+    may target the same organization with another motive. Having completed this section,
+    you have learned about some of the important factors that matter to threat actors
+    prior to performing a cyber-attack on an organization. In the next section, you
+    will discover
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploring the importance for penetration testing
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Each day, cybersecurity professionals are always in a race against time with
+    threat actors in discovering vulnerabilities in systems and networks. Imagine
+    that threat actors are able to exploit a security vulnerability on a targeted
+    system before a cybersecurity professional can find it and implement security
+    controls and countermeasures to mitigate the threat. The longer cybersecurity
+    professionals take to identify hidden security flaws on systems, the more time
+    threat actors has to improve their cyber operations, exploit their targets and
+    expand their foothold on a compromised network. This would leave the cybersecurity
+    professional to perform incident handling and response to contain and eradicate
+    the threat, and recover any compromised systems back to an acceptable working
+    state.Organizations are realizing the need to hire white hat hackers such as ethical
+    hackers and penetration testers with the skills needed to simulate real-world
+    cyber-attacks on their systems and networks with the intention of discovering
+    and exploiting hidden vulnerabilities to better understand the TTPs of cyber criminals.
+    These techniques enables the ethical hacker and penetration tester to perform
+    the same type of attacks as a real hacker; the difference is the penetration tester
+    is hired by the organization and has been granted legal permission to conduct
+    such intrusive security testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important Note
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Penetration testers usually have a strong understanding of computers, operating
+    systems, networking, and programming, as well as how these technologies work together.
+    Most importantly, you need creativity. Creative thinking enables a person to think
+    *outside the box* and go beyond the intended uses of technologies, and find new
+    and exciting ways to implement them.
+  prefs:
+  - PREF_BQ
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: At the end of the penetration test, both an executive and technical report is
+    presented to the organization's stakeholders detailing all the findings, such
+    as vulnerabilities and how each weakness can be exploited. The reports also contain
+    recommendations on how to mitigate and prevent a possible cyber-attack on each
+    vulnerability found. This allows the organization to better understand what type
+    of information and systems a hacker will discover if they are targeted and the
+    countermeasures which are needed to reduce the risk of a future cyber-attack.
+    Some organizations will even perform a second penetration test after implementing
+    the recommendations outlined in the penetration test reports to determine whether
+    all the vulnerabilities have been fixed, the security controls are working as
+    expected to mitigate the threats and the whether the attack surface is reduced.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Penetration testing Methodologies
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Many learners are always eager and excited to get started with learning ethical
+    hacking and penetration testing, and can’t wait to compromise their first targeted
+    system. Some would be too eager and may overlook the fundamentals or forgot to
+    perform an important step during a process to reach their objectives. As a result,
+    the desired outcome may not be achieved for this reason. Hence, there are various
+    penetration testing methodologies which helps ethical hackers and penetration
+    testers to take a specific course of actions during security assessments to ensure
+    all in-scope systems, networks and applications are thoroughly tested for security
+    vulnerabilities. The following are common penetration testing methodologies:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Penetration Testing Execution Standard** (**PTES**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Payment Card Industry Data Security Standard** (**PCI DSS**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Penetration Testing Framework** (**PTF**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Technical Guide to Information Security Testing and Assessment**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Open Source Security Testing Methodology Manual**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**OWASP Web Security Testing Guide**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**OWASP Mobile Security Testing Guide**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**OWASP Firmware Security Testing Methodology**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: As shown in the preceding list, there are various penetration testing methodologies
+    which can be applied to organizations based on their operating industry, category
+    of business, the goals of performing ethical hacking and penetration testing,
+    and the scope of the security assessment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tip
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'To learn more about each penetration testing methodology, please see: [https://owasp.org/www-project-web-security-testing-guide/latest/3-The_OWASP_Testing_Framework/1-Penetration_Testing_Methodologies](https://owasp.org/www-project-web-security-testing-guide/latest/3-The_OWASP_Testing_Framework/1-Penetration_Testing_Methodologies).'
+  prefs:
+  - PREF_BQ
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: To better understand the importance of each phase of penetration testing, let’s
+    take a closer look at the PTES methodology as it’s applicable to many scenarios.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pre-engagement phase
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'During the pre-engagement phase, key personnel are selected. These individuals
+    are key to providing information, coordinating resources, and helping the penetration
+    testers to understand the scope, breadth, and rules of engagement in the assessment.
+    This phase also covers legal requirements, which typically include a **Non-Disclosure
+    Agreement** (**NDA**) and a **Consulting Services Agreement** (**CSA**). The following
+    is a typical process overview of what is required prior to the actual penetration
+    testing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file1.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'An NDA is a legal agreement that specifies that a penetration tester and their
+    employer will not share or hold onto any sensitive or proprietary information
+    that is encountered during the assessment. This is important to the customer as
+    the penetration tester will be accessing their systems and may find confidential
+    information. Companies usually sign these agreements with cybersecurity companies
+    who will, in turn, sign them with the employees who are working on the project.
+    In some cases, companies sign these agreements directly with the penetration testers
+    from the company carrying out the project.The scope of a penetration test, also
+    known as the *rules of engagement*, defines the systems and networks the penetration
+    tester is authorized to perform security assessments on. In other words, it defines
+    what the penetration tester is permitted and not permitted to hack, and whether
+    there are any restricted tools and attacks. This ensures the penetration tester
+    remains within legal boundaries. This is a mutual agreement between the client
+    (customer) and the service provider (penetration tester). It also defines sensitive
+    systems and their IP addresses as well as testing times, and which systems require
+    special testing time-windows. It''s incredibly important for penetration testers
+    to pay close attention to the scope of a penetration test and the location they
+    are testing in order to always stay within the testing constraints.The following
+    are some general pre-engagement questions to help you define the scope of a penetration
+    test:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is the size/class (IP addresses and/or network blocks) of the external
+    network? (Network penetration testing)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What is the size/class (IP addresses and/or network blocks) of the internal
+    network? (Network penetration testing)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: What is the purpose and goal of the penetration test? (Applicable to any form
+    of penetration testing)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How many site pages does the web application have? (Web application penetration
+    testing)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How many user inputs or forms does the web application have?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This is not an extensive list of pre-engagement questions, and all engagements
+    should be given thorough thought to ensure that you ask all the important questions
+    so you don't *under scope* or under-price the security assessment.Now that you’ve
+    understood the legal limitation stages of penetration testing, let's move on to
+    learn about the information gathering phase and its importance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Information gathering phase
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Penetration testing is a lot like real-world hacking with the exception the
+    penetration tester is limited to the scope and time allocated for the security
+    assessment to be completed. Therefore, like a real cyber-attack, penetration testers
+    need to perform sufficient reconnaissance to collect information from various
+    data sources to create a profile about the targeted organization and identify
+    security vulnerabilities. Information gathering is essential to ensure that penetration
+    testers have access to key information that will assist them in successfully conducting
+    their security assessments. Sometimes, a seasoned professional would normally
+    spend a day or two conducting extensive reconnaissance on their target. The more
+    knowledge that is known about the target will help the penetration tester to better
+    identify the attack surface, such as points of entry in the targeted systems and
+    networks. Additionally, this phase also helps the penetration tester to identify
+    the employees, infrastructure, and geolocation for physical access, network details,
+    servers, and other valuable information about the targeted organization.Understanding
+    the target is very important before launching any type of attack as a penetration
+    tester, as it helps in creating a profile of the potential target and determine
+    which type of attacks are most effective based on the attack surface. Additionally,
+    recovering user credentials/login accounts in this phase, for instance, will be
+    valuable in later phases of penetration testing as it will help ethical hackers
+    and penetration testers gain access to vulnerable systems and networks. Next,
+    we will discuss the essentials of threat modeling.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Threat modeling
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Threat modeling is a process used to assist penetration testers and network
+    security defenders to better understand the threats that inspired the security
+    assessment or the threats that applications or networks are most prone to. This
+    data is used to help penetration testers to simulate, assess, and address the
+    most common threats that an organization, network, or application faces.Overall,
+    threat modeling helps organizations and cybersecurity professionals to better
+    understand and evaluate the cyber risks and threats which has the potential to
+    negatively affect the assets in a company. In addition, threat modelling helps
+    cybersecurity professionals to determine the potential each threat has to successfully
+    compromise an asset, together with the likelihood and the ability of the organization
+    to respond to a security incident.The following are common threat models:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'STRIDE: Spoofing identity, tampering with data, information disclosure, denial
+    of service, and elevation of privilege.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'PASTA: Process for Attack Simulation and Threat Analysis.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Tip
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: 'To learn more about threat modeling and various frameworks, please see: [https://www.crowdstrike.com/cybersecurity-101/threat-modeling/](https://www.crowdstrike.com/cybersecurity-101/threat-modeling/).'
+  prefs:
+  - PREF_BQ
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Having understood the importance and need for threat modeling, the next step
+    is to perform a vulnerability assessment on the assets to further determine the
+    risk rating and severity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerability analysis
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: During the vulnerability analysis phase, the ethical hacker or penetration tester
+    perform both manual and automated testing on targeted systems to identify hidden
+    and unknown security flaws. Identifying security vulnerabilities within systems
+    helps the organizations to better understand the attack surface, which is the
+    vulnerable points of entry within their systems and network infrastructure. While
+    many organizations implement and use automated vulnerability scanning tools, it’s
+    also recommended to perform manual testing to determine whether a security vulnerability
+    exists on a system and how to can be exploited by a real adversary, hence the
+    need for penetration testing.Furthermore, the vulnerability helps the stakeholders
+    and decision-makers in the organization to better determine how to allocation
+    resources to higher priority systems. For instance, many automated vulnerability
+    scanners provides a vulnerability score between 0 (lowest) – 10 (most severe)
+    for each security flaw which are found on a system. The vulnerability scores can
+    help organizations determine which security vulnerability on a system requires
+    more attention and higher priority due the potential impact if the vulnerability
+    were to be exploited by an adversary.In the later sections of the book, you will
+    learn how to perform vulnerability assessments using various tools and techniques
+    on targeted systems. After identifying the security weaknesses on a targeted system
+    or network, the next phase is exploitation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploitation
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: As an ethical hacker and penetration tester, the next steps are discovering
+    vulnerabilities on a targeted system, perform manual testing to validate whether
+    these security vulnerabilities exists and determine how a real threat actor can
+    compromise the system. Exploitation is sometimes the most challenging phase during
+    a penetration test since you will need to either develop or acquire an exploit,
+    modify and test it thoroughly to ensure it has the capabilities of taking advantage
+    of the vulnerability on the targeted system. For many cybersecurity professionals,
+    exploitation is the most exciting phase and feeling of breaking into a system.
+    Exploitation is the ammunition or evidence that helps articulate why the vulnerability
+    matters and illustrates the impact that the vulnerability could have on the organization.
+    Furthermore, without exploitation, the assessment is not truly a penetration test
+    and is nothing more than a vulnerability assessment, which most companies can
+    conduct in-house better than a third-party consultant could.To put it simply,
+    during the information gathering phase, a penetration tester will profile the
+    target and identify any vulnerabilities. Next, using the information about the
+    vulnerabilities, the penetration tester will do their research and create specific
+    exploits that will take advantage of the vulnerabilities of the target—this is
+    exploitation. We use exploits (malicious code) to leverage a vulnerability (weakness)
+    in a system, which will allow us to execute arbitrary code and commands on the
+    targeted system(s).Often, after successfully exploiting a targeted system or network,
+    we may think the task is done—but it isn't just yet. There are tasks and objectives
+    to complete after breaking into the system. Next, we’ll discuss the post-exploitation
+    phase in penetration testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Post-exploitation
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: After a threat actor compromises a targeted system, the adversary usually attempts
+    to expand their foothold on the network by compromising additional systems and
+    setting up backdoor access. This provides additional points of entry into the
+    network infrastructure of the targeted organization. Similarly, ethical hackers
+    and penetration testers apply common post-exploitation techniques such as *lateral
+    movement* to compromise other systems on the network and setting up **Command
+    and Control** (**C2**) operations to control multiple systems simultaneously.
+    During post-exploitation, the primary goal is typically to demonstrate the impact
+    that the vulnerability and access gained can pose to the targeted organization.
+    This impact assists in helping executive leadership and decision-makers to better
+    understand the risks, vulnerabilities and the damages it could cause to the organization
+    if a threat were to target their company and assets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Report writing
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Report writing is exactly as it sounds and is one of the most important elements
+    of any penetration test. Penetration testing may be the service, but report writing
+    is the deliverable that the client/customer sees and is the only tangible element
+    given to the client at the end of the security assessment. Reports should be given
+    as much attention and care as the testing.Report writing involves much more than
+    listing the security vulnerabilities that were found, their impact and recommendations.
+    It is the medium through which you convey risk and business impact, summarize
+    your findings, and include remediation steps. A good penetration tester also needs
+    to be a good report writer, or the issues they find will be lost and may never
+    be understood by the customer who hired them to conduct the assessment.Having
+    completed this section, you are now able to describe each phase of a penetration
+    test and have gained a better idea of the expectations of penetration testers
+    in the industry. Next, we will dive into understanding various penetration testing
+    approaches.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Discovering penetration testing approaches
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A **white box** assessment is typical of web application testing but can extend
+    to any form of penetration testing. The key difference between white, black, and
+    gray box testing is the amount of information provided to the penetration testers
+    prior to the engagement. In a white box assessment, the penetration tester is
+    provided with full information about the targeted applications, systems and networks,
+    and usually be given user credentials with varying degrees of access to quickly
+    and thoroughly identify vulnerabilities in the targeted systems and networks.
+    This approach reduces the time required by the ethical hacker and penetration
+    tester to perform reconnaissance to identify the attack surface of the target.
+    Not all security testing is done using the white box approach; sometimes, only
+    the target targeted organization’s name is provided to the penetration tester.**Black
+    box** assessments are one of the most common form of network penetration testing
+    and are most typical among external network penetration tests and social engineering
+    penetration tests. In a black box assessment, the penetration testers are given
+    very little or no information about the targeted organization, its networks or
+    systems, except the organization’s name. This particular form of testing is efficient
+    when trying to determine what a real adversary will find and their strategies
+    to gain unauthorized access to the organization's network and techniques for compromising
+    their systems.**Gray box** assessments are a hybrid of white and black box testing
+    and are typically used to provide a realistic testing scenario while also giving
+    penetration testers enough information to reduce the time needed to conduct reconnaissance
+    and other black box testing activities. In addition, it's important in any assessment
+    to ensure you are testing all in-scope systems. In a true black box, it's possible
+    to miss systems, and as a result, they are left out of the assessment.Each penetration
+    test approach is a bit different from the others, and it's important that you
+    know about all of them. Imagine a potential client calling to request a black
+    box test on their external network infrastructure; as a penetration tester, we
+    must be familiar with the terminologies and what is expected by the customer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Types of penetration testing
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: As an aspiring ethical hacker and penetration tester, it's important to understand
+    the difference between a vulnerability assessment and penetration testing. In
+    a vulnerability assessment, the cybersecurity professional uses a vulnerability
+    scanner, which is used to help identify the security posture of the targeted systems
+    within the organization. These vulnerability scanners use various techniques to
+    automate the process of discovering a wide range of security weaknesses on systems.The
+    downside of using an automated vulnerability scanning tool is its incapability
+    to identify the issues that manual testing can, and this is one of the many reasons
+    why organizations hire penetration testers to perform these assessments on their
+    systems. However, if the penetration tester only delivers the reports of the vulnerability
+    scanning tools instead of performing manual testing during a network-based penetration
+    test, in my opinion, this is highly unethical. During the course of this book,
+    you will learn how to perform successful penetration testing using industry practices,
+    tools and techniques.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Web application penetration testing
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Web application penetration testing, hereafter referred to as WAPT, is the most
+    common form of penetration testing and is likely to be the first penetration testing
+    job most people reading this book will be involved in. WAPT is the act of conducting
+    manual hacking or penetration testing against a web application to test for security
+    vulnerabilities that typical vulnerability scanners won't find. Too often, penetration
+    testers submit web application vulnerability scans instead of manually finding
+    and verifying issues within web applications.In the later section of this book,
+    you will gain the skills and hands-on experience on getting started with web application
+    security testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Mobile application penetration testing
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Mobile application penetration testing is similar to WAPT but it’s specific
+    to mobile applications that contain their own attack vectors and threats. This
+    is a rising form of penetration testing with a great deal of opportunity for those
+    who are looking to break into penetration testing and have an understanding of
+    mobile application development. As you may have noticed, the different types of
+    penetration testing each have specific objectives.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Social engineering penetration testing
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Social engineering penetration testing, in my opinion, is the most adrenaline-filled
+    type of security assessments. Social engineering is the art of manipulating basic
+    human psychology (mind) to find human vulnerabilities and trick potential victims
+    into doing things they may not otherwise do. For instance, adversaries will attempt
+    to trick an employee within a targeted organization to connect a malware-infected
+    USB drive to their computer or open a malware-infected attachment within an email
+    message. In this form of penetration testing, you may be asked to do activities
+    such as sending phishing emails, make vishing phone calls, or talk your way into
+    secure facilities and connect a USB drive onto the system to determine what a
+    real adversary could achieve. There are many types of social engineering attacks,
+    which will be covered later on in this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Network penetration testing (external and internal)
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Network penetration testing focuses on identifying security weaknesses in a
+    targeted environment. The penetration test objectives are to identify the flaws
+    on the targeted organization''s systems, their networks (wired and wireless),
+    and their networking devices such as switches and routers.The following are some
+    tasks that are performed using network penetration testing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Bypassing an **Intrusion Detection System** (**IDS**)/**Intrusion Prevention
+    System** (**IPS**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Bypassing firewall appliances
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Password cracking
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Gaining access to end devices and servers
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exploiting misconfigurations on switches and routers
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Now that you have a better idea of the objectives of network penetration testing,
+    let's take a look at the purpose of cloud penetration testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cloud penetration testing
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: Cloud penetration testing involves performing security assessments to identify
+    the risks on cloud-based platforms to discover any security vulnerabilities that
+    may expose confidential information to malicious actors. Before attempting to
+    directly engage a cloud platform, ensure you have legal permission from the cloud
+    provider. For instance, if you are going to perform penetration testing on the
+    Microsoft Azure platform, you'll need legal permission from both the cloud provider,
+    Microsoft as your actions may affect other users and services who are sharing
+    the data center, and the customer who are hiring you for the service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Physical penetration testing
+  prefs:
+  - PREF_H4
+  type: TYPE_NORMAL
+- en: 'Physical penetration testing focuses on testing the physical security access
+    control systems in place to protect an organization''s data. Security controls
+    exist within offices and data centers to prevent unauthorized persons from entering
+    secure areas of a company. Physical security controls include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Security cameras and sensors: Security cameras are used to monitor physical
+    actions within an area.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Biometric authentication systems: Biometrics are used to ensure that only authorized
+    people are granted access to an area.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Doors and locks: Locking systems are used to prevent unauthorized persons from
+    entering a secure room or area.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Security guards: Security guards are people who are assigned to protect something,
+    someone, or an area.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Having completed this section, you are now able to describe various types of
+    penetration testing. Your journey ahead won't be complete without understanding
+    the phases of hacking. The different phases of hacking will be covered in the
+    next section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploring penetration testing methodologies
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Ethical hackers and penetration testers are the white hat hackers, the people
+    with a good moral compass in the cybersecurity industry, it’s important to understand
+    the general phases of hacking and how each phase is typically aligned to penetration
+    tester. During any penetration testing training, you’ll encounter the five phase
+    of hacking.The following are the general five phases of hacking:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file2.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding diagram, a threat actor perform reconnaissance on
+    the targeted system, network or organization to collect as much information as
+    possible to better understand the attack surface of the target before moving forward
+    to launching an attack to compromise the target. In the following sub-sections,
+    you will learn more about the purpose of each phase and how it aligns to ethical
+    hacking and penetration testing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reconnaissance
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'Reconnaissance, commonly referred to as the *information gathering* phase,
+    is where the threat actor focuses on acquiring meaningful information about their
+    target. The collected information is analyzed to create context and develop a
+    profile about the targeted system, network or organization. The collected information
+    helps the threat actor to better understand the target’s attack surface and develop/acquire
+    specific exploits that suitable for compromising targeted systems.The following
+    are techniques used in the reconnaissance phase:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using internet search engines to gather information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using social networking platforms
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Performing Google hacking techniques
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Performing **Domain Name System** (**DNS**) interrogation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using social engineering techniques
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: During this phase, the objective is to gather as much information as possible
+    about the target. Next, we will discuss using a more direct approach, and engage
+    the target to get specific and detailed information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scanning and enumeration
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'The second phase of hacking is scanning. Scanning involves using a direct approach
+    in engaging the target to obtain information that is not accessible via the passive
+    information gathering techniques. This phase also involves profiling the targeted
+    organization, its systems, and network infrastructure by sending specially crafted
+    probes to the target.The following are techniques used in the scanning phase:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Perform host discovery
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Check for firewalls and test their rules
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Check for open network ports and running services
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Check for security vulnerabilities
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Create a network topology of the target network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: This phase is very important as it helps us to improve the profile of the target.
+    The information found in this phase will help us to move on to performing exploitation
+    on the targeted system or network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Gaining access
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'This phase can sometimes be the most challenging phase of them all. During
+    this phase, the threat actor uses the information obtained from the previous phases
+    to either craft an exploit or acquire one from online sources that’s designed
+    to compromise the security vulnerability on the target. In addition, the threat
+    actor needs to test the exploit to ensure it’s working as expected before delivering
+    and executing it on the targeted system. The following can occur once access is
+    gained on a targeted system or network:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Retrieve and crack stored passwords on systems
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Escalating privileges
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Transferring additional payloads and malware
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The gaining access (exploitation) phase can at times be difficult as exploits
+    may work on one targeted system and not on another. Once an exploit is successful
+    and system access is acquired, the next phase is to ensure the threat actor expands
+    their foothold on the compromised system and network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Maintaining access
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'After gaining access to a system, the threat actor usually attempts to implement
+    additional backdoors on the compromised system to expand their foothold. In addition,
+    the threat actor usually perform lateral movement on the network by compromising
+    other systems and setting up backdoors for persistent access on the victim’s network.
+    Therefore, if a compromised system is offline, the attacker can attempt to remotely
+    connect to another to re-gain access to the targeted network.The objectives of
+    maintaining access are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lateral movement
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exfiltration of data
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating backdoor and persistent connections
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Maintaining access is important to ensure that you, the penetration tester,
+    always have access to the targeted systems or network. Once the technical aspect
+    of the penetration test is completed, it's time to clean up the network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Covering tracks
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: The last phase is to cover your tracks. This ensures that you do not leave any
+    traces of your presence on a compromised systems or network. As penetration testers,
+    we would like to be as undetectable as possible on a targeted network, not triggering
+    any alerts on security sensors and appliances while we remove any residual traces
+    of the actions performed during the penetration test. Covering your tracks ensures
+    that you don't leave any trace of your presence on the network, as a penetration
+    test is designed to be stealthy and simulate real-world attacks on an organization
+    to both identify hidden security vulnerabilities and test the effectiveness of
+    the cyber defenses on the organization.Having completed this section, you have
+    gained the knowledge to describe the various phases of hacking that are commonly
+    used by threat actors. In the next section, you will discover the Cyber Kill Chain
+    framework and we are going to leverage it into the training and exercises throughout
+    this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding the cyber kill chain
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'As an aspiring ethical hacker and penetration tester who’s breaking into the
+    cybersecurity industry, it''s essential to understand the mindset of threat actors,
+    adversaries and malicious actors. To be better at penetration testing, you need
+    to develop a very creative and strategic mindset. To put it simply, you need to
+    think like a real hacker if you are to compromise systems and networks as a cybersecurity
+    professional.The **Cyber Kill Chain** is a seven-stage framework developed by
+    Lockheed Martin, an American aerospace corporation. This framework outlines each
+    critical step a threat actor will need to perform before they are successful in
+    meeting the objectives and goals of the cyber-attack against their targets. Cybersecurity
+    professionals will be able to reduce the likelihood of the threat actor meeting
+    their goals and reduce the amount of damage if they are able to stop the attacker
+    during the earlier phases of the Cyber Kill Chain.The following diagram shows
+    the seven stages of the Cyber Kill Chain that are used by threat actors:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file3.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding diagram, each stage of the Cyber Kill Chain flows
+    into the other until the adversary reaches the last phase, *actions on objectives*,
+    where the threat actor has successfully reach their goals of the cyber-attack,
+    and both the cyber defenses and cybersecurity team of the compromised organization
+    was not able to stop the attack or hacker in their tracks. On the blue team side
+    of cybersecurity operations, the security engineers need to ensure the systems
+    and networks are very well protected and monitored for any potential threats.
+    If a threat is detected, the blue team needs to analyze and contain (isolate)
+    the threat as quickly as possible, preventing it from spread to other devices
+    on the network. However, as an aspiring ethical hacker and penetration tester,
+    we can apply the techniques and strategies used by threat actors which is associated
+    to each stage of the Cyber Kill Chain to achieve our objectives during a real-world
+    penetration test for an organization.In the next few sections, you will learn
+    about the fundamentals of each stage of the Cyber Kill Chain, how each is used
+    by threat actors, and how penetration testers apply these strategies within their
+    security assessments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reconnaissance
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: As with every battle plan, it's important to know a lot about your opponent
+    before starting a war. The reconnaissance phase focuses on gathering a lot of
+    information and intelligence about the target, whether it's a person or an organization.
+    Threat actors and penetration testers use this stage to create a profile of their
+    targets, which contains IP addresses, systems' operating systems, and open service
+    ports, running applications, security vulnerabilities, and any sensitive resources
+    that may be unintentionally exposed that can increase the attack surface.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important Note
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: ''
+  prefs:
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: The reconnaissance stage involves both passive and active information gathering
+    techniques, which will be covered in later sections of this book. You will also
+    discover tools and techniques to improve your information collecting and analysis
+    skills during a penetration test.
+  prefs:
+  - PREF_BQ
+  - PREF_BQ
+  type: TYPE_NORMAL
+- en: Threat actors will spend a lot of time researching their target to determine
+    the geolocation of any physical offices, online services, domain names, network
+    infrastructure, online servers and web applications, employee contact details,
+    telephone numbers and email addresses, and so on. The main objective is to know
+    as much information about the target. Sometimes this phase can take a long time.
+    As compared to a penetration tester who has a specific time period to perform
+    the entire penetration test, it can take between 1 to 2 days of intensive research
+    before moving onto the next phase. However, since adversaries does not have any
+    time constraints like ethical hackers and penetration testers, that can spend
+    a lot more time collecting information, looking for security vulnerabilities and
+    better plan their cyber-attacks on the target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Weaponization
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: Using the information gathered from the reconnaissance phase, the threat actor
+    and penetration tester can use it to better craft a weapon, better referred to
+    as an exploit, which can take advantage of a security vulnerability on the targeted
+    system. The weapon (exploit) has to be specially crafted and tested to ensure
+    its successful when launched by the threat actor or penetration tester. The objective
+    of the exploit is to compromise the confidentiality, integrity, and/or availability
+    of the systems or networks that is owned by a targeted organization.Both threat
+    actors and penetration testers need to consider the likelihood their exploit will
+    be detected by any antimalware, **Endpoint Detection and Response** (**EDR**)
+    and any threat detection solutions that’s monitoring the targeted systems and
+    network. Therefore, it’s important to encode or disguise the exploit to reduce
+    triggering any security sensors and alerting the security team.An exploit takes
+    advantage of a vulnerability. After that happens, what's next? To be a bit more
+    strategic, threat actors and penetration testers will couple their exploit with
+    additional payloads. The payload is unleashed after the exploit has compromised
+    the system. As a simple example, a payload can be used to create a persistent
+    backdoor on the targeted system to allow the threat actor or the penetration tester
+    remote access to the system at any time when the compromised system is online.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Delivery
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'After creating the exploit (weapon), the threat actor or penetration tester
+    has to use an attack vector as a method to deliver the exploit onto the targeted
+    system. Delivery can be done using the creative mindset of the attacker, whether
+    using email messaging, instant messaging services, or even by creating drive-by
+    downloads on compromised web services. Another technique can be copying the exploit
+    onto multiple USB drives and dropping them within the compound of the target organization,
+    with the hope an employee will find it and connect it to an internal system due
+    to human curiosity.The following is a picture of a USB Rubber Ducky that’s commonly
+    used during ethical hacking and penetration testing:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../media/file4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: As shown in the preceding image, the USB Rubber Ducky enables a penetration
+    tester to load malicious scripts onto the memory card. Once this device is connected
+    to a computer, it’s detect as a **Human Interface Device** (**HID**) such as keyword,
+    then executes the script on the targeted system. This is just one of many creative
+    ideas of delivering a payload to a target. As an aspiring ethical hacker and penetration
+    tester, ensure you have multiple methods of delivering the weapon to the target,
+    such that, in the event that one method does not work, you have another, and alternative
+    solutions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploitation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: After the weapon (exploit) is delivered to the target, the attacker needs to
+    ensure when the exploit is executed, it is successful on taking advantage of the
+    security vulnerability on the targeted system as intended. If the exploit does
+    not work, the threat actor or penetration tester may be detected by the organization's
+    cyber defenses and this can create a halt in the Cyber Kill Chain. The attacker
+    needs to ensure the exploit is tested properly before executing it on the targeted
+    system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installation
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: After the threat actor has exploited the targeted system, the attacker will
+    attempt to create multiple persistent backdoor accesses to the compromised system.
+    This allows the threat actor or the penetration tester to have multiple channels
+    of entry back into the system and network. During this stage, additional applications
+    may be usually installed while the threat actor takes a lot of precautions to
+    avoid detection by any threat detection systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Command and Control (C2)
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: 'An important stage in a cyber-attack is creating **Command and Control** (**C2**)
+    communication channels between the compromised systems and a C2 server on the
+    internet. This allows the threat actor to centrally control a group of infected
+    systems (zombies) in a collection of a botnet using a C2 server that is managed
+    by the adversary. This allows the threat actor to create an army of zombies, all
+    controlled and managed by a single threat actor.The following diagram shows an
+    example of C2:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![ا 2" server ا ا Attacker ](../media/file5.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: The threat actor uses data encryption, encapsulation, and various tunneling
+    techniques to evade threat detection systems within target organizations. Similarly,
+    there is an advanced stage of penetration testing known as red teaming where there
+    are no limitations (rules of engagement) on the methods and techniques used to
+    compromise a target organization, with the objective of simulating the closest
+    thing to a real advanced cyber-attack of a malicious cyber army. However, keep
+    in mind that legal permission is still needed for any type of red teaming engagements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Actions on objectives
+  prefs:
+  - PREF_H3
+  type: TYPE_NORMAL
+- en: If the threat actor or penetration tester is able to reach this stage of the
+    Cyber Kill Chain, the organization's blue team has failed to stop the attacker
+    and preventing the cyber-attack. At this stage, the threat actor has completed
+    their objectives and achieved the goals of the attack. In this phase, the attacker
+    can complete the main objective of the attack, whether it's exfiltrating data
+    from the organization and selling it on the dark web or even extending their botnet
+    for a larger-scale cyber-attack on another target organization. Stopping the threat
+    actor or penetration tester at this phase is considered to be extremely difficult
+    as the attacker would have already established multiple persistent backdoor accesses
+    with encrypted C2 communication channels on many compromised systems within the
+    targeted organization. Furthermore, the threat actor will also be clearing traces
+    of any evidence or artifacts that could help cybersecurity professionals to trace
+    the source attack to the threat actor.Having completed this section, you have
+    learned about the various stages of the Cyber Kill Chain and how it helps cybersecurity
+    professionals understand the intentions of threat actors. Additionally, you have
+    learned how penetration testers can implement these strategies within their penetration
+    testing engagements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: During this chapter, you have learnt about the importance and need for cybersecurity
+    professionals and solutions around the world to safeguard assets from cyber criminals.
+    Furthermore, you now have a better understanding on different types of threat
+    actors and their reasons for performing cyber-attacks on their targets. In addition,
+    you have explored what matter to threat actors and how various factors can affect
+    their motives and determine whether it’s truly worth attacking a system or organization.
+    Furthermore, you have learned about the various phases of penetration testing
+    and how it compares to the Cyber Kill Chain frameworks that commonly used by threat
+    actors. Each phase of the penetration testing is important to ensure the ethical
+    hacker and penetration tester is efficiently able to test the cyber defenses of
+    a targeted organization and discover hidden security vulnerabilities. I trust
+    that the knowledge presented in this chapter has provided you with valuable insights,
+    supporting your path towards becoming an ethical hacker and penetration tester
+    in the dynamic field of cybersecurity. May this newfound understanding empower
+    you in your journey, allowing you to navigate the industry with confidence and
+    make significant contributions.. In the next chapter, *Chapter 2, Building a penetration
+    testing lab*, you will learn how to design and build a virtualized penetration
+    testing lab on your personal that will be used to hone your new skills in a safe
+    environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further Reading
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The cyber kill chain - [https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html](https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: MITRE ATT&CK tactics - [https://attack.mitre.org/tactics/enterprise/](https://attack.mitre.org/tactics/enterprise/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Penetration Testing Execution Standard (PTES) - [http://www.pentest-standard.org/index.php/PTES_Technical_Guidelines](http://www.pentest-standard.org/index.php/PTES_Technical_Guidelines)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Payment Card Industry Data Security Standard (PCI DSS) - [https://www.pcisecuritystandards.org/documents/Penetration-Testing-Guidance-v1_1.pdf](https://www.pcisecuritystandards.org/documents/Penetration-Testing-Guidance-v1_1.pdf)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Penetration Testing Framework (PTF) - [http://www.vulnerabilityassessment.co.uk/Penetration%20Test.html](http://www.vulnerabilityassessment.co.uk/Penetration%20Test.html)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical Guide to Information Security Testing and Assessment - [https://csrc.nist.gov/publications/detail/sp/800-115/final](https://csrc.nist.gov/publications/detail/sp/800-115/final)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Open Source Security Testing Methodology Manual - [https://www.isecom.org/OSSTMM.3.pdf](https://www.isecom.org/OSSTMM.3.pdf)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OWASP Web Security Testing Guide - [https://owasp.org/www-project-web-security-testing-guide/](https://owasp.org/www-project-web-security-testing-guide/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OWASP Mobile Security Testing Guide - [https://owasp.org/www-project-mobile-app-security/](https://owasp.org/www-project-mobile-app-security/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OWASP Firmware Security Testing Methodology - [https://github.com/scriptingxss/owasp-fstm](https://github.com/scriptingxss/owasp-fstm)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

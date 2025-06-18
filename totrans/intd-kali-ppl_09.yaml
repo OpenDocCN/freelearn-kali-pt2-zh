@@ -1,0 +1,1646 @@
+- en: '6'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Traffic and Log Analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we’ve established a bare-bones SIEM solution and learned how to direct
+    traffic to that solution, it’s time to see how Kali Purple can help us understand
+    the traffic that we’re sending. Otherwise, it wouldn’t do much good to send the
+    traffic if we couldn’t make much sense of it, right? Kali Purple provides some
+    well-known solutions that each approach traffic analysis in different ways. The
+    two we will highlight are **Arkime**, formerly known as Moloch, and **Malcolm**,
+    previously known as Bro.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additionally, we are going to peek at how bad actors will sometimes intentionally
+    manipulate this traffic to fool cyberdefense systems and personnel. Even the most
+    experienced and knowledgeable personnel and systems can be slowed down by making
+    the traffic hard to understand through a concept known as obfuscation. Well-trained
+    bad actors know that obfuscation won’t fool properly trained and/or experienced
+    defense analysts but they will still employ such methods because they know it
+    will, at the very least, annoy and slow down the cyber defenders. That would then
+    potentially buy attackers more time to do their dirty deeds. It’s also worth the
+    effort in their eyes to gamble on the cyber defenders being untrained, poorly
+    trained, or entirely new to the profession, which might sometimes provide them
+    with a lucky strike.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Many tools are designed to address obfuscation but anybody who’s been in the
+    cybersecurity profession for a length of time will tell you that there’s one that
+    reigns supreme over the others. It’s called **CyberChef**, and it too is included
+    in the Kali Purple distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will examine network traffic, packet analysis, and obfuscation
+    by highlighting the features of the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding packets
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Malcolm
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Arkime
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: CyberChef and obfuscation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The requirements for this chapters are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Minimum requirements**: A computing device with either the *amd64 (x86_64/64-bit)*
+    or *i386 (x86/32-bit)* architecture. It should contain at least *8 GB* of RAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Recommended requirements**: Based on feedback from cybersecurity field practitioners,
+    aim for the *amd64 (x86_64/64-bit)* architecture with *16 GB* of RAM – more is
+    better – and up to *64 GB* of additional disk space.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You’ll also require a successfully installed and running Elasticsearch instance
+    for the Arkime backend.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding packets
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Those of you with at least a basic knowledge of network transmission know that
+    the information exists as the result of data being broken down into very small
+    measurable chunks, called **packets**, for easier transmission over the internet.
+    That way, if there is a hiccup of some sort on the internet, only that tiny portion
+    of the total data stream needs to be re-sent, and only if it’s sent with the **Transmission
+    Control Protocol** (**TCP**), which is a protocol that requires the recipient
+    to attempt to reassemble the data in order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **User Datagram Protocol** (**UDP**) – the default protocol for live streaming
+    – does not require the data to be reassembled in order so that the data can reach
+    its destination in as close to real time from the sender as possible. That’s why
+    sometimes, you’ll see a brief glitch when watching a video. That glitch is from
+    the UDP simply dropping and forgetting the packets with the idea that it’s too
+    late, the show must go on. This information is sent and received through physical
+    portals on endpoint devices. These portals are known as **network interface**
+    **cards** (**NICs**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you currently use a physical cable for your internet connection, you’re probably
+    already familiar with an NIC. It is a term that was originally used to describe
+    the physical portal that’s internal to your computer with an external face that
+    has the physical port in which you plug your cable – called an Ethernet cable
+    – into your device. As time has passed, more and more folks have migrated to wireless
+    internet connections. A wireless NIC is similar in that it has the same function
+    of sending and receiving data. In some cases, this can be a noticeable device
+    with an antenna. As technology improves, wireless NICs, especially in laptop devices,
+    aren’t even noticeable anymore.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One interesting thing about NICs is that they are the only element of an information
+    system with a network address that is physically stamped onto the device itself.
+    This is called a **Media Access Control** (**MAC**) address. It is important to
+    understand packets, NICs, and MAC addresses because it is these bits of information
+    that are collected at these locations by network security and other cyber-defense
+    systems and software for analysis and action. Collecting data packets in this
+    manner is aptly known as packet capturing. One of the most famous packet-capturing
+    utilities is known as **Wireshark** but that’s a tool that hails from the red
+    team side of the Kali Purple family. We will discuss Wireshark in [*Chapter 10*](B21223_10.xhtml#_idTextAnchor161).
+    For now, we’re going to stick with the utilities that were uniquely added with
+    Kali Purple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Malcolm
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Malcolm is a free open source tool that focuses on data collection and analysis.
+    It is the result of a collaboration between the **Idaho National Laboratory**
+    and the United States **Department of Homeland Security** (**DHS**). More specifically,
+    the contributions come from the somewhat infamous **Cybersecurity Infrastructure
+    Security Agency** (**CISA**), which is an agency within DHS. In this vein, you
+    might be interested to learn that Malcolm is not technically a single piece of
+    software but a collection of many open source tools, including the rest of the
+    tools in both this and the next chapter! If you think about it, that’s what Kali
+    Purple is, right? So, we have a collection of tools within another collection
+    of tools. That should give you an idea of the overall depth of Kali Purple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The idea of Malcolm being a collection of tools can sometimes confuse people
+    because some of these tools are well-known. Two such tools will be covered later
+    in this chapter – Arkime and CyberChef. Two more will be covered in [*Chapter
+    7*](B21223_07.xhtml#_idTextAnchor108) – Suricata and Zeek. Zeek is more associated
+    with an IDS type of system and is formerly named Bro, which sometimes causes people
+    to declare that Malcolm used to be Bro. That isn’t true. It is only because it
+    is one of Malcolm’s core utilities. The other tool – Suricata – is also covered
+    in the next chapter. It’s another IDS system that is extremely popular in the
+    open source cyber-defense community.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One thing you will discover as we learn about many of the tools within the Kali
+    Purple distribution is that a good majority of them are interoperable or can otherwise
+    integrate with each other, and almost all of them can integrate with the ELK stack
+    – which is why we covered those tools first and in greater detail than the rest.
+    On that note, you will notice that, within the Malcolm distribution, there are
+    some alternatives to Elastic’s Elasticsearch and Kibana. Malcolm offers OpenSearch,
+    which serves as a simultaneous alternative to both ELK stack utilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Grabbing Malcolm is a little bit different than what we’ve done thus far but
+    it still follows similar concepts. Just remember to research the customization
+    options Malcom offers before you run any configuration scripts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We’re going to use a containerization program called Docker, which we will
+    talk about in-depth in [*Chapter 8*](B21223_08.xhtml#_idTextAnchor134). For now,
+    we’ll give you the answer key and you can just follow along:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start your Kali Purple VM and log in to your Purple instance.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open a terminal window.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo apt update && sudo** **apt upgrade**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo apt install apt-transport-https ca-certificates curl** **gnupg lsb-release**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo apt update && sudo apt install -****y docker.io**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you get an error, type **sudo apt install -****y docker**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you continue to get errors, type **sudo** **systemctl daemon-reload**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: As a last resort, reboot your system after executing each preceding step.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Type **sudo systemctl enable docker** and then reboot your system again.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo git** **clone** [https://github.com/idaholab/Malcolm](https://github.com/idaholab/Malcolm).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From the root directory, type **sudo chmod -R** **777 /home/<the_name_you_gave_your_system>/Malcolm/config/dashboards.env**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **cd Malcolm** and then type **sudo chmod -R** **777 docker-compose.yml**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **cd scripts** and then type **sudo ./****configure -d**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Carefully, observe any errors. If it says an operation is not permitted, this
+    means you need to use **sudo chmod <value>** to change file permissions. We’ve
+    been cheating by using **sudo chmod -R 777** throughout this book because we’re
+    showing you how to create a quick proof-of-concept. In a production environment,
+    however, you will not want to give more permissions than are necessary.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: When doing **chmod** for a file, make sure you include the entire file path.
+    Otherwise, you might have correct permissions on the end file but the directories
+    leading to it – if lesser permissions – will still prevent Kali Linux and/or Malcolm
+    from successfully performing the task.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: If it says an operation is not permitted, you can usually consider that to be
+    a missing **sudo** command. For example, skipping **sudo** with the preceding
+    **./configure** command could put you through the entire Malcolm configuration
+    process should you also leave **-d** off the end of the command. That would result
+    in a series of configuration questions you’ll need to answer; only after you’re
+    done will it give you the error that the operation is not permitted. When things
+    like that happen, you need to think backward – you must trace your steps and find
+    the first command that you did not place a **sudo** command in front of.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Type **./auth_setup** (this time, it’s best not to use **sudo**) and record
+    the user credentials that you create – you will need them to log in to Malcolm
+    for the first time.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Whenever you work through a setup from the Kali command line for Malcolm, the
+    options will be presented along with hints as to the recommended setting by capitalizing
+    Y or N in a yes or no setting or placing the recommendation in parenthesis at
+    the end of the line, as shown in *Figure 6**.1*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.1 – Malcolm ./auth_setup](image/B21223_06_1.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.1 – Malcolm ./auth_setup
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At this point, you have installed Docker and the core Malcolm engines. Now,
+    it’s time to grab the suite of tools that we will use, as well as allow Malcolm
+    to automatically set up a Docker Compose wrapper for the suite:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To grab the files you need, type **docker-compose --profile malcolm pull**.
+    You should see the various containers begin to download, as shown in *Figure 6**.2*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.2 – Docker Compose downloading containers for Malcolm](image/B21223_06_2.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.2 – Docker Compose downloading containers for Malcolm
+  prefs: []
+  type: TYPE_NORMAL
+- en: You should be prompted to install the **docker-compose** command. Select *Y*
+    to install it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **docker images** to get a confirmed listing of the images that have been
+    pulled into **docker-compose**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Now, all that’s left is to fire it up and start using it! To start Malcolm,
+    you need to remain in the **scripts** directory and type **./start** without using
+    **sudo**. If you like, you can type **ls** to see all of the different options
+    available to you. You can type **./stop** to stop, **./wipe** to wipe the database,
+    or **./restart** to restart. Go ahead and start Malcolm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Make sure you have port **443** forwarded in your VM settings if you’d like
+    to use your host machine to access the interface. Otherwise, you’ll need to operate
+    through the web browser within your VM. Either way, open a web browser and navigate
+    to [https://localhost](https://localhost) – there’s no need to append a port number
+    to the end of the URL because the *s* in *https* tells the browser to use port
+    **443**. The default Malcolm page should load, as seen in *Figure 6**.3*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.3 – The Malcolm home page after successful setup](image/B21223_06_3.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.3 – The Malcolm home page after successful setup
+  prefs: []
+  type: TYPE_NORMAL
+- en: Take note of the tiles on the front page for Arkime and CyberChef, both of which
+    will round out this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The key features of Malcolm are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Packet capture and storage**: Malcolm is designed to capture, store, and
+    analyze network traffic. It relies on tools such as tcpdump and Wireshark – discussed
+    later in this book – to grab the traffic by capturing the packets as they pass
+    through defined network interfaces, as we discussed at the beginning of this chapter.
+    Whatever medium is used to capture the data, it stores the data on disk while
+    providing options for the administrator to configure storage locations, set compression
+    levels for optimization and performance, and even set retention policies for the
+    data. Like nearly every commercially available packet-capturing tool out there,
+    Malcolm utilizes the **Packet Capture** (**PCAP**) file format. These types of
+    files will contain metadata and payload data so that analysts can reconstruct
+    the data where needed and gain a detailed analysis. Like Arkime, Malcolm can extract
+    metadata from the packets, reconstruct sessions, index the data, and search it.
+    You can then provide your full analysis of the data by using any of the tools
+    we’ve already covered, such as Elasticsearch and Kibana, CyberChef (we’ll cover
+    this in the next section), the two IDS systems we’ll be looking at in [*Chapter
+    7*](B21223_07.xhtml#_idTextAnchor108), and **Snort IDS**. Snort is not part of
+    Kali Purple and is technically no longer a part of Kali Linux at all at the time
+    of writing. This is a crime in some professionals’ opinion but experienced folks
+    would likely be able to still it and make it work. Also of value will be threat
+    feed and information-sharing platforms such as the **Malware Information Sharing**
+    **Platform** (**MISP**).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Post-event analysis**: Unlike Arkime, there is no inherent support for real-time
+    analysis. Instead, Malcolm’s strength is built around a plethora of tools that
+    are designed to work together to analyze traffic after events occur. You might
+    have already started to piece this together when we talked about the depth of
+    storage and recovery options for PCAP files. Malcolm utilizes metadata extraction
+    and information gathered through IDS systems, which it enriches with data gathered
+    from threat streams if possible. The greatest benefit of Malcom’s post-event analysis,
+    however, is its embedded collaborative analysis design. Through this method, entire
+    security teams can work together by sharing their results through the platform.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Protocol analysis and parsing**: You might be sensing a theme here. Protocol
+    analysis and parsing is a key feature of Malcolm that it accomplishes through
+    its integrations with specialized analysis tools. By that, we mean the tools we’ve
+    been talking about all along, such as IDS/IPS systems. There is support for custom
+    protocol analysis, which has become an unspoken requirement in today’s world of
+    data analysis product development. Occasionally, protocol analysis might also
+    require the benefits of CyberChef and decoding. However, you are more likely to
+    utilize that tool with the data payload itself.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Metadata extraction and indexing**: The platform can extract very rich metadata
+    from the PCAP files that have been captured. It grabs data such as protocol-specific
+    details, payload information, source and destination IP addresses, timestamps,
+    and any other stdout data, depending on the size and type of packet where the
+    extraction is occurring. Grabbing this data gives you a foundation for the post-event
+    analysis we recently covered. It provides insight into network communication patterns
+    and other security types of events.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Threat detection and analysis**: As it relates to threat detection and analysis,
+    Malcolm takes a multi-faceted approach. The various toolsets are used to proactively
+    identify and respond to security threats within network environments. The following
+    methods are the primary means of accomplishing this task:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Rule-based detection
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Pattern matching
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Anomaly detection
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integration with threat feeds – discussed in a moment
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Session reconstruction and metadata analysis
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Custom rule creation and tuning
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integration with visualization tools
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Some of these methods will be discussed shortly. Most of them will have a level
+    of overlap with the features of Arkime. For example, we’ve previously discussed
+    rule-based detection. Here, when a set of pre-defined standards is matched, a
+    detection is triggered. These are standards that are usually custom-created by
+    the administrators to look for very specific rules covering very specific potential
+    threats to the organization.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Pattern matching** is similar to rule-based detection in that it seeks to
+    match patterns of data with rules. The difference is that these are rules that
+    can be a little more generic or else provided by the threat detection engines
+    – the IDS systems we’ve been talking about.'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Anomaly detection** is something that occurs after a threat detection engine
+    first grabs a baseline of network behavior to determine what is normal for that
+    environment. Then, when the behavior of network traffic deviates from the established
+    norm, it is considered anomalous and worthy of deeper investigation.'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Custom rule creation** is not the same as rule-based detection. That is the
+    result of custom rule creation in a literal sense. However, in practice – and
+    this can seem a little perverse and hurt your brain, so don’t feel bad if you
+    need to re-read this section to get a handle on it – it’s a term that’s usually
+    used to extend rule-based detection. Yes, that sounds a lot like the egg laying
+    a chicken. We can’t always control the evolution of terms and tools in practical
+    application. More directly, custom rule creation is a feature that some threat
+    detection engines provide that allows the analyst to take a pre-existing rule,
+    either provided by the engine or a rule-based detection created by the administrator
+    of the environment they are working in, and then make analyst-level customizations
+    to further refine the rule for analysis.'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: If you’ve ever worked with the completely harmless **Kusto Query Language**
+    (**KQL**), you’ll likely understand this. KQL can be used to manipulate which
+    data is displayed and how it is displayed for deeper analysis without actually
+    changing the storage or values of the data itself. It’s not exactly what custom
+    rule creation is but it’s similar.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Session reconstruction and flow analysis**: Malcolm is very effective at
+    managing session reconstruction and flow analysis. You’ve already gained a solid
+    foundation of the components and methods that are used, so we don’t delve any
+    further. The components can be broken down as follows:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Session reconstruction
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Metadata extraction
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Protocol-specific parsing
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Flow analysis and data transfer
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integration with analysis tools
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Custom session analysis plugins
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: By all means, take the time to look back at preceding discussions in this chapter
+    with either Malcolm and/or Arkime if you wish to get some reinforcement knowledge
+    of these topics.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Data visualization and reporting**: Using the ELK stack, Malcolm provides
+    a robust selection of data visualization and reporting abilities that you can
+    use to facilitate a fully comprehensive analysis and depict network security insights.
+    Kibana integrates with Malcolm and as you already know, you can display data by
+    using charts, graphs, timelines, maps, and countless other methods. Malcolm provides
+    data to Kibana that assists with packet flow visualization. That will assist you,
+    as an analyst, to get a graphical representation of data transfer behaviors, transactional
+    patterns, and network session activities, thus making any irregularities or anomalous
+    behaviors much easier to spot.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Analysts will also have the ability to generate reports based on the data they
+    are working with using metadata attributes and **indicators of compromise** (**IoCs**),
+    among numerous other options. Generating reports can save analysts enormous amounts
+    of time in organizing and providing documentation for **After Action Reviews**
+    (**AARs**), communication with stakeholders, and compliance record-keeping and
+    reporting.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Customization and extensibility**: Another key feature of Malcolm is its
+    customization and extensibility. This feature is identical to Arkime’s offerings
+    and is the result of everything we’ve discussed thus far. Feel free to refer to
+    the previous section if you want a deeper explanation. In summary, these offerings
+    are as follows:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The ability to create capture plugins
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integration with third-party tools
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Custom dashboards and/or other visualization options
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Rule-based detection and custom rules
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Packet analysis and enrichment
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**User access control** (**UAC**) **and collaboration**: UAC and collaboration
+    are supported by the same methods as Arkime. An important concept to pay attention
+    to is **role-based access control** (**RBAC**). It’s easy to mistake a role-based
+    something for a rule-based something. Something that is rule-based, as we covered
+    previously, is something that is based on a set of pre-defined rules. Something
+    that is role-based, however, is when something is based on pre-determined permissions
+    or groups of permissions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the tech world, these groups of pre-determined permissions are called roles.
+    Roles are often set up in advance based on unknown users. Once the role has been
+    set up, users can be added to the group that covers those roles. This means that
+    administrators don’t need to set the permissions for each user individually as
+    they onboard or gain the rights to certain roles. Admins will simply assign that
+    user to the pre-defined group and then all of the privileges and rights are automatically
+    available for that user. Of course, admins can certainly work a user’s rights
+    at an individual level for a finer level of granularity for the user. Collaborative
+    workspaces, data sharing, audit trails, and activity, logs along with user management
+    and provisioning, are all part of Malcom’s UAC and collaboration feature.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Integration with security tools**: In addition to the ELK stack and IDS/IPS
+    tools we’ve covered, Malcolm also integrates seamlessly with a neat network traffic
+    and analysis tool called **Threat Organized Response with Quantitative and Unified
+    Extensibility** (**TORQUE**). TORQUE is set apart from other network traffic and
+    analysis tools because of several key differentiators and unique or limited supply
+    characteristics.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Real-time analysis has gained in popularity and isn’t unique anymore, but it’s
+    worth mentioning that TORQUE was one of the earliest traffic analysis tools to
+    offer results in real time. As you’ve already discovered, real-time analysis means
+    that analysts can examine and respond to network activities as they are actively
+    occurring.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: TORQUE offers quantitative analysis features. This enables organizations to
+    perform in-depth quantitative assessments of network traffic patterns, data trends,
+    and communication behaviors. Quantitative analysis is a systematic and structured
+    examination of data using statistics and advanced mathematics to derive insights,
+    identify patterns, and achieve actionable conclusions on data analysis. It can
+    involve calculating and deeply evaluating statistical metrics such as averages,
+    standard deviations, and frequencies, as well as the distribution patterns of
+    network traffic data. It can also involve studying historical trends and behaviors
+    and comparing them with current trends to identify patterns as well as changes
+    in behavior. This assists with anomaly detection.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Risk assessment and capacity planning are important features of TORQUE. Using
+    mathematics, administrators can calculate probabilities along with the potential
+    impact of certain threats by applying the formulas to traffic volume, bandwidth,
+    and resource usage/requirements. That, in turn, can provide the byproduct of performance
+    evaluation, which can help administrators and engineers identify focus areas to
+    address and/or improve.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Alerting and notifications**: One of the most desired features of any cybersecurity
+    defensive product is the ability to receive notifications and alerts. We can develop
+    alerts with the usual suspects of rule-based and anomaly detection alerting. However,
+    Malcolm allows for some additional types of alerting.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: There is threshold alerting, which is when there’s a predefined threshold for
+    a particular metric or behavior within the network traffic data that can be assigned
+    to trigger an alert once the admin or user-defined metric is exceeded. Your network
+    engineers (or yourself) might find this type of alerting handy when you want to
+    monitor and respond to deviations from normal traffic patterns such as sudden
+    spikes in traffic volume or endpoint CPU/RAM usage.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: You will able to be able to create customized alerts to check for different
+    manners of delivering alert notifications, such as email, SMS, or integration
+    with one of the other tools or SIEM/SOAR solutions within your SOC. It can also
+    be used to target specific stakeholders to receive specific notifications but
+    perhaps not all of them. This can be useful in high-volume alerting situations
+    where there are many people with different specialties working within the SOC
+    environment. So, you would set up alert notifications to be delivered in a specific
+    manner based on the recipient’s roles and responsibilities. This also supports
+    escalation workflows when called for.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Malcolm alerting can integrate with popular communication tools such as Microsoft
+    Teams, Slack, and other incident response types of platforms. As with all of Malcolm’s
+    tools, alerting and notifying can also be sent to Kibana or other visualization
+    platforms to help users get a graphical representation of the data they’re looking
+    at.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Now that we’ve installed the mama and papa system in Malcolm (though we can’t
+    say we’ve ever met a mama named Malcolm, but hey, there’s a first time for everything!),
+    it’s time to drill down into some of the amazing tools contained within the suite.
+    We’re going to start by reviewing a packet capturing and indexing utility called
+    Arkime in the next section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Arkime
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Arkime is a tool that falls into the category of packet capturing and indexing.
+    Like all the tools we’re covering from Kali Purple, it is free, open source software.
+    Arkime is designed to efficiently work with very large-scale deployments. That,
+    however, comes at the cost of resources, such as storage and RAM capacities. The
+    bigger you want your deployment to be, the more resources you will need. Fortunately,
+    the organization offers a resource calculator on their website to help you prepare.
+    We’ll toss that link in the *Further reading* section for those of you with big
+    aspirations who might be reading this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Like the ELK stack, Arkime has enough features and customizations that an entire
+    book could be written on just this one product alone. For that reason, we will
+    only highlight the features of this product. As a cybersecurity professional,
+    you already know just from reading this book alone that independent research will
+    always be a part of your lifestyle, just as it is for surgeons, lawyers, and all
+    other levels of white-collar professions. Welcome to the club of well-researched
+    and intellectually elite folks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Arkime organization prides itself on a style of packet capture called **full
+    packet capture** (capturing every packet) versus **filtered packet capture** (only
+    capturing packets that meet predefined criteria). There are many brands of packet-capturing
+    products out there. Arkime is free, open source software; this is something you
+    might have realized is the theme of the Kali Purple distribution. Don’t kid yourself,
+    though. Just because it’s free doesn’t mean it’s cheap. Arkime is a beast! It
+    is very robust and operates just as powerfully – even more so – than any commercially
+    available product.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you’ve been immersed in this aspect of networking and/or network security
+    before, you’ll already be familiar with Arkime under its former name, Moloch.
+    The developers have done something a whole bunch of us probably wish more modern
+    tech businesses would do with their product. They have provided their intended
+    pronunciation of the word Arkime! According to their website, it is to be said
+    Arkime (/ɑːrkɪˈmi/) or (R Kim Me). They mentioned that the name change was due
+    to feedback suggesting folks could use the term Moloch in an undesirable manner.
+    Arkime was chosen as the new identity after the mythical wizard Merlin’s owl Archimedes
+    and a well-known mathematician from historical Greece who went by the same name.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we talk about Arkime’s offerings, you probably want to grab a copy of
+    the product for yourself. However, note that it’s not necessary in this chapter
+    to have any of the software we are talking about up and running while you’re reading.
+    The majority of this content is a high-level overview since each component of
+    Kali Purple we are discussing here is robust enough to warrant its own autonomous
+    publication. However, it still provides value to acquire and run if you like to
+    immerse yourself in your projects while you completely lose track of the time
+    until your wife threatens to leave you unless you acknowledge her existence. Wait,
+    that might be the software engineer’s manual…
+  prefs: []
+  type: TYPE_NORMAL
+- en: Make peace with your spouse. Then, we can get started. It’s time to take off
+    the training wheels here and give you some independent fun installing Arkime,
+    should you choose to do so. Before you walk the traditional route, it might be
+    worth your while to do an internet search or two to see which updates to Arkime
+    might have occurred since this publication. You might also find alternative repositories.
+    Just make sure you keep your eyes peeled for authentic repositories and the availability
+    of file hashes if you’re going outside of the APT terminal method we use inside
+    Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Otherwise, if you’re looking to harness your inner budding Linux guru, then
+    you know the drill:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start the Kali Purple VM and log in to your Purple instance.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open a terminal window.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo apt update && sudo** **apt upgrade**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **cd Malcolm/scripts**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **./ start** without using **sudo**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Type **docker ps** to verify that Arkime is up and running, as shown in *Figure
+    6**.4*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.4 – Using the docker ps command to confirm that Arkime is running](image/B21223_06_4.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.4 – Using the docker ps command to confirm that Arkime is running
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we can open a web browser and navigate to [https://localhost](https://localhost).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Remember, there’s no need to append a port number to the end of the URL because
+    the *s* in *https* tells the browser to use port **443**.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'To access Arkime, simply click the **Arkime** tile on Malcolm’s home page,
+    as highlighted in *Figure 6**.5*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.5 – The Arkime tile on Malcolm’s home page](image/B21223_06_5.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.5 – The Arkime tile on Malcolm’s home page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When you load Arkime, the most important portion of the home page you’ll want
+    to pay attention to is the owl at the top left. Go ahead and click on it to see
+    all of the options presented to you. Also, notice the main navigation across the
+    top ribbon. Those two items will provide all of the rather self-explanatory links
+    you’ll need to use the product, as seen in *Figure 6**.6*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.6 – Arkime’s default view home page](image/B21223_06_6.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.6 – Arkime’s default view home page
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you continue to negotiate the Kali Purple tools outside of the ELK stack,
+    it is of paramount importance that you retain a certain level of patience. Some
+    of these tools are updated very frequently and with each update, the manner of
+    acquiring, installing, and running has the potential to be changed – either by
+    design or unintended consequence. This is where your analyst mindset comes in
+    handy. While developing the content for this book, several items were updated
+    by their creators mid-writing and in the course of doing so, the manner of acquiring
+    and/or installing or otherwise configuring the applications was changed. It is
+    for that reason that we have chosen to focus on using Docker for any multi-application
+    setups or applications with independently developed dependencies.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here’s the Arkime **About** page:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.7 – Arkime’s owl navigation and FAQ access](image/B21223_06_7.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.7 – Arkime’s owl navigation and FAQ access
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s look at the key features of Arkime:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Packet capture and storage**: Arkime captures network packets by using an
+    NIC, as we touched on in the first section. It does this in what is known as **promiscuous
+    mode**. That mode is where packet capture applications will collect every bit
+    of data that passes through the portion of the network it is assigned to monitor.
+    This means it may collect data that is not intended for the device to be the final
+    destination. It may be passing through the device on its journey to another device
+    in the network. Conversely, **non-promiscuous mode** only captures packets that
+    are addressed to the MAC address of the specific device that is being monitored
+    by the packet-capturing application. In this case, that’s Arkime.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Real-time traffic analysis**: As the name implies, real-time traffic analysis
+    is where Arkime will capture the packets from the NIC and immediately send the
+    data to Elasticsearch for indexing and storage. It does this in one fell swoop,
+    as the activity occurs. Arkime’s design allows it to monitor live network sessions
+    so that it can track the behavior of network connections and observe user behaviors
+    as they occur. By employing this method, Arkime and the tools integrated with
+    it can identify anomalous and potentially threatening data flow quickly so that
+    analysts can respond and stop bad actors in their tracks.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scalability and performance**: Scalability and performance are Arkime’s greatest
+    advantage over similarly competing network monitoring software. The application
+    is designed to support distributed architecture. That means it can take the packet
+    capture, query and index it, and split it up to send to different interconnected
+    nodes that include different physical computing devices to be processed in unison.
+    As you might have guessed, this not only allows for the workload to be negotiated
+    efficiently but also for fault tolerance and easily upgrading and improving equipment.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Fault tolerance would be if a device or node were to go down, the programming
+    is in place to direct the other nodes to pick up the slack while the down node
+    is addressed by technicians. Sometimes, a node will need to be taken offline intentionally.
+    This could be for standard maintenance, upgrading, or replacement. This also means
+    additional nodes can be added on the fly without needing to stop or intervene
+    with the active setup in any manner. The technicians simply add the new nodes
+    and then adjust the rules of Arkime to also recognize and utilize the added nodes
+    in addition to the pre-existing nodes.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Metadata generation and indexing**: When Arkime captures packet data, it
+    collects the entirety of the packet. That includes the payload, which is the data
+    that was instructed by the sending device to be sent, and the header, which is
+    additional information that’s added to the original dataset to assist network
+    and routing devices in sending the payload to the proper location in the proper
+    manner, as well as other important information about the total packet. Within
+    these packets are pieces of data that stand out from the rest as they are critical
+    to the successful transmission of data. These special standout pieces of data
+    are called **metadata**. Examples of metadata might include source and destination
+    IP addresses, timestamps, the byte size of the payload or total packet, and a
+    plethora of other possibilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'One of the primary forms of metadata that’s utilized includes transport protocols:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Transport Control Protocol** (**TCP**): This is used for transporting data
+    once a communication has been established between the sending and receiving devices'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**User Datagram Protocol** (**UDP**): This is used for transporting data without
+    first requiring a connection'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Hyper Text Transfer Protocol** (**HTTP**): This is used to transport data
+    between web servers and clients (that is, the user’s browser)'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Hyper Text Transfer Protocol Secure** (**HTTPS**): This is the same as HTTP
+    except it uses encryption for authentication and transferring data'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**File Transfer Protocol** (**FTP**): This is used to transfer entire file
+    sets from a file server to the user’s device'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Arkime was generous enough to publicly post screenshots of their product that
+    depict these different aspects of the product, giving us more time and space to
+    talk about the product. A link leading to Arkime’s screenshots with explanations
+    has been provided in the *Further reading* section if you would like to get a
+    visual depiction of these items in action.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Upon capturing these packets and extracting the metadata, Arkime will also utilize
+    the robust power of Elasticsearch to index, store, and retrieve the data. Arkime
+    allows its administrators to define custom indexing and mapping for the metadata
+    fields. This is important for enterprise installations of the tool because the
+    data that’s being extracted and stored can be organized in a manner that is most
+    useful to the organization’s specific needs. Arkime allows its data that has been
+    indexed with Elasticsearch’s support to be easily searchable and retrieved from
+    the Arkime interface.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Search and query capabilities**: Through Arkime’s user interface, users can
+    perform granular searches – that is, detailed, specific searches – with surgical
+    precision while being able to perform queries that pinpoint details within captured
+    network traffic data. It’s a type of search that allows the user to target specific
+    fields or attributes within packets.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Arkime supports a broad array of search styles:'
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: By logical and mathematical operators
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: By metadata fields
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: With full-text searching – entire words, phrases, and patterns
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: By regular expressions and complex patterns
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Through saved search templates – these can be created by users for frequently
+    utilized searches
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Arkime can integrate with visualization tools to present the information it
+    gathers from any of these search methods in graphical formats such as timelines,
+    histograms, and charts. Arkime also allows users to share search results with
+    colleagues for team-based analysis. Users can export the search results so that
+    they can be used with external systems or records.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Packet reassembly and session reconstruction**: Arkime has the amazing ability
+    to reassemble packets and reconstruct sessions, which gives it strong capabilities
+    that can be used to piece together and analyze network traffic data directly at
+    the packet and session levels of data transfer. This ability is used during the
+    initial packet capture process. The software identifies fragmented or segmented
+    packets and intelligently examines them to piece them back together into the original
+    single packet so that a full and accurate analysis can be performed on the data
+    that was captured. This allows analysts to view the full picture of any scenario,
+    which also can help in root cause analysis for any issues.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Taken to the next level, Arkime can also reconstruct sessions by analyzing packets
+    and logically grouping them if they are related and part of the same flow of data.
+    Doing this allows analysts to view the entire exchange of a session, providing
+    a grander context of the scenario. Analysts can then take a more holistic approach
+    to data analysis by viewing the entirety of a data exchange between the two endpoints
+    involved in the session.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Threat detection and analysis**: Everything we’ve discussed thus far is part
+    of Arkime’s threat detection and analysis plus more! The following are also part
+    of this key feature:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Metadata enrichment
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Rule-based detection
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Protocol analysis and anomaly detection
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integration with threat intelligence feeds
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Metadata enrichment is the same as typical data enrichment, where the data that’s
+    harvested is compared with related tables of pre-existing data to help parse the
+    information into clearer categories. Rule-based detection is just as it sounds.
+    The administrator can create custom rules to look for precise threats, patterns
+    of behavior, and IoCs.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Protocol analysis and anomaly detection are the process of examining and interpreting
+    the communication protocols that are used in network traffic to evaluate uncommon,
+    abnormal, or anomalous behavior. It involves dissecting the headers, structure,
+    and payloads of the communication packets. Then, it takes that information and
+    compares/contrasts it with the protocols that are used, such as TCP, UDP, HTTP,
+    HTTPS, DNS, and others. Administrators will look for communication pattern changes
+    such as volume and handshake failures. Handshakes are part of the sending and
+    receiving devices authenticating with each other and is the process of establishing
+    a connection between the two.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Integration with threat intelligence feeds is where Arkime subscribes to or
+    otherwise draws information that has already been assembled by a third party such
+    as **AlienVault OTX** (now known as **LevelBlue Labs**), **FBI InfraGuard**, **Spamhaus**,
+    or **Proofpoint** and brings that information into its own environment to help
+    with analyzing data. This is a form of data enrichment. Examples of third-party
+    information include reputable blacklists, known threat indicators such as cataloged
+    malicious IP addresses, and other threat intelligence information. Subscribing
+    to such feeds can significantly reduce the workload for any organization because
+    you’re grabbing the results of work that has already been done by others and is
+    being shared.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Extensibility and integration**: Similar to threat feed integration, Arkime
+    allows extensibility of itself to allow for a wider range of integrations through
+    capture plugins, protocol parsers, and decoders. Capture plugins are customized
+    code modules that allow Arkime to grab network packet information from specialized
+    or atypical sources. An example of this might be grabbing information from an
+    **industrial control system** (**ICS**), a system that’s used in manufacturing
+    and critical infrastructure such as city water and sewer plants or nuclear power
+    plants. These plugins *extend* the base practical use of Arkime, creating extensibility
+    of the product itself. Extensibility can be further created by the capture plugins
+    providing resources and support to decode and parse the data that it pulls from
+    non-standard sources.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Arkime also offers support for viewer plugins, which are plugins that extend
+    the product’s ability to display the data through custom visualizations with user
+    interface enhancements. That allows organizations to create displays that will
+    only provide the data that is most relevant to their mission. This, in turn, helps
+    create more efficient analysis and detailed reports.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Protocol parsers operate in the same capacity as capture and viewer plugins,
+    whereby they extend the functionality of the product by offering customized features.
+    In this case, it is code that’s meant to decode, parse, and analyze specialized
+    and rarely seen protocols and then enrich the protocol data with previously indexed
+    metadata.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**User access control and permissions**: Through its authentication and authorization
+    mechanisms, Arkime can provide high-quality user access control and permissions
+    management. Sure, Arkime will support the basic username/password authentication
+    method. However, it also offers **single sign-on** (**SSO**) integration with
+    identity providers as well as authentication through **Lightweight Directory Access
+    Protocol** (**LDAP**) or **Active Directory** (**AD**). By offering these integrations,
+    organizations with existing identity management infrastructure can authenticate
+    their users who are trying to access the Arkime platform.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Also included is RBAC. You experienced a small dose of what this is when you
+    set up Filebeat in [*Chapter 5*](B21223_05.xhtml#_idTextAnchor085). It allows
+    administrators to define roles with a pre-determined set of permissions and then
+    assign users to this role afterward. This manner of user privileges allows a finer-tuned,
+    granular, control over defining which users may have access to specific features,
+    data, and other administrative abilities within the platform.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: Arkime also maintains very detailed audit trails of user activities. This serves
+    the dual purpose of providing proper visibility into user actions and changes
+    while also giving an avenue to preserve efforts administratively in the interest
+    of creating audit trails to meet any regulatory requirements.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Rich data visualization**: Arkime approached rich data visualization through
+    a combination of customizable dashboards, graphical representations, and interactive
+    visualizations. Like most dashboard-based platforms, users can customize their
+    dashboards through the use of widgets. In this case, widgets can be used to emphasize
+    real-time or historical data through topics such as traffic volume, protocol distribution,
+    threat alerts, packet capture statistics, and top talkers. Users can aggregate
+    and display key metrics, trends, and analysis results. It can leverage graphical
+    representation with charts, graphs, timelines, heatmaps, network traffic patterns,
+    anomalies, communication relationships, and performance metrics to name a few.
+    Interactive visualizations can happen when users explore and interact with the
+    data dynamically, such as by zooming in/out, applying filters, panning across
+    timeframes, and drilling down into more specific data elements if they wish to
+    obtain a more detailed insight or gain a greater context of a scenario.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: While Arkime is meant for overall traffic analysis, there is another tool that
+    can be used to further refine such analysis when the traffic is encoded or obfuscated
+    in some manner. That tool can also be accessed from the Malcolm GUI and it is
+    known as CyberChef.
+  prefs: []
+  type: TYPE_NORMAL
+- en: CyberChef and obfuscation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: You’ve seen a few references to American government contributions to the cybersecurity
+    landscape. Now, let’s take a look at a British contribution. CyberChef is one
+    of the most critical tools that every single person working in a cybersecurity
+    profession should have in their quick-access toolbox. It was created by the **Government
+    Communications Headquarters** (**GCHQ**) of the United Kingdom. The organization
+    is considered one of three intelligence and security organizations responsible
+    for providing **Signals Intelligence** (**SIGINT**) and information assurance
+    to the UK government and armed forces. (The other two are MI5 and the famed MI6
+    from the James Bond and Mission Impossible pop culture – yes, the organizations
+    are real.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: GCHQ developed CyberChef to function as an open source web application for a
+    variety of data processing, transformation, and analysis tasks. It was always
+    intended to cater to the needs of cybersecurity professionals, digital forensics
+    experts, and data analysts. It comes with a user-friendly interface and since
+    it is released as open source, organizations can take it, adjust it, and integrate
+    it within their tools. This is because having the tool online still leaves the
+    data communication between its users and the product itself susceptible to interception,
+    which is a security risk in itself. When used as a desktop tool or integrated
+    into an organization’s SIEM solution, the data being worked with can be contained
+    to where it is being utilized. One such solution is the Devo SIEM/SOAR solution,
+    which is considered a next-gen cloud SIEM. Devo has a version of CyberChef embedded
+    within its toolbox for authorized analysts and users within an organization to
+    utilize so that the customer’s data never needs to be traversed outside of the
+    cyber defenses that are collecting the data in the first place. Devo is not part
+    of Kali Purple, but we’ve provided a link in the *Further reading* section to
+    satisfy your curiosity anyway.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’re probably sitting there wondering, “*Okay, so what’s all this hype about
+    CyberChef?*” Let’s get into it. While using the tools we’ve covered in this chapter,
+    an analyst will frequently encounter encrypted or obfuscated data. There may even
+    be times when you might like to take data that is not encoded in either of those
+    manners and add some form of encryption or encoding to it. All of this can be
+    accomplished by CyberChef. CyberChef is a very powerful web application that can
+    be integrated with other cybersecurity tools. As we just discussed, it can also
+    be downloaded as a desktop utility or integrated into pre-existing tools. It specializes
+    in raw data analysis to include encryption/decryption, encoding/decoding, and
+    a sub-form of encoding known as obfuscation. It is designed to handle a great
+    variety of data transformation tasks in a flexible yet user-friendly manner. CyberChef
+    has been designated as the *Cyber Swiss Army Knife* by its creator, GCHQ.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To acquire CyberChef, you have a plethora of options. If you’re the cheating
+    spoiler type, you can skip ahead to the end of this chapter, where you’ll find
+    a quick link in the *Further reading* section. That is the quickest way to get
+    this application… that is unless you already have Malcolm installed and, along
+    with your Kali Purple VM up and running. *<<insert evil laugh here>>* However,
+    since we are working with Kali Purple, we will explain how to acquire CyberChef
+    from within the Purple environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'It’s also pretty simple. First, make sure your VM with Kali Purple installed
+    has been launched and is up and running. Then log in to your Purple instance,
+    open a terminal window, and go through the intense sacrificial motions we’ve been
+    brainwashing you with since [*Chapter 3*](B21223_03.xhtml#_idTextAnchor052). We
+    can summarize these as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start your Kali Purple VM and log in to your Purple instance.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open a terminal window.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo apt update && sudo** **apt upgrade**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **cd Malcolm/scripts**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **./ start** without using **sudo**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Type **docker ps** to verify that Malcolm is up and running, as shown in *Figure
+    6**.8*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.8 – The Malcolm pre-packaged Docker suite is up and running](image/B21223_06_8.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.8 – The Malcolm pre-packaged Docker suite is up and running
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we can open a web browser and navigate to [https://localhost](https://localhost).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Again, there’s no need to append a port number to the end of the URL because
+    the *s* in *https* tells the browser to use port **443**.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: 'To access Arkime, simply select and click the **Arkime** tile on Malcolm’s
+    home page, as highlighted in *Figure 6**.9*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 6.9 – The Malcolm pre-packaged Docker suite is up and running](image/B21223_06_9.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.9 – The Malcolm pre-packaged Docker suite is up and running
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go ahead and select and click that tile. It will load the CyberChef utility
+    for you. In the top-left corner, you’ll notice that you can download this utility
+    to your local device. Let’s put it to the test! Copy and paste the following code
+    into the top-right window, known as the **Input** window, as identified in *Figure
+    6**.10*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Experience will teach you how to recognize what different manners of encoding
+    look like. Two of the most common you’ll come across as a cyber defender are **Base64**
+    and **URL encoding**. This code sample we provided is **Base64 encoding**. Select
+    the top tile in the left column labeled **Favorites**. When you do that, the section
+    will expand and within it, you’ll see one called **From Base64**. Click and hold
+    that one, drag it to the middle window labeled **Recipe**, and release your click
+    for it to drop there, as shown in *Figure 6**.10*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’ll notice that there is also an option called **To Base64**. That’s right
+    – CyberChef can be used to encode things in addition to decoding them. Go ahead
+    and click through all of the areas within the left column and check out the expanded
+    lists. You’ll see options to decode everything imaginable, including **Morse Code**!
+    How cool is that?
+  prefs: []
+  type: TYPE_NORMAL
+- en: The one thing you will not see, however, is a *bad grammar decoder*. With that
+    in mind, click the **Bake** button at the bottom of the middle column. If you
+    already had the **Auto Bake** box checked, look at the results in the lower right
+    window called **Output** window. Curious. What was the **Base64** **decoded**
+    message?
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 6.10 – CyberChef demonstration](image/B21223_06_10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 6.10 – CyberChef demonstration
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The key features of CyberChef are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Data transformation**: CyberChef users can select and combine data manipulation
+    options from the comprehensive list of built-in operations to create what it likes
+    to call custom data transformation recipes. The list includes options that address
+    encoding/decoding, compression, encryption/decryption, hashing, regular expressions,
+    and much more. Users can select options from the left column of CyberChef’s display
+    and then drag and drop them into the middle window. CyberChef will process the
+    instructions from the top down. So, it will perform the calculations from the
+    first option you drag into the window first, use the next instruction you dropped,
+    apply it to the results of the first calculation, and so on. This allows for batch
+    processing. Users can save any repetitively used tasks for easier future reuse.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Encryption and decryption**: With the cryptography aspect of CyberChef, you
+    can work with both symmetric and asymmetric encryption algorithms, which will
+    prove useful for those of you who might be responsible for working with securing
+    data as one of your job/career roles. There are many built-in encryption operations
+    you can access from the left column, including but not limited to AES, DES, RSA,
+    Triple DES, Blowfish, and XOR. You can also utilize CyberChef to encode/decode
+    hexadecimal, URL, and Base64 encoding among others. With all of these options,
+    you might well guess that this tool can be used for key management and hashing
+    operations (MD5, SHA-256, and many others). If cryptography is where you live,
+    then you’ll be happy to know that you can use CyberChef to create customized encryption
+    parameters such as key size, block size, padding modes, and chaining modes.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**File processing**: With CyberChef, you can read entire file inputs and you
+    can output your results to an entire file. To grab a file as input, go to the
+    top-right corner of the **Input** window and select the folder with an arrow pointing
+    into it to grab a file as input, as shown in *Figure 6**.11*. The supported file
+    types include JSON, XML, binary, and text:![Figure 6.11 – CyberChef – getting
+    a file as input](image/B21223_06_11.jpg)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Figure 6.11 – CyberChef – getting a file as input
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can also perform byte-level operations on binary files using bitwise logic.
+    Additionally, CyberChef offers hexdump visualization for analyzing such binary
+    data and file contents. Advanced CyberChef users can learn to parse and extract
+    structured data from files using operations that have been tailored for specific
+    file formats such as JSON, XML, and CSV, among others. They can also perform line-based
+    processing, metadata extraction, and batch processing, as well as develop custom
+    workflows to support their specific file manipulation requirements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Regular expressions**: The CyberChef tool provides straightforward and dedicated
+    operations for applying regular expressions to input data. The left-hand column,
+    sometimes referred to as the operations column in CyberChef, offers your regex
+    operations. With it, users can define, configure, and apply regular expressions
+    to their data inputs. You can specify a regex pattern to be used for searching
+    and comparing against the input data if you like. Regex operations can be used
+    to match patterns in this way and by doing that, it can also be used to transform
+    and/or replace data, extract data that matches the regex, or it can be mixed with
+    other operations such as encoding/decoding or other tasks defined by an analyst
+    for quick pattern recognition and data extraction. CyberChef’s user-friendly interface
+    helps add an element of visualization to the work, making the readability of the
+    somewhat obscure regex patterns more easily interpreted.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Networking and encoding**: As it relates to the networking encoding aspect
+    of information, in its operations column, CyberChef offers options for working
+    with IP addresses, including the ability to convert between decimal and binary
+    representations, extracting IP addresses from text, and also the ability to perform
+    IP address manipulations such as subnetting and IP address validation. You’ll
+    also see options for dissecting and analyzing network packet data, decoding packet
+    headers and protocol-specific analysis, URL / URI handling, and Base64 encoding
+    and decoding, which is commonly found in networking information. If you followed
+    our previous recommendations to explore the left column, you’ll see hexadecimal
+    operations, encoding conversions such as URL encoding and HTML entity encoding,
+    along with Unicode representation. Here’s a couple of fun operations for you.
+    If you select the **Data** format sub-heading under operations, you’ll see you
+    can convert to and from Braille; if you go just one subheading further down the
+    list and select **Encryption/Encoding**, that’s where you’ll find the **Morse
+    Code** conversation we spoke of earlier.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Custom operations**: Something very nice about every tool we’ve discussed
+    in this chapter is how they each offer a plethora of opportunities for customization.
+    CyberChef is no exception. You can develop custom operations through the use of
+    JavaScript code within the interface. That is one of the beautiful parts of this
+    product’s extensibility. If you have a coding or software engineering background,
+    you are likely already familiar with JavaScript; if you don’t, we’ve provided
+    a link in the *Further reading* for your perusal. As a cybersecurity professional,
+    it’s recommended that you upskill your Python first and foremost, but any additional
+    programming language skills are always going to be useful.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Data analysis**: The explanations that have been provided thus far have undoubtedly
+    shown you how data analysis is a key feature of CyberChef. Please review any of
+    the previous topics if you’re uncertain of CyberChef’s contributions to any of
+    the following data analysis features:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Data transformation
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Encryption and decryption
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Regular expressions
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: File processing
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Networking operations
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Customized options
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Virtualization
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integration with other tools
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Whenever you’re dealing with traffic analysis – which is what the defensive
+    aspect of cybersecurity is entirely about – you’re going to encounter attempts
+    to evade defenses through trickery such as encoding and encrypting data. That
+    makes CyberChef one of the most critical tools in your entire defensive toolset.
+    We promised you a quick and easy manner of accessing CyberChef outside of Kali
+    Purple and outside of Malcolm. Are you ready? Drum roll, please… Simply paste
+    the following URL into any web browser and use it directly from the source: [https://gchq.github.io/CyberChef/](https://gchq.github.io/CyberChef/).
+    The downside is that there are things such as data privacy and data privacy laws
+    that will make using CyberChef remotely a risky option because whatever becomes
+    decoded could be highly protected data. It’s best and safest to download a local
+    copy or use it integrated with your toolset, as we did inside of Malcolm.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we provided a high-level overview of the traffic that will
+    be running through our network and therefore our cyber defense solution. We examined
+    several tools provided by Kali Purple that we can deploy and integrate with other
+    tools to analyze this data, as well as manipulate it if necessary. These solutions
+    are well known and some of them, such as Arkime, are created by private sector
+    organizations, whereas others were created and/or assembled by government organizations.
+    Even more fun, some government organizations will include the private sector creations
+    within their compilations, such as Malcolm and Arkime.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’ve learned that Arkime is a robust network data analysis tool that is designed
+    for large organizations and organizations that are expected to experience quick
+    and large growth. Arkime’s greatest strength is scalability. We also explored
+    a suite of tools that was put together as a collaborative effort between American
+    government agencies from the State of Idaho and federally from the Department
+    of Homeland Security.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, we covered the world-famous CyberChef, which is a must-have for any
+    cybersecurity professional. We learned that it was created and released by the
+    British intelligence agency GCHQ. We explored the power of CyberChef as it relates
+    to data manipulation and various elements of cryptography. We also learned that
+    it can be used online, downloaded as a desktop product, or integrated into our
+    independent software solutions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before delving into all of these tools, we briefly explored data packets so
+    that we could understand how most of these tools integrate with tools that work
+    on a data packet level. In the course of doing so, we learned about IPS and DPS,
+    both of which we will explore in more depth in [*Chapter 7*](B21223_07.xhtml#_idTextAnchor108).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Questions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Answer the following questions to test your knowledge of this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Arkime is a network traffic capture and analyzer that used to be known as what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Malcolm
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Molotov Cocktail
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Moloch
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What does it mean when an NIC operates in promiscuous mode?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The NIC captures all traffic passing through it, regardless of the final destination
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The NIC is extra friendly with the data that passes through it
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The NIC only captures data passing through where the device itself is the final
+    destination
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is real-time traffic analysis?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Sitting on an overpass to study the different makes and models of automobiles
+    as they pass by
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Analyzing network traffic that is time-stamped in Zulu time on a Gregorian calendar
+    format
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The ability to analyze network traffic as it is actively occurring
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Examining any traffic that has occurred within the previous 20 minutes
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: CyberChef is also known as what by its creator?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The Cyber Swiss Army Knife
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The British Top Chef
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The Irish Army Universal Utility
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The Royal Marine Entrenching Tool
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What type of threat detection occurs after the administrator captures a baseline
+    and compares future traffic for deviations from this baseline?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Irregular expression detection
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Abnormal detection
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Pattern matching
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Anomaly detection
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Further reading
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To learn more about the topics that were covered in this chapter, take a look
+    at the following resources:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Arkime home page and** **documentation**: [https://arkime.com/index#home](https://arkime.com/index#home)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Arkime navigation** **resource**: [https://arkime.com/index#screenshots](https://arkime.com/index#screenshots)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Malcolm Network Traffic Analysis** **documentation**: [https://inl.gov/content/uploads/2023/07/Network-Traffic-Analysis-with-Malcolm.pdf](https://inl.gov/content/uploads/2023/07/Network-Traffic-Analysis-with-Malcolm.pdf)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**CyberChef across-the-net remote access** **version**: [https://gchq.github.io/CyberChef/](https://gchq.github.io/CyberChef/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Devo SIEM/SOAR** **solution**: [https://www.devo.com/experiences/devo-siem-walkthrough/?utm_campaign=2023_next-gen_siem&utm_term=devo%20siem&utm_source=google&utm_medium=cpc&utm_content=644484296347&hsa_src=g&hsa_ver=3&hsa_cam=1423896132&hsa_kw=devo%20siem&hsa_ad=644484296347&hsa_tgt=kwd-652171837431&hsa_mt=b&hsa_acc=4869300310&hsa_grp=59041274115&hsa_net=adwords&gad_source=1&gclid=EAIaIQobChMIkqqlxcrCgwMVw3d_AB0RpgP7EAAYAiAAEgLv2_D_BwE](https://www.devo.com/experiences/devo-siem-walkthrough/?utm_campaign=2023_next-gen_siem&utm_term=devo%20siem&utm_source=google&utm_medium=cpc&utm_content=644484296347&hsa_src=g&hsa_ver=3&hsa_cam=1423896132&hsa_kw=devo%20siem&hsa_ad=644484296347&hsa_tgt=kw)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Learn** **JavaScript**:  [https://www.w3schools.com/js/default.asp](https://www.w3schools.com/js/default.asp)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Learn** **Python**: [https://www.w3schools.com/python/default.asp](https://www.w3schools.com/python/default.asp)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

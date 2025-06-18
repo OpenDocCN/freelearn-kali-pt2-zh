@@ -1,0 +1,677 @@
+- en: Attacking the Browser with BeEF
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The Browser Exploitation Framework (a.k.a. BeEF) is a structured code base
+    for attacking web browsers. BeEF can attack any browser, but the OS, browser type,
+    settings, plugins, and version will all have an effect on what attacks it can
+    execute. BeEF runs as a server; when we hook a browser, it connects back to the
+    BeEF server. From there, we can execute commands against it. In this chapter,
+    we will cover the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hooking the browser with BeEF
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Collecting information with BeEF
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating a persistent connection with BeEF
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integrating BeEF and Metasploit
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using the BeEF autorule engine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hooking the browser with BeEF
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In order to use BeEF, we need to start its services and be able to access its
+    console. Additionally, in order to exploit a victim''s browser, we need to find
+    a way to hook their browser. There are a number of ways of exploiting a victim''s
+    browser; in this chapter, we will cover two ways:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The first shows how we can deploy a script on a website that we are able to
+    directly edit.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In the second example, we will exploit a website vulnerable to XSS attacks.
+    In this way, we can deploy our script on a site we have no administrative access
+    to.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: BeEF comes preinstalled on Kali Linux. In the examples provided, an instance
+    of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more
+    information on how to set up systems in a local lab environment, refer to the
+    *Installing Metasploitable2* and *Installing Windows Server* recipes in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*. Additionally,
+    this section will require a script to be written to the filesystem using a text
+    editor, such as Vim or GNU nano. For more information on how to write scripts,
+    refer to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Now let''s get started and learn to hook the browser with BeEF:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to Applications | Exploitation Tools | beEF xss framework:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00584.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'A Terminal window will open and start the BeEF server. When it has completed,
+    it will open a browser and take you to the BeEF console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00437.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The default Username and Password is `beef/beef`. Once authenticated, we see
+    the BeEF console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00641.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, we need to hook the browser. There are many methods we could use. We
+    will demonstrate two methods here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Method 1**: First, let''s see how we could simply insert some JavaScript
+    into a page we have control over:'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Notice in the Terminal that launched when we started BeEF the line that shows
+    a sample hook:'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00440.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We see that we hook a browser by calling the `hook.js` file, so let''s make
+    a page that will do that. We navigate to our web root directory and create a file;
+    we will call it `beef.html`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00013.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, we will create a simple web page and embed our script between the `<head>`
+    and `</head>` tags:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00442.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, when someone navigates to our web page, it will load the `hook.js` script
+    and create a connection to our BeEF server. However, there will be no visual cues.
+    If you navigate to our web page, you will see something like this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00078.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now let''s go look at the BeEF console, and we will see that we have hooked
+    the browser:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00109.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '**Method 2: **We can get a little trickier and do this on a site we don''t
+    own using XSS. We will use Mutillidae.  Specifically, we will exploit the Add
+    To Your Blog function of Mutillidae that is vulnerable to XSS.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'On this page, we will simply use the same script we used on our web page earlier.
+    So, we navigate to the `add-t0-your-blog.php` page and enter our script:'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00143.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now let''s navigate to our blog post:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00449.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The `hook.js` script is loaded in the background, and it''s persistent. Anyone
+    now visiting this blog will be hooked. If we take a look at the BeEF console,
+    we will now see the browser we have hooked:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00224.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: BeEF runs as a server on Kali Linux. Once we have started BeEF and deployed
+    its hook, it is only a matter of waiting for a browser to come across and load
+    our `hook.js` file. This in turn will connect the exploited browser to our BeEF
+    server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Collecting information with BeEF
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Once we have successfully hooked a browser, we are ready to use BeEF to exploit
+    it. This recipe covers how we can use some basic BeEF commands to collect information
+    and exploit a victim's browser.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: BeEF comes preinstalled on Kali Linux. In the examples provided, an instance
+    of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more
+    information on how to set up systems in a local lab environment, refer to the
+    *Installing Metasploitable2* and *Installing Windows Server* recipes in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*. Additionally,
+    this section will require a script to be written to the filesystem using a text
+    editor, such as Vim or GNU nano. For more information on how to write scripts,
+    refer to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Now let''s get started and learn to collect information with BeEF:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Returning to the previous recipe, let''s take a look at the BeEF console. We
+    once again see that we have a hooked browser. BeEF gives some information right
+    away about our hooked browser. In the following example, it tells us using icons
+    that the browser is Internet Explorer, the operating system is Microsoft Windows,
+    and our hardware is a virtual machine. Additionally, it gives us the IP address
+    of the hooked machine''s browser:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00452.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: We can get more information about the hooked browser by selecting it with our
+    mouse. When we do this, a new tab pops up and reveals details about the hooked
+    browser. We get the browser type, version, more details about the platform, and
+    even the resolution of the browser. We also get information on the browser's plugins
+    and components and information on the page that was used to hook the browser.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Finally, we get some more details about the browser''s host computer:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00294.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can now run commands against our victim''s browser, but before we do, let''s
+    examine the traffic light icons and see what each means:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00454.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'You will notice when we expand the module tree under the Commands tab that
+    each command will have a corresponding traffic-light icon. This gives us some
+    idea as to what is available to us as well as whether or not the user may notice
+    when we execute a command. For this example, let''s expand the `Browser` folder
+    in the module tree:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00376.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can see a number of options, but let''s try Get Visited URLs. If we click
+    on that command, we get a brief description and a text box in which to enter the
+    URL(s) that we would like to see whether the hooked browser has visited. Let''s
+    first try it with the default entry, [http://beefproject.com/](http://beefproject.com/).
+    When we click on Execute, we see that the command returns false:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00459.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To test whether this command works, we will modify the value of the URL(s)
+    with a page we know the browser has visited and see what it returns. In this example,
+    let''s use the `http://172.16.69.135/beef.html` URL.  When we execute this, we
+    see that the command now returns true:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00257.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Lets try another command. In this example, we will redirect the browser to
+    a URL of our choosing. You will see that the traffic light next to this command
+    is orange, as the user will obviously notice that they have be redirected once
+    the command is executed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00258.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'For our example, I am just going to redirect them to the root of our website
+    hosting the `beef.html` page.  So we will modify the redirect URL to `http://172.16.69.135/`
+    and click on the Execute **button** . If we click on the command we just executed,
+    the result shows that the redirect happened:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00262.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Going back to our Windows XP hooked browser, we can see that, indeed, the browser
+    was redirected to `http://172.16.69.135/`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00265.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: BeEF runs as a server on Kali Linux. Once we have started BeEF and deployed
+    its hook, it is a matter of waiting for a browser to come across and load our
+    `hook.js` file. This in turn will connect the exploited browser to our BeEF server.
+    Once connected, BeEF has a number of functions that will allow us to collect information
+    about our exploited target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating a persistent connection with BeEF
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: When a browser gets hooked by BeEF, by default it only stays hooked as long
+    as it is on the page that infected it. If the user navigates away from that page,
+    it will no longer be hooked to our BeEF console. In this recipe, we show how can
+    create persistence with BeEF even if a user navigates away from the infecting
+    page.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: BeEF comes preinstalled on Kali Linux. In the examples provided, an instance
+    of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more
+    information on how to set up systems in a local lab environment, refer to the
+    *Installing Metasploitable2* and *Installing Windows Server* recipes in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*. Additionally,
+    this section will require a script to be written to the filesystem using a text
+    editor, such as Vim or GNU nano. For more information on how to write scripts,
+    refer to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Now let''s learn to create a persistent connection with BeEF:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s go to the BeEF console and verify that we still have the hooked browser
+    from the previous recipe. If not, we can hook the browser again by going to the
+    page `http://172.16.69.135/beef.html`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00268.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Having the browser hooked is great; however, once the user navigates away from
+    the page that infected it, we no longer have the browser hooked. It goes from
+    showing up in an `Online Browsers` folder and shows up in our `Offline Browsers` folder,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00248.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Obviously, this is not ideal from our perspective. Once we have hooked a browser,
+    it would be ideal to have some persistence even if the user navigates away from
+    our infecting page. To make this happen, we navigate to the Commands tab, and
+    expand the Persistence folder.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Here, we can see several options available to us. For this example, we will
+    use the Create Pop Under command. This command will create a new browser window
+    and then hide it from the user. As long as this window remains open, we will have
+    a persistent connection:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00263.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once we click on the Execute button, we can go take a look at our infected
+    browser. Here, you can see in the Windows XP taskbar at the bottom that we have
+    two instances of Internet Explorer running now:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00273.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, if the user navigates away from our page, we will still have the pop-under
+    window hooked and can maintain our persistence. Looking at the BeEF console, we
+    can see that we have one online browser and one offline with the same IP address.
+    The offline browser is the one that has navigated away from our infecting page,
+    while the online one is the one we instantiated using the Create Pop Under command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00276.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In order to maintain persistence with BeEF, the browser needs to keep using
+    the `hook.js` resource. When a user navigates away from our infecting page, it
+    no longer is using `hook.js`, so we lose our connection. In order to maintain
+    persistence, we can use an IFrame or another browser window to maintain our connection
+    by loading our `hook.js` file in it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Integrating BeEF and Metasploit
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We know now that BeEF is a great framework for exploiting the browser and that
+    Metasploit is a great framework for exploiting a host. In this recipe, we'll see how
+    we can use BeEF and Metasploit together. After hooking a browser with BeEF, we
+    redirect the victim's browser to an executable that creates a reverse shell.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: BeEF comes preinstalled on Kali Linux. In the examples provided, an instance
+    of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more
+    information on how to set up systems in a local lab environment, refer to the
+    *Installing Metasploitable2* and *Installing Windows Server* recipes in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*. Additionally,
+    this section will require a script to be written to the filesystem using a text
+    editor, such as Vim or GNU nano. For more information on how to write scripts,
+    refer to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Now let''s learn how to integrate BeEF and Metaspoilt:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will begin by creating a reverse shell and packaging it into an executable.
+    We know that our hooked browser is Microsoft Windows, so we will build an executable
+    to match the victim''s platform. We are using the payload `windows/shell/reverse_tcp`.
+    We then enter `LHOST` as the IP address of our Kali host, and we will set `LPORT`
+    as `4444`. We do some encoding and output our file in our web root so that we
+    can redirect our victim to it when we are ready:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00278.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now that we have created our exploit, we need to set up our listener. We do
+    this by opening the MSF console and typing `use exploit/multi/handler`. Then,
+    we set the payload to the same one we used in `msfvenom`: `set payload windows/shell/reverse_tcp`.
+    From here, we need to set `LHOST` to `172.16.69.133` and `LPORT` to `4444`. Once
+    we have all our options set, type `exploit` and the listener will start:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00281.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now we go back to our BeEF console and decide how we want to direct the user
+    to our `shell.exe` file. We could perform a redirect or open a new window, but
+    for this example, we will use an IFrame. When we click on the command, we are
+    presented with a textbox to enter our URL. Here, we enter the path to our `shell.exe`
+    file we just created. In our example, it is `http://172.16.69.133`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00284.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When we click on Execute, the victim''s browser is going to receive a prompt
+    and has to make a decision about whether or not to open or save it. Of course,
+    the user does not have to open our file, and if they do not, there will be no
+    reverse shell. This is meant purely as an example, but there is a lot we could
+    do to encourage the user by making this look like something they want to install.
+    When it comes to exploiting, this is where creativity comes into play. For now,
+    let''s suppose our victim does open our file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00287.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once opened, a reverse shell is created, and you can see that we get the Microsoft
+    Windows Command Prompt. From here, we can do whatever the compromised user can
+    do from the Terminal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00288.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: BeEF provides a framework that allows us to exploit the victim's browser. In
+    this recipe, we take the exploited browser and have it download a reverse shell
+    executable, linking it back to our Metasploit host.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the BeEF autorule engine
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We have now seen some of the power of BeEF. Wouldn't it be great if we could
+    automate some of that power? With the BeEF autorule engine, we can do just that.
+    As an example, it would be great to create a persistent connection automatically
+    with our victim as soon as the browser is hooked. This recipe looks into this
+    and some other ideas.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: BeEF comes preinstalled on Kali Linux. In the examples provided, an instance
+    of Metasploitable2 is used to demonstrate hooking a browser via XSS. For more
+    information on how to set up systems in a local lab environment, refer to the
+    *Installing Metasploitable2* and *Installing Windows Server* recipes in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*. Additionally,
+    this section will require a script to be written to the filesystem using a text
+    editor, such as Vim or GNU nano. For more information on how to write scripts,
+    refer to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In order to automate BeEF, we will be using the BeEF **Autorun Rule Engine**
+    (**ARE**). With ARE, we can automatically run commands on a browser when it is
+    hooked, provided it meets the requirements we specify. As an example, we would
+    only want to run Google Chrome commands if the browser that is hooked is Google
+    Chrome:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'BeEF comes prepackaged with a number of ARE rules. On Kali, we can view them
+    by navigating to the `/usr/share/beef-xss/arerules/` directory and viewing its
+    contents, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00289.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Although BeEF comes prepackaged with ARE commands, these commands are continually
+    being updated and added to. To view the latest comprehensive list of ARE commands,
+    we can visit the BeEF projects arerules page at [https://github.com/beefproject/beef/tree/master/arerules](https://github.com/beefproject/beef/tree/master/arerules).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To get the latest rules, we will download the BeEF master archive. We switch
+    to the `/tmp/` directory and download the latest BeEF archive from [https://github.com/beefproject/beef/archive/master.zip](https://github.com/beefproject/beef/archive/master.zip).
+    We can now unzip the contents using the `unzip` command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00293.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Notice that we have downloaded the entire BeEF project, although all we need
+    is to update the rules. So let's switch to the `autorule` directory, and we will
+    run a command to look for autorule files and move them to the `/usr/share/beef-xss/arerules/`
+    directory.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We can then switch back over to the `/usr/share/beef-xss/arerules/` directory
+    and confirm whether the files were moved. We should also go back to the `/tmp/`
+    directory and remove the files there as they are not needed. We can do this by
+    executing the `rm -r /tmp/beef-master` and `rm master.zip` commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00431.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Now that we have the latest ARE rules, let's look specifically at the `man_in_the_browser.json` file.
+    Man-in-the-browser attacks work by intercepting the request when a user clicks
+    on a link. If the link is on the same domain, it simply will make an AJAX call
+    to load the new page. To the user, it doesn't look any different from what they
+    would normally experience; however they remain hooked. In the event that the link
+    is to another domain, a new tab is launched to load the requested page. This may
+    or may not tip off the user; however, it is not that uncommon for sites to open
+    pages in new tabs. This is required because the same-origin policy won't allow
+    us to make the request in the same way as if the link were to another page on
+    our given domain.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In order for us to automatically run our ARE rules, we must move them from the
+    `/usr/share/beef-xss/arerules/` directory to the `/usr/share/beef-xss/arerules/enabled/` directory.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After moving them, we need to restart BeEF in order for it to pick up the new
+    configuration:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00298.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When we originally created our web page to hook our victims, we did not add
+    any links to the page. Let''s begin by editing our `beef.html` file with the `vi`
+    editor:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00299.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, we can edit the page and add a link. In this example, we will add the
+    following HTML to our page:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](../images/00476.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now we navigate to `172.16.69.133/beef.html` from our Windows XP machine. From
+    our BeEF panel we can see that the browser is  hooked as expected:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00304.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When we navigate away from our page and to `www.packtpub.com`, our `man_in_the_browser.json` file
+    goes to work, keeping our browser hooked. If we look in the logs, we can see that
+    it was executed. Additionally, even though the user navigated away, we can see
+    that our browser remains online:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00307.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The BeEF ARE allows us to choose specific commands to be executed automatically
+    when a browser is hooked by BeEF. This allows us to collect information and create
+    persistence, among a number of other functions.
+  prefs: []
+  type: TYPE_NORMAL

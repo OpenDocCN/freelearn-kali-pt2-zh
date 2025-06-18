@@ -1,0 +1,331 @@
+- en: Preface
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Kali Linux, the most popular security testing platform available today, provides
+    a means for individuals from all walks of life to become more experienced with
+    penetration testing and information security. Kali is not only the cornerstone
+    of many security penetration testing programs, but also has a tremendous community
+    of users who share code, methods, and experiences to help even the most seasoned
+    security practitioners become more effective. As a platform, Kali Linux is quite
+    versatile. It can be run from bootable media, installed onto hardware platforms,
+    or run in virtual environments. It can be enhanced with any number of tools available
+    outside of the native distribution (and we will demonstrate this in the following
+    chapters). It truly gives you the means to have a single platform to work from,
+    in any format you like, without the need for expensive investments in hardware
+    and software.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With the rise of malicious actors and malware, and the increased focus on system
+    and network security, being able to understand how the attacker operates allows
+    you to become more effective at providing balanced and appropriate controls.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this book, we will explore how to use Kali Linux as well as additional tools
+    such as Nexpose, Nessus, and OpenVAS to perform various types of penetration testing
+    tasks. We will cover how to set up an effective lab for testing purposes and we
+    will also cover many aspects of penetration testing, along with useful advice
+    on how to go about being successful in using the Kali Linux platform.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What this book covers
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '[Chapter 1](7560c369-51ac-43f6-b94e-3889265b10bc.xhtml), *Installing Kali and
+    the Lab Setup*, documents best practices for setting up a testing environment,
+    where you can test the skills highlighted in this book.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 2](48d70dd4-e446-4efa-9f68-eae64fddd3ac.xhtml), *Reconnaissance and
+    Scanning*, enables you to learn the skills necessary to gather information about
+    your target environment. We will gather domain names, IP subnets, hosts, routing
+    information, as well as other useful information. You will also learn how to keep
+    track of this data, so we can refer to it in the future as we progress through
+    our penetration testing environment.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 3](efecc8fd-4746-4428-9662-854d418bcba2.xhtml), *Vulnerability Analysis*,
+    explains that once access to a network has been gained and the systems within
+    that network have been identified, the next step is to establish a foothold and
+    persistent access.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 4](9f678d15-2115-4e29-a75d-03dba65d3398.xhtml), *Finding Exploits
+    in the Target*, takes the host information that we have accumulated to determine
+    the potential exploits to use against target machines and services.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 5](f6db0321-3c3e-4511-927c-cf279ea1700a.xhtml), *Social Engineering*,
+    speaks about social engineering that can be employed through electronic means
+    and is also used in physical penetration testing and even data gathering. We bend
+    well-known natural tendencies to help us accomplish or obtain what we want.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 6](868da5dc-85d4-4ac2-9325-1274b75c8c7d.xhtml), *Password Cracking*,
+    enables you to learn different techniques and tools to gain knowledge of password
+    hashes gained during various attacks, as well as the means to reset these passwords
+    if access is gained.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 7](66009beb-61cd-46c3-9233-ec9b8edbf79c.xhtml), *Privilege Escalation*,
+    helps you to learn how to use a small foothold to expand the scope of your breach,
+    increase the admin level, and use lateral movement to compromise more machines.
+    In most cases, the initial point of a breach is not the desired target, but just
+    a means to get to the more valuable targets.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 8](86184310-ec3f-4792-a238-a7719e071af2.xhtml), *Wireless Specific
+    Recipes*, explains that due to the ever growing adoption of wireless networking,
+    as well as the extended reach wireless signals can provide, we will focus on how
+    to gain access to these networks through a variety of means.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 9](f8114976-00fa-415d-94e7-254206a44dbb.xhtml), *Web and Database
+    Specific Recipes*, explains that evaluating the security of web applications and
+    databases requires a unique set of tools that can be leveraged against them. In
+    the event that a web application is compromised, it is highly likely that it may
+    then be used as a jumping off point for further network penetration.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[Chapter 10](02e6452a-b223-4edb-954a-fef51f21215e.xhtml), *Maintaining Access*,
+    explains that once access has been gained to the target environment, it is crucial
+    to make sure that your access is maintained. Learn how to maintain access and
+    pivot into other areas of your target environment.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What you need for this book
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This book assumes a medium level of expertise on Linux operating systems, strong
+    knowledge of networking technologies, including both wired and wireless, moderate
+    experience with OS platform configuration, and moderate experience with general
+    information security concepts. This book will go through the process of setting
+    up a basic testing lab, the installation of Kali Linux, and the tools needed to
+    perform network reconnaissance, and exploitation. Because you will be running
+    exercises against live hosts, it is important that this environment is isolated
+    from other non-test environments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Kali Linux can be installed into a virtual environment such as VirtualBox or
+    VMware, or can be installed onto a dedicated hardware. This book requires that
+    you have enough compute resources for the Kali Linux installation as well as the
+    target systems. In addition to the minimum requirements for your hypervisor, minimum
+    hardware or virtual requirements are listed as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'CPU: 10 cores'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Memory: 24 GB RAM'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Disk space: 260 GB'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'In this book, you will need the following software list:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux 2017.x
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: VirtualBox
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows XP
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows 7
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows 2008
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Internet connectivity is required to install the necessary additional packages
+    that must be installed onto Kali Linux, depending on the recipe requirements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Who this book is for
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To make best use of the content of this book, knowledge in networking, device
+    management, general information security concepts, and core operating systems
+    is required. Foundational knowledge of Kali Linux is also expected. Since Kali
+    Linux provides a tremendous number of tools for many different purposes, it is
+    impossible to cover all possible combinations of the available tools and their
+    use. For more details on all the tools available within Kali Linux, visit the
+    official Kali Linux Tool page located at [https://tools.kali.org/](https://tools.kali.org/).
+    With that in mind, this book is intended to provide a more in-depth set of recipes
+    to take advantage of these tools to sharpen your knowledge of security penetration
+    testing and exploitation of insecure/undersecured environments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sections
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this book, you will find several headings that appear frequently (Getting
+    ready, How to do it, How it works, There's more, and See also).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To give clear instructions on how to complete a recipe, we use these sections
+    as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This section tells you what to expect in the recipe, and describes how to set
+    up any software or any preliminary settings required for the recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This section contains the steps required to follow the recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This section usually consists of a detailed explanation of what happened in
+    the previous section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This section consists of additional information about the recipe in order to
+    make the reader more knowledgeable about the recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: See also
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This section provides helpful links to other useful information for the recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conventions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this book, you will find a number of styles of text that distinguish between
+    different kinds of information. Here are some examples of these styles, and an
+    explanation of their meaning.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Code words in text, database table names, folder names, filenames, file extensions,
+    pathnames, dummy URLs, user input, and Twitter handles are shown as follows: "select `/root/Documents` and
+    type in your customer name".'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Any command-line input or output is written as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'New terms and important words are shown in bold. Words that you see on the
+    screen, in menus or dialog boxes for example, appear in the text like this: "click
+    on Apply."'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Warnings or important notes appear like thisTips and tricks appear like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Readers feedback
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Feedback from our readers is always welcome. Let us know what you think about
+    this book-what you liked or disliked. Reader feedback is important for us as it
+    helps us develop titles that you will really get the most out of.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To send us general feedback, simply email `feedback@packtpub.com`, and mention
+    the book's title in the subject of your message.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If there is a topic that you have expertise in and you are interested in either
+    writing or contributing to a book, see our author guide at [www.packtpub.com/authors](http://www.packtpub.com/authors).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Customer support
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that you are the proud owner of a Packt book, we have a number of things
+    to help you to get the most from your purchase.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Downloading the color images of this book
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We also provide you with a PDF file that has color images of the screenshots/diagrams
+    used in this book. The color images will help you better understand the changes
+    in the output. You can download this file from [https://www.packtpub.com/sites/default/files/downloads/KaliLinuxCookbookSecondEdition_ColorImages.pdf](https://www.packtpub.com/sites/default/files/downloads/KaliLinuxCookbookSecondEdition_ColorImages.pdf).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Errata
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Although we have taken every care to ensure the accuracy of our content, mistakes
+    do happen. If you find a mistake in one of our books-maybe a mistake in the text
+    or the code-we would be grateful if you could report this to us. By doing so,
+    you can save other readers from frustration and help us improve subsequent versions
+    of this book. If you find any errata, please report them by visiting [http://www.packtpub.com/submit-errata](http://www.packtpub.com/submit-errata),
+    selecting your book, clicking on the Errata Submission Form link, and entering
+    the details of your errata. Once your errata are verified, your submission will
+    be accepted and the errata will be uploaded to our website or added to any list
+    of existing errata under the Errata section of that title.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To view the previously submitted errata, go to [https://www.packtpub.com/books/content/support](https://www.packtpub.com/books/content/support)
+    and enter the name of the book in the search field. The required information will
+    appear under the Errata section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Piracy
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Piracy of copyrighted material on the Internet is an ongoing problem across
+    all media. At Packt, we take the protection of our copyright and licenses very
+    seriously. If you come across any illegal copies of our works in any form on the
+    Internet, please provide us with the location address or website name immediately
+    so that we can pursue a remedy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Please contact us at `copyright@packtpub.com` with a link to the suspected pirated
+    material.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We appreciate your help in protecting our authors and our ability to bring you
+    valuable content.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Questions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: If you have a problem with any aspect of this book, you can contact us at `questions@packtpub.com`,
+    and we will do our best to address the problem.
+  prefs: []
+  type: TYPE_NORMAL

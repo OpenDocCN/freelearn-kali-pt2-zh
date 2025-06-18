@@ -1,0 +1,1 @@
+["```\nsudo apt-get install cmake make gcc g++ flex libfl-dev bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev\n```", "```\nsudo apt-get install python3-git python3-semantic-version\n```", "```\ngit clone --recurse-submodules https://github.com/zeek/zeek\n```"]

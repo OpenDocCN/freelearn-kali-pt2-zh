@@ -1,0 +1,816 @@
+- en: Web and Database Specific Recipes
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating an offline copy of a web application
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scanning for vulnerabilities
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Launching website attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scanning WordPress
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hacking WordPress
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Performing SQL injection attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Evaluating the security of web applications and databases requires a unique
+    set of tools that can be leveraged against them. Websites and databases are highly
+    targeted environments due to the amount of visibility they have and the information
+    they contain. These could be for publicly accessible sites or intranets. In the
+    event that a web application is compromised, it is highly likely that it may then
+    be used as a jumping off point for further network penetration.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating an offline copy of a web application
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: One of the first things that you should do is create an offline copy of the
+    target site. This will allow you to analyze the contents of information such as
+    how forms are submitted, the directory structure of the application, and where
+    files are located. Aside from the technical details of the site's structure, comments,
+    and inactive code can also give you an insight into additional areas of interest.
+    This information can be used to craft site-specific attacks in subsequent portions
+    of this chapter. By creating an offline copy of the site in question, you also
+    limit the number of times that you are touching the site, minimizing the number
+    of records generated in logs, and so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In order to perform an offline copy of a target site, we will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Network access to the target system
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: BurpSuite free edition (installed by default on Kali Linux)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OWASP-BWA installed as required in the recipe, Installing OWASP-BWA in [Chapter
+    1](7560c369-51ac-43f6-b94e-3889265b10bc.xhtml), *Installing Kali and the Lab Setup*
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To create an offline copy of the analysis, we will use the following recipe:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Launch BurpSuite from the Applications | 03 - Web Application Analysis menu:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/47a520c9-132a-45a6-a054-a7605ba8c047.png)Launching BurpSuite'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If this is the first time it is being launched, you will be presented with a
+    license agreement – please read this before clicking I Accept to continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Since we are using the free version, we will only be able to use the Temporary
+    Project option, so click on Next.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For the purposes of this demonstration, we will use the BurpSuite defaults.
+    Click on Start Burp to continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The default values for BurpSuite should be changed to something more appropriate
+    if you are going to use this platform for connections other than your testing
+    server, as these values are known, and are likely to trigger intrusion detection
+    systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once BurpSuite starts, you will see a number of tabs:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/777c7879-940d-4cb7-85d2-7263864e7582.png) Initial view of BurpSuite'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select the main tab Proxy, and be sure that intercept is off is displayed as
+    follows. If it is enabled, clicking on that link will toggle the status to off:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/8c5ddabe-bb09-41a3-aaea-72525b02c1db.png)Disable Intercept'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Your browser should next be configured to use BurpSuite as its proxy. To do
+    this, open Firefox ESR, and navigate to the Preferences | Advanced | Network |
+    Connections | Settings menu. You will configure your proxy settings as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c098138c-12fe-42bc-9fdd-a729b7c64ca0.png)Browser proxy configuration'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once Proxy settings are complete, use Firefox to navigate to the IP address
+    of your OWASP-BWA instance. From here, navigate through some of the application
+    options to familiarize yourself with the layout.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Since BurpSuite is running as your browser's proxy, you may see SSL certificate
+    errors – this is to be expected.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Return back to your BurpSuite app, and review the entries in the Proxy | HTTP
+    history tab. Locate the initial request to your OWASP-BWA instance, and highlight
+    it. Right-click on this entry, and select Add to scope:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/daa647a0-b4f7-404d-8b35-d4c2730264ec.png)Adding OWASP-BWA to target
+    scopeYou will see different numbers in the first column, as this is generated
+    sequentially. Sort on the URL column to locate the `/` request. Once specified
+    as being in scope, BurpSuite will only record the proxy history for this host.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To review the scope configuration, navigate to Target | Scope, select the host
+    entry for your OWASP-BWA instance, and select Edit. You can see there are several
+    different options that you can select here, including the use of regular expressions
+    to help make target selection easier. Since our example is a single host, we will
+    not change this option and will leave the target port as `80`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2b812eee-2985-4ac2-984c-1c35cba1d8bc.png)OWASP scope configuration'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The generation of the offline copy requires certain information prior to use.
+    Navigate to Spider | Options, and review the available options. We will leave
+    them as the default for now:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/f37f1aab-b569-4044-bd41-06a5b759e44b.png)BurpSuite spider options'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can check on the progress of the analysis by visiting Spider | Control,
+    where you will see the current status:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ca98bd88-a68c-49bf-a194-e1a768ad1006.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the spider starts collecting data, it can be found in the Target | Site
+    map section of BurpSuite. Here you can see all requests made through the proxy,
+    with the hosts within the target scope in bold:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5389f583-f63c-4888-8627-b54234654ab9.png)Site map details of target
+    web application'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can now review the contents of, not only the application documents themselves,
+    but also all requests sent to and received from the server. By reviewing this,
+    as well as the site map information, you can begin identifying additional areas
+    of inspection.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You will notice traffic identified by BurpSuite that is not part of the target
+    scope in the site map. This is due to the fact that all traffic being generated
+    by the browser is being proxied, and therefore added to the site map. The non-target
+    hosts are listed but are greyed out – if you want to add additional hosts to the
+    scope, right-click on the host in question, and select Add to scope. Once added,
+    the spider will include this host in the analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The information gathered by BurpSuite spider is extensive and a detailed analysis
+    of all data gathered would require a book by itself. For more information on how
+    to leverage this data to a greater level of detail, refer to the PortSwigger site
+    at [https://support.portswigger.net/](https://support.portswigger.net/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scanning for vulnerabilities
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Web applications pose a particular risk to organizations as they are accessible
+    to the internet, and therefore can be accessed by anyone. If you consider this
+    carefully, untrusted external entities are being permitted access to applications
+    and systems within the organization's security perimeter, making them an excellent
+    jumping off point for further infiltration, once compromised.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will now move to the next phase of our approach, using OWASP-ZAP, we will
+    scan the target system for vulnerabilities that can potentially be exploited.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the key reasons we perform on an offline copy of a target system is to
+    better craft your tool's configuration to minimize the noise generated by the
+    scanning process. With the exceptional focus on security in the industry as a
+    result of high-profile breaches, many corporations are implementing intrusion
+    detection/prevention measures that would look for the signatures of attacks against
+    their systems. These systems, if triggered, can prevent you from any access whatsoever.
+    Use with caution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To successfully complete this section, we will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installation and configuration of OWASP-BWA as highlighted in the recipe, *Installing
+    OWASP-BWA* in [Chapter 1](7560c369-51ac-43f6-b94e-3889265b10bc.xhtml), *Installing
+    Kali and the Lab Setup*
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network connectivity between your Kali Linux desktop and the OWASP-BWA instance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To execute a vulnerability scan of a target system using OWASP-ZAP, we will
+    perform the following tasks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From the Kali Linux Applications menu, navigate to Applications | 03 - Web Application
+    Analysis | owasp-zip to launch the application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once prompted for the type of session persistence, select persistence based
+    on the current timestamp:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/7e0df357-9b93-48ef-90b5-005ed399763c.png)Selecting session persistence'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the upper left, change the scan type from Safe Mode to ATTACK Mode:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3ad1e25b-de6c-4a98-b7d9-c9f489d33341.png)Changing OWASP-ZAP script
+    mode'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you have done this, we will enter the IP address of the OWASP-BWA device
+    into the input field in the Quick Start tab and click Attack. This will start
+    the scanning process:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/e3939d7e-fd3c-40a2-a695-d17231dd965b.png)Initiating OWASP-ZAP scan'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To monitor the progress of a scan, under the Active Scan tab, click on the
+    icon to the immediate left of the progress bar:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/59f9d549-6fc3-4684-bf06-5a35602a4ec6.png) Launching progress monitor'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The details of the progression of the scan, as well as the components completed,
+    can be seen in the pop-up window. This can be left open and on a separate area
+    of your desktop to monitor progress, as this may take some time to complete:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/f28fdddc-81bf-4bc0-ace1-be3f0689f817.png)Detailed progress'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As the scan progresses, you will see the following panes:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b6cee1a9-6e68-4d25-962f-5eeb40b417e8.png)Scan in progress - OWASP-ZAPSome
+    additional information on the panes seen in the preceding image:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Upper Left: Site map created during the scan of the target site'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Upper Right: The Request and Response tabs show communications between the
+    scanner and web server'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Lower Left: Open the Alerts tab, and you can see the vulnerabilities that are
+    being discovered'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Lower Right: Details of the Alerts selected from the lower left pane'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In order to save the results as a detailed report, that we can reference at
+    a later time from the Report menu, select Generate HTML Report, and save it to
+    `/root/Chapter9/owasp-zap.html`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/0883b4d9-46e1-47b0-8188-09cb097dbc03.png)Saving OWASP-ZAP scan results'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once saved, open it in Firefox and review the results. We will be using the
+    information contained in this report in subsequent recipes:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/14e77849-92aa-4178-a91a-5129e48135b4.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Since traffic to and from internet sites is easily traced, you may consider
+    running your scans through alternate connection paths. Some examples of this are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tor network, using the proxy chains package
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Virtual Private Network** (**VPN**)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SSH tunneling
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 3rd party VPN services
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Anonymizing proxies
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Each of these come with their own benefits and risks, so consider the best balance
+    of performance, ease of use, and accuracy of results when considering one of these
+    options.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Launching website attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As mentioned in the previous sections, web servers represent a network device
+    that resides on both the internal and external networks and can be used as a pathway
+    to internal segments if successfully compromised. In addition to being a jumping
+    off point to the internal network, web applications frequently handle sensitive
+    data such as customer data, payment information, or medical records – all of which
+    are valuable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Focusing on the web applications themselves, we will use Vega to perform a deeper
+    analysis on the install applications to identify possible opportunities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will be focusing on the web applications specifically since we cover platform
+    and daemon vulnerabilities in [Chapter 3](efecc8fd-4746-4428-9662-854d418bcba2.xhtml), *Vulnerability
+    Analysis* and [Chapter 4](9f678d15-2115-4e29-a75d-03dba65d3398.xhtml), *Finding
+    Exploits in the Target.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To successfully complete this section, we will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installation and configuration of OWASP-BWA as highlighted in the recipe *Installing
+    OWASP-BWA* in [Chapter 1](7560c369-51ac-43f6-b94e-3889265b10bc.xhtml), *Installing
+    Kali and the Lab Setup*
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network connectivity between your Kali Linux desktop and the OWASP-BWA instance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Installation of Vega from the command line as follows:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe, we will do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From the command line, launch Vega, and add our OWASP-BWA instance as a new
+    scan. When presented with the options dialog box, select all available checks,
+    and start the scan.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'As the scan progresses, we will see more alerts generated in the Vega interface:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4765e9f1-09c9-418e-bba3-d730c63a9554.png)Vega scan overview'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Selecting an alert in the left column will give you more details on the right,
+    in this case, a remote shell injection vulnerability:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3271bff4-12d5-4b99-a19d-f819bc6eb8a7.png)Remote shell injection
+    vulnerability'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scanning WordPress
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: WordPress is one of the most popular **content management systems** (**CMS**)
+    used on the internet and due to its popularity and the ability for programmers
+    to create custom components that integrate with WordPress, it presents a potentially
+    attractive target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because of this popularity, there are many tools designed to scan for these
+    vulnerabilities. We will be using one of these tools, WPScan.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To successfully complete this section, we will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installation and configuration of OWASP-BWA as highlighted in the recipe *Installing
+    OWASP-BWA* in [Chapter 1](7560c369-51ac-43f6-b94e-3889265b10bc.xhtml), *Installing
+    Kali and the Lab Setup*
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network connectivity between your Kali Linux desktop and the OWASP-BWA instance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps are needed in order to perform a scan against a WordPress
+    site using WPScan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the command line, we will run the following to make sure that we have
+    the latest database downloaded and installed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Once complete and updated, we now can use WPScan to start evaluating the security
+    of our target WordPress site (located on our OWASP-BWA image):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The preceding command runs WPScan against our WordPress instance on our OWASP-BWA
+    host and looks for known **vulnerable plugins** (**vp**) and known **vulnerable
+    themes** (**vt**), and saves the information to `wpscan.log`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When scanning a remote WordPress host, it is good practice to run through different
+    user agents to observe if the target system returns different results based on
+    this change. You can instruct WPScan to use random user agents by including the
+    `-r` switch in the command line.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The resulting log file can now be reviewed to see what vulnerabilities are
+    present on the target. We can get a quick list of the vulnerabilities by running
+    the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To get more details on the vulnerabilities located in this report, view the
+    full log file, as it contains URLs to online resources with more detailed information.
+    For example, our installation is vulnerable to the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: The information in this scan will be used in the next section, where we will
+    use these vulnerabilities to take control of our WordPress installation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Hacking WordPress
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: With information on WordPress vulnerabilities available, and with the increase
+    of useful tools to validate the security of WordPress installations, we will now
+    use that information to perform an attack on a WordPress installation targeting
+    the administrative user through an identified SQL injection vulnerability in a
+    third party plugin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To successfully complete this section, we will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installation and configuration of OWASP-BWA as highlighted in the recipe *Installing
+    OWASP-BWA* of [Chapter 1](7560c369-51ac-43f6-b94e-3889265b10bc.xhtml), *Installing
+    Kali and the Lab Setup*
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network connectivity between your Kali Linux desktop and the OWASP-BWA instance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Results from the WPScan run in the section *Scanning WordPress*
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To gain access to the remote WordPress installation, we will do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on the previous use of WPScan, we see that there is a SQL injection vulnerability
+    in the Spreadsheet plugin. Unfortunately, in our WPScan, we were unable to enumerate
+    users, so we will use this vulnerability to get the admin user information for
+    this installation.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From a command line, we will use the `searchsploit` tool to locate ways to
+    exploit this vulnerability:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This will present us with information, indicating that exploit information
+    is available in the file `/usr/share/exploitdb/platforms/php/webapps/5486.txt`.
+    When we open this file, it contains an example URL that will allow us to pull
+    the admin info:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If we take the example URL from the preceding example and adapt it to our directory
+    structure, we get the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Taking the preceding URL, we enter that into our Firefox browser and access
+    the page. Due to the SQL injection, we are presented with the user (admin), hashed
+    password, and email address for the user with the ID of `1`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5a2f1100-b9d2-405f-9727-a5a587d88750.png)Admin user information
+    obtained through vulnerable plugin'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s add that to a file so that we can run it through hashcat to get the
+    password:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'It is important to note that in WordPress versions 2.4 and prior, the password
+    was hashed as an unsalted MD5 hash, so we will need to tell hashcat that the format
+    is MD5 (`-m 0`), to use the hash we saved into `wp_admin.txt`, and to use the
+    local copy of `rockyou.txt` dictionary:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Hashcat will now run through `rockyou.txt` and display the following, including
+    the password for the admin account (in this case, it is `admin`):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: With the admin user account password, we can now do as we please after logging
+    into the WordPress instance, including add/remove accounts, adding/removing plugins,
+    uploading files of our choice, and so on.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In this case, we were able to get the admin user's hashed password through a
+    SQL injection, which is preferable to brute force, as doing so can lock accounts
+    and alert the target system owners. WPScan has provisions to do remote brute force
+    attacks and will attempt to locate plugins designed to prevent brute force attacks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performing SQL injection attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nearly all model web applications use an underlying database for storage of
+    everything from application configuration, localization, user authentication credentials,
+    sales records, patient records, and more. The information is read from and written
+    to by the web applications that face the internet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Unfortunately, web applications often are written in a way that allows remote
+    users to insert their own commands into input forms, giving them the ability to
+    change how the application behaves, and potentially giving access directly to
+    the database itself.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To successfully complete this section, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installation and configuration of OWASP-BWA as highlighted in the recipe *Installing
+    OWASP-BWA* in[Chapter 1](7560c369-51ac-43f6-b94e-3889265b10bc.xhtml), *Installing
+    Kali and the Lab Setup*
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network connectivity between your Kali Linux desktop and the OWASP-BWA instance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scan results from OWASP-ZAP in the recipe, *Scanning for Vulnerabilities* of[Chapter
+    9](f8114976-00fa-415d-94e7-254206a44dbb.xhtml), *Web and Database Specific Recipes*
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You will need to log into the OrangeHRM application at `http://192.168.56.100/orangehrm/`
+    with the user/password `admin`, and enter some user information, as the database
+    that ships with OWASP does not include this information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Starting with the results from the OWASP-ZAP scan from *Scanning for vulnerabilities*,
+    we will do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As seen in *Hacking WordPress*, a SQL-injection attack allowed us to extract
+    the admin user information that was later cracked with hashcat. We will be taking
+    that single vulnerability and using it to go beyond just the WordPress database.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To start, we need to identify the underlying database. Open a terminal, and
+    at the command line enter the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This will provide the following information, indicating it is MySQL server
+    5 or higher:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, we need to see what other databases are on the target system. From the
+    command line, run the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This will dump a list of all databases accessible through this SQL injection
+    vector:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From the list of available databases, we will work with OrangeHRM, as it is
+    a human resources management application. From the command line, run the following
+    to dump the tables that are present in the OrangeHRM database:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This will dump a list of all the tables in the OrangeHRM database, and the
+    amount of data it returns is substantial, 84 tables to be exact. In the list that
+    is output, you will see some interesting ones such as:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: hs_hr_customer                 (Customers)
+  prefs: []
+  type: TYPE_NORMAL
+- en: hs_hr_emp_directdebit     (Bank account information for direct deposit)
+  prefs: []
+  type: TYPE_NORMAL
+- en: hs_hr_emp_passport        (Passport records)
+  prefs: []
+  type: TYPE_NORMAL
+- en: hs_hr_employee                 (Detailed employee info)
+  prefs: []
+  type: TYPE_NORMAL
+- en: hs_hr_users                        (HR app users, able to create/modify users,
+  prefs: []
+  type: TYPE_NORMAL
+- en: employees, and so on)
+  prefs: []
+  type: TYPE_NORMAL
+- en: With the information from the database, an attacker would be able to extract
+    and crack user credentials for an administrator and log in with super user rights.
+    They could create a fake employee, generate a payroll record, and have payroll
+    sent via direct deposit to an outside bank. They would also be able to use the
+    information to steal the identities of any employee, manipulate their salaries,
+    and so on.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It is important to note that even though we started on an application not related
+    to the HR application, because they were housed on the same MySQL server, and
+    the user credentials used had to access to all databases, we were easily able
+    to jump between databases, even if, in this case, the HR application was only
+    available internally.
+  prefs: []
+  type: TYPE_NORMAL

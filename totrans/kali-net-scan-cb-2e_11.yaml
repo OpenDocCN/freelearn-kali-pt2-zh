@@ -1,0 +1,772 @@
+- en: Working with Sparta
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Sparta is a reconnaissance tool that integrates a number of the tools we''ve
+    covered into a single GUI.  It includes Nmap, Hydra, Nikto, Netcat, and a number
+    of other tools. Additionally, Sparta can be configured to use other tools by editing
+    the `sparta.conf` file. The following are the recipes we will cover in this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Information gathering with Sparta
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating custom commands for Sparta
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Port scanning with Sparta
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Fingerprinting with Sparta
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with Sparta
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Web application scanning with Sparta
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Information gathering with Sparta
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta offers a great deal of functionality out of the box. In this recipe,
+    we will take a look at the Sparta interface, explore what Sparta does by default
+    when you add hosts to the scope, look at some of the tools Sparta utilizes, and
+    brute-force passwords.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta comes pre-bundled with Kali Linux 2\. To use it to perform scans, you
+    will need to have a remote system that is running network services. In the examples
+    provided, an instance of Metasploitable2 is used to perform this task. For more
+    information on how to set up Metasploitable2, refer to [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s now dive straight into Sparta:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To get started, navigate to Applications | Information Gathering | sparta:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00310.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once Sparta has started, we need to define our target. In the Hosts pane, select
+    Click here to add host(s) to scope.  For our examples, we will be using an IP
+    address of `172.16.69.128`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00314.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once you click on the Add to scope button, the scans begin. First, Sparta will
+    run a staged Nmap scan. The staged Nmap scan is a number of scans actually, which
+    will determine open ports and running services:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00317.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'As the scans progress, the services found will begin showing up in the Services
+    window to the right of the Hosts pane. Additionally, it will do its best to identify
+    specific software and versions where it can:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00318.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can also see information about the services found by clicking on the Services
+    pane. This would be more useful if we were scanning a network range and wanted
+    to see what was found listed by service rather than host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00322.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Upon discovery of certain services, Sparta will automatically deploy tools
+    to gather further information. In the following screenshot, on discovering an
+    FTP service running, Sparta launches Hydra in an effort to uncover passwords,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00587.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If a web service is discovered, it will run nikto. Additionally, it runs screenshooter
+    to take a screenshot of the website found:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00326.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When we look at all the information Sparta has acquired and organized for us,
+    it is quite impressive. It has found a number of services and discovered usernames
+    and passwords for a great deal of them, including MySQL, PostgreSQL, and FTP services.
+    However, there is one FTP service it was not able to find credentials for; check
+    out the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00330.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Given that no password was found, let''s see whether we can find it using Sparta''s
+    Brute tab. If we click on that tab, we can configure the IP, Port, and Service:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00332.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We will also use a Username list and Password list. We do this by clicking
+    on the radio button and browsing to the lists we want to use. Kali has some great
+    word lists in the `/usr/share/wordlists` directory.  We will use `/usr/share/wordlists/unix_users.txt`
+    for the Username list and `/usr/share/wordlists/unix_passwords.txt` for the Passwords
+    list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00335.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once we have it properly configured, we are presented with a dialog box; just
+    click on the Run button and let it do the work. It finds the username/password
+    combination in short order and displays it back to the screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00339.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta has a number of tools already integrated into its GUI and is an excellent
+    way of consolidating your reconnaissance into one place. Upon configuring your
+    scope, it will scan one or more hosts for open ports and services. Additional
+    tools are also used to scan when certain services are discovered.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Creating custom commands for Sparta
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In the previous recipe, we saw what Sparta can do out of the box. A great feature
+    of Sparta is the ability to add other tools. These can then show up in the contextual
+    menus, and the results can be consolidated within the Sparta interface. In this
+    recipe, we cover how to custom-integrate a new tool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta comes pre-bundled with Kali Linux 2\. To use Sparta to perform scans,
+    you will need to have remote systems that are running network services. In the
+    examples provided, a combination of Linux and Windows systems are used. For more
+    information on setting up systems in a local lab environment, refer to the *Installing
+    Metasploitable2* and *Installing Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will also be editing Sparta's configuration file; refer to the *Using text
+    editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta is a great interface for performing our scanning and collecting our information
+    in one place. Before we begin, let's make a change to Sparta that will prevent
+    it from running all its tools automatically. As we saw in the previous recipe,
+    Sparta will do a great deal of scanning and launch a number of tools based on
+    what it finds. This may not always be the approach we want to take, especially
+    if we are trying to be stealthy. To make this change, open a terminal window and
+    type `vi /usr/share/sparta/sparta.conf`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Change the line `enable-scheduler-on-import=True` to `enable-scheduler=False`
+    and save:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00651.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The following steps will guide you to create custom commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To get started, navigate to Applications | Information Gathering | sparta:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once Sparta has started, we need to define our target. Select Click here to
+    add host(s) to scope. For our examples, we will be using an IP range of `172.16.69.0/24`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Uncheck Run staged nmap scan. If left checked, it will run a number of Nmap
+    scans identifying ports and services: ![](../images/00344.jpeg)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After the Nmap host discovery scan has been run, we can see the discovered
+    IPs under the Hosts tab, as seen in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00670.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now that we have a list of discovered hosts, we can right-click on any one
+    of them to see a menu of what we can do next, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00220.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Before we go any further, let''s save our Sparta session by going to File |
+    Save As. Save your session:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We can add additional tools to Sparta, provided they run in non-interactive
+    mode. To demonstrate this, we will add `fping` to the tools contained within Sparta.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'There are three types of actions you can define in Sparta:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Host**: A host action is one that would target a specific machine'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Port**: Port actions target a specific port or service'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Terminal**: Terminal actions allow you to spawn a terminal from within Sparta'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'To add an action, it needs to be defined in the following format:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`tool=label, command, services`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s not look at the meaning of each of these words:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`tool`: This is the name of the tool we are adding.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`label`: This is what will show within the contextual menus in Sparta.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`command`: This is what you would type if running the tool from the terminal.
+    The `command` tool uses the following placeholders: `[IP]`, `[PORT]`, and `[OUTPUT]`.
+    These variables are replaced with the appropriate values at runtime.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`services`: Services is a list of Nmap service names the tool would apply to.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Let's now define a tool as an example. For our example, we will use the command
+    `fping`. This will be a host action, as `fping` is used to see whether a host
+    is up. Running `fping` from the command line would look something like `fping
+    172.16.69.130`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You should see something similar to the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00291.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, let''s add `fping` to Sparta. Open a terminal window and type the following
+    command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You should see something similar to the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00206.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, we will add a tool to the Sparta configuration. We will define `fping`
+    under `[HostActions]`, shown as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: You will note that we do not use `[PORT]` or `[OUTPUT]` as `fping` does not
+    require them. Also, `services` is not required in our definition because `fping`
+    is a host action.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Save the file by hitting the *Esc* key, then typing, `:wq` and hitting the *Enter*
+    key.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In order to see our new command in Sparta, we will need to restart the service.
+    To close Sparta, go to the File | Exit menu option. Now we can reopen Sparta.
+    Once started, go to the File | Open menu option and load back in the Sparta scan
+    we saved earlier.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now when we right-click on the host, you will see Run fping, the host action
+    we created. Select that option, and our `fping` command will run. You will notice
+    that a new tab opens up within Sparta, displaying the results:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00221.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta has a number of tools already integrated into its GUI and is an excellent
+    way of consolidating your reconnaissance into one place. If you have other tools
+    you would like to integrate, you can do so by modifying the configuration and
+    adding tools to expand its capabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Port scanning with Sparta
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta conducts port scanning out of the box using Nmap. In this recipe, we
+    will discuss how we can conduct port scanning by adding tools and customizing
+    the Sparta interface.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta comes pre-bundled with Kali Linux 2\. To use Sparta to perform scans,
+    you will need to have remote systems that are running network services. In the
+    examples provided, a combination of Linux and Windows systems is used. For more
+    information on setting up systems in a local lab environment, refer to the *Installing
+    Metasploitable2* and *Installing Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will also be editing Sparta's configuration file. Refer to the *Using text
+    editors (Vim and GNU nano) recipe* in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s now learn to perform port scanning with Sparta:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Sparta uses Nmap to perform its port-scanning operations. We can see this by
+    right-clicking on a host and navigating to the Portscan submenu. A number of Nmap
+    scanning options are available to us; these options are also configurable in the
+    `sparta.conf` file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00235.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If we want to add other options with different tools, we can do that as well.
+    Let''s begin by adding an option to conduct a stealth scan using `hping3`.  Close
+    the Sparta application and open a terminal window. From here, let''s edit the
+    Sparta configuration file using the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now let''s add a new host action, defined as `hping3=hping3 (stealth scan),
+    hping3 [IP] --scan 0-65535`. You should see something similar to the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00598.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can now save our changes and reopen Sparta. Now if we right-click on a host,
+    we see our new host action, hping3 (stealth scan):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00353.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Clicking on this option runs our stealth scan against the designated host.
+    A new tab is opened, displaying the results of the scan:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00277.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Let''s add one more port-scanning option. Once again, we close Sparta and will
+    edit the `/usr/share/sparta/sparta.conf` file.  This time, we will add a host
+    action option to conduct a connect scan via `dmitry`.  We configure our host action
+    as follows:  `dmitry-connect=dmitry (connect scan), dmitry -p [IP]`. Then, we
+    save the file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00292.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Let''s now relaunch Sparta and load our hosts. We once again, see a new host
+    action:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00313.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Select dimitry (connect scan) from our host actions menu, and the scan is fired
+    off. A new tab is opened, displaying the results of our connect scan:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00323.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta has a number of tools already integrated into its GUI and is an excellent
+    way of consolidating your reconnaissance into one place. Sparta uses Nmap to scan
+    for ports by default. In this recipe, we've expanded Sparta's capabilities adding
+    `hping3` and `dmitry`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fingerprinting with Sparta
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The next step in our discovery process is fingerprinting, something we talked
+    about earlier in [Chapter 5](part0189.html#5K7QA1-cf89710d791c4a3bb78ec273d9322426),
+    *Fingerprinting*.  When fingerprinting, we want to uncover more details about
+    the operating system and software services being used. Sparta allows us to continue
+    gathering these details, keeping the details within its interface.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta comes pre-bundled with Kali Linux 2\. To use Sparta to perform scans,
+    you will need to have remote systems running network services. In the examples
+    provided, a combination of Linux and Windows systems is used. For more information
+    on setting up systems in a local lab environment, refer to the *Installing Metasploitable2*
+    and *Installing Windows Server recipes* in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will also be editing Sparta's configuration file; refer to the *Using text
+    editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'You will remember from our discussion of fingerprinting in [Chapter 5](part0440.html#D3JNG1-cf89710d791c4a3bb78ec273d9322426),
+    *Fingerprinting*, that after we identify our hosts and ports, we want to continue
+    gathering more detailed information about the OS and services running. Sparta
+    has some great preconfigured tools to help with this.  As an example, let''s examine
+    the contextual menus we now get when right-clicking on a service.  In the following
+    example, we are examining an FTP service, and we are given the options to open
+    a Telnet session, opening with Netcat, and grabbing the banner, among others:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00340.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Sparta will change the contextual menus depending on the service. In the following
+    example, we''re looking at an HTTP service. Given this, Sparta presents us with
+    some new items related to web services, such as Run nikto and Launch dirbuster:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00354.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Let''s configure a new host action that will allow us to analyze SNMP. This
+    will be a host action and be displayed in that contextual menu. In order to achieve
+    this, we follow these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As before, we close Sparta and edit our Sparta configuration file using the `vi
+    /usr/share/sparta/sparta.conf` command.  Under `[HostActions]`, we add a new item,
+    `snmp=SNMPwalk, snmpwalk [IP] -c public -v 2c`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00373.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once we are done editing, save and exit the configuration file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now when we launch Sparta and reload our hosts, we can see a new host action
+    when we right-click on a given host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00392.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If we run SNMPwalk, we can see the results opened up in a new tab, as shown
+    in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00413.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta has a number of tools already integrated into its GUI and is an excellent
+    way of consolidating your reconnaissance into one place. Sparta uses Nmap to collect fingerprinting
+    information. In this recipe, we added SNMPwalk to its capabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerability scanning with Sparta
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As we have seen, Sparta is a great tool for conducting our reconnaissance and
+    collecting that information in a central repository. We will now see how we can
+    use Sparta and Nmap NSE together to scan for specific vulnerabilities in our target
+    systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta comes pre-bundled with Kali Linux 2\. To use Sparta to perform scans,
+    you will need to have remote systems that are running network services. In the
+    examples provided, a combination of Linux and Windows systems is used. For more
+    information on setting up systems in a local lab environment, refer to the *Installing
+    Metasploitable2* and *Installing Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will also be editing Sparta's configuration file, refer to the *Using text
+    editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s now learn to perform vulnerability scanning with Sparta:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In order to add a new port action, we close Sparta and use `vi` once again to
+    edit the Sparta configuration file using the `vi /usr/share/sparta/sparta.conf` command.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Navigate down to the `[PortActions]` section, and we will add a new action.
+    Back in [Chapter 6](part0255.html#7J5VE1-cf89710d791c4a3bb78ec273d9322426), *Vulnerability
+    Scanning*, we used Nmap NSE to check for one of the four vulnerabilities exploited
+    by the Stuxnet worm. We will add a port action here that will run this check.
+    We will define our `[PortAction]` as `smb-vuln=Check` and for printer spooler
+    impersonation, `vuln, nmap -p[PORT] --script=smb-vuln-ms10-061 [IP] -vvvv` and `netbios-ssn,microsoft-ds`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00661.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Save the configuration file, open Sparta, and reload our Sparta project. We
+    navigate down to one of our Windows XP boxes and look at the services available.
+    We can see that port `445` is open, and the `microsoft-ds` service is available.
+     If we right-click on that service, we can see our newly defined port action is
+    there and available to use:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00448.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now we can check for this vulnerability right within the Sparta interface.
+    If we run the check, a new tab is opened and the results of the test are displayed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00464.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta has a number of tools already integrated into its GUI and is an excellent
+    way of consolidating your reconnaissance into one place. Sparta is very configurable;
+    in this recipe, we added the ability for Nmap NSE commands to check for specific
+    vulnerabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Web application scanning with Sparta
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta comes preconfigured with a number of tools we can use to examine web
+    services. In the following recipe, we'll look at its scanning capabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta comes pre-bundled with Kali Linux 2\. To use Sparta to perform scans,
+    you will need to have remote systems that are running network services. In the
+    examples provided, a combination of Linux and Windows systems is used. For more
+    information on setting up systems in a local lab environment, refer to the *Installing
+    Metasploitable2* and *Installing Windows Server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will also be editing Sparta's configuration file; refer to the *Using text
+    editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Sparta comes preconfigured with a number of port actions defined for web services.
+    If we right-click on a web service, we can see our available actions listed. We
+    will take a look at a couple of these port actions in this recipe:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00074.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Run nikto: One of the first options that stands out is the ability to run Nikto
+    against our target web service. You will remember from our coverage of Nikto in [Chapter
+    9](part0381.html#BBB6A1-cf89710d791c4a3bb78ec273d9322426), *Web Application Scanning*, that
+    it spiders through a target application and also makes numerous preconfigured
+    requests, attempting to identify potentially dangerous scripts and files that
+    exist in an application:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00490.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Run nmap (scripts) on port: If we run Nmap scripts on the port, we get some
+    banner grabs identifying http-methods, http-server-header, and http-title:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00505.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Launch dirbuster: We can also run dirbuster and the OWASP tool, which will
+    look for directories and files on the target server. If we click on Launch dirbuster,
+    the target URL and port are preconfigured. It can do a pure brute-force attack
+    or list based off a file. For our example, we will give it a list of directories
+    to try. There are a number of these lists available in the ` /usr/share/wordlists/dirbuster/`
+    directory:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00519.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Dirbuster can take some time to run, largely depending on the type of scanning
+    and/or the size of the word list we give it. Once we click on Start, dirbuster
+    begins its checks and reports back in a new tab about what it finds:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](../images/00531.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Run whatweb: Whatweb, as configured by our Sparta port action, provides us
+    information about the web servers, operating system, and languages. Whatweb is
+    quite powerful, and you may want to consider creating your own port actions after
+    reviewing its capabilities. To learn more about whatweb, use its help document
+    by typing `whatweb -h` in your terminal. For our example, we will use whatweb
+    as it comes configured in Sparta:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00538.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Launch webslayer: Finally, you will see an option for using webslayer within
+    the context menu. Unfortunately, webslayer is not included in the Kali Linux 2.0
+    distribution. If you try to run it, it will just crash, as can be seen in the
+    following screenshot:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00626.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sparta has a number of tools already integrated into its GUI and is an excellent
+    way of consolidating your reconnaissance into one place. Sparta comes preconfigured
+    with a number of great tools for analyzing web applications. In this recipe, we
+    explored how to use these tools to test discovered web services.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,678 @@
+- en: '1'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Red, Blue, and Purple Teaming Fundamentals
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Welcome to the third edition of *Digital Forensics with Kali Linux*, and for
+    those of you who may have purchased the previous editions, welcome back. I’d also
+    like to sincerely thank you for once again choosing this exciting title. As with
+    the second edition, this third edition has been updated with new tools, easy-to-follow
+    labs, and a couple of new chapters. We have an exciting journey ahead of us, and
+    I’m pleased to announce the inclusion of some major additions, including the installation
+    of Wine, which will allow us to run Windows tools within Kali Linux and will be
+    covered in its entirety in [*Chapter 5*](B19441_05.xhtml#_idTextAnchor085)*, Installing
+    Wine in Kali Linux*. [*Chapter 10*](B19441_10.xhtml#_idTextAnchor191), *Memory
+    Forensics and Analysis with Volatility 3*, is also brand-new and shows how to
+    perform RAM artifact analysis on newer operating systems. Another new chapter
+    on using the Autopsy v4 **Graphical User Interface** (**GUI**) to perform full
+    **Digital Forensics and Incident Response** (**DFIR**) analysis and investigations
+    can be found in [*Chapter 13*](B19441_13.xhtml#_idTextAnchor234), *Performing
+    a Full DFIR Analysis with the Autopsy* *4 GUI*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Besides these major additions, we will also look at some new topics, such as
+    creating a portable Kali Linux box using Raspberry Pi 4 and learning about tools
+    such as DD-rescue, scrounge-ntfs, Magic Rescue, PDF-Parser, Timeliner, netdiscover,
+    and introduce **Shodan.io** and **apackets.com** for **Internet of Things** (**IoT**)
+    discovery and packet analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For this book, we take a very structured approach to digital forensics, as we
+    would in forensic science. First, we will stroll into the world of digital forensics,
+    its history, and some of the tools and operating systems used for forensics, and
+    we will immediately introduce you to the concepts involved in evidence preservation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With that said, we have a lot to cover and will start by learning about Kali
+    and the various cybersecurity teams and the differences between red, blue, and
+    purple teaming. For our returning and advanced readers who may have prior knowledge
+    of Kali Linux and the respective teams, feel free to skim through the first two
+    chapters and get straight into the practical aspects in [*Chapter 3*](B19441_03.xhtml#_idTextAnchor058),
+    *Installing Kali Linux*, [*Chapter 4*](B19441_04.xhtml#_idTextAnchor072), *Additional
+    Kali Installations and Post-Installation Tasks*, and [*Chapter 5*](B19441_05.xhtml#_idTextAnchor085),
+    *Installing Wine in Kali Linux*, which detail the installations of Kali and Wine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter we will cover the following key topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is Kali Linux?
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding red teaming
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding blue teaming
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding purple teaming
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Before we get started with these topics, the following is a sneak peek at how
+    I got into the world of Kali Linux, as I feel some of you will be able to relate
+    to my story!
+  prefs: []
+  type: TYPE_NORMAL
+- en: How I got started with Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Digital forensics has had my attention for well over 15 years. Ever since I
+    was given my first PC (thanks, Mom and Dad), I’ve always wondered what happened
+    when I deleted my files from my massively large 2 GB (**Gigabyte**) hard drive
+    or moved my files to (and often hid them on) a less-than-inconspicuous 3.5-inch
+    floppy diskette that maxed out at 1.44 MB (**Megabytes**) in capacity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I soon learned that hard and floppy disk drives did not possess the digital
+    immortality I so confidently believed in. Sadly, many files, documents, and priceless
+    fine art created in Microsoft Paint by yours truly were lost to the digital afterlife,
+    never to be retrieved again. Sigh. The world shall never know.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It wasn’t until years later that I came across an article on file recovery and
+    associated tools while browsing the magical **World Wide Web** (**WWW**) on my
+    lightning-fast 42 Kbps dial-up internet connection (made possible by my very expensive
+    USRobotics dial-up modem), which sang the tune of the technology gods every time
+    I tried to connect to the realm of the internet. This process involved a stealthy
+    ninja-like skill that would make even a black-ops team envious, as it involved
+    doing so without my parents noticing, as this would prevent them from using the
+    telephone line to make or receive phone calls (apologies, dear Mother, Father,
+    and older teenage sister).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The previous article on data recovery wasn’t anywhere near as detailed and fact-filled
+    as the many great peer-reviewed papers, journals, and books on digital forensics
+    widely available today. As a total novice (also referred to as a noob) in the
+    field, I did learn a great deal about the basics of file systems, data and metadata,
+    storage measurements, and the workings of various storage media. It was at this
+    time that, even though I had read about the Linux operating system and its various
+    distributions (or distros), I began to get an understanding of why Linux distros
+    were popular for data recovery and forensics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I managed to bravely download the Auditor and Slax Linux distributions, again
+    on a dial-up connection. Just downloading these operating systems was quite a
+    feat, which left me feeling highly accomplished as I did not have any clue as
+    to how to install them, let alone actually use them. In those days, easy installation
+    and GUIs were still under heavy development, as user-friendly, or in my case,
+    user-unfriendly, as they were at the time (mostly due to my inexperience, lack
+    of recommended hardware, and also lack of resources, such as online forums, blogs,
+    and YouTube, which I did not yet know about).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As time passed, I researched many tools found on various platforms for Windows,
+    Macintosh, and many Linux distributions. I found that many of the tools used in
+    digital forensics could be installed on various Linux distributions or flavors,
+    and many of these tools were well maintained, constantly being developed, and
+    widely accepted by peers in the field. Kali Linux is a Linux distribution or flavor,
+    but before we go any further, let me explain the concept of a Linux distribution
+    or flavor. Consider your favorite beverage: this beverage can come in many flavors,
+    some without sweeteners or sugar, in different colors, and even in various sizes.
+    No matter the variations, it’s still the basic ingredients that comprise the beverage
+    at the core. In this way, too, we have Linux and then different types and varieties
+    of Linux. Some more popular Linux distros and flavors include RedHat, CentOS,
+    Ubuntu, Mint, KNOPPIX, and, of course, Kali Linux. More on Kali Linux will be
+    discussed in [*Chapter 3*](B19441_03.xhtml#_idTextAnchor058), *Installing* *Kali
+    Linux*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: With that said, let’s move on to our next section as we get started with exploring
+    the enchanting world of Kali Linux!
+  prefs: []
+  type: TYPE_NORMAL
+- en: What is Kali Linux?
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Kali Linux is a Debian-based operating system used globally by cyber security
+    professionals, students, and IT enthusiasts. Debian is a flavor of Linux that
+    is completely free, stable, constantly updated, supports many types of hardware,
+    and is also used by popular operating systems such as Ubuntu and Zorin. Kali Linux
+    is certainly not new to the cybersecurity field and even goes back to the mid-2000s,
+    but it was known then as BackTrack, which was a combination of two platforms called
+    Auditor Security and Whax. This merge happened in 2006, with subsequent versions
+    of BackTrack being released up to 2011 when BackTrack 5, based on Ubuntu 10.04,
+    was released.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In 2013, *Offensive Security* released the first version of Kali v1 (Moto),
+    which was based on Debian 7, and then Kali v2 in 2015, which was based on Debian
+    8\. Following this, Kali Linux Rolling was released in 2016, with the names of
+    the distribution reflecting both the year of release and the major update of the
+    quarterly period. For example, at the time of writing, I use Kali **2022.3** and
+    **2022.4**, both based on recent versions of Debian. You can find more on the
+    open source and free Debian Project at [https://www.debian.org/intro/about](https://www.debian.org/intro/about).
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a cybersecurity professional, a **Chief Information Security Officer** (**CISO**),
+    **penetration tester** (**pentester**), and subject matter expert in DFIR, I have
+    used BackTrack and now Kali Linux for well over a decade since I first came across
+    it when I started studying for the Certified Ethical Hacker exam in 2006\. Since
+    then, I’ve used a myriad of operating systems for pentesting and digital forensics,
+    but my main tool of choice, particularly for pentesting, is Kali Linux. Although
+    Kali Linux has focused less on DFIR and more on penetration testing, it makes
+    it much easier for me to have both penetration testing and DFIR tools on one platform
+    rather than have to switch between them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For our readers who may have purchased the first and second editions of this
+    book, I’d say you’re certainly in for a treat as I’ve not only updated many labs
+    and introduced new tools in this edition, but I’ve also included a chapter on
+    installing Wine in Kali Linux. **Windows Emulator** (**Wine**) allows you to run
+    Windows applications in Kali Linux. Although it takes a bit of configuration,
+    I’ve compiled a step-by-step guide on how to install Wine in [*Chapter 5*](B19441_05.xhtml#_idTextAnchor085),
+    *Installing Wine in* *Kali Linux*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Some of you may be wondering why we would install Wine instead of simply using
+    a Windows machine. There are quite a few valid reasons actually. Firstly, cost
+    is a major factor. Windows licenses aren’t cheap if you’re a student, in between
+    jobs, changing careers, or live in a region where the exchange rate and forex
+    are limiting factors in purchasing licensing. At the time of writing, the cost
+    of a Windows 10 Professional license is $199.00, as listed on Microsoft’s site
+    at [https://www.microsoft.com/en-us/d/windows-10-pro/df77x4d43rkt?activetab=pivot:overviewtab](https://www.microsoft.com/en-us/d/windows-10-pro/df77x4d43rkt?activetab=pivot:overviewtab).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although we will not be using commercial tools in this book, there are some
+    amazing free DFIR tools that are available for Windows, such as **Belkasoft RAM
+    Capturer**, **Autopsy 4 GUI**, and **NetworkMiner**, which we can now install
+    within our open source Kali Linux environment instead of on a licensed Windows
+    machine. These tools will be covered in detail in [*Chapter 8*](B19441_08.xhtml#_idTextAnchor147),
+    *Evidence Acquisition Tools*, [*Chapter 13*](B19441_13.xhtml#_idTextAnchor234),
+    *Performing a Full DFIR Analysis with the Autopsy 4 GUI*, and [*Chapter 16*](B19441_16.xhtml#_idTextAnchor262),
+    *Network Forensic Analysis* *Tools*, respectively.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Another consideration is that Wine again saves us the hassle of having to switch
+    between physical machines and can also save on resource utilization such as **Random
+    Access Memory** (**RAM**), **Central Processing Unit** (**CPU**), **Hard Disk
+    Drive** (**HDD**) space, and other resources when using virtual machines, which
+    we will discuss more in detail in the next chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, we can install many other Windows applications in Kali Linux using
+    tools, whether they be productivity tools or even tools for penetration testing,
+    thus making our Kali Linux installation the perfect purple teaming operating system
+    environment, which we will discuss later in this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Why is Kali Linux so popular?
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Aside from being one of the oldest, InfoSec distros (distributions), Kali Linux
+    has a very large support base, and you can find thousands of tutorials on installation,
+    using built-in tools, and installing additional tools on YouTube, TikTok, and
+    the internet at large, making it one of the more user-friendly platforms.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux also comes with over 600 tools, all of which are nicely categorized
+    in Kali’s **Applications** menu. Many of the tools included in Kali can perform
+    various cybersecurity tasks ranging from **Open Source Intelligence** (**OSINT**),
+    scanning, vulnerability assessments, exploitation and penetration testing, office
+    and productivity tools, and, of course, DFIR. The full listing of tools can be
+    found at [https://www.kali.org/tools/all-tools/](https://www.kali.org/tools/all-tools/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following screenshot gives a preview of the category listings in the Kali
+    Linux menu.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.1 – Category listing in the Kali Linux menu](image/Figure_1.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.1 – Category listing in the Kali Linux menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux users also have the option to download and install (meta)packages
+    manually rather than downloading a very large installation file. Kali Linux (meta)packages
+    contain tools and dependencies that may be specific to an assessment or task,
+    such as information gathering, vulnerability assessments, wireless hacking, and
+    forensics. Alternatively, a user can download the **kali-linux-everything (meta)package**.
+    We’ll go into more detail about (meta)package installations in [*Chapter 4*](B19441_04.xhtml#_idTextAnchor072),
+    *Additional Kali Installations and Post-Installation Tasks*, but if you’d like
+    to know more about what (meta)packages exist, you can find the full listing at
+    [https://www.kali.org/docs/general-use/metapackages/](https://www.kali.org/docs/general-use/metapackages/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Yet another reason why Kali Linux is so popular is that there are several versions
+    available for a multitude of physical, virtual, mobile, and portable devices.
+    Kali is available as a standalone operating system image and can also be installed
+    virtually using their pre-built images for virtual platforms such as VMware and
+    VirtualBox, which will be covered in detail in [*Chapter 3*](B19441_03.xhtml#_idTextAnchor058),
+    *Installing Kali Linux*, and [*Chapter 4*](B19441_04.xhtml#_idTextAnchor072),
+    *Additional Kali Installations and Post-Installation Tasks*. There are also versions
+    of Kali for ARM devices, cloud instances, and even the ability to run Kali Linux
+    in Windows 10 under the **Windows Subsystem for Linux** (**WSL**). On a personal
+    note, I also use the mobile version of Kali Linux called Kali NetHunter on an
+    old OnePlus phone and also on a Raspberry Pi 4, which, when connected to a power
+    bank, serve as the ultimate portable security assessment toolkit. As far as installation
+    on mobile phones goes, NetHunter (and even Kali Linux itself in some cases) can
+    be installed on a variety of phones from Samsung, Nokia, OnePlus, Sony, Xiaomi,
+    Google, or ZTE. We’ll look at installing Kali Linux in VirtualBox and Raspberry
+    Pi 4 in [*Chapter 4*](B19441_04.xhtml#_idTextAnchor072), *Additional Kali Installations
+    and* *Post-Installation Tasks*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The fact that Kali Linux offers all these features for free and can be easily
+    upgraded with the addition of new tools just a couple of clicks and commands away
+    makes it the perfect purple teaming solution. Let’s take a look at red, blue,
+    and purple teaming and the skillsets required for each team.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding red teaming
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Possibly the most commonly known team among users of Kali Linux, the red team
+    is the name given to the collective of individuals responsible for handling the
+    offensive side of security as it relates to OSINT, scanning, vulnerability assessments,
+    and the penetration testing of resources, including but not limited to individuals,
+    companies, host end users (desktops, laptops, mobiles), and network and critical
+    infrastructure such as servers, routers, switches, firewalls, NAS, databases,
+    WebApps, and portals. There are also systems such as IoT, **Operational Technology**
+    (**OT**) devices, and **Industrial Control Systems** (**ICS**), which also require
+    assessments by highly skilled red teamers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Red teamers are generally thought of as highly skilled ethical hackers and penetration
+    testers who, apart from having the skill sets to conduct the assessments listed
+    previously, may also have the technical certifications that allow them to do so.
+    Although certifications may not directly reflect the abilities of the individuals,
+    they have been known to aid in obtaining jobs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Some red teaming certifications include (but are not limited to):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Offensive Security Certified Professional** (**OSCP**): Developed by the
+    creators of Kali Linux'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Certified Ethical Hacker** (**CEH**): From the *EC-Council*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Practical Network Penetration Tester** (**PNPT**): Developed by TCM Security'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Pentest+**: By CompTIA'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SANS SEC**: Courses from the SANS Institute'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**e-Learn Junior Penetration Tester** (**eJPT**): Developed by *e-Learn Security*
+    for beginners interested in becoming red teamers'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ultimately, all of this knowledge allows red teamers to conduct offensive attacks
+    (with explicit permission) against companies to simulate internal and external
+    threat actors and essentially hack systems and security mechanisms in the same
+    manner in which malicious actors would compromise and exploit the attack surface
+    of an individual, company, or valued asset.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux generally contains all the tools required to perform almost all types
+    of offensive security and red teaming assessments. On a personal note, Kali Linux
+    is my go-to operating system of choice for penetration testing as most of the
+    tools required for fingerprinting, reconnaissance, OSINT, vulnerability assessments,
+    exploitation, and reporting are all readily available and preinstalled on the
+    platform. I’ve been using Kali to conduct red team exercises for over 12 years
+    and I don’t see that changing anytime soon, as they’ve always maintained the OS
+    and support for tools over the years.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s move on to blue teaming now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding blue teaming
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Blue teamers are generally considered to be on the defensive side rather than
+    the offensive, as previously written about red teamers. While red teamers focus
+    on threat simulation and possible exploitation, blue teamers are the protectors
+    of the realm.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Red and blue teamers are quite similar when considering that the main goal of
+    each team is mainly to protect resources and understand the potential impact and
+    risk associated with breaches and data leaks. The red team may focus on attack
+    techniques, such as the cyber kill chain and penetration testing, whereas the
+    blue team then focuses on ensuring that not only are mechanisms in place to protect
+    against attacks but also that formal policies, procedures, and even frameworks
+    are implemented to assure effective DFIR.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The work of a blue teamer covers far more than that of a red teamer, as blue
+    teamers must analyze threats, understand their risk and impact, implement security
+    and protective measures, understand forensics and incident response, and ensure
+    that effective monitoring, response services, and measures are implemented. It
+    also certainly helps if a blue teamer has the knowledge or experience of a red
+    teamer, as this provides an additional depth of understanding of attack surfaces
+    and threat landscapes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Blue teamers must also be knowledgeable about a wide scope of technology and
+    analytics. While it is not impossible for people new to IT to get into blue teaming
+    and DFIR, it does require prior knowledge along the lines of a network and systems
+    administrator and also of a security analyst and threat hunter. For example, understanding
+    that systems must be updated and patched accordingly is more of a best practice.
+    The blue teamer will understand why there is a need for patching and also understand
+    that there is much more to be done when hardening devices to reduce attack surfaces
+    while also taking into consideration the possibilities of zero-day exploits and
+    even human weaknesses, which may easily facilitate a breach by a threat actor
+    and then circumvent all technical measures implemented.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is also not uncommon to see job posts asking that blue teamers be proficient
+    in **Security Information and Event Management** (**SIEM**) tools, which provide
+    real-time analysis, monitoring, and alerts that greatly aid in DFIR management
+    and allow for a greater understanding of the level of protection required in maintaining
+    a high-security posture rating when safeguarding data, systems, and assets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Blue teamers must also accept that their responsibilities do not only apply
+    to internal and external resources but will be extended when considering the threat
+    landscape of the assets to be protected. The threat landscape can be devices,
+    persons, data, and any information that may be useful to an attacker when planning
+    an attack. This is where an in-depth understanding of OSINT comes in. Although
+    previously mentioned as a red teaming skill set, this proves equally important
+    to the blue teamer in being able to scout the internet, social media, and the
+    dark web for any information that could either pose a threat or aid the threat
+    actor in some way.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A good example would be to search the dark web for breach databases where the
+    blue teamer (after taking all necessary precautions to protect themselves) browses
+    the dark web in search of compromised emails or **Virtual Private Network** (**VPN**)
+    credentials of the company they work for. The blue teamer may also use a site
+    such as Shodan.io, which we will cover later on in this book, to find accessible
+    devices from an external perspective, such as external access to firewalls, servers,
+    and CCTV cameras. All of the preceding scenarios aid the blue teamer in developing
+    what is known as a threat profile, which, while not directly focusing on internal
+    and external assets, will still compile potential threats and even **Indicators
+    of Compromise** (**IoC**) found externally.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A great free resource for learning OSINT is TCM Academy’s free 4-hour course
+    on YouTube, which can be found here [https://www.youtube.com/watch?v=qwA6MmbeGNo](https://www.youtube.com/watch?v=qwA6MmbeGNo).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although many of the previously mentioned skills are learned via research and
+    countless hours digging, looking at YouTube videos, and attending specialized
+    courses. I’ve listed just a few certifications that may assist in furthering your
+    studies and career in blue teaming and DFIR.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Some blue teaming certifications include (but are not limited to):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Computer Hacking Forensic Investigator** (**CHFI**) from EC-Council'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Certified Cloud Security Engineer** (**CCSE**) from EC-Council'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Certified Forensic Computer Examiner** (**CFEC**) from IACIS'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**GIAC Certified Forensics Examiner** (**GFCE**) from SANS'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We will look at the tools required to be a DFIR investigator and analyst in
+    more detail throughout this book. Although we won’t be going into detail about
+    commercial tools used, I will mention some that you may wish to look into at some
+    point if heading into a career in DFIR or as a blue teamer, although the open
+    source tools covered in this book are more than enough to get you started and
+    conduct entire DFIR investigations as long as the best practices and procedures
+    are followed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It is also of paramount importance that DFIR investigators and analysts understand
+    the importance of following best practices and procedures in evidence collection,
+    acquisition, analysis, and documentation, as the integrity of the evidence and
+    case could be easily compromised. Analysis of evidence and results in reports
+    should also be repeatable, meaning that other DFIR investigators and analysts
+    should be able to repeat the tests performed and produce the same results as you.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this regard, blue teamers should have a detailed and well-documented plan
+    of action along with knowledge of purpose-specific tools. There are many freely
+    available and well-documented best practices and frameworks for blue teams, some
+    of which we’ll look at in the next chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s briefly look at an overview of the tools you may be required to use in
+    a DFIR investigation, which are all covered in this book. The following list gives
+    a one-liner for a specific task and the tools used to achieve the task. Think
+    of this as a blue team cheat sheet where open source tools are concerned. Feel
+    free to also make a copy of this page to use as a reference sheet for your forensics
+    and incident response fieldwork:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Forensic operating systems for DFIR – our customized version of Kali Linux,
+    CSI Linux, and CAINE
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating a live bootable USB with Kali Linux – Rufus and Etcher
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Creating a portable version of Kali Linux for Raspberry Pi – Imager (Pi Imager)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Windows tools in Kali – Wine
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Memory acquisition – FTK Imager and Belkasoft RAM Capturer
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Evidence and drive acquisition – DD, DC3DD, Guymager, and FTK Imager
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: File recovery and data carving – Foremost, Magic Rescue, DD-Rescue, Scalpel,
+    and Bulk_extractor
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: PDF forensics – pdfparser
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: NTFS drive recovery – scrounge-ntfs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Memory/RAM analysis – Volatility 3
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Operating system identification – p0f
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Live Linux forensics – Linux Explorer
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Artifact discovery – swap_digger, mimipenguin, and pdgmail
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Browser-based forensic analysis tool – Autopsy Forensic Browser
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Complete forensic analysis tool – Autopsy 4
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network discovery tools – netdiscover and nmap
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: IoT search engine – [Shodan.io](http://Shodan.io%20)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Browser-based network packet capture analysis – Xplico
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Automated network packet capture analysis – Network Miner and PcapXray
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Online Pcap Analysis tools – [packettotal.com](http://packettotal.com), [apackets.com](http://apackets.com%20)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Next, let’s have a look at purple teaming.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding purple teaming
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We can now have our cybersecurity moment of Zen as we get into purple teaming.
+    The term **purple teaming** refers to the combination of skill sets in red and
+    blue teaming. The color purple can also be achieved by mixing the colors red and
+    blue, hence the name purple teaming. Looking back at all the skill sets and certifications
+    mentioned in the red and blue teaming sections, it may seem like an impossible
+    accomplishment; however, I guarantee you that there are many purple teamers out
+    there who started as novices and ended up as professionals, myself included.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When I started my journey in cybersecurity in the early 2000s, I was far more
+    interested in ethical hacking and pentesting (red teaming) at that point in time
+    and spent many a night in front of my desktop reading, researching, and using
+    the very limited tools available at that time. It was not until perhaps 2008 that
+    I decided to get into DFIR and became very interested in the field of forensics,
+    to the point where I started to teach the CHFI course alongside the CEH course.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Every time I thought to myself that I’d specialize in one, I’d come across a
+    new tool that would point me in the direction of the other. Thankfully, this all
+    worked out in my favor as I soon realized that red and blue teaming overlap in
+    many aspects and also that there was never a point where I could say that what
+    I had already learned was enough. My point here is that cybersecurity is such
+    a dynamic field with so many paths that you can never know just enough. There
+    is always some new exploit, an investigative tool, or an incident response procedure
+    to learn, and it’s up to you to decide whether you would like to specialize in
+    one field or continue to learn and grow as I did and apply your knowledge when
+    necessary.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fast forward to today, and I’m the owner of the Computer Forensics and Security
+    Institute, where I not only lead a purple team but I’m also the lead penetration
+    tester as well as the lead forensic and incident response investigator. Again,
+    it is very much possible to be well versed in both fields once you commit to it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this regard, I can comfortably state that Kali Linux is the perfect place
+    to get started, as it offers the best tools for purple teaming. Let’s have a sneak
+    peek at some of the exploitation (red teaming tools) available to us, which are
+    all preinstalled with any version of Kali.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This is just a snippet of the tools within the **Exploitation** menu of Kali;
+    however, I use the **metasploit framework**, the **msf payload creator**, and
+    the **social engineering toolkit (root)** religiously for red team assessments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.2 – Tools within the Exploitation menu](image/Figure_1.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.2 – Tools within the Exploitation menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let’s have a look at the **Forensic** menu in Kali Linux:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 1.3 – Tools within the Forensics menu](image/Figure_1.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 1.3 – Tools within the Forensics menu
+  prefs: []
+  type: TYPE_NORMAL
+- en: Again, these are just some of the forensics tools, as the others can also be
+    found by viewing the **All Applications** menu, which we will explore in [*Chapter
+    3*](B19441_03.xhtml#_idTextAnchor058), *Installing Kali Linux*. Kali Linux is
+    one of the few user-friendly platforms that offers a variety of tools for purple
+    teaming, and I look forward to showing you how to effectively use many of them
+    in the coming chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In [*Chapter 3*](B19441_03.xhtml#_idTextAnchor058), *Installing Kali Linux*,
+    I’ll show you, step by step, how to set up Kali Linux in a safe, virtual test
+    environment where we can use our tools and download sample files for analysis.
+    Although this virtual machine will be connected to the internet, we will use it
+    in a sandboxed environment to ensure that it does not affect your production environment.
+    In [*Chapter 5*](B19441_05.xhtml#_idTextAnchor085), *Installing Wine in Kali Linux*,
+    I will also walk you through the process of installing Wine in Kali Linux to help
+    build your ultimate blue and purple team arsenal of tools that will now combine
+    the best open source Windows and Linux tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve looked at the differences between red, blue, and purple teaming,
+    we will be moving on to understand digital forensics and also have a look at other
+    forensic platforms and some commercial tools and quite importantly, gain some
+    insight into forensic frameworks in [*Chapter 2*](B19441_02.xhtml#_idTextAnchor024),
+    *Introduction to* *Digital Forensics*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we were introduced to Kali Linux’s Debian-based operating system
+    and its usefulness in the world of cybersecurity. We also learned about the different
+    teams in cybersecurity, such as red teams, comprised of individuals concerned
+    with offensive security and ethical hacking, such as penetration testers, and
+    blue teams, comprised of individuals concerned with defending networks and data,
+    such as forensic investigators. We also learned that having both red and blue
+    teaming skill sets and experience puts an individual into the highly skilled purple
+    team, which suggests that the individual is versed in a wide range of tools for
+    vulnerability assessments, penetration testing, and also incident response and
+    digital forensics, many of which can be found in Kali Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we will dive a bit deeper into digital forensics, look at other forensic
+    operating systems, and learn about forensic frameworks and commonly used open
+    source and commercial tools. See you in the next chapter!
+  prefs: []
+  type: TYPE_NORMAL

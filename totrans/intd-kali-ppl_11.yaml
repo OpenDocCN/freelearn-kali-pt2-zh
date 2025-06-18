@@ -1,0 +1,1332 @@
+- en: '8'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Security Incident and Response
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: So far, within the realm of cybersecurity defense, we’ve covered a lot of ground
+    surrounding the setup and acquisition of data from various sources and studied
+    how to transport it, organize it, store it, and evaluate it through various methods
+    of analysis. Have you wondered while covering all of these topics what you might
+    do if the data you are analyzing suggests that an actual cyber-attack is occurring
+    or has occurred? After all, it doesn’t do much good going through all of this
+    work to grab, study, and try to decipher the data if we have no plan of action
+    when the data tells us something bad is happening!
+  prefs: []
+  type: TYPE_NORMAL
+- en: When our defensive analysis suggests malicious activity is happening, we transform
+    into a new realm of cybersecurity. We go from triaging alerts to a formal action
+    known as **incident response**. Oftentimes, organizations will have dedicated
+    workers who specialize in responding to incidents that are usually a career step
+    up from entry-level triage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Purple provides several tools that are designed to assist us in responding
+    to threats, and even take it a step further by actively searching through data
+    for hints of potential future threats or deeply hidden threats. That is known
+    as **threat hunting** from a career perspective. Aiding in these activities, we
+    will examine a **Security Orchestration and Automation Response** (**SOAR**) product,
+    which is a more automated, pseudo-**Artificial Intelligence** (**AI**) style of
+    SIEM from a company called StrangeBee – Cortex. StrangeBee also produces an incident
+    response platform called **TheHive**, which we will spend a fair amount of time
+    setting up.
+  prefs: []
+  type: TYPE_NORMAL
+- en: These two products are capable of integrating with a vast array of threat-hunting
+    and intelligence feeds. In a departure from what we’ve done so far, there is a
+    small challenge section at the end of this chapter so you can go out and find
+    the feeds and integrations that best suit your interests. Not all of the tools
+    you will find are part of the default Kali Purple ecosystem, but you will be surprised
+    at how many of them are compatible and able to be integrated. Some of these tools
+    might include the **Malware Information Sharing Platform** (**MISP**), **Structured
+    Threat Information eXpression** (**STIX**), and **Trusted Automated Exchange of
+    Indicator** **Information** (**TAXII**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'By the end of this chapter, you will know how to install a Docker container
+    and create a **Docker-compose** YAML file that includes many of the applications
+    we’re discussing here. Expect to cover the following sections:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Incident response
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Docker
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cortex
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: TheHive
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Challenge!
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The technical requirements for this chapter are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Minimum**: A computing device with either *amd64 (x86_64/64-bit)* or *i386
+    (x86/32-bit)* architectures. It should contain at least *8 GB* of RAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Recommended**: Based on feedback from cybersecurity field practitioners,
+    aim for *amd64 (x86_64/64-bit)* architecture with *16 GB* of RAM – more is better
+    – and up to *64 GB* of additional disk space.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Incident response
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Sometimes, despite deploying the best technology and exerting our best efforts,
+    the bad guys still manage to penetrate our security defenses and cause damage
+    in some form or fashion to our information resources. It’s not something any of
+    us want to happen on our watch but the fact of the matter is the day will come
+    when it will. When it does, those of us who are most passionate about the field
+    of cybersecurity tend to take it personally while others might become engaged
+    in a finger-pointing contest. The truth is neither of those mindsets is helpful
+    and, more likely than not, the actual root cause or success of the breach will
+    have nothing to do with any specific analyst. When a security breach, or other
+    unauthorized activity, occurs, we refer to it as an incident. To keep our heads
+    screwed on straight and operate smoothly with an organized and proper reaction,
+    there is a subset of cybersecurity that has evolved, known as **security incident**
+    **response** (**SIR**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: SIR is usually handled by a team of professionals sometimes referred to as a
+    **cyber security incident response team** (**CSIRT**) or **security incident response
+    team** (**SIRT**). You’ll see references to both out in the wild. For simplicity’s
+    sake, we will simply use the term **incident response** – or **IR** – in this
+    chapter. IR is an organized method of reacting to security incidents. It’s a way
+    of putting our personal emotions aside so we can focus on addressing and managing
+    the aftermath of a security breach, cyberattack, or other security incident that
+    has already occurred. IR involves detecting, analyzing, and responding to security
+    threats in the most accurate and efficient manner possible to help limit or otherwise
+    mitigate any damage. It’s a pathway to help recover from an attack as well as
+    to create educational opportunities to prevent future security incidents of the
+    like.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A good IR framework might include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Preparation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Containment
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Eradication
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Recovery
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Post-incident analysis – aka **After Action Review** (**AAR**) or lessons learned
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Of course, stopping security incidents altogether would be the most ideal situation,
+    but we all know that’s neither realistic nor likely. Anything that can be made
+    can also be unmade. Anything that can be engineered can also be reverse-engineered.
+    As long as technology exists, so will the exploits of those with ill intentions.
+    Therefore, the ultimate practical goal of IR is to minimize the impact of security
+    incidents, along with improving and maintaining the security and integrity of
+    the affected systems and data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that you’ve gained a general idea of what IR is from a business definition,
+    let’s begin to set up our IR environment first, by creating a fresh virtual machine
+    so we can avoid software conflicts with previous work we’ve done. If you need
+    a refresher on this, go back to [*Chapter 3*](B21223_03.xhtml#_idTextAnchor052).
+    You’ll be surprised at how much you remember. In the next section, we are going
+    to begin in our new VM by acquiring and installing Docker.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Because our packaged Docker container is going to include **Elasticsearch**,
+    which you might already have installed, along with other applications that could
+    conflict with what you have – depending on how experimental you have been, we
+    highly recommend that you create a new virtual machine for this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The reasons are the suite of software we are bundling in this chapter can function
+    as a standalone SOC and an alternative to the ELK Stack setup you’ve already tried,
+    and also, if you don’t containerize the content in this chapter, you’re quite
+    likely to experience software compatibility and communication conflicts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Be prepared to experience bonus challenges if you do not heed this advice! (It’s
+    quite okay if you don’t, by the way, since that’s how folks learn.)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Docker
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Docker** can be thought of as a cyber-container. Have you ever gone out on
+    a picnic lunch? How did you prepare, store, and distribute/carry your food? You
+    packed it inside a container, right? Perhaps you had a peanut butter and jelly
+    sandwich or two, fruit such as an apple or banana, maybe some celery or carrot
+    sticks, and a juice box or small bottle of water. Then, you placed all of those
+    items inside a single unit. Maybe you called it a lunch box, a picnic basket,
+    or something else. The point is you placed them all inside a container. Though
+    related, they were still each unique with a unique purpose, working together to
+    resolve a unified need – your nutritional need; your hunger. However, the container
+    didn’t just include those items, did it? It also included things you depended
+    on to smoothly enjoy those food items. It included eating utensils, napkins or
+    wet wipes, and perhaps a spice packet or two. It included dependencies. It included
+    everything you needed to fulfill your mission without having to walk around and
+    fetch things from your kitchen or fill your pockets from the open condiments section
+    of your favorite fast food restaurant. No, the container had everything you needed
+    to keep the hunger monster inside you satisfied.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Docker is exactly that. It is a lunchbox – or picnic basket – full of cyber
+    items and their needed dependencies. The suite of software applications we’re
+    building in this chapter will be inside a Docker container. When complete, it
+    will have yet another base for a mini-SOC independent of the ELK Stack as a standalone
+    SOC. However, this suite of tools does have a dependency on Elasticsearch. Furthermore,
+    we are going to include **Apache Cassandra** and **Minio** in the package.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Whenever there’s a large group of software with such interdependencies as you
+    will encounter here, you will deal with regular independent software upgrades,
+    which means regular issues with compatibility. We are going to help you avoid
+    those headaches by deploying the entire suite within the Docker container we just
+    learned about.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before we install Docker, let’s make sure its own core dependencies are in
+    place. Within your fresh Kali Purple VM, type the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: These items will now also ensure that you can install Docker using the standard
+    package manager instead of some of the archaic ways we’ve taught you to find software
+    in this book thus far. One thing is for sure, when you complete this textual journey
+    with us, you will be well-rounded and experienced in many future package-mapping
+    and installation experiences. You might be annoyed at us making you do some things
+    the hard way now, but you’ll thank us for it eventually. In the meantime, imagine
+    actor Dwayne Johnson singing the peppy, melodic song called *You’re Welcome!*
+    If you haven’t heard it, search for it on YouTube. That’s exactly what your humble
+    author is like, except with bigger muscles.
+  prefs: []
+  type: TYPE_NORMAL
+- en: According to [kali.org](http://kali.org), there *may* already be a package named
+    **docker** in your default installation that is not a containerized version. Since
+    we don’t know which version of Kali Purple you’re running by the time you read
+    this, we will need to make a subtle adjustment to our installation plans. We will
+    first try to install something called docker.io, and if you get an error, then
+    you can try the default **docker install**. It’s much simpler than it sounds.
+    First, type **sudo apt update && sudo apt install -y docker.io** at the command
+    line, and only if you get a warning or error, either now or after the next step,
+    you can type **sudo apt install -y docker** (no need to update again since you
+    just did that). If you continue to get an error, you should type **sudo systemctl
+    daemon-reload** and then reboot before attempting the following command again,
+    and if you still receive an error, you can type it a third time but append **–-now**
+    to the end of it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When you’ve finished installing Docker, you’ll want to bind it to autostart
+    when you launch or reboot your VM. Type **sudo systemctl** **enable docker**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, let’s start it up and make sure all is working as intended. By now, you’re
+    surely familiar with this process. Type **sudo systemctl start docker** to start
+    the service. Now, type **sudo systemctl status docker** and it should show as
+    active (running), as seen in *Figure 8**.1*. You can press *Ctrl* + *Z* to break
+    out of the status screen:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.1 – Docker status screen](image/B21223_08_1.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.1 – Docker status screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you’ve confirmed Docker is up and running properly, you’ll want to do yourself
+    a favor and set a command that will allow you to use it without typing **sudo**
+    before every command by adding yourself to the Docker group. Type **sudo usermod
+    -aG** **docker $USER**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We’re not done yet but, at this point, we recommend rebooting your system. Give
+    it a chance to fully load and then try checking the status again by typing **sudo
+    systemctl status docker** to make sure Docker automatically started.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, it’s time to create the YAML file that will pull and configure the resources
+    we want to have inside our container. First, let’s make the directory where that
+    file will reside. Type **mkdir security-stack** and for the sake of keeping things
+    simple, let’s go into that directory by typing **cd security-stack**. Now, we’re
+    going to do something rather neat in the world of containers. Think of the lunchbox
+    container we described a few moments ago. Now, imagine such a lunchbox that has
+    multiple sections inside of it – one for the cold and/or wet items and one for
+    the dry items. It’s like having multiple containers inside of a larger container.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Docker has created a tool for us to do the same thing, called **Docker Compose**.
+    We can define the items in Docker Compose by creating our own YAML file. Those
+    are the files with the **.yml** file extensions that you’ve been editing throughout
+    this book to configure the applications that you’ve been using. Let’s create our
+    file now by typing **nano docker-compose.yml**. While still in your Kali Purple
+    instance (unless you configured it to allow cut and paste to be shared between
+    your host and VM), open a web browser and go to the following URL: [https://docs.strangebee.com/thehive/installation/docker/#quick-start](https://docs.strangebee.com/thehive/installation/docker/#quick-start).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The only way to ensure we have the most up-to-date compatibility between applications
+    is to grab the suggested Docker Compose YAML file directly from **StrangeBee**.
+    This way, no matter how long after this is published you read it, you’ll still
+    be able to successfully run Docker Compose. On the web page, under **quick start**,
+    copy the data from the proposed **docker compose** file and paste it inside the
+    open **docker-compose.yml** file you recently created. The data should resemble
+    what you see in *Figure 8**.2* but may have subtle differences:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.2 – Beginning of StrangeBee’s docker-compose.yml](image/B21223_08_2.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.2 – Beginning of StrangeBee’s docker-compose.yml
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you are finished pasting the data into the YAML file, you can press *Ctrl*
+    + *X* to exit the file and select *Y* to save when prompted.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After you return to the command prompt, we recommend typing **cat docker-compose.yml**,
+    which displays a non-editable – read-only – display of the file’s contents. Double-check
+    it against the information on the web page and then we highly recommend rebooting
+    your system one more time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Upon returning from the reboot, again confirm that Docker is up and running
+    by typing **systemctl status docker** and then move into the directory where your
+    **docker-compose.yml** file resides by typing **cd security-stack**. Now, it’s
+    time to fire it up! Type **docker-compose up -d** and enjoy watching the various
+    containers load in front of your eyes unless you’re prompted to install the **docker-compose**
+    command, in which case you should dramatically roll your eyes, grunt in annoyance,
+    and then press **y** to install the command before again attempting to type **docker-compose
+    up -d**. If you continue to have problems, make absolutely certain that you’re
+    in the directory where your **docker-compose.yml** file is, and that you’ve rebooted
+    your system. Sometimes, it takes a few minutes for all of these technologies you’re
+    working with to start working fully together. We’ve found jumping up and down
+    and pumping your fists in anger to be very helpful in scenarios like that. That’s
+    primarily because it usually distracts you long enough to allow the technologies
+    to start up and begin to communicate as desired:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.3 – Docker Compose containers loading](image/B21223_08_3.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.3 – Docker Compose containers loading
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After the containers load, there are two more commands you will want to know.
+    They are **docker ps** and **docker-compose ps**. Both serve the same function
+    of showing you the status of all Docker containers simultaneously. However, they
+    each have their own benefit. The **docker ps** command will provide container
+    IDs at the beginning of each line so that you can execute container-specific commands.
+    Such commands might be to start, stop, pause, unpause, or view logs specific to
+    that container. Those commands, however, are executed within Docker Compose. Remember,
+    you must be inside the security-stack directory in order to execute Docker Compose
+    commands:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.4 – docker ps shows the state of the containers with container IDs](image/B21223_08_4.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.4 – docker ps shows the state of the containers with container IDs
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'And here is the other one:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.5 – Docker-compose ps shows the state of the containers in summary](image/B21223_08_5.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.5 – Docker-compose ps shows the state of the containers in summary
+  prefs: []
+  type: TYPE_NORMAL
+- en: You likely will need to run the **docker-compose up -d** command after a reboot
+    to get all of the containers up and running again. That said, let’s start examining
+    this group of applications as they relate to the overall IR environment we are
+    creating in this chapter. First up is **Cortex**, which is the centerpiece of
+    our IR solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Cortex
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Cortex is a security product that helps to facilitate **security orchestration
+    automation and response** (**SOAR**) activities. Many consider Cortex the most
+    crucial component of incident response because it serves as a sort of IR operating
+    system. This is because it integrates with – *marries*, if you will – other IR
+    tools with automation to create a streamlined process of working IR. In doing
+    so, Cortex is able to more directly address some of the more common challenges
+    that are faced by today’s SOCs and CSIRTs, as well as professional security researchers,
+    during the threat intelligence and digital forensics portions of the IR process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before installing it, let’s take a look at a few things that make Cortex special:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Analyzer and responder integration**: Cortex provides a very robust framework
+    to be used for integrating and executing analyzers and responders. Analyzers are
+    software utilities that are used to perform security analysis tasks, such as enriching
+    observable data – we talked about data enrichment in the first four chapters,
+    conducting malware analysis, or executing queries/searches from differing sources
+    of data. Responders help to enable automated response actions such as isolating
+    endpoints, blocking potentially malicious IP addresses, dealing with file hashes
+    and artifacts, or sending notifications. Cortex has an architecture that allows
+    custom analyzers and responders to be integrated, which enables organizations
+    using the product to tailor Cortex to fit their unique business security needs.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Pluggable architecture**: The pluggable architecture is the part of Cortex
+    that is designed to accept customized analyzers and responders. It is what makes
+    the integrations mechanically possible.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**RESTful API**: Cortex provides a RESTful API that is also often referred
+    to as a **REST API** to support seamless integration with external systems, applications,
+    and security tools. What does that mean? Those of you who’ve worked, or presently
+    work, in software development likely have a thorough understanding of this concept
+    already. For everyone else, let’s break it down just a little bit.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We’ve talked about what an API is in broad terms but what does it really do?
+    The **Application Programming Interface** (**API**) is something that defines
+    the rules for how two different software systems will communicate with each other.
+    Developers create these sets of rules in the form of an API to explain to any
+    external applications how they should interact with their own applications from
+    a programming perspective.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: The **REST** acronym stands for **Representational State Transfer**, which is
+    a software architecture that provides guidelines on how APIs should work. It’s
+    somewhat of a case of who’s watching the watchdog, with the *watchdog* being the
+    API setting the rules and the *who* being REST. It was created with the idea that
+    it would help manage inter-application communications within the most complex
+    internet networks. It’s known for contributing to high performance, which translates
+    into faster application loading and data retrieval for us mere mortals. REST provides
+    a high level of visibility into cross-platform portability communications, implementations,
+    and modifications. It is stateless, which means all necessary data must be contained
+    within the communications between the client and server because the server will
+    not store or record the client’s connection status. There is an abundance of resources
+    if you wish to learn more about the RESTful API. We’ll toss a couple of links
+    in the *Further reading* section at the end of this chapter.
+  prefs:
+  - PREF_IND
+  type: TYPE_NORMAL
+- en: '**Multi-tenancy**: Making Cortex especially useful is the implementation of
+    multi-tenancy support. Some of you might hear that term and think that it means
+    a single instance of Cortex can handle multiple organizations or customers. Yes,
+    that is true, but it’s more than that. Multi-tenancy can also refer to a more
+    precise segmentation based on organizational units, teams, or specific use cases.
+    This can help larger organizations manage multiple unrelated scenarios while employing
+    separation of duties with their personnel. Separation of duties is used to make
+    sure no single person has all of the security and access permissions of any environment,
+    reducing potential damage from insider threats. Keep in mind that insider threats
+    do not always occur with malicious intent. A super awesome and honest high-performing
+    employee who makes a simple mistake, maybe even due to no fault of their own,
+    is considered an insider threat in terms of cybersecurity. The key takeaway here
+    is that Cortex allows segmentation within its deployment.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scalability and performance**: We’ve already talked about how scalability,
+    when applied to technology, means having the ability to increase the size and
+    scope of the technology seamlessly, and possibly even suddenly, without adversely
+    affecting the availability of organizational resources. This is yet another example
+    of a software developer considering the *A* from the **CIA Triad** we talked about
+    in [*Chapter 1*](B21223_01.xhtml#_idTextAnchor013). Cortex is built to efficiently
+    handle very large volumes of information while maintaining high performance and
+    reliability in support of security operations.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Integration with TheHive**: Cortex is very tightly integrated with TheHive,
+    which we will discuss in the next section. In fact, it was created by the same
+    folks who created TheHive. In a nutshell, TheHive submits observable security
+    information to Cortex, where it can be handled through automation and then returned
+    to TheHive for a more streamlined and efficient analysis, and, if applicable,
+    investigation and response.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Now that we’ve covered a basic overview of what Cortex is, what its key features
+    are, and what it can do, we should go play in the dirt. It’s much more fun than
+    staring at it, wouldn’t you say? Unlike previous chapters, we don’t need to go
+    through step-by-step procedures to install any of the packages in this and the
+    next chapter because they have all already been installed, along with their dependencies,
+    via Docker Compose. So, now, all we do is make sure everything is still up and
+    running – in case you took a break since reading that section. Review the end
+    of the section with the screenshots showing **docker-compose ps** and **docker
+    ps**. Either restart any down processes or just try to restart the entire group
+    by typing **docker-compose up -d**. It is mission-critical that you are very patient
+    with this process. When you try to load Cortex in your browser in the next step,
+    you might get an error if Cortex is still loading in the background. Just wait
+    a minute or two and try again.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can access Cortex using your web browser. Depending on your individual
+    setup, you will want to make sure you have port forwarding enabled within your
+    Kali Purple VM instance, assigning port **9001** to your Cortex access. You can
+    review [*Chapter 5*](B21223_05.xhtml#_idTextAnchor085) if you want a refresher
+    on **port forwarding**. While we’re at it, let’s just get all of the port forwards
+    put in place right now. Then, we won’t have to keep going back. Forward ports
+    **80**, **443**, **9000**, **9001**, **9042**, **9090**, **9200**, and **9300**
+    as you see in *Figure 8**.6*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.6 – Port forwards needed for this VM instance](image/B21223_08_6.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.6 – Port forwards needed for this VM instance
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When your port forwarding is set up, open up the appropriate browser (host
+    or guest OS) based on your preferences and point the URL to [http://127.0.0.1:9001](http://127.0.0.1:9001),
+    where you might be prompted to have Cortex update its database, as seen in *Figure
+    8**.7*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.7 – Cortex initial access requests a database update](image/B21223_08_7.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.7 – Cortex initial access requests a database update
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select the **Update Database** button and you will be prompted to create an
+    administrator account as seen in *Figure 8**.8*. To be clear, the value you enter
+    in the **Login** field will become the username. The value you enter in the **Name**
+    field is simply an identity of the type of account. As you can see, we called
+    our super admin **Packt Super Admin**. Fill in your desired values and select
+    the **Create** button to continue:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.8 – Cortex initial admin account creation](image/B21223_08_8.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.8 – Cortex initial admin account creation
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You’ll be redirected to the regular login page, which is the page you will
+    see moving forward whenever you go to access Cortex. You can now log in with the
+    credentials that you just created:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.9 – Default Cortex login screen after initial admin account creation](image/B21223_08_9.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.9 – Default Cortex login screen after initial admin account creation
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You may recall that we discussed a little earlier how Cortex supports multi-tenancy.
+    That is, it supports a fragmented setup where groups of users can be isolated
+    from other groups if their assignments are not related or with the same company
+    or team. The page that loads immediately after logging in is where we begin to
+    manage this multi-tenancy. Do not be misled by the **Organizations** label. It
+    could just as easily have been labeled **Segments**, **Teams**, **Pods**, or pretty
+    much anything that describes a deliberate isolation from the other groups. It
+    is here you will create your organizations, as shown in *Figure 8**.10*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.10 – Cortex Organizations and Users tabs for multi-tenancy management](image/B21223_08_10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.10 – Cortex Organizations and Users tabs for multi-tenancy management
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding screenshot, you can also see a **Users** option if you look
+    across the top-right navigation, next to the logged-in username. There, you can
+    create and manage additional users, including assigning roles and permissions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select the **Organizations** tab. There, you can create new organizations and
+    manage the ones you already have. Go ahead and select the **+ Add organization**
+    button at the top left to create a new organization. It’s pretty self-explanatory
+    at this point. Enter a name for your organization in the **Name** field and a
+    description of your organization in the **Description** field. *Figure 8**.11*
+    shows an example. Select **Save** when you’ve finished:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.11 – Creating an organization in Cortex](image/B21223_08_11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.11 – Creating an organization in Cortex
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let’s create a user to add to that organization. Select the **Users** tab.
+    There, you will notice that we also have the option to create API keys for authentication
+    or lock the accounts completely. It is through this feature that you will get
+    TheHive to integrate with Cortex. First, create the user.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select the **Add user** button at the top left of the page to create a new
+    user:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.12 – Cortex Add user button](image/B21223_08_12.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.12 – Cortex Add user button
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will create a user named **TheHive** and it may be a good practice – depending
+    on your organization’s setup and **Service-Level Agreements** (**SLAs**) that
+    you might have established with these customer organizations – to give that original
+    user general administrative roles as well as reading and analyzing since the admin
+    of the organization is likely to be the first account you’re creating for it.
+    It is certainly possible that you have it arranged for organizations to not have
+    dedicated admin – if you’re providing that service yourself or your organization
+    is, as opposed to the customer managing their own organization within your environment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.13 – Cortex Add user window](image/B21223_08_13.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.13 – Cortex Add user window
+  prefs: []
+  type: TYPE_NORMAL
+- en: You might have noticed there is no option to set the password. That option is
+    provided after you click **Save user** and return to the default **Users** screen,
+    which you can see in *Figure 8**.13*. You will notice the first row offers an
+    opportunity to edit the password. That’s what will show when a password already
+    exists.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When a password needs to be created from scratch, it will instead provide you
+    the option to create a new password, as you see in the second row. To do that,
+    go ahead and click **New password** and a field will appear in place of the button.
+    Type your password into that field and press the *Enter* key on your keyboard.
+    You’ll then need to refresh your page for the button display to switch to **Edit
+    password**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You’ll also notice at the very end of the second row that you have an option
+    to lock the user. That will be the case for everyone you create except the default
+    super user. That should be pretty self-explanatory; it locks the user and prevents
+    them from having access to Cortex:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.14 – Edit password, New password, Create API Key, and Lock](image/B21223_08_14.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.14 – Edit password, New password, Create API Key, and Lock
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Lastly, let’s create an API key for our users. For the user you just created,
+    select the **Create API Key** button and it will create the API key, transforming
+    the display into three button options – **Renew**, **Revoke**, and **Reveal**,
+    as you see in the first row of *Figure 8**.14*. To see the API that Cortex created
+    for you, select the **Reveal** button and a value box will appear showing the
+    key, as you see in the second row of *Figure 8**.15*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.15 – Create, Renew, Revoke, and copy the API key](image/B21223_08_15.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.15 – Create, Renew, Revoke, and copy the API key
+  prefs: []
+  type: TYPE_NORMAL
+- en: To save space, the API is truncated, and you’ll only see the beginning of it.
+    That’s okay, because as those of you who are astute observers will have already
+    noticed, the international symbol for copy contents is in a small box to the right
+    of the truncated API key field. Select the image with two pieces of paper to automatically
+    copy the contents of your API key to your clipboard. Record that value somewhere
+    safe and reference it any time you’d like to integrate another tool with Cortex
+    using this specific user. Remember to pay attention to this user’s purpose. They
+    don’t have to be a unique human; they could be a service account. Some of the
+    more complex setups may have multiple service accounts for integrating with other
+    tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This feature is the bread and butter of this entire section. After you finish
+    the next section, you should start to be able to visualize how the IR tool known
+    as TheHive integrates with a SOAR product, which itself integrates with the Elasticsearch
+    database we learned about near the beginning of this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this section, you learned that a SOAR is used to manage and automate security
+    tasks as they relate to the total incident response process and that Cortex is
+    such a product. You also gained insight into how the various products in *Introduction
+    to Kali Purple* are designed to work together as a full unit, giving anyone who
+    takes the time to fully implement and integrate them the makings of a home-built
+    SOC. You now have Cortex installed and configured, along with some elements of
+    TheHive, which we will dive into a little deeper in the next section. That said,
+    let’s move on to TheHive, which is the application that will utilize the features
+    of Cortex and fill in a few gaps we’ve yet to cover.
+  prefs: []
+  type: TYPE_NORMAL
+- en: TheHive
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Kali Purple offers TheHive as an open source **Security Incident Response Platform**
+    (**SIRP**). TheHive now falls under the umbrella of a company called StrangeBee.
+    StrangeBee was co-founded by Jerome Leonard, Nabil Adouani, and Thomas Franco,
+    who are also TheHive’s creators. Also falling under StrangeBee is a product called
+    Cortex, which should be quite familiar to you since we just discussed it in the
+    previous section. TheHive is a SIRP that was built to integrate with Cortex and
+    also with the extremely well-known MISP. If you presently work in a cybersecurity
+    profession, odds are you’ve already worked with MISP. We will cover that in the
+    next section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'TheHive was built to streamline the process of managing security incidents.
+    The creators realized the best way to achieve streamlining was to ensure everybody
+    had access to the same threat data, hence the integration with the MISP, which
+    was built specifically for that purpose. TheHive is equipped with a comprehensive
+    set of IR features and enhancements. Let’s take a bird’s-eye view of these features
+    and enhancements:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Case management**: TheHive provides a centralized location for organizing
+    and managing security incident cases. Cybersecurity analysts can create, update,
+    and track the progress of individual cases, providing a structured and organized
+    approach to incident handling. In fact, you can either enter a case ID for quick
+    access or create a brand new case from the top ribbon of TheHive’s GUI, as seen
+    in *Figure 8**.16*:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 8.16 – TheHive case creation](image/B21223_08_16.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.16 – TheHive case creation
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Task management**: The product allows users to manage tasks by giving them
+    permission to assign and track the precise tasks that might be associated with
+    any specific incident response scenario. Having this feature provides a level
+    of accountability among the analysts, not to mention it further facilitates collaboration
+    and coordination.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Observables management**: Observables are items that analysts can physically
+    see that might be worth categorizing and tracking independently and by themselves.
+    This is because they could affect numerous incident response cases in one form
+    or another. To further explain: Think of an IP address that turns out to have
+    a poor OSINT reputation and is generally considered to be malicious in nature.
+    By tracking this IP address by itself, analysts would be able to correlate malicious
+    activity across many different incident response scenarios if there was a broad
+    malicious campaign coming from the address, such as a phishing campaign. Such
+    an event would likely affect many different organizations and involve many different
+    incident response scenarios. IP addresses are something analysts can physically
+    see. Therefore, they’re observable. Other observables may include domain names,
+    URLs, and hashes. In TheHive, analysts can categorize and track any of these observables
+    for more effective incident response.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Reporting and analysis**: Knowing where our own potential weaknesses are
+    is critical for a mature SOC. This security solution includes reporting and analysis
+    tools that allow users to generate fully comprehensive reports on security incidents.
+    They can also use the software to report on security trends and performance metrics.
+    This feature empowers organizations to gain insights from within their own security
+    posture overall, as well as their individual incident response capabilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Collaboration**: We’ve talked about it several times now and it cannot be
+    overstated. This security solution offers collaboration as a key feature because
+    it’s one of the core values of TheHive’s manner of operations. This collaboration
+    is accomplished by providing a shared workspace for incident responders so they
+    can work together to resolve the security incidents they are facing. This is set
+    up so that the collaboration can occur in real time, providing IR folks with a
+    manner of sharing insights, knowledge, and best practices as they are needed.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Playbook automation**: Cybersecurity analysts can create and execute automated
+    playbooks in TheHive. **Playbooks** are predefined workflows for common incident
+    response scenarios. If you think of a flow chart that you might have studied or
+    created when you were in school, a workflow is pretty much the same thing. It’s
+    a visual flow of the step-by-step corrective actions needed to respond to a particular
+    security event. Playbooks are these same workflows set up in advance for the sake
+    of universal response and are often automated for the sake of creating a streamlined
+    approach to any repetitive tasks, thereby ensuring a consistent and effective
+    response to security incidents. It can also save considerable time on human interaction
+    while avoiding human error.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Integrations**: TheHive offers integrations with a very wide range of security
+    tools and platforms, creating seamless data sharing and orchestration of incident
+    response activities. Some of these integrations include Cortex, MISP Active Directory:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Lightweight Directory Access Protocol** (**LDAP**), **Active Directory Federation
+    Services** (**ADFS**), email services, other reporting, and metrics platforms,
+    SIEM and SOAR platforms, threat intelligence feeds, and other collaboration and
+    communication tools. The integrations promote the enhanced interoperability of
+    TheHive with other security solutions.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Customization**: TheHive users have the ability to customize their experience
+    by creating personalized templates, playbooks, and dashboards tailored to their
+    organization’s specific IR needs.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scalability**: As you likely already know, scalability refers to the capability
+    of a system, network, or process to handle a growing amount of work, sometimes
+    quickly and unexpectedly, or at least have the potential to be quickly enlarged
+    to handle such organizational growth. It is typically only used when talking within
+    the context of software and technology. The word scalability itself is often used
+    in reference to a rapid need to adapt to increased demands on resources without
+    compromising the performance, reliability, or functionality of the product. Scalability
+    is considered a capability of TheHive.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Historical data retention**: A necessary feature for any security-oriented
+    application is to preserve the history of what happened. We could spend all day
+    talking about why this is to include lessons learned, trend analysis, clueing
+    in future analysts to potential resolutions, forensic investigations, government
+    regulations, having proof if needed in a legal court case, or simply having knowledge
+    available for continuous process improvement. TheHive preserves historical incident
+    data and provides a repository of past security incidents along with their resolutions.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'When you’re ready to access TheHive, open up another browser tab and point
+    the URL to [http://127.0.0.1:9000](http://127.0.0.1:9000), where you will be presented
+    with the login screen. Luckily for you, a default administrator account is already
+    created with TheHive, as seen in *Figure 8**.17*. Your initial login will be to
+    that account. Type **admin** for your username and **secret** for the password.
+    Then click the **Let me in** button to formally gain access:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.17 – TheHive default login screen](image/B21223_08_17.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.17 – TheHive default login screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: After you log in for the first time, you might notice the absence of case management
+    and the ability to create cases that we previously mentioned. That’s because admin
+    roles are to manage the organizations and users, not the cases themselves. Users
+    will manage the cases. So, the first thing you’ll want to do is to create a user
+    with the analyst role assigned to them so that you can create and manage cases
+    with that user! However, in order to create a user with the analyst role, we first
+    need to have an organization that has that role available. The default admin organization
+    will not be adequate for creating any users who are not admin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Since we are setting up TheHive for the very first time, there will not already
+    be an organization in place with the correct options. So, let’s create one. In
+    fact, let’s create the exact same organization we created in Cortex! Select the
+    **Organisations** field from the left column of the default view, as highlighted
+    in *Figure 8**.18*, and then select the plus icon on the far left of the top ribbon:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.18 – TheHive – create an organization](image/B21223_08_18.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.18 – TheHive – create an organization
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The main screen will be grayed out and you will get a popup on the right for
+    you to fill out the details of the organization you wish to create:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.19 – TheHive main screen grays out when we create an organization](image/B21223_08_19.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.19 – TheHive main screen grays out when we create an organization
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go ahead and fill in all of the same details from the organization we created
+    in Cortex for TheHive organization creation. For now, leave **Tasks sharing rule**
+    and **Observables sharing rule** set to **manual**. Setting the autoshare for
+    tasks is meant for teams who are working together on a project. We’re just going
+    to create one user for this organization. However, if we were to assign an entire
+    team to this organization, we might consider setting **Tasks sharing rule** to
+    **autoshare** so that all members of the team could be equally informed and involved
+    in the resolution of the task. **Observables sharing rule** is for sharing observable
+    data such as **Indicators of Compromise** (**IoCs**) or information gleaned from
+    threat intelligence feeds. Setting this to **autoshare** helps to produce timely
+    dissemination of critical information to the appropriate stakeholders. Select
+    the **Confirm** button at the bottom right of your screen to finalize the creation
+    of the organization:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.20 – TheHive – create an organization screen](image/B21223_08_20.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.20 – TheHive – create an organization screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The pop-up window will go away. However, since it was a pop-up window instead
+    of another page, it’s possible you may need to refresh the page for your new organization
+    to show up in the default listing. We recommend waiting 10 to 20 seconds first.
+    Give the application time to do its background work:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.21 – TheHive default organization screen with our newly added organization](image/B21223_08_21.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.21 – TheHive default organization screen with our newly added organization
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To create your first user, which will be a non-administrative user, you have
+    two options. First, you can select the name of the new organization you just created
+    and then select **Add User** from the main windowpane, as you see in *Figure 8**.22*,
+    and then proceed to the third step in the instructions ahead:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 8.22 – TheHive organization details screen with the option to add
+    a new user](image/B21223_08_22.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.22 – TheHive organization details screen with the option to add a new
+    user
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Alternatively, you can proceed with the following steps, which will only be
+    effective if the organization has been created first:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select and click the icon showing three human silhouettes in the left column
+    of the default page after logging in. We will call that the **users** icon. It’s
+    highlighted in *Figure 8**.23* if you need help identifying the icon.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.23 – TheHive selecting the Users icon in the left column](image/B21223_08_23.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.23 – TheHive selecting the Users icon in the left column
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Then, after you click the human silhouettes, select, and click the large plus
+    symbol near the top left of the **Users** page. This is also reflected in *Figure
+    8**.24*. It’s very important that you do this after you first select the **users**
+    icon. Otherwise, the plus will not add a new user but instead a new organization!:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.24 – TheHive selecting the plus on the Users screen to create a
+    new user](image/B21223_08_24.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.24 – TheHive selecting the plus on the Users screen to create a new
+    user
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you do this, the page will be grayed out and a pop-up window will appear
+    on the right portion of the page asking you to input details for the new user:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.25 – TheHive Adding a User popup with grayed-out main window](image/B21223_08_25.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.25 – TheHive Adding a User popup with grayed-out main window
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Under **Type**, the value should default to **Normal** and you should leave
+    it that way. That field is for setting up service accounts, which we discussed
+    briefly in [*Chapter 4*](B21223_04.xhtml#_idTextAnchor076). Refer back to that
+    chapter if you’d like a refresher on service accounts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.26 – TheHive setting new user type to Normal](image/B21223_08_26.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.26 – TheHive setting new user type to Normal
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Under **Login**, you will not enter a username but instead a classification
+    of login. This allows admin users to create groups of logins where they can pre-assign
+    roles. For simplicity’s sake, we recommend typing **thehive@thehive.local**, but
+    you can make the first part whatever you want, such as **test@thehive.local**,
+    so long as whatever you begin with, you append **@thehive.local** to the end of
+    it. During login, you will only type the name you created without the **@thehive.local**.
+    Then, under the **Name** field is where you will enter the desired username for
+    the value:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.27 – TheHive setting new user Login and Name values](image/B21223_08_27.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.27 – TheHive setting new user Login and Name values
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Under the **Organizations** field, you will determine the level of this new
+    user you are creating. We already know that we don’t want the user to be an admin.
+    So, select the drop-down area under **Organizations** or **Profile** (it will
+    be one or the other depending on which of the two ways you accessed this feature)
+    and choose **analyst**. If you arrived here by adding the user from the profile
+    of the organization you created, then all of the analyst roles will populate on
+    the screen for you. If every field has been addressed, then a **Confirm** button
+    will appear at the bottom of the page. Select that button and you will have your
+    new admin user:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.28 – TheHive completed new user form](image/B21223_08_28.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.28 – TheHive completed new user form
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The grayed-out area will go away and your new user will appear on the list.
+    You still have one more very important step before you log in as this user. Similar
+    to setting up Cortex users, you need to edit the user you just created in order
+    to establish a password, which was not available at the time you created the user.
+    However, the manner of doing so is a little bit different than Cortex. From the
+    default user screen, you need to hover your mouse over the name of the user you
+    just created. When you do, a **Preview** field will appear near the middle of
+    the row, next to the value under the **Organizations** column. Select that **Preview**
+    field as highlighted in *Figure 8**.29*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.29 – TheHive new user Preview button used to set a password](image/B21223_08_29.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.29 – TheHive new user Preview button used to set a password
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Scroll down until you see the **Password** section. You’ll have **Reset the
+    password** and **Edit password** options. You can play with all of this stuff
+    later, but for now, select **Reset the password** or **Set a new password** if
+    you’re a brand new user, and then type the desired password in for the user you
+    are creating. When you’ve finished, click the little blue **Confirm** button that
+    appears at the lower right of your screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.30 – TheHive Set a new password and Reset the password](image/B21223_08_30.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.30 – TheHive Set a new password and Reset the password
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you’ve finished, you’ll see the same **Confirm** button appear at the
+    bottom as you saw when you first created the user. Click that button and you should
+    be set:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 8.31 – Confirm button](image/B21223_08_31.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 8.31 – Confirm button
+  prefs: []
+  type: TYPE_NORMAL
+- en: You may have a circle appear in the far-left column, allowing you to quickly
+    switch between the admin account and the analyst account you just created. If
+    not, select the down arrow at the top right followed by **Logout** from the dropdown,
+    and then enter the credentials for the new account you just created.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select **Let me in** to log back in as the mortal user. Now the top ribbon should
+    have a field to search by case ID, as well as an option to create a new case.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Congratulations! Installing and setting up Cortex and TheHive can be a tedious
+    and confusing set of tasks. If you made it this far, give yourself a pat on the
+    back. We recommend taking as much time as you like to play around with these utilities,
+    read the developer documentation if you like, and explore as much as possible.
+    If you break something, that’s fantastic! That’s how we learn. That’s how we all
+    get better.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With Cortex and TheHive being the core of incident response as far as the Kali
+    Purple suite of tools is concerned, you have a very basic framework to build upon.
+    Let’s take some real estate to make you aware of some of the threat intelligence
+    applications that you can use to support the mini IR SOC you’ve begun to assemble.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Challenge!
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are countless information-sharing platforms out there. You’ve already
+    been briefed a few times in this book about the **MISP**, or the **Malware Information
+    Sharing Platform**. That one is an open source project that was selflessly created
+    for the purpose of helping all of us to work together in stopping the malicious
+    activities of bad actors. Something that sets the MISP apart from many other information-sharing
+    feeds is **threat information exchange formats**. The MISP platform supports standardized
+    threat information exchange formats, including two of the most well known, which
+    are **Structured Threat Information eXpression** (**STIX**) and **Trusted Automated
+    eXchange of Indicator Information** (**TAXII**). That gives MISP a high level
+    of interoperability and compatibility with any other security platform or tool
+    that chooses to adopt these well-known standards.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Other key features of the MISP include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Threat intelligence sharing
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: IOC management
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Threat intelligence feeds
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Automated indicator correlation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Collaborative analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Visualization and reporting
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integration framework
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your challenge is to go out into the wild and find as many different applicable
+    platform feeds as you can, so long as they’re applicable to cybersecurity, study
+    them, and select at least one – but feel free to choose as many as you like –
+    to integrate with the mini IR SOC that you’ve started in this chapter. Thoroughly
+    document your journey with an abundance of words and screenshots, and then find
+    an online venue – perhaps social media, perhaps not – and present your work in
+    a manner that showcases your skills and will also help others learn and grow.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, you have taken the lessons from previous chapters and learned
+    how they apply when data you’ve previously learned how to collect, analyze, and
+    store reveals there may be a possible true positive incident occurring. That is
+    to say, you’ve begun to gain a feel for the part of cybersecurity defense known
+    as incident response.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the course of responding to incidents, it helps to have tools at your disposal,
+    especially when automation is included, and with that, you were introduced to
+    a security orchestration automation and response platform known as Cortex. You
+    learned about an incident response case management platform known as TheHive,
+    which feeds its data into Cortex for processing and gets it returned with many
+    potential automation activities performed on the data.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You also got a glimpse of the MISP. This open source project was selflessly
+    created for the purpose of helping all of us to work together to stop the malicious
+    activities of bad actors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter, we'll do a little bit of a deeper dig into malware analysis
+    than we have thus far, and even learn a little bit about exploit development!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Questions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Cortex and TheHive were created by the same company, which is called…
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: BumbleBee
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: SweatBee
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: StrangeBee
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: LeaveMeBee
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A pre-defined series of steps for orchestrated patterns of activity that are
+    often repeatable is what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: IR circuit
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Workflow
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Container
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Code library or **.****dll** file
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Something that defines the rules for how two different software systems will
+    communicate with each other is known as what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**Application Programming** **Interface** (**API**)'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**International Cybersecurity Communication** **Law** (**ICCL**)'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A constitutional monarchy
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '**International Standards of Technological Security** **Controls** (**ISTSC**)'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is multi-tenancy?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When two or more people work on the same computer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An application that can distinguish between and manage more than one customer
+    or organization
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Similar to multi-tasking except performed in secret
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An octopus or other member of the animal kingdom with more than 2 arms or legs
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The MISP facilitates the sharing of information about what type of technology?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: All known threats
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Database
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Digital
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Malware
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Further reading
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Cortex** **Documentation**: [https://docs.strangebee.com/cortex/](https://docs.strangebee.com/cortex/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**REST API resource number** **1**: [restapitutorial.com](http://restapitutorial.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**REST API resource number** **2**: [restcookbook.com](http://restcookbook.com)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**MISP project** **website**: [https://www.misp-project.org/](https://www.misp-project.org/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Learning Linux CHMOD** **commands**: [https://linuxhandbook.com/chmod-command/](https://linuxhandbook.com/chmod-command/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Free Azure Synapse Analytics video** **course**: [https://www.youtube.com/watch?v=lLrjaVdBuM0](https://www.youtube.com/watch?v=lLrjaVdBuM0)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Synapse Analytics with TheHive GitHub** **page**: [https://github.com/TheHive-Project/Synapse](https://github.com/TheHive-Project/Synapse)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Microsoft Synapse free** **trial**: [https://azure.microsoft.com/en-us/free/synapse-analytics/](https://azure.microsoft.com/en-us/free/synapse-analytics/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

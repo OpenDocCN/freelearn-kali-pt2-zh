@@ -1,0 +1,1330 @@
+- en: Working with Burp Suite
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will explore the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Configuring Burp Suite on Kali Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Defining a web application target with Burp Suite
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Spider
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Proxy
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite engagement tools
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using the Burp Suite web application scanner
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Intruder
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Comparer
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Repeater
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Decoder
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Sequencer
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Extender
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Clickbandit
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite is a collection of seamlessly integrated tools for testing web applications.
+    While the majority of the tools are available in the free version, some automation
+    and scanning features require the professional edition, which is well worth the
+    cost of the upgrade. Personally, I consider it an indispensable tool for testing
+    web applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Configuring Burp Suite on Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Proxy is one of the most powerful web application auditing tools
+    available. However, it is not a tool that can be started easily with a single
+    click. Configurations in both the Burp Suite application and in the associated
+    web browser must be modified to ensure that each communicates with the other properly.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nothing needs to be done to execute Burp Suite in Kali Linux for the first time.
+    The free version is an integrated tool, and it is already installed. Alternatively,
+    if you choose to use the professional version, a license can be purchased at [https://pro.portswigger.net/buy/](https://pro.portswigger.net/buy/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The license is relatively inexpensive and well worth the additional features.
+    However, the free version is still highly useful and provides most of the core
+    functionality at no cost to the user.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s configure Burp Suite on Kali Linux with the help of following steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Burp Suite is a GUI tool and requires access to the graphical desktop in order
+    to be run. As such, it cannot be used over SSH. There are two ways to start Burp
+    Suite in Kali Linux. You can browse to it in the Applications menu by navigating
+    to Applications | Kali Linux | Top 10 Security Tools | burpsuite. Alternatively,
+    you can execute it by passing it to the Java interpreter in a bash Terminal, as
+    follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'When you start Burp Suite, you will be asked whether you want to use a Temporary
+    project, New project on disk, or Open existing project. For our purposes now,
+    let''s use the default choice of a Temporary project:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00119.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When asked to select the configuration, choose Use Burp defaults:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00193.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once Burp Suite is loaded, ensure that the proxy listener is active and running
+    on the desired port. In the example provided, TCP port `8080` is used. These configurations
+    can be verified by selecting the Proxy tab and then selecting the Options tab
+    below it, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00266.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Here, you will see a list of all proxy listeners. If none exist, add one. To
+    use it with the Mozilla Firefox web browser in Kali Linux, configure the listener
+    to listen on a dedicated port on the `127.0.0.1` address. Also, ensure that the
+    Running checkbox is activated. After configuring the listener in Burp Suite, you
+    will also need to modify the Mozilla Firefox browser configurations to route traffic
+    through the proxy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To do this, open up Mozilla Firefox by clicking on the Firefox icon at the
+    top of the sidebar. Once it''s open, expand the drop-down menu and click on Preferences
+    to get the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00342.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the Mozilla Firefox preferences menu, click on the Advanced options button
+    at the bottom of the menu and then select the Network tab.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Then, click on the Settings button under the Connection header. This will bring
+    up the Connection Settings configuration menu, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00623.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By default, the proxy radio button is set to Use system proxy settings. This
+    needs to be changed to Manual proxy configuration. The manual proxy configurations
+    should be the same as the Burp Suite Proxy listener configurations. In the example
+    provided, the HTTP proxy address is set to `127.0.0.1` and the port value is set
+    to TCP `8080`. To capture other traffic, such as HTTPS, click on the Use this
+    proxy server for all protocols checkbox.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To verify that everything is working correctly, attempt to browse to a website
+    using Firefox, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00508.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If your configurations are correct, you should see the browser attempting to
+    connect, but nothing will be rendered in the browser. This is because the request
+    sent from the browser was intercepted by the proxy. The proxy intercept is the
+    default configuration used in Burp Suite. To confirm that the request was captured
+    successfully, return to the Burp Suite Proxy interface, as shown here:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00638.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Here, you should see the captured request. To continue using your browser for
+    other purposes, you can change the proxy configurations to passively listen by
+    clicking on the Intercept is on button to disable it, or you can change your proxy
+    settings in your browser back to the Use system proxy settings option and only
+    use the manual proxy settings when using Burp.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The initial configuration performed in Burp Suite creates a listening port on
+    TCP `8080`. This port is used by Burp Suite to intercept all web traffic and also
+    to receive the incoming traffic returned in response. By configuring the IceWeasel
+    web browser proxy configuration to point to this port, we indicate that all traffic
+    generated in the browser should be routed through Burp Suite Proxy. Thanks to
+    the capabilities provided by Burp, we can now modify the en-route traffic at will.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Defining a web application target with Burp Suite
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: When performing a penetration test, it is important to be sure that your attacks
+    are only targeting intended systems. Attacks performed against unintended targets
+    can result in legal liability. To minimize this risk, it is important to define
+    your scope within Burp Suite. In this recipe, we will discuss how to define in-scope
+    targets using the Burp Suite proxy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system running one or more web applications. In the
+    examples provided, an instance of Metasploitable2 is used to perform this task.
+    Metasploitable2 has several preinstalled vulnerable web applications running on
+    the TCP port `80`. For more information on setting up Metasploitable2, refer to
+    the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    pass web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to perform web application analysis using
+    the Burp Suite:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The leftmost tab in the Burp Suite interface is Target. There are two tabs underneath
+    this tab, called Site map and Scope. The Site map tab will be automatically populated
+    as content is accessed via the proxied web browser. The Scope tab allows the user
+    to configure sites and site content to be either included or excluded from the
+    scope.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To add a new site to the scope of the assessment, click on the Add button under
+    the Include in scope table. Have a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00634.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Adding in-scope content can be as general as a range of IP addresses or as specific
+    as an individual file. The Protocol option has a drop-down menu that includes
+    values of ANY, HTTP, or HTTPS. The Host or IP range field can include a single
+    hostname, single IP, or range of IP addresses. Additionally, text fields exist
+    for both Port and File. Fields can be left blank to limit the specificity of the
+    scope. Fields should be populated using regular expressions.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the example provided, the caret opens each of the regular expressions, the
+    dollar sign closes them, and the backslashes are used to escape the special meaning
+    of the periods in the IP address. It is not within the scope of this book to address
+    the use of regular expressions, but many resources are openly available on the
+    Internet to explain their use. One good web primer you can use to familiarize
+    yourself with regular expressions is [http://www.regular-expressions.info/](http://www.regular-expressions.info/).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Regular expressions logically define the conditions whereby a given host, port,
+    or file may be considered in scope. Defining the scope of an assessment in Burp
+    Suite affects the way it operates when interacting with web content. The Burp
+    Suite configurations will define what actions can and cannot be performed on objects
+    that are in or out of the defined scope.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Spider
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To effectively attack a web application, it is important to be aware of all
+    hosted web content on the server. Multiple techniques can be used to discover
+    the full attack surface of the web application. One tool that can quickly identify
+    linked content that is referenced in the web pages of the target is the Spider
+    tool. In this recipe, we will discuss how to spider the Web to identify in-scope
+    content using Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s use the Burp Suite Spider to perform the web application attack:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To begin automatically spidering the web content from your previously defined
+    scope, click on the Spider tab at the top of the screen. Underneath, there are
+    two additional tabs that include Control and Options.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The Options tab allows the user to define the configurations for how spidering is
+    performed. This includes detailed settings, depth, throttling, form submissions,
+    and so on. It is important to consider the configurations of an automatic spider,
+    as it will be sending requests to all in-scope web content. This could potentially
+    be disruptive or even damaging to some web content.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once configured, the Control tab can be selected to begin automatic spidering.
+    By default, the Spider tab is paused. By clicking on the button that indicates
+    such, the spider can be started. The Site map tab under the Target tab will be
+    automatically updated as the spider progresses. Have a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00002.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Depending on the configurations defined, Burp Suite will likely request your
+    interaction with any forms that it encounters while spidering. Enter parameters
+    for any forms identified, or skip the forms by selecting the Ignore form button,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00306.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Alternatively, you can spider from any particular location by right-clicking
+    on it in the Site map tab and then clicking on Spider this branch. This will recursively
+    spider the object selected and any files or directories contained within. Have
+    a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00058.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Burp Suite Spider tool works by parsing through all known HTML content and
+    extracting links to other content on the Web. The linked content is then analyzed
+    for additional linked content that is discovered within it. This process will
+    continue indefinitely and is only limited by the amount of available linked content,
+    the layers of depth specified, and the number of concurrent threads processing
+    additional requests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Proxy
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Despite all of its available tools, Burp Suite's primary function is to serve
+    as an intercepting proxy. This means that Burp Suite is capable of capturing requests
+    and responses and then manipulating them prior to forwarding them on to their
+    destination. In this recipe, we will discuss how to intercept and/or log requests
+    using Burp Suite Proxy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to intercept the log requests using Burp
+    Suite Proxy:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The Burp Suite Proxy function can be used in passive or intercept mode. If
+    intercept is disabled, all requests and responses will simply be logged in the
+    HTTP history tab. These can be navigated through, and the details of any request
+    and/or response can be seen by selecting it from the list, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00213.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Alternatively, the Intercept button can be clicked on to capture traffic en
+    route to its destination server. These requests can be manipulated in the Proxy
+    tab and then either forwarded to the destination or dropped.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'By selecting the Options tab, the intercepting proxy can be reconfigured to
+    define the types of requests intercepted, or to even enable the interception of
+    responses prior to them being rendered in the browser, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00283.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Proxy works to intercept or passively log traffic going to and coming
+    from an attached browser because it is logically configured to sit between the
+    browser and any remote devices. The browser is configured to send all the requests
+    to Burp Proxy, and then Proxy forwards them on to any external hosts. Because
+    of this configuration, Burp can both capture requests and responses en route,
+    or it can log all communications going to and coming from the client browser.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite engagement tools
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite also has a number of tools that can be used for basic information
+    gathering and target profiling. These tools are called **engagement tools**. In
+    this recipe, we will discuss how to use the supplemental engagement tools in Burp
+    Suite to gather or organize information on a target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s gather or organize information on a target using the supplemental engagement
+    tools in Burp Suite:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Engagement tools can be accessed by right-clicking on any object in the Site
+    map tab and then scrolling down to the expansion menu and selecting the desired
+    tool. By default, the selected engagement tool will recursively target the object
+    selected, to include all files and directories within. Consider the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00362.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We will address each of the engagement tools in the order in which they are
+    presented in this menu. For organization purposes, I think it is best to introduce
+    them in the following bullet points:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Search: This tool can be used to search for terms, phrases, or regular expressions.
+    It will return any HTTP requests or responses that include the queried term. For
+    each entry returned, the queried term will be highlighted in either the request
+    or response.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Find comments: This tool searches through all JavaScript, HTML, and other sources
+    of code throughout the specified web content and locates all comments. These comments
+    can also be exported for later review. This can be particularly helpful at times,
+    as some developers will often leave sensitive information in the comments of code
+    that they have written.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: "Find scripts: This tool will identify all client- and server-side scripts within\
+    \ the \Lweb content."
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Find references: This tool will parse through all HTML content and identify
+    other referenced content.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Analyze target: This tool will identify all dynamic content, static content,
+    and parameters within the specified web content. This can be particularly useful
+    to organize testing of web applications that have a lot of parameters and/or dynamic
+    content.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Discover content: This tool can be used to brute-force directories and filenames
+    by cycling through a word list and defined list of file extensions.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Schedule task: This tool allows the user to define time and dates to start
+    and stop various tasks within Burp Suite.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Simulate manual testing: This tool presents an excellent way to appear as though
+    you are performing a manual analysis on a web application when you''ve actually
+    stepped away for coffee and donuts. There is absolutely no practical function
+    for this tool, beyond just bamboozling the boss.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite engagement tools work in a variety of ways, depending on the tool
+    being used. Many of the engagement tools perform searches and examine the already
+    received responses for a particular type of content. The Discover content tool
+    provides the functionality of discovering new web content by brute-forcing file
+    and directory names by cycling through defined word lists.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the Burp Suite web application scanner
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite can also service as an effective web application vulnerability scanner.
+    This feature can be used to perform both passive analysis and active scanning.
+    In this recipe, we will discuss how to perform both passive and active vulnerability
+    scanning using the Burp Suite scanner.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additionally, your web browser will need to be configured to proxy web traffic
+    through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Performing both passive and active vulnerability scanning using the Burp Suite
+    scanner:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: By default, Burp Suite will passively scan all in-scope web content that is
+    accessed via the browser when connected to the proxy. The term **passive scanning**
+    is used to refer to Burp Suite passively observing requests and responses to and
+    from the server and examining that content for any evidence of vulnerabilities.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Passive scanning does not involve the injection of any probes or other attempts
+    to confirm suspected vulnerabilities. Have a look at the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00456.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Active scanning can be performed by right-clicking on any object in the Site
+    map tab or any request in the HTTP history tab under the Proxy tab and by then
+    selecting Actively scan this branch or Do an active scan, respectively, as shown
+    in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00524.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Upon selecting Actively scan this branch, you will be presented with options
+    of what to scan. Select your preferences, click on Next, and you will be presented
+    with a list of what will be scanned:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00591.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The results for all active scanning can be reviewed by selecting the Scan queue
+    tab under Scanner. By double-clicking on any particular scan entry, you can review
+    the particular findings as they pertain to that scan, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00645.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Active scanning configurations can be manipulated by selecting the Options
+    tab. Here, you can define the types of tests performed, the speed at which they
+    are performed, and the thoroughness of those tests. One should take note of the
+    types of test the scanner will be conducting:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00020.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite's passive scanner works by merely evaluating traffic that passes
+    between the browser and any remote server with which it is communicating. This
+    can be useful for identifying some easily noticeable vulnerabilities, but is not
+    sufficient to validate many of the more critical vulnerabilities that exist on
+    web servers these days. The active scanner works by sending a series of probes
+    to parameters that are identified in the request. These probes can be used to
+    identify many common web application vulnerabilities, such as directory traversal,
+    cross-site scripting, and SQL injection.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Intruder
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Another highly useful tool in Burp Suite is the Intruder feature. This feature
+    allows fast-paced attacks to be performed by submitting large numbers of requests
+    while manipulating predefined payload positions within the request. In this recipe,
+    we will discuss how to automate manipulation of request content using Burp Suite
+    Intruder.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to automate manipulation of requested content
+    using the Burp Suite Intruder:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use Burp Suite Intruder, a request needs to be sent to it from either an
+    en-route capture via an intercept or from the proxy history. With either of these,
+    right-click on the request and then select Send to Intruder, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00072.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, a username and password were entered into the login
+    portal of DVWA''s Brute Force application. After being sent to Intruder, the payloads
+    can be set with the Positions tab. To attempt to brute-force the admin account,
+    the only payload position that will need to be set is the value of the password
+    parameter, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00152.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the payload position has been defined, the payloads that will be injected
+    can be configured with the Payloads tab. To perform a dictionary attack, one could
+    use a custom dictionary list or a built-in list. In the example provided, the
+    built-in Passwords list is employed to perform the attack, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00231.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Once the attack has been fully configured, you can click on the Start Attack
+    button at the top of the screen. This will quickly submit a series of requests
+    by substituting each value in the list into the payload position. A successful
+    attempt can often be identified by a variation in response.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To determine whether there is any request that generates a distinctly different
+    response, one can sort the results by length. This can be done by clicking on
+    the Length table header. By sorting the table by length in descending order, we
+    can identify that one response in particular is longer than the others.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'This is the response that is associated with the correct password (which happens
+    to be `password`). This is shown in the following screenshot. This successful
+    login attempt is further confirmed in the next recipe, which discusses the use
+    of Comparer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00301.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Intruder works by automating payload manipulation. It allows a user
+    to specify one or more payload positions within a request and then provides a
+    large number of options that can be used to configure how the values that will
+    be supplied to those payload positions will change from one iteration to the next.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Comparer
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: When performing a web application assessment, it is often important to be able
+    to easily identify variations in HTTP requests or responses. The Comparer feature
+    simplifies this process by providing a graphical overview of variation. In this
+    recipe, we will discuss how to identify and evaluate varied server responses using
+    Burp Suite Comparer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to identify and evaluate varied server responses
+    using the Burp Suite Comparer:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Any anomalous exception to an otherwise consistent response is often worth investigating.
+    Variation in response can often be a solid indication that a payload has produced
+    some desirable result.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the previous demonstration of using Burp Suite Intruder to brute-force the
+    login for DVWA, one payload in particular generated a longer response than all
+    the others.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To evaluate the variation in response, right-click on the event and then click
+    on Send to Comparer (response), as shown in the following screenshot. The same
+    thing should be done for one of the control examples:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00386.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After sending each event to Comparer, you can evaluate them by selecting the
+    Comparer tab at the top of the screen. Ensure that one of the previous responses
+    is selected for item 1 and the other is selected for item 2, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00654.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the bottom-right corner of the screen, there is an option to choose compare
+    words or compare bytes. In this particular case, select the Words option. By doing
+    this, we can see that some of the content modified in the response reveals that
+    the login was successful. Any content that has been modified, deleted, or added
+    is highlighted from one response to the next and makes it very easy to visually
+    compare the two, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00482.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Comparer works by analyzing any two sources of content for differences.
+    These differences are identified as content that has been modified, deleted, or
+    added. Quickly isolating variations in content can be effective in determining
+    the distinct effects that particular actions have upon the behavior of a web application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Repeater
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: When performing a web application assessment, there will often be times that
+    manual testing is required to exploit a given vulnerability. Capturing every response
+    in the proxy, manipulating it, and then forwarding it can become very time consuming.
+    Burp Suite's Repeater feature simplifies this by allowing consistent manipulation
+    and submission of a single request without having to regenerate the traffic in
+    the browser each time. In this recipe, we will discuss how to perform manual text-based
+    audits using Burp Suite Repeater.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'With the help of following steps we will be performing manual text-based audits
+    using the Burp Suite Repeater:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use Burp Suite Repeater, a request needs to be sent to it from either an
+    en-route capture via an intercept or from the proxy history. With either one of
+    these, right-click on the request and then select Send to Repeater, as shown in
+    the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00605.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, a request is made of the user to provide a name, and
+    the server returns the provided input in the HTML response. To test for the possibility
+    of cross-site scripting, we should first inject a series of commonly used characters
+    in such an attack, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00499.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After sending in the series of characters, we can see that all of the characters
+    were returned in the HTML content and none were escaped. This is a very strong
+    indication that the function is vulnerable to cross-site scripting. To test the
+    exploitability of this vulnerability, we can enter the standard token request
+    of `<script>alert(''xss'')</script>`, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00036.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By reviewing the returned HTML content, we can see that the opening script
+    that is tagged has been stripped from the response. This is likely an indication
+    of blacklisting that prohibits the use of the `<script>` tag in the input. The
+    problem with blacklisting is that it can often be circumvented by slightly modifying
+    the input. In this case, we can attempt to circumvent the blacklisting by modifying
+    the case of several characters in the opening tag, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00348.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By using the opening `<ScRiPt>` tag, we can see that the imposed restriction
+    has been bypassed and both the opening and closing tags have been included in
+    the response. This can be confirmed by issuing the request in a browser, as shown
+    in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00029.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To evaluate the response in the client browser, right-click on the request
+    and then select Request in browser. This will generate a URL that can be used
+    to reissue the request in a browser that is actively connected to Burp Proxy,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00350.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can copy the URL provided manually or by clicking on the Copy button. This
+    URL can then be pasted into the browser, and the request will be issued in the
+    browser. Assuming the cross-site scripting attack was successful, the client-side
+    JavaScript code will be rendered in the browser, and an alert will appear on the
+    screen, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00096.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Repeater simply works by providing a text-based interface to the
+    Web. The Repeater can allow a user to interact with remote web services by directly
+    manipulating requests rather than interacting with a web browser. This can be
+    useful when testing cases for which the actual HTML output is more critical than
+    the way it is rendered in the browser.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Decoder
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: When working with web application traffic, you will frequently notice content
+    that is encoded for obfuscation or functionality reasons. Burp Suite Decoder allows
+    request and response content to be decoded or encoded as needed. In this recipe,
+    we will discuss how to encode and decode content using Burp Suite Decoder.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s encode and decode content using Burp Suite Decoder:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To pass a given value to Burp Suite Decoder, highlight the desired string,
+    right-click on it, and then select Send to Decoder. In the example provided, the
+    value of the `Cookie` parameter is sent to the decoder, as shown in the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00355.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By clicking on the Smart decode button, Burp Suite automatically identifies
+    the encoding as URL encoding and decodes it in the field below where the encoded
+    text was originally entered, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00161.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: If Burp Suite is unable to determine the type of encoding used, manual decoding
+    can be performed for multiple different types of encoding to include URL, HTML,
+    Base64, ASCII hex, and so on. A decoder can also be used to encode strings that
+    are entered using the Encode as... function.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Decoder provides a platform for both encoding and decoding content
+    when interacting with a web application. This tool is extremely useful because
+    various types of encoding are frequently used across the Web for handling and
+    obfuscation reasons. Additionally, the Smart decode tool examines any given input
+    for known patterns or signatures in order to determine the type of encoding that
+    has been applied to the content and then decodes it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Sequencer
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Web application sessions are often maintained by session ID tokens that consist
+    of random or pseudorandom values. Because of this, randomness is absolutely critical
+    to the security of these applications. In this recipe, we will discuss how to
+    collect generated values and test them for randomness using Burp Suite Sequencer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s test randomness on the generated values using the Burp Suite Sequencer:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use Burp Suite Sequencer, a response containing the `Set-Cookie` header
+    value or other pseudorandom number value to be tested needs to be sent to it.
+    This can be sent either from the HTTP history tab under the Proxy tab or from
+    a response intercepted prior to being received by the browser, as shown in the
+    following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00358.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Burp will automatically populate the Cookie drop-down menu with all the cookie
+    values set in the response. Alternatively, you can use the Custom location field
+    and then the Configure button to designate any location in the response for testing,
+    as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00005.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: After defining the value to be tested, click on the Start live capture button.
+    This will start submitting a large number of requests to acquire additional values
+    for the defined parameter. In the example provided, Burp will issue a large number
+    of requests with the `PHPSESSID` value stripped from the request.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'This will cause the server to generate a new session token for each request.
+    By doing this, we can acquire a sample of values that can be subjected to FIPS
+    testing. This will consist of a series of tests that will evaluate the entropy
+    associated with the generated pseudorandom numbers. All of these tests can be
+    represented in a graphical format that is easy to understand, as shown in the
+    following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00360.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: For a highly accurate and thorough FIPS test, a total of 20,000 values are needed,
+    but an analysis can be performed with as few as 100 values. In addition to performing
+    a live capture, the Manual load tab can be used to upload or paste a list of values
+    for testing.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Sequencer performs a number of different mathematical evaluations
+    against a sample of pseudorandom numbers in an attempt to determine the quality
+    of the sources of entropy from when they were generated. Live capture can be used
+    to generate sample values by issuing crafted requests that will result in new
+    values being assigned. This is often done by removing an existing cookie value
+    from a request so that the response provides a new session token in the form of
+    a new `Set-Cookie` response header.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Extender
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite offers a way to extend the capability of its tools through Burp Suite
+    Extender. You can do this by writing your own extensions in Java, Python, and
+    Ruby, or by installing existing extensions already available for use. This section
+    will show you how to install and use the latter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you are interested in building your own extensions, refer to the documentation
+    at [https://portswigger.net/burp/extender/](https://portswigger.net/burp/extender/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will help you to perform web application analysis using
+    the Metasploitable2:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To install a Burp Suite extension, we will first navigate to the Extender tab
+    and click on BApp Store. Here, there are a number of extensions available ready
+    to be installed and used:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00311.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We are going to take a look at the Logger++ extension. If we select it, we
+    can see a description of the additional capabilities it adds to Burp. In this
+    case, the extension can be used to log the requests and responses made by all
+    of Burp Suite''s tools, and it also provides a way to export them. To use this
+    extension, we first click on the Install button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00364.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After installing it, you will notice we have a new tab in our Burp interface
+    called Logger++. If we click on it and go to Options, we can specify whether to
+    only log in-scope items and what tools that we want it to capture. Select In scope
+    items only:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00427.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To demonstrate the Logger++ ability, we will click back over to the Target
+    tab and spider the `dvwa` directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00367.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, if we click back over to the Logger++ tab and click on View Logs, we can
+    see our requests. Additionally, if we want to save these requests as a `.csv`
+    file, we can do so from the Options screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00480.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Extender allows us to add additional functionality and testing to
+    Burp Suite via prebuilt extensions or by building our own utilizing the Burp Extender
+    API.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Clickbandit
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite Clickbandit provides a tool to help identify clickjacking attempts.
+    Clickjacking is where an attacking web page uses transparent layers. When a user
+    clicks somewhere on the page thinking they are interacting with what they see,
+    they may actually be clicking on these transparent layers without realizing it.
+    Burp offers a great tool for helping to find this type of vulnerability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Burp Suite to perform web application analysis against a target, you
+    will need to have a remote system that is running one or more web applications.
+    In the examples provided, an instance of Metasploitable2 is used to perform this
+    task. Metasploitable2 has several preinstalled vulnerable web applications running
+    on the TCP port `80`. For more information on setting up Metasploitable2, refer
+    to the *Installing Metasploitable2* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, your web browser will need to be configured to
+    proxy web traffic through a local instance of Burp Suite.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps will guide you to uncover clickjacking using the Burp Suite
+    Clickbandit:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To uncover clickjacking requests, we will first want to look at Burp Suite
+    Scanner as it identifies pages potentially vulnerable to clickjacking. These pages
+    are identified with an issue type of Frameable response (potential Clickjacking).
+    In this case, the following page may be vulnerable (`http://172.16.69.128/mutillidae/framing.php`):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00371.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After selecting the issue in question, we go up to the Burp menu and select
+    Burp Clickbandit, as depicted in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00546.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Burp will present us with a screen describing what to do and a button, Copy
+    Clickbandit to clipboard. Click on it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00374.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Next, we go to our browser and navigate to the potentially vulnerable page
+    (`http://172.16.69.128/mutillidae/framing.php`):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00083.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'From the browser, we need to open the developer console from the menu and select
+    the web console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00378.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'At the bottom of the page, we then paste in our Clickbandit code we copied
+    before and hit the *Enter* key:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00662.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Clickbandit frames our potentially vulnerable page. After clicking inside the
+    page, we can see that it is in fact performing a clickjacking attack:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00380.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite provides a tool that frames the web page in question and uncovers
+    clickjacking requests.
+  prefs: []
+  type: TYPE_NORMAL

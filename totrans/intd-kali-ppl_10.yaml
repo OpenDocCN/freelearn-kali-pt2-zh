@@ -1,0 +1,1362 @@
+- en: '7'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Intrusion Detection and Prevention Systems
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: One of the most beautiful aspects of Kali Purple is that the collection of utilities
+    that make up the software suite is designed to account for nearly every type of
+    network defense setup you might find. Businesses – and sometimes simply individuals
+    – will all have unique circumstances that determine their needs. The uniqueness
+    of those circumstances will involve funding, the size of the network, the volume
+    of traffic, the availability of human technicians and analysts, and the plans
+    of the individual or organization, among other things.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With that in mind, take note of the fact that many of these tools will overlap
+    in terms of their capabilities. That’s because Kali Purple was not designed for
+    you to install and integrate every single utility they offer with each other.
+    Rather, the tools are provided to give you, the user, the master SOC engineer,
+    as many options as possible to meet your organizational needs. It is unlikely
+    you will need to deploy Arkime outside of Malcolm – especially since Malcolm contains
+    a copy of Arkime itself. Likewise, it is unlikely you will need to deploy both
+    Suricata and Zeek.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you read this chapter, take note of what has interested you about Kali Purple
+    in the first place. Is it a personal need or curiosity? Is it to discover potential
+    needs your organization is seeking? Is it out of pure curiosity that you might
+    imagine how you would set it up if your organization or any organization that
+    you are interested in decides to establish its own SOC? As you consider those
+    things, think about what mixture of these tools might provide the level of security
+    defense that best suits you.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the previous chapter, we talked about two tools that were very similar in
+    function but had an abundance of positives and negatives for different business
+    scenarios. In this chapter, we’ll be doing the same thing. We will talk about
+    the robust Suricata IDS/IPS utility, after which we will talk about the meeker
+    and humbler Zeek IDS-only utility. Why use a tool that offers less? Have you ever
+    heard the phrase *less is more*? Whether that’s the case here depends entirely
+    on the cyber defense administrator’s needs. That’s you! Perhaps the more that
+    other related tools offer isn’t necessary for your situation and would unnecessarily
+    use more computing resources, which you might prefer to better allocate or keep
+    in reserve if you don’t need them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here, we will help you decide which of these tools is better suited for you
+    by comparing and contrasting them and by doing the same with IDS and IPS systems
+    in general. Once you’ve read this chapter, you should have a clearer understanding
+    of how these tools, along with the tools that were mentioned in previous chapters,
+    are best suited for your situation, if at all. You’re beginning to write the cyber
+    defense recipe that is meant for your kitchen.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: IDS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: IPS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Suricata IDS/IPS solution
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Zeek IDS solution
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The requirements are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Minimum requirements**: A computing device with either the *amd64 (x86_64/64-bit)*
+    or *i386 (x86/32-bit)* architecture. It should contain at least *8 GB* of RAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Recommended requirements**: Based on feedback from cybersecurity field practitioners,
+    aim for the *amd64 (x86_64/64-bit)* architecture with *16 GB* of RAM – more is
+    better – and up to *64 GB* of additional disk space.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: IDS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: An IDS is a network security tool that is designed to monitor network or other
+    technological system activities for potential malicious activities and/or policy
+    violations. They can identify unauthorized access, misuse of equipment or software,
+    as well as potential security threats from anywhere within a network environment.
+    The primary function of an IDS is to observe and report security incidents such
+    as unauthorized access and policy violations, as mentioned previously. An active
+    IDS also is expected to find and assist analysts with defense against malware
+    or any other objects, real or virtual, along with their activities. In summary,
+    they are meant to address anything that might pose a threat to the proper and
+    desired function of the network system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The key functions and abilities of an IDS are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Traffic monitoring
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Anomaly detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Signature-based detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Real-time alerts
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Log and event analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network and host-based detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Provide analysts with information for their response and mitigation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Regulatory compliance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Integration with security infrastructure
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Traffic monitoring
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In [*Chapter 6*](B21223_06.xhtml#_idTextAnchor098), we talked about packet and
+    protocol analysis frequently. That’s because Malcolm carries the tools we’ll be
+    discussing in this chapter, both of which have IDS capabilities and, similar to
+    Suricata, can also be configured to serve as an IPS. We’ll talk about how it’s
+    not realistically possible to serve both simultaneously later, even though detecting
+    them is required before preventative action can be taken.
+  prefs: []
+  type: TYPE_NORMAL
+- en: IDS solutions utilize packet analysis just like the traffic analysis tools mentioned
+    in [*Chapter 6*](B21223_06.xhtml#_idTextAnchor098). An IDS also works with the
+    attributes mentioned in the following few sections, along with statistical and
+    protocol analysis and event correlation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Anomaly detection
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: As you may recall, **anomaly detection** is when a piece of technology reads
+    what’s happening at the moment and records and/or otherwise measures it. Then,
+    it categorizes it as the baseline and therefore the normal behavior. After, it
+    measures future behaviors against this baseline; when behavior deviates from this
+    norm, it considers that behavior to be anomalous.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A clearer picture of this might be when a detection system measures the volume
+    of traffic that occurs over a certain period within an organization’s network.
+    The IDS might realize that after the traditional close of business each day, the
+    traffic significantly declines but doesn’t go away completely – because there’s
+    always someone staying late to catch up, right? Then perhaps around midnight,
+    the traffic declines to almost nothing but there may still be some bytes being
+    transferred here and there – because there’s always an overachiever working the
+    night shift, right? Finally, the IDS perhaps recognizes a marked decline in activity
+    on weekends and holidays. All of this makes sense and seems like normal business
+    behavior. The IDS would record this pattern of traffic activity and measure future
+    volumes of network traffic against this standard. So, when a massive amount of
+    traffic suddenly starts flowing at 2:00 A.M. on a holiday, especially if the traffic
+    is leaving the company – signifying potential data exfiltration – the IDS knows
+    this isn’t normal. It doesn’t match the baseline activity and it alerts based
+    on this abnormal behavior because it’s a deviation from the measured baseline.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Signature-based detection
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Signature-based detection is something we’ve briefly covered but let’s take
+    a deeper look at it here. Any product or software out in the wild has unique characteristics,
+    much the same way we humans each have unique fingerprints or zebras have unique
+    stripes. For us to know these **cyber fingerprints**, the correct software needs
+    to exist. In the case of malicious software or malware, someone needs to closely
+    examine, capture, and examine it in a sandbox environment and/or reverse engineer
+    the product, depending on the depth of study.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Sometimes, a cyber fingerprint can be identified without touching the malware
+    itself but simply recognizing the unique behaviors it displays. Whenever an application
+    behaves uniquely, we generally refer to that unique behavior as its signature.
+    Signature-based detection is exactly as it sounds: our IDS product examines behavior
+    and compares it with the known behaviors of bad actors. When a behavior matches,
+    it triggers an alert. It’s important to consider that the behavior itself does
+    not necessarily need to be bad; just unique.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you think about it, we’ve already sort of learned about the components of
+    a malware signature. One of the most popular attributes of any software signature
+    is its hash value. A **hash value** is a software’s fingerprint, which is a major
+    component of the overall signature. Refer back to [*Chapter 3*](B21223_03.xhtml#_idTextAnchor052)
+    if you’d like to learn more about hash values. So, a security system might look
+    at the actions of the software, most notably if it’s trying to access and change
+    the Windows registry. Some benign software might find a need to do this. That’s
+    why it’s only one component of the entire signature. Another factor might be if
+    the software is communicating with a known malicious or questionable external
+    IP address. Other examples of independent attributes that might be considered
+    in determining an application’s signature are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: File extensions
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Frequency of connections
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Irregular port access
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Encryption algorithm used
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Type of payload content
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Payload size – determining if the packet is larger or smaller than what is typical
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: As a security analyst, a rather simple but potentially devastating behavior
+    you will want to keep your eyes peeled for is when an application is making successful
+    external communications that are occurring on a precise schedule, such as every
+    20 minutes right down to the second. Such precision behavior can indicate beaconing
+    – or communicating to an external **Command and Control** (**C2**) server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A C2 server is a device that is set up with a sort of logic bomb – that is,
+    a set of instructions to execute bad deeds at a precise time and under precise
+    conditions. Often, bad actors will have these servers set up to evaluate the number
+    of *bots* they have communicating backward. This provides a literal real-time
+    metric for the size of their intended botnet. They’re just waiting for the botnet
+    to be big enough, at which point they will eventually insert attack information
+    and commands into the C2 server. It’s sort of like Order 66 in the Star Wars universe.
+    The clone troopers, who eventually came to be known as Stormtroopers, were programmed
+    all along to attack the Jedi once this order was received. Until then, they were
+    completely obedient and benign. They were a sort of Trojan Horse masquerading
+    as a protective Army of the Republic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The bad actors will continue to infect devices with backdoors until thousands
+    or millions of devices are infected, with each infection beaconing out, waiting
+    for instructions to attack a target in unison. That’s how grand-scale **denial
+    of service** (**DoS**) attacks occur. When more than one machine is involved,
+    the attack is considered to have had the workload distributed across many devices.
+    This is what a **distributed denial of service** (**DDoS**) attack is. There is
+    strength in numbers. DDoS attacks are fierce and can take down the toughest of
+    organizational networks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Collectively, all these various attributes will work together to determine a
+    unique signature for applications. Once a unique signature has been determined,
+    the security device will trigger an alert for analysts to review – just in case
+    there is a benign application with a similar or – coincidentally – the same signature.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Real-time alerts
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Once an IDS system identifies a potential intrusion or other anomalous behavior,
+    it will immediately trigger an alert for analysts to review. Most IDS systems
+    will follow a pre-determined and defined process for how to work with real-time
+    alerts. The initial alert will contain information about the event it has detected,
+    such as the type of intrusion or threat, the targeted or victim system or network,
+    and the severity of the event. The IDS will categorize the alert based on predefined
+    rules and security levels, which helps it determine the severity of the alert.
+    That, in turn, will help the security analyst understand the underlying nature
+    of the alert so that they can determine the most appropriate level and type of
+    response.
+  prefs: []
+  type: TYPE_NORMAL
+- en: After the initial alert classification, the IDS system will then notify the
+    designated security personnel and/or response teams in real time. That information
+    is something the administrators of the IDS system will have predetermined and
+    configured within the security solution itself. Most IDS systems are designed
+    to integrate with a variety of notification methods, such as SMS text notifications,
+    emails, or passing the notification on to other security platforms to distribute
+    the suspected threat notification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Some IDS solutions will correlate multiple alerts to determine if they might
+    be part of a coordinated attack or some style of large-scale security incident.
+    This helps to identify broad patterns and narrow down activities that otherwise
+    might have seemed unrelated. Some IDS solutions can enrich the data in-house,
+    while others might prefer to pass it along to Logstash or other data-enriching
+    and indexing SIEM solutions.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Log and event analysis
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Independent of the real-time alerting process, a good IDS will also simultaneously
+    conduct log and event analysis. Doing so can help with finding threats that might
+    have previously gone unnoticed, occurred before the IDS was tuned to look for
+    them, and help refine details of current alerting, as well as assist with **after-action
+    reviews** (**AARs**), identifying root causes, or simply improving processes along
+    the incident response pathway. It will grab log and event data from network devices,
+    including servers, firewalls, endpoint systems, and security appliances of all
+    types, seeking out syslog messages, system logs, network traffic logs, and virtually
+    any security event log generated by any node on the network. It may try to normalize
+    the logs by converting them into a universal format. If it doesn’t, it may be
+    because the device has integrated the IDS with another SIEM product such as the
+    ELK stack to carry that burden. A good IDS will take log data and perform the
+    functions we’ve discussed thus far, such as correlating with other log data, checking
+    signatures, and looking for anomalous behavior.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Network and host-based detection
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: A good IDS will focus on both networks as well as host-based detections. So,
+    what does that mean? Well, in simple terms, we’ve already covered detections in
+    these areas. So, it involves classifying which type of detection is expected to
+    be found in which location. A **network intrusion detection system** (**NIDS**)
+    is essentially an IDS that has been configured to monitor network traffic. Network
+    detections are uncovered through packet analysis, signature-based detections of
+    network data, deviations of behaviors from baselines (anomalous behavior), real-time
+    network monitoring, and protocol analysis. In contrast, a **host intrusion detection
+    system** (**HIDS**) is an IDS that has been configured on an individual host that
+    includes workstations, servers, or other endpoints to monitor traffic on that
+    specific host. Host-based detections are when the IDS is sifting through system
+    logs, checking file integrities, monitoring registry changes and access, application
+    behaviors, process monitoring, and general endpoint security monitoring, such
+    as antivirus and firewall events.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Response and mitigation
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: An IDS handles response and mitigation with a basic structure of identifying,
+    prioritizing, and prompting the analyst to respond, all of which we’ve covered.
+    More advanced IDS solutions will take these three steps to much deeper levels
+    through event correlation, data enrichment, giving administrators the option to
+    achieve containment by isolating infected systems, data/evidence preservation,
+    and then AAR activity such as preparing reports for auditing and compliance. Sometimes,
+    this might be called **post-incident analysis and refinement** (**PIAR**). It’s
+    all the same principle. Through these activities, administrators can develop tabletop
+    exercises and refine the detection algorithms, as well as update the incident
+    response playbooks for the analysts to follow.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Regulatory compliance
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: IDS solutions are quite beneficial in helping organizations attain regulatory
+    compliance, especially as it relates to record keeping. Properly configured IDS
+    solutions will never discard any data they collect automatically. It’s all retained
+    unless human interaction decides otherwise. Most SOCs will determine their budgets
+    and include monetary, time, and space/size constraints based on industry and data
+    retention regulations. They will map their security monitoring and detection capabilities
+    to specific regulatory requirements and industry standards. They will also align
+    their types of alerting, logging, and incident response processes with the mandates
+    outlined in well-known industry regulations such as the **General Data Protection
+    Regulation** (**GDPR**), **Data Protection and Retention** (**DPR**), **Health
+    Insurance Portability and Accountability Act** (**HIPAA**), **Payment Card Industry
+    Data Security Standard** (**PCI DSS**) and others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Integration with security infrastructure
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: IDS can integrate with other parts of your organization’s security infrastructure,
+    and it would be foolish not to do so. Both utilities that will be discussed later
+    in this chapter can be integrated with the ELK stack, for example. This helps
+    provide an additional layer of automation, as well as human, security to the traffic
+    and other metadata that your IDS solutions are intercepting and parsing. Most
+    modern security solutions involve an IPS that’s integrated with a SIEM or SOAR
+    solution. Doing so allows for the data that’s been collected to be further enriched
+    and presented in creative ways – in visual ways such as charts and graphs, for
+    example. This can help analysts define potential threats beyond the scope of what
+    is immediately available, such as trends over time. For example, seeing a perfectly
+    spaced spike in traffic on a graph might help an analyst discover beaconing when
+    they might have missed it by simply looking through textual log information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: IDS solutions are just as plush with features as IPS solutions. You can’t proactively
+    prevent an activity if you can’t detect the activity you wish to prevent, right?
+    That’s why you’ve learned about the core of what every section in this chapter
+    is about. Now, let’s move on to prevention systems to see what subtle differences
+    there may be so that we can enhance our security solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: IPS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: An IPS, though similar to an IDS in terms of capabilities, is a distinctly different
+    security solution. While the core from a behavioral and software engineering perspective
+    is approximately the same as an IDS, its primary function is different, as well
+    as its operational modes. An IPS is an advanced security solution that detects
+    potential threats, as an IDS does, but then takes an additional step of proactively
+    blocking or mitigating those threats. It does this by enforcing security policies
+    and access control rules within the host or network environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: While it may seem that this product is just an IDS with an extra step added,
+    it’s far more complex than that. Because an IDS only detects, administrators can
+    *err on the side of caution* and be a little looser with the rules that govern
+    its detections. An IPS, however, does not have that luxury. Since it proactively
+    responds to potential threats, there is no room for error and the rules governing
+    the IPS detections must be tightened up. Otherwise, legitimate activity could
+    end up being blocked.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Think back to [*Chapter 1*](B21223_01.xhtml#_idTextAnchor013) when we discussed
+    the CIA triad. You might recall that we stated the *A* from the triad represented
+    the **availability** of resources. If an organization has a disruption to its
+    resources, it can have very severe consequences for the bottom line and/or reputation
+    of the organization. Some business professionals will go so far as to state that
+    a cyberattack is often less damaging than an accidental disruption of company
+    resources. Now there’s some food for thought. Take a moment and ponder on that.
+    Seriously, take some time and think that through deeply. Understanding this will
+    have a direct and profound impact on your cyber career.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For that reason, the way an IPS detects potential threats is going to be different
+    and far stricter than the way an IDS detects potential threats. The key takeaway
+    here is to recognize that an IDS and IPS are not the same systems with different
+    configurations; rather, they are two completely different systems with similar
+    missions. That said, you will soon discover that Suricata can function as either
+    an IDS or IPS. Keep in mind that’s a unique functionality of the brand. You could
+    argue that an IPS is only possible if it first detects – which would technically
+    be true. However, this is a completely different manner of detection. Suricata
+    will not function as a traditional IDS while also serving as an IPS. It would
+    need to be administered uniquely. The other solution we’ll be discussing in this
+    chapter – Zeek – only serves as an IDS solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'An IPS shares all of the key features of an IDS. Some additional noteworthy
+    features are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Real-time threat prevention
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Automated response
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Policy enforcement
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Inline protection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Application layer protection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Performance optimization
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Real-time threat prevention
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: An IDS approaches real-time threat prevention by applying the predefined rules
+    of which traffic to address, similar to an IDS, but usually in much greater detail.
+    Since an IPS acts without live human approval, its rules tend to be more precise,
+    as are the options of how to respond. It’s easy to sit there and think that it’s
+    the same as an IDS and stops threats automatically but it’s more than that. An
+    IPS will respond automatically, but that does not necessarily mean it will block
+    potential threats. As mentioned previously, we must take care not to adversely
+    affect the organization’s resources. IPS tools can also respond by dropping, modifying,
+    redirecting, or quarantining traffic. This can assist with neutralizing or containing
+    threats without overtly shutting down organizational resources.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Automated response
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The whole purpose of an IDS is to relieve organizations of the cost of human
+    operators. By employing automation, that’s one less salary they need to account
+    for – in theory. Often, organizations will discover that maintaining automation
+    barely covers the cost of having human eyes at work. Another benefit of automated
+    responses, however, is that it removes the prospect of human error in judgment.
+    Computers think what we tell them to think. If we create an automated response
+    to malicious activity and vet it from experienced professionals, then the technology
+    can identify and respond without there ever being a question or debate among humans
+    as to whether the response was correct or not. It’s correct from the perspective
+    of the automation’s creator!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Policy enforcement
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Because an IDS only detects, it really cannot enforce anything. An IPS, however,
+    can have automation and rules mapped to the host organization’s policies so that
+    they include any required regulatory policies, as well as any customer policies
+    defined by the organization. That’s a massive relief for **chief information security
+    officers** (**CISOs**) and other executives everywhere as an accidental policy
+    violation, especially if it also pertains to the law, could be catastrophic. Counting
+    on the black-and-white manner of an IPS’s automated scripting can protect an organization
+    in this manner.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Inline protection
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Inline placement**, also known as **active monitoring**, isn’t something
+    that an IDS needs to consider, but an IPS will gain tremendous value from this.
+    So, what is it? It’s a very critical aspect of a proper IPS deployment. It is
+    when the IPS solution itself is placed in front of the network traffic’s pathway,
+    making it more or less impossible for any traffic of any kind to enter or exit
+    the network without going through the security solution. Think of it as being
+    an employee of the Department of Motor Vehicles standing in the middle of the
+    highway to read license plate numbers (definitely *not* recommended).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Application layer protection
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: While IDS solutions can offer application layer monitoring to some degree, IPS
+    solutions are typically found to be more prepared to examine traffic at this layer
+    since responding to and preventing threats often requires direct access to the
+    application layer anyway. This could include identifying and blocking potentially
+    malicious activities such as SQL injection, cross-site scripting, server-side
+    request forgery, command injections, buffer overflows, and data exfiltration activity.
+    These sorts of activities all take advantage of security vulnerabilities within
+    applications and for the IPS to respond, it must place itself on location to identify
+    and act.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performance optimization
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Technically, an IDS also offers a level of performance optimization. However,
+    we are placing it in this section because IPS solutions simply offer higher quality
+    and more robust capabilities in this regard. IPS solutions enhance performance
+    by inspecting traffic with increased efficiency, even over IDS solutions. What
+    does that mean? Well, it’s just a way of saying it can do its job without allowing
+    traffic inspection to slow down your network as much as other solutions. They
+    are generally programmed to perform functions while using minimal RAM and CPU
+    resources. Of course, a good IPS solution will not sacrifice the quality of its
+    work in favor of such efficiency. IPS solutions are usually designed to take advantage
+    of devices with multiple CPU cores, allowing different aspects of its functionality
+    to be processed through different cores simultaneously – a process known as multi-threading.
+    When accessing the disk, IPS solutions will take advantage of asynchronous traffic
+    transport methods. Because IPS solutions are generally more likely to be found
+    operating in the middle of the highway, as we discussed earlier, developers tend
+    to focus more heavily on improving the efficiency of their operations while its
+    sister IDS solution is often left behind. Now, this isn’t always the case. It’s
+    just a natural trend that has occurred in security solutions, so be mindful of
+    it when you’re deciding which solution you want to use. Ideally, we recommend
+    not resigning yourself to either solution based on what you’re reading right now
+    but instead test out the different solutions yourself and see what works best
+    for you.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With that, you’ve learned how IPS solutions can offer a simple step up from
+    IDS solutions but can still be vastly more complex in terms of the mentality and
+    configuration that’s needed to deploy them. You’ve discovered that it requires
+    a much more precise manner of thinking and that you absolutely, positively, *must*
+    consider the *A* from the CIA triad – protecting the availability of an organization’s
+    resources is of paramount importance.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suricata
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Suricata is an extremely popular open source network security solution that
+    can be set up to operate as an IDS, IPS, and **network security monitoring** (**NSM**)
+    engine. It is designed to be incredibly fast, efficient, and highly accurate in
+    detecting intrusions and malicious activities on computer networks. Suricata can
+    perform real-time traffic analysis, allowing it to detect and respond to security
+    threats as they occur. Suricata can be used to protect networks from a very wide
+    range of threats, including malware, exploits, D/DoS attacks, and much more.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Suricata offers features that pretty much cover every IDS and IPS topic we
+    just discussed. We’ll give you a nudge in terms of getting it set up. If you decide
+    to choose it as your network traffic defense solution, you will want to keep the
+    following areas where Suricata excels in mind:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Signature-based detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Protocol analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: File extraction
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SSL/TLS inspection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Support for a wide range of network protocols
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Multi-threaded and multi-core processing for high performance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Real-time traffic analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network intrusion detection
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network intrusion prevention
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network security monitoring
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Take some time and map these different concepts to your individual and/or organizational
+    needs. Then, if you’d like to use Suricata, follow these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start your Kali Purple VM.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Log in to your Purple instance.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open a terminal window.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo** **apt update**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo** **apt upgrade**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Type **sudo apt install suricata**. Ensure you pay attention while Suricata
+    is being installed as you may come across dependency errors, as highlighted in
+    *Figure 7**.1*. All you have to do is read through the error; it will tell you
+    how to fix it. In this case, the error states that the **libnetfilter-queue1**
+    package is missing. So, how might we fix this? That’s right! We can simply type
+    **sudo apt install libnetfilter-queue1** to install the package. Too easy:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 7.1 – Suricata install dependency error](image/B21223_07_1.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.1 – Suricata install dependency error
+  prefs: []
+  type: TYPE_NORMAL
+- en: Type **sudo systemctl** **enable suricata**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo systemctl** **start suricata**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo systemctl** **status suricata**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Press *Ctrl* + *Z* to break out when needed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **sudo** **systemctl daemon-reload**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Reboot your Kali Purple instance to ensure that **daemon-reload** is recognized.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The full scale of Suricata’s configuration options is enormous, So we’ll only
+    give you the basics you need to get it up, running, and tested. For more advanced
+    options, there is a link in the *Further reading* section you can use if you decide
+    to deploy Suricata as your IDS/IPS solution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In a production environment, the most common manner of adding Suricata to your
+    cyber defense package is to place it on a server at the network perimeter of your
+    organization. However, this depends on how you intend to use the product. If,
+    for example, you only wish to use it to secure and monitor VPN traffic, then it
+    should be placed within the VPN structure for best security. In some scenarios,
+    it can be used as a HIDS, in which case you would place it directly on the host
+    you wish to protect in that situation. Finally, if your technology is cloud-centric,
+    you would place Suricata as close to your cloud perimeter as is logical for your
+    situation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Suricata can be deployed as either an IDS – called a **passive deployment**
+    – or an IPS – also known as an **inline deployment** or **active deployment**.
+    Once you’ve determined the correct place for Suricata on your network, you’ll
+    want to configure it. In our case, we’re setting it up within our Kali Purple
+    environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To configure Suricata, you will want to grab some data from the device you’re
+    installing it on:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open a terminal window.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **ifconfig** and record the **eth0** interface IP.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Alternatively, type **ip a s** to get the full range of your network. Record
+    the range.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you want to be in the directory where the file you’re editing is located,
+    then type **cd /etc/suricata** followed by **sudo nano suricata.yaml**. Note that
+    this YAML file extension is **.yaml** instead of **.yml**, which is what we’re
+    used to.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If you like to edit remotely, type **sudo** **nano /etc/suricata/suricata.yaml**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 7.2 – Suricata file path and YAML file access](image/B21223_07_2.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.2 – Suricata file path and YAML file access
+  prefs: []
+  type: TYPE_NORMAL
+- en: Either way works. The Suricata configuration file should now be open. You’ll
+    want to use the arrow keys to scroll down until you find the **vars:** field.
+    Directly after this field is **address-groups:**, followed by a bunch of **HOME_NET:**
+    fields, as displayed in *Figure 7**.3*. Change the values of those fields so that
+    they contain the IP addresses you just recorded. In general, the more specific
+    the address, the more efficient your solution. However, for training purposes,
+    there’s no harm in using the network range and/or uncommenting the row with **“any”**
+    as the value. You can add a row with that value if it doesn’t already exist.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Look for the **vars:**, **address-groups:**, and **HOME_NET:** fields:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 7.3 – Suricata configuration file](image/B21223_07_3.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.3 – Suricata configuration file
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, you will want to ensure that your primary interface is listed as a value
+    for Suricata to perform certain functions. This value should be **eth0** if you
+    have followed the running example with the VirtualBox VM. You can skip ahead in
+    long files like this when using nano by pressing *Ctrl* + *W* and entering the
+    value you want to search the file for. Try that now by pressing *Ctrl* + *W* and
+    entering **af-packet** as the search value. When you press *Enter*, it should
+    take you further down the file to the **af-packet** field. Make sure the value
+    for that field is either **eth0** or the primary network interface you recorded
+    earlier:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 7.4 – Suricata af-packet configuration](image/B21223_07_4.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.4 – Suricata af-packet configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Press *Ctrl* + *W* and enter **pcap** as your search term. Make sure that the
+    value is also set to your primary interface value:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 7.5 – Suricata pcap configuration](image/B21223_07_5.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.5 – Suricata pcap configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Press *Ctrl* + *W* and enter **community-id** as the search term. Set that
+    value to **true**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 7.6 – Suricata community-id configuration](image/B21223_07_6.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.6 – Suricata community-id configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you’ve finished editing the configuration file, you can press *Ctrl* +
+    *X* to save the file and then press *Y* to confirm this when you’re prompted.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we get to review some fun options for our Suricata setup. First, let’s
+    make sure our Suricata rule sets are up to date. Type **sudo suricata-update**
+    and wait until the timestamp has a value that says **Done**. Then, to get a list
+    of rule options, type **sudo suricata-update list-sources**; the screen should
+    print a list of potential rules you can enable, along with the vendor of the original
+    rule creator, a summary of the rule, any license type that might apply to the
+    rule, and any other special parameters or subscription information about the rule,
+    as shown in *Figure 7**.7*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.7 – Suricata’s in-house list of optional rulesets](image/B21223_07_7.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.7 – Suricata’s in-house list of optional rulesets
+  prefs: []
+  type: TYPE_NORMAL
+- en: To enable any of the rulesets that are returned when you type the preceding
+    command, type **sudo suricata-update enable-source <source-name>**, where **source
+    name** is the value listed behind the **Name:** row, as shown in *Figure 7**.7*.
+    Once you’ve done this, you will need to update Suricata so that it recognizes
+    your rule change by typing **sudo suricata-update** one more time. You should
+    see the update reflected in the screen output.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s quickly test our configuration before we engage in some of the most fun
+    activities you’ve read and participated in thus far. To test the Suricata configuration,
+    type **sudo suricata -T -c /etc/suricata/suricata.yaml -v**; it should return
+    results similar to what’s shown in *Figure 7**.8*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.8 – Suricata configuration test results](image/B21223_07_8.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.8 – Suricata configuration test results
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If all is fine and dandy in the land of Oz and your configuration was successfully
+    tested, proceed to the next step. If not, go back and troubleshoot and make sure
+    you get your installation ready so that it passes the preceding test before you
+    try to move on. Otherwise, it’s time to break out our inner demons and simulate
+    an attack against our IDS/IPS solution! At the command line, type **curl http://testmynids.org/uid/index.xhtml**
+    from the terminal command prompt – not your browser – to send an attack against
+    yourself. When you type this command, you should get feedback at your prompt that
+    looks similar to **uid=0(root) gid=0(root) groups=0(root)**. That’s not very helpful,
+    is it? That’s because the place we should look when we want to see what’s happened,
+    if anything, is in the logs. Take a moment and think that through. What is a SIEM?
+    What does a SIEM do? For that matter, what do most security solutions do? They
+    evaluate log data, right? To check the logs in this scenario, type **sudo cat
+    /var/log/suricata/fast.log** and look closely at the results! The screen will
+    display the contents of that log file. If you look at the last line of data in
+    *Figure 7**.9*, you will see that Suricata – operating as an IDS in this instance
+    – successfully detected the attack we just simulated against ourselves! If you
+    received this same result, congratulations! You’ve successfully set up and configured
+    a proper cyber defense with Suricata:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.9 – Suricata logs detecting a simulated attack](image/B21223_07_9.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.9 – Suricata logs detecting a simulated attack
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you didn’t get the same result, we highly encourage you to retrace your steps
+    and start over, and this time perhaps open a text document or grab a pencil and
+    paper and turtle-walk the process as you record each action you take immediately
+    *after* you take it. With each step double and triple-check your spelling, spacing,
+    and location within the filesystem. Has the complete file path been set up with
+    permissions? Review the preceding chapters and sections for information about
+    CHMOD and CHOWN or, even better, toss a search into your favorite search engine
+    or AI chatbot. AI chatbots are invaluable when it comes to researching errors.
+    Check out Google Gemini or Microsoft Copilot if you need a starter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you can see, Suricata is a very powerful IDS/IPS. It has a loyal following
+    in the open source software community and has developed a reputation for high
+    quality. However, it isn’t the only security solution available. In the next section,
+    we’re going to take a look at Zeek, which only serves as an IDS at the time of
+    writing but has a very strong support system from highly educated professionals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Zeek
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Zeek, formerly known as Bro, is an open source network security monitoring tool
+    that provides a powerful platform for network traffic analysis. In [*Chapter 6*](B21223_06.xhtml#_idTextAnchor098),
+    we explained that it is included in the Malcolm suite of tools. Zeek passively
+    monitors network packets. Then, it generates high-level logs that will contain
+    the details of network activities. Zeek functions only as an IDS solution but
+    don’t count it out. Not everyone finds IPS solutions to be beneficial to their
+    business needs, so in that regard, Zeek might be the better solution for you or
+    your organization. It is also designed to be highly flexible and customizable.
+    Zeek allows users to create custom scripts and plugins to extend its functionality.
+    It can also analyze network protocols, detect and log security incidents, and
+    provide just as valuable insights into network behavior as Suricata. Keep in mind
+    that all of this customization and extensibility comes at the price of more complicated
+    setup routines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Like Suricata and Arkime, Zeek is part of Malcolm’s package. If you have your
+    Docker Compose image up and running from the previous chapter, then all you have
+    to do is log in to your Malcolm dashboard (review [*Chapter 6*](B21223_06.xhtml#_idTextAnchor098)
+    if you need a refresher on how to do that) and poke around it. Pay particular
+    attention to the options related to Zeek in the left column, as highlighted in
+    *Figure 7**.10*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.10 – The Malcolm dashboard highlighting Zeek functions](image/B21223_07_10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.10 – The Malcolm dashboard highlighting Zeek functions
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you’d like to operate outside of Malcolm, that’s no problem! We’re going
+    to go on an adventure with this one. Grabbing a copy of and setting up Zeek is
+    considerably different than anything we’ve covered so far. That’s because it has
+    several dependencies that you will need to grab and set up first. Then, instead
+    of installing an executable version of this product, you will need to grab the
+    code and compile it yourself! We’ll give you a summary of what that means if you’re
+    not familiar with compiling applications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you do not have experience in computer programming and software development,
+    know that there are different languages developers can use to write the code that
+    creates the products they are making. There are thousands of different types of
+    programming languages. They exist only to assist the coders (programmers) with
+    different levels of efficiency and creation logic. In reality, they all end up
+    the same way on the backend – the end that is read by the computer. What all of
+    these different languages have in common is that they must all be translated from
+    whichever language the developer is using into a universal type of language the
+    computer itself can read and understand. This is known as **machine language**.
+    Machine language comes in the form of binary code. It is the literal 1s and 0s
+    that you see referenced in pop culture when invoking technology topics.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The process of changing this code from the language that’s used by the developer
+    into machine language is known as compiling. This is a very simplistic view of
+    the concept. The full process of compiling also involves automated error checking
+    and linking the developer-created code to pre-written universal code – known as
+    libraries among other tasks. That will happen when we compile our Zeek distribution.
+    If you watch closely as Kali Purple compiles Zeek, you will see it happening in
+    the output of your terminal window.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One of the most popular modern-day methods of grabbing source code that is meant
+    to be freely shared is to visit GitHub. That’s where we will get our copy of Zeek.
+    Before doing that, however, we need to grab some additional applications because
+    of the aforementioned dependencies. Also, you might wish to ensure that the file
+    path is available and empty first. While it’s not likely to be an issue for us,
+    it’s still a great habit to get into as a best practice. A Zeek file structure
+    might have been put in place from some of our previous activities and may or may
+    not adversely affect the work we are about to do.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You’ll need to exert some elbow grease here. Alternatively, you could gamble
+    on installing the dependencies first and wait to see if Kali Purple will notify
+    you of any conflicts when you clone the GitHub directory. Otherwise, if you’re
+    the play-it-safe type, you can start by using Linux file and directory removal
+    commands. Also, now would be a good time to mention that Zeek has provided a very
+    helpful and comprehensive online manual. You can find that, along with a link
+    for a Linux cheat sheet courtesy of the University of Minnesota for dealing with
+    files and directories, in the *Further reading* section of this chapter.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When you’re ready to get the ball rolling, go ahead and fire up your Kali Purple
+    VM instance, log in, and open a terminal window. The following command will grab
+    the required dependencies and make them for you. Here, the **make** command is
+    telling Kali Purple to compile those products for you. Don’t try to install and
+    run Zeek without doing this first.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Type the following command to grab the required dependencies:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Take note that the final application in the preceding list of dependencies has
+    two vertical characters in the name. The first one – between the z and i – is
+    a lowercase L and the second one – between the b and g – is the number one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: It sounds rather dumb to put the words *optional* and *dependency* in the same
+    sentence but, alas, some dependencies are considered optional. In the words of
+    C3PO, “*How perverse?!*” As a good practice, let’s grab them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Type the following command to grab the optional dependencies:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Now, it’s time to invoke the dragon herself. We’re going to clone the entire
+    directory from GitHub’s Zeek repository. We’re only going to clone it once. As
+    exciting as creating our own army of Stormtroopers would be just to hear C3PO
+    say the words “*How perverse?!*,” we truly only need one copy.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Type the following command to clone the Zeek source from GitHub:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Once you’ve done this, you’ll want to find the default installation directory.
+    In our example, it was installed at **/home/karllane/zeek**. However, you might
+    find it at **/usr/local/zeek**, **/opt/zeek**, or **/opt/bro**. To shorten this
+    process, you can simply search for it by typing **locate <filename>**. In this
+    case, using Zeek as the locate term will return an enormous list of possible locations.
+    You can narrow it down by trying to find the **Makefile** or **configure** file,
+    which will return all files of that name on your system. When you find a directory
+    that contains **INSTALL**, **Makefile**, **configure**, **cmake**, **build**,
+    and something like **zeek-path-dev.in** plus a bunch of read files, stop. Those
+    are the droids you are looking for! Navigate to that directory. As a good practice,
+    you will want to be present in the directory where you’re compiling from. To make
+    your life a whole lot easier, you will want to launch the autoconfiguration script.
+    To do that, type **./configure**; this should start the script. If you run into
+    problems with your configuration script, you will want to return to the beginning
+    of this process and double-check each of the dependencies to see if they’ve been
+    installed. If not, install them and type **sudo make** after each installation
+    to make sure they’re installed individually.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Otherwise, once the configuration is complete, you will want to compile the
+    Zeek distribution. Type **sudo make** and be prepared to wait a while. Fortunately,
+    your terminal window should show a bunch of percentages at the beginning of each
+    line to give you an idea of how far along the compilation process is. **make**
+    only compiles the code into a final executable. Once that is done, you still need
+    to install the executable into the directory structure for your local Kali Purple
+    system to be able to access it. To do that, type **sudo make install** – again,
+    you may need to wait a while for the process to complete.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When you’re finished, your terminal window should look similar to what’s shown
+    in *Figure 7**.11*, whereby it tells you that you’re done but also provides you
+    with the different file paths of certain directories. It will also tell you where
+    the build files have been located:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 7.11 – Zeek’s successful compilation](image/B21223_07_11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 7.11 – Zeek’s successful compilation
+  prefs: []
+  type: TYPE_NORMAL
+- en: It would be impractical for us to cover all of the different customizations
+    and optional settings for your Zeek installation. If you choose to use this product
+    over Suricata, we highly recommend that you invest some time reading the documentation
+    Zeek has provided for you to address your unique needs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To help you find your way, let’s discuss some of the ways Zeek differs from
+    Suricata:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Protocol analysis**: Zeek prefers to focus on script-driven protocol analysis,
+    allowing skilled users to create custom scripts for protocol parsing, event generation,
+    and metadata extraction, whereas Suricata relies on digital signatures to focus
+    on rule-based detections in protocol analysis.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Custom scripting**: Remember what we talked about a short while ago regarding
+    the thousands of programming languages in the world? Well, scripting is a type
+    of programming and Zeek has its own unique scripting language! It is based on
+    its predecessor, Bro’s scripting language, and allows direct access to network
+    protocols and traffic. This offers the maximum flexibility and customization but
+    comes with the risk of damage if the person doing the scripting is not a competent
+    developer. Suricata supports the more well-known Lua scripting language and relies
+    on the external libraries that we talked about when we discussed compiling. This
+    limits the originality somewhat but offers more secure *harder-to-break-it* security.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Network forensics**: Zeek’s approach is to let you deep dive into comprehensive
+    metadata extraction and log analysis so that you can reconstruct and generate
+    a full activity life cycle to review. On the other hand, Suricata’s focus is on
+    grabbing the information that is readily available for immediate, real-time response.
+    Each style has its benefits. Ask yourself if you’d rather shut down the potential
+    bad actors right away with the prospect that you may accidentally punish the good
+    folks or if you want to focus on in-depth accuracy so that you can prepare and
+    defend against bad activity in the future but at the risk of any super skilled
+    bad actor getting in with enough time to do damage before you can stop them? Six
+    in one hand. Half a dozen in the other. It’s all based on the eye of the beholder
+    in this case and the beholder is you.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scalability**: This is a more technical compare and contrast than the others
+    but it’s still worth mentioning. Zeek is a cluster-based IDS solution. It is similar
+    to Elasticsearch in that regard. By processing data in clusters, Zeek can expand
+    horizontally as needed and therefore distribute computing power. Remember, clusters
+    can be located on completely different physical devices and if set up properly
+    can allow for hardware upgrades and/or maintenance to occur without the need to
+    turn the software solution off at all! Suricata prefers to address scalability
+    by employing a multi-threaded architecture whereby it distributes the workload
+    across multiple CPU cores with support for multiple NICs as well.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Community and tool ecosystem**: Zeek has many close ties to the academic
+    and research community. You can safely assume that there will nearly always be
+    some sort of collaboration with contributions from educational institutions. The
+    Zeek community tries to focus on extensibility and offers well-known formats such
+    as JSON. Suricata, however, is more driven by the open source community. This
+    is a community that may include academia but is more of an over-arching term for
+    anyone who wants to contribute to the project without the expectation of receiving
+    payment (unless formally employed by the organization).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In this section, you learned that while Zeek is not as robust as Suricata, it
+    has a strong web of support from academia and therefore is likely to always be
+    up to date with the newest ideas and methods. You also gained a bit of a bonus
+    software engineer flavor in this section due to how Zeek is made available to
+    the public.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we examined the difference between IDS and IPS security solutions,
+    as well as how each one should be set up to be used. We started by focusing on
+    how to detect potentially malicious activity since prevention cannot occur without
+    detection. We looked at the different angles that these security solutions approach
+    network data and learned how they look at more than just the payload of the traffic
+    that’s running in the network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We also looked at how examining large quantities of data that might appear benign
+    could provide review patterns or other visuals that might help analysts notice
+    activity that might otherwise have slipped past the human eye. In that regard,
+    we discussed automation, along with the benefits and risks of such automation,
+    such as reducing labor costs, removing ambiguity from analysis, and ensuring policy
+    – possibly legal – adherence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further refining our newfound knowledge, we introduced Suricata, a hugely popular
+    IDS/IPS solution that is strongly supported by the open source community, and
+    discovered how it is designed to reduce human error by maintaining compatibility
+    with pre-existing rule-based technology concepts. We learned that while some customization
+    is available in Suricata, much more can be found in Zeek.
+  prefs: []
+  type: TYPE_NORMAL
+- en: While studying Zeek, we learned a bonus lesson about how software is built,
+    and we were also provided with a basic understanding of programming languages
+    and what it means to compile a program. While not directly related to IDS/IPS
+    technology, we gained an understanding of how having such knowledge may have long-term
+    benefits within our cyber defense careers. In that regard, we learned that Zeek
+    allows those who wish to delve into coding or programming to create in-depth scripting
+    routines related to the traffic being inspected and how such deep and highly customizable
+    analysis can serve as the beginning of digital forensics. We will talk more about
+    that concept in [*Chapter 9*](B21223_09.xhtml#_idTextAnchor147).
+  prefs: []
+  type: TYPE_NORMAL
+- en: With that, we’ve put a lot of effort into setting up, acquiring, and storing
+    data, along with examining it for anomalous and/or potentially malicious activity.
+    So, at this point, we should consider what we would do when we’ve confirmed bad
+    things are happening! That’s precisely what we’re going to cover in [*Chapter
+    8*](B21223_08.xhtml#_idTextAnchor134) as we embark on incident response with Cortex
+    and TheHive integration.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Questions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Answer the following questions to test your knowledge of this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: What’s the difference between an IDS and IPS?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An IDS proactively blocks malicious activity whereas an IPS only detects it
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An IPS proactively blocks malicious activity whereas an IDS only detects it
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Nothing – they are the same
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Thousands of dollars in potential overhead costs
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which potential threat is network activity occurring at precise intervals a
+    potential symptom of?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An extremely rigid employer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A potential configuration error on a device
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Automation and scripting
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A bot that is beaconing to an external C2 server
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The process of converting a programmer’s code into machine language is known
+    at what?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compiling
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Compelling
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Controlling
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Careful translation
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is a HIDS?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An IDS that is funded by a single entity
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An IDS that can also be configured to serve as an IPS
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: An IDS that is placed on a single endpoint to protect only that device
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: All of the above
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Is programming/coding or software development necessary for a career in cybersecurity?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Without a doubt. You can’t function effectively without this knowledge.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: No, but it can have great value in advancing your skillset and helping you create
+    automation.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: No, not at all. Never. Absolutely not. That’s too much. Stop picking on me!
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Further reading
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To learn more about the topics that were covered in this chapter, take a look
+    at the following resources:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Suricata configuration** **guide**: [https://docs.suricata.io/en/latest/configuration/suricata-yaml.xhtml](https://docs.suricata.io/en/latest/configuration/suricata-yaml.xhtml)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Zeek comprehensive online** **manual**: [https://docs.zeek.org/en/v5.1.0/](https://docs.zeek.org/en/v5.1.0/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**University of Minnesota Linux** **cheatsheet**: [https://latisresearch.umn.edu/linux-cheatsheet](https://latisresearch.umn.edu/linux-cheatsheet)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

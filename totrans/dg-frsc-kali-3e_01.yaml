@@ -1,0 +1,37 @@
+- en: 'Part 1: Blue and Purple Teaming Fundamentals'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As we begin our journey into **Digital Forensics and Incident Response** (**DFIR**),
+    it is important that we have a clear understanding of Blue and Purple Teaming,
+    which is compared to Red Teaming, and also have a firm grasp on fundamental knowledge
+    required to create a Blue and Purple Teaming lab environment. This section explains
+    the terminology and looks at the skillsets required in becoming a Blue and Purple
+    Teamer, and also demonstrates various methods of setting up a DFIR lab environment.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This part has the following chapters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 1*](B19441_01.xhtml#_idTextAnchor015), *Red, Blue, and Purple Teaming
+    Fundamentals*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 2*](B19441_02.xhtml#_idTextAnchor024), *Introduction to Digital Forensics*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 3*](B19441_03.xhtml#_idTextAnchor058), *Installing Kali Linux*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 4*](B19441_04.xhtml#_idTextAnchor072), *Additional Kali Installations
+    and Post-Installation Tasks*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 5*](B19441_05.xhtml#_idTextAnchor085), *Installing Wine in Kali Linux*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

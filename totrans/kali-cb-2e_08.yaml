@@ -1,0 +1,1062 @@
+- en: Wireless Specific Recipes
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scanning for wireless networks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Bypassing MAC-based authentication
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Breaking WEP encryption
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Obtaining WPA/WPA2 keys
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exploiting guest access
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Rogue AP deployment
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using wireless networks to scan and attack internal networks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Although all the previous chapters have created a basis for pen testing that
+    works across the spectrum, wireless has its own set of tools that span the pen
+    testing methodology.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scanning for **Service Set Identifiers** (**SSIDs**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scanning for hidden SSIDs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Determining security of target SSID
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for MAC address authentication
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking **Wired Equivalent Privacy** (**WEP**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cracking **Wi-Fi Protected Access** (**WPA**/**WPA2**)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Exploiting guest access
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Rogue **Access Point** (**AP**) deployment
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Man-in-the-Middle** (**MITM**) wireless attacks'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using wireless networks to scan internal networks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using wireless as a vector for network related attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scanning for wireless networks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Wireless networking is very popular due to its ease of use, reduction of cabling,
+    and ease of deployment. Fortunately for us, the very same features that make it
+    easy to use on a day-to-day setting also make it easy to monitor and to perform
+    attacks from areas that do not rely on physical access to the network. Often the
+    wireless signal bleeds into public areas, such as parking lots, adjacent office
+    spaces, shopping malls, and more. Unless the wireless network administrator has
+    taken great pains to limit the wireless coverage to only their facility, it is
+    very likely that you can begin your wireless reconnaissance using a smart phone
+    to identify a good location to set up your Kali Linux platform within the range.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this section, we will cover how to use `airodump-ng` to identify the available
+    wireless SSIDs including those that are not set to advertise their presence. With
+    the information gathered, we will then take a look at the different types of security
+    that are in place, and the best ways to attempt to penetrate those layers of protection.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Before you can use Kali Linux for wireless scanning, it is important to know
+    which wireless chipset your wireless adapter is using, as only certain wireless
+    chipsets are capable of being put into promiscuous or monitor mode. For a list
+    of supported chipsets, check [https://www.aircrack-ng.org/doku.php?id=compatibility_drivers](https://www.aircrack-ng.org/doku.php?id=compatibility_drivers).
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the event that your wireless adapter is not supported, there are many USB
+    wireless adapters that can be added to an existing testing platform for minimal
+    cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you have determined that you have a supported wireless chipset, you will
+    need to put `wlan0` into the monitor mode by doing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Once you have confirmed that all interfering processes have been stopped, you
+    will use the following steps to start gathering information on available wireless
+    networks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Create a directory for your results named `wireless`, and change your directory
+    to it. This is where the output of the tools will be saved.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From the command line, type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Allow this to run for a few minutes. During this time, you will begin to see
+    information on wireless networks that can be seen by your device, such as the
+    following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/8329ec84-f490-43c3-9006-8d694e0d8603.png)Wireless networks seen
+    from airodump-ng'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Using the preceding information, you can learn the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We can see that there are a total of 5 ESSIDs, one of which is not broadcasting
+    its ESSID.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`Kali_One` is showing `OPN` as its encryption type, meaning anyone can associate
+    with this ESSID. This is commonly how guest wireless networks are seen.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`Kali_Two` and `Kali_Three` are showing `WEP` as their encryption type—but
+    we don''t know yet whether it is 40 bit or 104 bit WEP keys.'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`Kali_Four` is showing as `WPA2`, and PSK for authentication (pre-shared key).'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If we look at the BSSID (MAC address) of the ESSIDs, we see that they are sequential.
+    This is common for environments with centrally managed wireless networks and tells
+    us that successfully connecting to one or more of these ESSIDs increases our likelihood
+    of gaining access to the corporate network beyond.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From the same directory, list the files generated as a result of the scan. Having
+    this information available to you without the need to continuously scan is important
+    to minimize the amount of time you need to be actively scanning.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Bypassing MAC-based authentication
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In the absence of a truly centralized authentication, or in the event that devices
+    need to connect to a wireless network but are unable to provide authentication
+    credentials, very frequently an open wireless network will be in place that will
+    be configured to only allow specific MAC addresses to connect. This is frequently
+    the case with older devices that were manufactured before it was common to secure
+    wireless networks.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Given how simple MAC authentication is to bypass, it is still used in a surprising
+    number of locations due to the ease of implementation as well as the perception
+    that this it is effective.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In order to complete this recipe, you will need to follow the commands laid
+    out in the previous section *Scanning for wireless networks*, placing your wireless
+    network adapter into the monitor mode.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can confirm this by running the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Confirm that interface `wlan0mon` is set to `type monitor`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/8472ce92-85d2-4bcd-8fe7-167513c33c52.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The steps necessary for this recipe are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Similar to the previous section, we will be using `airodump-ng` to gather more
+    specific information. Since we know that the ESSID `Kali_One` is unauthenticated,
+    we will look for that specific BSSID and for the devices connecting to it. Open
+    a terminal session and start `airodump-ng` as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'As this runs, you will start to see the devices that are currently connecting
+    to this BSSID, giving you a list of devices that are on the authorized MAC list:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5eeaf70c-5cc8-4b70-b576-122ff7ab8f54.png)Devices connecting to a
+    particular ESSID'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we have a MAC address that is on the authorized MAC list, we can use
+    the `macchanger` utility to change the MAC address of our Kali Linux machine to
+    match the preceding device.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Open a new root terminal and disable `wlan0`, change the MAC address, and bring
+    the interface backup:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/cd4042dc-8e19-47c7-b89b-b3ba2cecf2e6.png)Using macchanger to use
+    different MAC address'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, attempts to connect to this SSID should be successful. Using `NetworkManager`,
+    attempt to connect to the `Kali_One` SSID, and confirm from the CLI:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/1c9842d5-dd7d-4219-9212-f6cd0a388e1a.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Breaking WEP encryption
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Wireless administrators recognized that having open networks or networks that
+    rely on MAC address authentication, presented an unacceptable level of risk and
+    therefore over time, there have been many attempts to harden the authentication
+    to wireless networks, each with their own limitations:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Wired Equivalent Privacy** (**WEP**) uses the RC4 encryption algorithm and
+    combines the user-defined key with a 24 bit **initialization vector** (**IV**).
+    Unfortunately, IV''s are reused thus allowing for us to use tools like `aircrack-ng`
+    to get the original key, giving us access to the target network as an authenticated
+    endpoint.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Wi-Fi Protected Access** (**WPA**) comes in several different flavors and
+    is much more secure than WEP. Because it can be used in a manner similar to WEP
+    where a pre-shared key is used (WPA-PSK), tools such as fluxion can recover the
+    pre-shared key, and where WPA2 is used with a central authentication source (commonly
+    RADIUS), brute forcing becomes necessary with tools such as `hashcat` (covered
+    in section *Obtaining WPA/WPA2 Keys*).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: It is important to note that in order for us to be able to recover pre-shared
+    keys, it is often necessary to monitor a large amount of network traffic in a
+    PCAP file for analysis, so when placing your systems, keep in mind they will need
+    to remain undisturbed for potentially quite some time.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In order to complete this recipe, you will need to follow the commands laid
+    out in the first recipe of this chapter, placing your wireless network adapter
+    into the monitor mode.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can confirm this by running the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Confirm that the interface `wlan0mon` is set to `type monitor`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/0ff6f98e-3d9a-40d8-a2d4-578761faa932.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'This is the process we will follow to find and expose WEP keys:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on the scanning done in the section *Scanning for wireless networks*,
+    we know that the SSID `Kali_Two` and `Kali_Three` are both running WEP on `channel
+    11`, and therefore will be our targets for this section.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Using `airodump-ng`, we will start a dump of data from `Kali_Two` using the
+    following command line:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: The argument for `-c` is the channel (`channel 11`) and BSSID is the MAC address
+    of the AP (`68:86:A7:1D:6D:84`). We will write the `pcap` file to the same directory
+    as in the previous sections and listen on `wlan0mon`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once initiated, it can take a very long time to gather enough data packets
+    to expose the IV – often between 250,000 and 1,500,000 depending on the key length.
+    You can see the progression in the progress indicator for `airodump-ng`, where
+    we are watching the `#Data` column:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ecc66a60-1963-4f8b-90f0-9da806c90674.png)Progress of airodump-ngIf
+    you would like to run `aircrack-ng` using test files with known good dumps, there
+    are many available, along with more in-depth details on advanced `aircrack-ng`
+    at this address: [https://www.aircrack-ng.org/doku.php?id=aircrack-ng](https://www.aircrack-ng.org/doku.php?id=aircrack-ng).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you have gathered enough IV''s to begin the cracking process, you will
+    kick off the process with the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The process of cracking the WEP key will begin and be depending on the amount
+    of data gathered, the key length used; this could take some time. Once complete,
+    however, you will see a display like the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: In our case, the WEP key is `kali2`, and can now be used to connect directly
+    to the wireless network as an authenticated end point.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Obtaining WPA/WPA2 keys
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'This section will walk you through the process of gathering WPA keys using
+    two different methods:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Social engineering through SSID manipulation and social engineering with fluxion
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Brute force cracking of gathered data using `hashcat`
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In order to complete this recipe, you will need to follow the commands laid
+    out in the section *Scanning for wireless networks* and place your wireless network
+    adapter into the monitor mode.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can confirm this by running the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Confirm that the interface `wlan0mon` is set to `type monitor`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/ca9216d3-f8b3-42fe-afab-55a21927f963.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'There are two ways in order to get the password for WPA protected networks;
+    we will use fluxion in the following way:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the command line, ensure that your wireless adapter is in the monitor
+    mode:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From the command line, we will need to download fluxion from Git:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Navigate to the directory that is created (`fluxion/`) and run the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: In the event that there are missing system dependencies, you can run the `./install/installer.sh`
+    file to ensure that all necessary packages are installed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once all dependencies are met, you will be presented with the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2c4ff630-1b68-4bf0-829d-fb21f51eaca2.png)Fluxion start'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next screen, select your wireless adapter.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, you will be asked to decide which channel to monitor. Since our target
+    SSID is on `channel 11`, we will enter `11` and hit *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The next screen will cause an additional terminal window to pop up with the
+    heading `Scanning Targets` followed by the channel we selected where fluxion will
+    be scanning for networks. Allow this to run for a few minutes until you find the
+    SSID you are looking to crack, then click on the X in the upper right to close
+    the scan and return to the fluxion application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You will now be presented with a list of SSIDs seen in the scanning session,
+    and we will want to look for those with clients attached. Enter the number of
+    the SSID from the list and press *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'With the SSID selected, you will be given the option of how the SSID will be
+    attacked. In this case, we will select option `[1] - FakeAP - Hostapd (Recommended)`,
+    and press *Enter*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/62aef4ca-7aff-4bf9-b23d-de2b68de5cae.png)Selecting false portal
+    method'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will now be prompted to enter the location of the previously recorded handshake
+    sessions between clients and the AP. If you do not have any saved from previous
+    attempts, simply press *Enter* and we will select the `aircrack-ng` option on
+    the next screen.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When asked how to capture the handshake, enter `1` for the option to deauth
+    all and press *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'This will now launch two additional windows – in the lower right, you will
+    see fluxion attempting to send deauth packets, and in the upper right, you will
+    see the progress. When you see packets between the ESSID and a client, you can
+    go back to the fluxion window, and select option `[1] Check handshake` and press
+    *Enter*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6a20432e-96e5-47ee-a0f7-08f87ea8f4bb.png)Capturing client handshakes
+    with fluxion'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you have not successfully captured a handshake, you will have the option
+    to restart the process to capture one.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Fluxion will now look to see if it has an SSL certificate configured to use
+    the login portal. In most cases, it is acceptable to select `Create a SSL certificate`
+    and proceed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/59371f71-99a9-44c5-86af-deffa526b85e.png)Certificate selection for
+    captive portal'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The next screen will select `1` for `Web Interface` and proceed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The next screen will present you with many different options in terms of portals
+    that can be presented to the user. We will enter `1` for `English` and continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Fluxion can be very heavily customized to present a portal that is nearly identical
+    to the one that can be used with guest portals, and so on. This would require
+    customizing the portals to fit your needs. To learn more about how this can be
+    done, visit the fluxion Git repository at [https://github.com/wi-fi-analyzer/fluxion](https://github.com/wi-fi-analyzer/fluxion).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Fluxion will now launch a series of applications in separate terminals, showing
+    the statistics of the processes it needs for the attack. It will launch a DHCP
+    server, a rogue AP (named the same as the target SSID, but not WPA protected),
+    a DNS server to force all DNS requests to go to the same IP address of the portal,
+    as well as information on the SSID being generated. MDK3 is running to deauth
+    any devices trying to connect to the original SSID, to force them to connect to
+    ours:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2ec0d3c9-da98-4e11-9c60-735762191d87.png)Progress of fluxion attack'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once a device has been forced to connect to our SSID, they will be redirected
+    to the captive portal spawned by fluxion. Depending on the option you selected
+    earlier or based on a customized portal generated by you, they will be redirected
+    to a portal similar to the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/13192534-c021-4e12-b6af-f6b899c3e039.png)Captive portal'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When the user sees this screen, they will likely enter the WPA password for
+    the original SSID (in our case, `Kali_Five`) and click Submit. When they do so,
+    fluxion will verify the password as being the pre-shared key, and if it is, the
+    fluxion processes will stop, and you will see a screen similar to the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2bb3b8b0-9638-47f3-95a4-23014e5bcd95.png)WPA password identified'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you don''t feel that it is likely that a network user can be tricked into
+    providing their credentials, you can also utilize `hashcat` to perform dictionary
+    or brute force attacks against the WPA key. To do this, we will use the same data
+    gathering process we used in the *Cracking WEP Encryption* section to gather data
+    from the `Kali_Five` SSID:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To speed the data collection process and to capture more handshakes, we will
+    send 100 deauth attempts to the client connecting to our BSSID using the following
+    command line:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: Allow the `airodump-ng` terminal to continue in its own terminal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Kali Linux includes a large wordlist that can be used with `hashcat`. Hashcat
+    is a versatile password brute-forcing tool that supports a tremendous number of
+    formats. In a separate terminal, navigate to the following directory, and unzip
+    the `rockyou.txt.gz` wordlist:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: At the time of this writing, `rockyou.txt` contained 14,344,392 different words.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Stop the `airodump-ng` process, and locate the `cap` file generated by `airodump`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/30af6f54-0eba-4d58-9745-c5065cfa5a8a.png)Files generated during
+    airodump-ng proces'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The file format that is generated by `airodump-ng` is incorrect for use with
+    `hashcat`, and Kali does not currently have the utility needed to convert `cap`
+    files to `hccapx` format that is needed for use with `hashcat`. This leaves you
+    with two different options:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You can download and compile the `cap2hccapx` utility from the GitHub repository
+    at [https://github.com/hashcat/hashcat-utils](https://github.com/hashcat/hashcat-utils)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You can upload the `cap` file to the online conversion tool located at [https://hashcat.net/cap2hccapx/](https://hashcat.net/cap2hccapx/)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Working on the premise that you have converted your `cap` file to `hccapx`
+    format, using one of the preceding tools we will now run `hashcat` against this
+    file using the `rockyou.txt` wordlist:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This command line does the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`-m 2500`: Tells `hashcat` to use the WPA hashing format'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`-a 0  `: Indicates we are doing a dictionary-based attack'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once `hashcat` has determined the WPA key from the `hccapx` file, it will return
+    the results in the terminal window. As we found in the fluxion section, the WPA
+    password is `wireless`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c3810048-2f95-477e-9abb-af42cc14fe2f.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Exploiting guest access
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'When guest access is offered, often it is on a shared network with the network
+    you are attempting to infiltrate. There are several different types of wireless
+    guest access offered, each has its own vulnerabilities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Pre-shared keys: These are generally WEP or WPA PSK''s that are intended to
+    keep unauthorized users or devices to a minimum. Unfortunately, these keys are
+    generally known by many people and are very rarely changed.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Captive portal: The guests connect to a wireless network and are automatically
+    redirected to a web page that prompts them for credentials. This may or may not
+    be combined with a pre-shared key.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The most common implementations of guest access include elements of recipes
+    that we have done in previous sections but are stung together and very frequently
+    are labeled as guest networks by their SSID.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In order to complete this recipe, you will need to follow the commands laid
+    out in section *Scanning for wireless networks*, placing your wireless network
+    adapter into monitor mode.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You can confirm this by running the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Confirm that the interface `wlan0mon` is set to `type monitor`:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/60818a2c-6fa6-46c6-b289-ea636a81c843.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To take advantage of environments with guest networks, we will us the following
+    process:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'First, we need to see what networks are likely to be guest networks. Start
+    by running `airodump-ng` as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/e533b4b4-ce78-47a2-9325-d22ac5c81a4f.png)Searching for guest networks'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Based on the results of the `airodump-ng` run, we can see that ESSID `Kali_Guest`
+    is visible and is protected with a shared WEP key, and ESSID `Kali_Guest1` is
+    open.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We will start with the open SSID since nearly all guest implementations use
+    a guest portal and authenticated sessions are tracked by the MAC address of the
+    device connecting to the guest network. To start gathering information on the
+    nodes on this network, we start by running `airodump-ng` specifically on the BSSID
+    for `Kali_Guest1`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'As we found in the previous sections, this will show us devices that are connected
+    to this network. In this case, we are likely to see a higher number of devices
+    than normal, as many devices will automatically connect to unauthenticated networks.
+    Use the `macchanger` utility to mimic one of these devices to use their authenticated
+    sessions:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To start cracking the WEP key for the SSID `Kali_Guest`, let''s kick off `airodump-ng`
+    to start gathering packets:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/4462982f-e0e9-435b-a465-4346f444c217.png)Gathering information to
+    crack WEP key on guest network'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we did in the *Cracking WEP Encryption* section, we gather enough data packets
+    to be able to extract the WEP key to get access to the guest network. Refer to
+    section *Cracking WEP Encryption* (if WEP is used) or section *Cracking WPA/WPA2
+    Encryption* (if WPA is used) for more detailed steps on gaining access to these
+    types of networks.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Rogue AP deployment
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will use `wifiphisher` to create a rogue, and capture username
+    and passwords from a captive portal that simulates corporate portals.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since we have covered creating rogue APs and forcing deauthentications in section
+    *Cracking WEP Encryption* (with `airodump-ng`/`aircrack-ng`) and *Obtaining WPA/WPA2
+    Keys* (with fluxion), this recipe will focus on the creation of access points
+    that encourage open use and have the ability to gather credentials or deliver
+    malicious payloads.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The tool used in this recipe is not included in the base installation of Kali
+    Linux and must be installed from the command line with the following command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To create a rogue access point with `wifiphisher`, the following process will
+    be used:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once installed, we will launch `wifiphisher` with the following command that
+    will disable `jamming` (`-nJ`) and create a SSID named `Free Wifi`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Once executed, you will be asked to make a selection as to the process that
+    will be in place once a victim connects to our SSID:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5869b912-bf35-4269-baee-e564b2f0157d.png) wifiphisher phishing options'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select `Browser Connection Reset` by entering `1` and hitting *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We have now created an open wireless SSID that appears as though it is a service
+    that can be used for many different purposes. In this scenario, when connections
+    are made to this SSID, the user''s browser is automatically redirected to the
+    HTTP server running on our Kali Linux system and the following page is displayed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/21d3a493-9348-4585-ab06-282568fcb7a1.png)Captive portal redirect,
+    using the browser redirect template'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To add an additional layer of realism to any AP you set up, you can define
+    the use of a WPA/WPA2 pre-shared key by adding the following to the command line:
+    `-pK MyKeyHere`. This is particularly useful when combining the oath-login with
+    the PSK of a shared network, like guest networks or corporate networks where the
+    key is static, but well known.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Stop the running `wifiphisher` session by pressing *CTRL-C*, and once it has
+    stopped, run the following from the command line:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: Unlike the previous step, we have defined the phishing template from the command
+    line. Default and customized templates can be called from the command line, allowing
+    for the generation of automated scripts to kick off new campaigns.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When you connect to this SSID, you will be redirected to a splash page that
+    will appear to be asking for you to authenticate to this network using your Facebook
+    credentials:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c4539b8b-4b1c-40dc-984d-3408030b5397.png)Gathering facebook credentials
+    with captive portal'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Again terminating the previous session, we will now demonstrate the next example,
+    by running the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Running this command will give you the ability to show a screen such as this,
+    that prompts the user for the WPA password for the network they believe they are
+    connected to (as opposed to our rogue network):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9caf1cdf-8900-4c1d-844e-064b13e75df8.png)Firmware upgrade captive
+    portal example'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Finally, terminating this session and launching `wifiphisher` with the following
+    command will kick off a new SSID that will not only redirect them to our portal,
+    but also give us the ability to convince the user to download the payload of our
+    choice, under the guise of a plugin update:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE26]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Unlike the other sessions we initiated, the plugin-update template allows us
+    to define a payload to encourage the user to download and install, posing as an
+    update for a browser plugin. After being launched, `wifiphisher` will require
+    the path to the file you wish to define as the payload. Once you have provided
+    that, it will redirect users to a page that looks very much like this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5e6abe6f-159c-451e-97aa-5d20f10bfecd.png)Plugin update phishing
+    portalSince `wifiphisher` uses configuration files for its templates, you can
+    create your own portals as necessary. Review the documentation on the tool''s
+    homepage at [https://wifiphisher.org/](https://wifiphisher.org/).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using wireless networks to scan internal networks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Access to a network is the ultimate goal, and the use of wireless networking
+    means that this access is likely easier to gain than through remote access/VPN
+    or through physical access to a network port. Using the recipes in this section,
+    it is highly likely that once you have gained access to the network, you will
+    have done so with the credentials of an authorized user. The next question is:
+    where can you go from here?'
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will use some of the tools that we have learned in preceding
+    sections to help identify ways for us to extend the access we have gained so far.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This recipe is built upon the assumption that you have already gained access
+    to the target wireless network, and that you have IP connectivity, preferably
+    through DHCP.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Once connected to a wireless network, you can use the following process to
+    identify additional targets and vulnerable systems:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Based on the IP information you have gained so far, look to see if there are
+    any discernible patterns in the network address schemes. An example of this is,
+    you have been issued an IP address in one subnet, but infrastructure services
+    such as DHCP and DNS reside in different subnets. Those subnets likely contain
+    servers containing domain user information such as **Active Directory** (**AD**),
+    **Lightweight Directory Access Protocol** (**LDAP**), centralized data repositories
+    such as database servers, application servers, and so on. To view the information
+    received in DHCP requests do the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE27]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the preceding case, you can see that in the client network we received a
+    DHCP address from the `192.168.56.0/24` network, and DNS and DHCP are located
+    in the same network. In many cases, the user network and server network would
+    be separate from each other, and that would have given us two possibilities:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The user environment is likely less secure, likely a better target to start
+    in to gain credentials, and so on.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The server environment is on a separate network and could have access controls
+    in place such as firewalls, access control networks, and so on. Those controls
+    are likely bound to services used by authenticated users, so credentials are likely
+    a better place to start.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From the command line, run `zenmap`. The `zenmap` is a graphical frontend to
+    `Nmap`, that makes the gathering and visualization of results easier. After launching
+    `zenmap`, enter the following scan options and start the scan. The results should
+    look similar to the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/64eeb41b-d17a-4ef6-a67b-4060eda5e833.png)Network hosts found with
+    zenmap'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once complete, click on Hosts Viewer to get a sorted, more detailed view of
+    the services and applications running on the hosts in this environment. If we
+    select `192.168.56.10` on the left, we can see that is it likely a Windows 2008
+    domain controller:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d89aa48b-2611-4958-939a-05a139c43437.png)Windows domain controller
+    located with zenmap'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'With a good target located, let''s re-open OpenVAS, the vulnerability scanning
+    platform we set up in [Chapter 3,](efecc8fd-4746-4428-9662-854d418bcba2.xhtml) *Vulnerability
+    Analysis. *Start the OpenVAS server service from the command line by entering
+    the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE28]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Open a browser, navigate to the address of your OpenVAS installation, and kick
+    off a new scan task:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/93509dc7-698e-4c2f-912e-d8602b9529b6.png)New OpenVAS task: Quick
+    Scan of 192.168.56.10'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once complete, review the results to determine if additional steps are necessary.
+    For more detailed recipes on using OpenVAS and other vulnerability scanning tools,
+    refer to [Chapter 3](efecc8fd-4746-4428-9662-854d418bcba2.xhtml), *Vulnerability
+    Analysis*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

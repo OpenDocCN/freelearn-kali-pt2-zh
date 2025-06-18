@@ -1,0 +1,834 @@
+- en: '11'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Artifact, Malware, and Ransomware Analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we’ll cover several different tools to uncover various digital
+    artifacts, malware, and ransomware, some of which reside in RAM and the swap file,
+    which, as we learned in the previous chapter, can be quite useful in our DFIR
+    investigations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To start things off, we will look into artifact analysis using tools such as
+    p0f to identify devices and operating systems, use swap_digger for swap file analysis,
+    and then use MimiPenguin for password dumping. Following this, we will dive into
+    malware analysis using pdf-parser and PDFiD for PDF malware analysis, use Hybrid
+    Analysis for malicious file analysis, and then end things off by using Volatility
+    3 for ransomware analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following topics will be covered in this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Identifying devices and operating systems with p0f
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Looking at the swap_digger tool to explore Linux artifacts
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Password dumping with MimiPenguin
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: PDF malware analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Hybrid Analysis for malicious file analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Ransomware analysis using Volatility 3
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Identifying devices and operating systems with p0f
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Let’s get started with **p0f**. p0f is a small tool that can be used to passively
+    scan and detect operating systems within a network. This scanning tool is considered
+    passive because it does not send data to other hosts apart from **Synchronize**
+    (**SYN**) packets. This is very useful when trying to quietly collect information
+    about other hosts on a network in DFIR investigations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s look at how to install and use p0f to detect other host operating systems
+    on the network:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Depending on the version of Kali you are running (2019.3 – 2023.1), you can
+    run the **p0f –h** command to determine whether it is preinstalled. If not, Kali
+    will ask whether you would like to install it. Press *y* to accept and install
+    it, as seen in the following screenshot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.1 – Installing p0f in Kali](image/Figure_11.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.1 – Installing p0f in Kali
+  prefs: []
+  type: TYPE_NORMAL
+- en: Run the **p0f –h** command again after installation. This displays the network
+    interface options, operating mode, output settings, and performance-related options.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.2 – p0f usage options](image/Figure_11.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.2 – p0f usage options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the installation is verified, you may specify an interface if you know
+    which one you would like to use. Check your network interfaces by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding **ifconfig** command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.3 – ipconfig command output](image/Figure_11.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.3 – ipconfig command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: You may also use the **p0f –L** command to list all the interfaces.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The output in *Figure 11**.3* shows that I have two interfaces with **eth0**
+    being my Ethernet/LAN interface with an IP of **172.16.77.159** and a default
+    **127.0.0.1** loopback address. I’ll be using the **eth0** interface with **p0f**
+    by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.4 – p0f eth0 output](image/Figure_11.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.4 – p0f eth0 output
+  prefs: []
+  type: TYPE_NORMAL
+- en: This may take a short while to run, but in the following screenshot, we can
+    see that the output returns client details such as the IP address and operating
+    system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.5 – p0f result output](image/Figure_11.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.5 – p0f result output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s go a bit further by opening a browser to detect what other hosts we may
+    be communicating with.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open the web browser in Kali and you’ll see the Terminal being populated with
+    more IP information. By default, the Firefox web browser’s home page carries us
+    to the Offensive Security site and so p0f shows information about the connections
+    and network hops to the server and information about the server.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Try browsing a site. I’ve opened [www.cfsi.co](http://www.cfsi.co) in the browser.
+    **p0f** updates the information in the terminal in real time and the first entry
+    displayed shows a SYN request from **172.16.77.159** (my Kali machine) to **185.230.60.211**
+    via port **80**. I can also see information about my Kali machine, such as the
+    operating system (**Linux 2.2-3.x**), as fingerprinted by p0f:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.6 – Updated p0f output after browsing](image/Figure_11.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.6 – Updated p0f output after browsing
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s get more information about the IP address **185.230.60.211**. In the
+    terminal window, click on **File** | **New Tab**. In the new tab, type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'In the following **whois** output, we can see that the IP points to **wix.com**,
+    which is the host for the [www.cfsi.co](http://www.cfsi.co) website:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.7 – whois output](image/Figure_11.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.7 – whois output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Scroll through the **p0f** output to see several other pieces of information,
+    including the uptime of the server and other IP addresses and hops along the way:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.8 – Additional p0f output](image/Figure_11.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.8 – Additional p0f output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve learned how to install and use p0f to detect other operating
+    systems that our device is communicating with, let’s move on to another tool called
+    **swap_digger** to explore Linux artifacts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Looking at the swap_digger tool to explore Linux artifacts
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **swap_digger** tool performs an automated analysis of the Linux swap file
+    and can retrieve artifacts such as system passwords, usernames, and form credentials,
+    and even Wi-Fi information such as SSIDs and perhaps even passwords if stored
+    in the swap file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing and using swap_digger
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Follow these steps to install and use **swap_digger** for swap analysis:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Change directories to the desktop in the terminal and clone **swap_digger**
+    to the desktop by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command for installing
+    swap_digger.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.9 – Installing swap_digger](image/Figure_11.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.9 – Installing swap_digger
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Change to the **swap_digger** directory by typing **cd swap_digger** and type
+    the following command to ensure swap_digger will have the required access permissions:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'To view all **swap_digger** usage options, type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.10 – swap_digger usage options](image/Figure_11.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.10 – swap_digger usage options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To try searching for passwords in the swap file, enter the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.11 – Using swap_digger to find passwords](image/Figure_11.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.11 – Using swap_digger to find passwords
+  prefs: []
+  type: TYPE_NORMAL
+- en: Feel free to try the other available options in **swap_digger** to discover
+    other artifacts within the swap file of your Linux system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Next, let’s look at password dumping using the **MimiPenguin** tool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Password dumping with MimiPenguin
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The **MimiPenguin** tool is based on the very popular password-cracking tool
+    called Mimikatz. Much like **swap_digger**, **MimiPenguin** can also retrieve
+    artifacts running in memory by dumping memory processes that may contain unencrypted
+    passwords in plaintext, as shown in the following steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s start by changing to the **Desktop** folder from our current location,
+    and then clone **MimiPenguin** to the desktop by typing the following into a new
+    terminal:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command when installing
+    MimiPenguin.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.12 – Installing MimiPenguin](image/Figure_11.12_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.12 – Installing MimiPenguin
+  prefs: []
+  type: TYPE_NORMAL
+- en: Change to the **mimipenguin** directory by typing **cd mimipenguin** and then
+    show the files within by typing **ls**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The following screenshot shows the output of the preceding **ls** command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.13 – Viewing contents of the mimipenguin folder](image/Figure_11.13_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.13 – Viewing contents of the mimipenguin folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Run MimiPenguin by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'It may take a while for the password to be found. I’ve changed my password
+    to something very simple for the purpose of saving time:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.14 – MimiPenguin output displaying the password](image/Figure_11.14_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.14 – MimiPenguin output displaying the password
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve learned how to dump a password using MimiPenguin, let’s go even
+    deeper and manually analyze PDF documents for embedded malware.
+  prefs: []
+  type: TYPE_NORMAL
+- en: PDF malware analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this section, we’ll have a look at PDF malware forensics and analysis. PDFs
+    are possibly the most common form of document when sharing information as many
+    people would rather open a PDF than an Office document, such as one in **.docx**
+    or **.xls** format, as they are more likely to contain macros and even viruses.
+    While PDFs are more trusted document types, it is still common to come across
+    some that have been infected with malware or contain hidden information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although we won’t be analyzing malicious PDFs as it may result in your system
+    becoming infected or experiencing some adverse effects, I will still introduce
+    you to a tool called **pdf-parser**, which can be used to inspect elements of
+    a PDF document and pinpoint malicious code and other suspect elements.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This may be considered an advanced tool as people with programming experience
+    typically use it to identify shellcode, streams, and filters. However, even beginners
+    will be able to analyze the output and identify embedded executable (**.exe**)
+    files. There are several PDF malware samples roaming the web and on Twitter. However,
+    I urge you to not attempt to download these unless you are a professional and
+    are doing so in an isolated environment on a sandboxed machine that if infected
+    will not cause harm to your data or network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s get started with learning how to analyze PDF documents using pdf-parser:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s first view the usage and available options of pdf-parser by typing the
+    following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.15 – pdf-parser usage options](image/Figure_11.15_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.15 – pdf-parser usage options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, let’s look at the associated statistics of a test file created by Didier
+    Stevens ([https://blog.didierstevens.com/about/](https://blog.didierstevens.com/about/)),
+    which I’ve renamed **testpdf.pdf** and saved to my desktop. We can analyze this
+    file to determine whether it contains any embedded code or hidden malware by typing
+    the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: In the following screenshot, we can see that there is in fact an embedded file,
+    which could also be a JavaScript file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.16 – pdf-parser results](image/Figure_11.16_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.16 – pdf-parser results
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s apply filters using the **-f** option to dig a bit deeper and see whether
+    **pdf-parser** can identify the embedded file using the following options:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: In the following screenshot, we have confirmation that it is an embedded file.
+    This file is a Word document called **eicar-dropper.doc**, which was embedded
+    within the PDF file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.17 – Embedded file discovered by pdf-parser](image/Figure_11.17_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.17 – Embedded file discovered by pdf-parser
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can also confirm the presence of a JavaScript file by using the PDFiD tool,
+    running the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.18 – Discovering embedded files using PDFiD](image/Figure_11.18_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.18 – Discovering embedded files using PDFiD
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we have learned how to manually inspect and analyze a PDF file that
+    may contain malware, let’s look at an online tool for automated malware analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Hybrid Analysis for malicious file analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: You can also use an online tool such as **Hybrid Analysis** ([https://www.hybrid-analysis.com/](https://www.hybrid-analysis.com/))
+    to analyze suspicious files of all types. If you suspect that a link or URL may
+    be suspicious within an email, you can also paste the link into this site for
+    analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As an example, I’ll use the very same **testpdf.pdf** file that I analyzed using
+    **pdf-parse** and **PDFiD** in the previous section. I’ll first visit the [https://www.hybrid-analysis.com](https://www.hybrid-analysis.com)
+    website and drag the suspect file into the upload area and click on **Analyze**,
+    as seen in the following screenshot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.19 – hybrid-analysis.com website](image/Figure_11.19_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.19 – hybrid-analysis.com website
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After submitting the PDF file, the results show the file to be possibly malicious,
+    as seen in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.20 – hybrid-analysis.com file analysis and results](image/Figure_11.20_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.20 – hybrid-analysis.com file analysis and results
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The details on the file’s unusual characteristics and suspicious indicators
+    are also provided, as displayed in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.21 – hybrid-analysis.com results page displaying a malicious indicator](image/Figure_11.21_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.21 – hybrid-analysis.com results page displaying a malicious indicator
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope you had fun learning about PDF and document malware forensics and analysis.
+    For our last tool, we will revisit Volatility 3 to perform ransomware analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ransomware analysis using Volatility 3
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: For our last section, let’s revisit the very powerful RAM analysis tool called
+    Volatility 3, which we covered in [*Chapter 10*](B19441_10.xhtml#_idTextAnchor191),
+    *Memory Forensics and Analysis with Volatility 3*. Feel free to take a moment
+    to review that chapter before moving ahead.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this lab, we’ll be using a memory dump called **wcry.raw**, which contains
+    information about a WannaCry ransomware infection on a Windows system. We will
+    be analyzing it using a variety of Volatility 3 plugins.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s first download and extract our sample memory dump, which we will later
+    move to our Volatility installation folder for analysis:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The WannaCry memory dump file can be downloaded from [https://mega.nz/file/7Z1ySZBT#KX5ZJKYzQgDHSa72lPFwqKL6CsZS7oQGbyyQrMTH9XY](https://mega.nz/file/7Z1ySZBT#KX5ZJKYzQgDHSa72lPFwqKL6CsZS7oQGbyyQrMTH9XY).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I’ve downloaded the WannaCry memory dump file to my **Downloads** folder, which
+    is named **wannacry** **pw- infected.7z**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To extract the file, right-click on the **.7z** file and click on **Extract
+    Here** as you have done with previously downloaded files.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The file is password protected and you will have to type the word **infected**
+    when prompted for the password. Once extracted, you should now have a folder within
+    your **Downloads** folder called **wannacry pw- infected**. Double-click on the
+    folder and you should see the **wcry.raw** memory dump file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Before we begin the analysis of our downloaded **wcry.raw** sample memory dump
+    file, let’s copy the file from its current **wannacry pw- infected** directory
+    and paste it into the **volatility3** folder, which we used in [*Chapter 5*](B19441_05.xhtml#_idTextAnchor085),
+    *Installing Wine in Kali Linux*, for analysis of the **cridex.vmem** memory dump.
+    This again makes access to our memory dump file easier by not having to specify
+    a lengthy path to the file each time we need to use a different plugin.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To ensure all our Volatility 3 files and **wcry.raw** files are in the correct
+    folder, let’s open a new terminal and change directories to our **volatility3**
+    folder, and then issue the **ls** command, as seen in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.22 – Contents of the volatility3 directory](image/Figure_11.22_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.22 – Contents of the volatility3 directory
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now for the exciting part. Let’s do some ransomware DFIR analysis using Volatility
+    3 and see what we can find:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s find out what operating system was running on the system by using the
+    **info** plugin:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.23 – Volatility 3 info plugin output](image/Figure_11.23_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.23 – Volatility 3 info plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: The output for the **info** plugin is lengthy; however, I’ve included a snippet
+    of the output as follows, where we can see that this memory dump was taken from
+    a Windows XP Service Pack 3 machine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.24 – info plugin snippet](image/Figure_11.24_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.24 – info plugin snippet
+  prefs: []
+  type: TYPE_NORMAL
+- en: As done in the previous chapter, let’s again do some process identification
+    and analysis using the **pslist**, **pstree**, and **psscan** plugins individually.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The pslist plugin
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Let’s get the list of all running processes, using the **pslist** plugin:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the following screenshot, we can see the **System**, **smss**, **csrss**,
+    **winlogon.exe**, **services.exe**, **lsass.exe**, **svchost.exe**, and **explorer.exe**
+    services were all started first and then followed by a few others:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.25 – plslist plugin output](image/Figure_11.25_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.25 – plslist plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Immediately, just using the **pslist** plugin, we can see a suspicious entry
+    (fourth from last) called **@WanaDecryptor@** with a PID of **740** and a PPID
+    of **1940**. To make things easy, I’ve included a snippet of the entry as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.26 – Snippet of the pslist plugin showing the @WanaDecryptor@ process](image/Figure_11.26_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.26 – Snippet of the pslist plugin showing the @WanaDecryptor@ process
+  prefs: []
+  type: TYPE_NORMAL
+- en: Looking at the **pslist** output, we can see that the **winlogon.exe** process
+    in *Figure 11**.25* has a PID of **620** and a PPID of **348**. The PPIDs of the
+    **services.exe** and **lsass.exe** processes (directly after the **winlogon.exe**
+    process) are both **620**, indicating that **winlogon.exe** is in fact the PPID
+    for both **services.exe** and **lsass.exe**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can also tell that **explorer.exe** with a PID of **1636** is the PPID of
+    **tasksche.exe** and **ctfmon.exe**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Further down, we see that **tasksche.exe** (Task Scheduler) with a PID of **1940**
+    is the PPID of **@WanaDecryptor@**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s view this a bit differently using the **pstree** plugin:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the following screenshot, it is easier to see that **explorer.exe** is the
+    parent process of **ctfmon**, **tasksche**, and **@WanaDecryptor@**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.27 – pstree plugin output](image/Figure_11.27_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.27 – pstree plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s now use the **psscan** plugin to display processes that can be used by
+    malware, such as rootkits, and are well known for doing just that to evade discovery
+    by users and antivirus programs:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.28 – psscan plugin output](image/Figure_11.28_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.28 – psscan plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: The output of both the **pslist** and **psscan** commands should be compared
+    to note similarities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s run the **cmdline** plugin to map and view the paths to processes and
+    executables:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'In the following screenshot, we can now be certain that there is an **@WanaDecryptor@**
+    executable on the system that was executed at some point by a user:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.29 – cmdline plugin output](image/Figure_11.29_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.29 – cmdline plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s attempt to find more information on **@WanaDecryptor@.exe** to map the
+    infection to a user using the **envars** plugin:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the preceding command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.30 – envars plugin output](image/Figure_11.30_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.30 – envars plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The **envars** plugin is lengthy, so I’ve scrolled down and taken a snippet
+    of the **@WanaDecryptor@** processes in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.31 – Additional envars plugin output](image/Figure_11.31_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.31 – Additional envars plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the **envars** output in *Figure 11**.31*, we’ve found some very useful information.
+    We can now tell that the user Donny’s files have been infected with **WannaCry**/
+    **@WanaDecryptor@**, and we know all paths of infection.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s now use the **getsids** plugins to view the privileges of the processes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the **getsids** plugin command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.32 – getsids plugin output](image/Figure_11.32_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.32 – getsids plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: If we scroll down a bit, we can see that the **@WanaDecryptor@** process with
+    a PID of **740** has local and administrator user privileges.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.33 – getsids plugin output continued](image/Figure_11.33_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.33 – getsids plugin output continued
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s verify this by running the **privileges** plugin to see what access **@****WanaDecryptor@**
+    has:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: As seen previously, the **@WanaDecryptor@** process can perform several tasks
+    and may also have read/write access.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.34 – Additional privileges plugin output](image/Figure_11.34_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.34 – Additional privileges plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can confirm this and also find specific instances of the **@WanaDecryptor@**
+    malware using the **malfind** plugin, which will also pinpoint other processes,
+    such as **winlogon**, that may be compromised:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The following screenshot shows the output of the preceding command:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.35 – malfind plugin output](image/Figure_11.35_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.35 – malfind plugin output
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope you enjoyed analyzing and finding the WannaCry ransomware using Volatility.
+    It involves a lot of work, but with a little practice, you can easily master this
+    very important DFIR tool.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This was certainly an intense chapter! We learned how to detect running processes
+    and connections using **p0f** and also did some investigation using **swap_digger**,
+    which revealed useful artifacts such as passwords within the paging file of a
+    live Linux system. We then also used **MimiPenguin** to try dumping the current
+    password of the system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We then moved on to the very exciting topic of malware analysis where we discovered
+    embedded malicious files within a PDF using **pdf-parser** and **PDFiD**, and
+    I also introduced you to an online tool at [hybrid-analysis.com](http://hybrid-analysis.com),
+    which I frequently use to analyze suspicious files and URLs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finally, we carried out an exciting lab, performing ransomware analysis using
+    the incredibly useful Volatility 3 tool, where we found processes belonging to
+    the WannaCry ransomware and, upon further analysis, were able to pinpoint the
+    infected user, paths, documents, and other processes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next up, we will delve a bit more into automated file analysis using the Autopsy
+    browser within Kali Linux. See you in the next chapter!
+  prefs: []
+  type: TYPE_NORMAL

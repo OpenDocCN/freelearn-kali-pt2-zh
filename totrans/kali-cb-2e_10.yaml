@@ -1,0 +1,672 @@
+- en: Maintaining Access
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pivoting and expanding access to the network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using persistence to maintain system access
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using cymothoa to create a Linux backdoor
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Protocol spoofing using pingtunnel
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Protocol spoofing using httptunnel
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hiding communications with cryptcat
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we will explore using multiple methods to maintain access.
+    For best results, multiple hosts and multiple methodologies should be employed.
+    We will also discuss how we cover our tracks to make it easier to hide our activity.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Pivoting and expanding access to the network
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will leverage a host as a beachhead to exploit other hosts.
+  prefs: []
+  type: TYPE_NORMAL
+- en: While this recipe may not sound appropriate for the topic of the chapter, one
+    of the best ways of maintaining access to a target network is to have more hosts
+    exploited that you can use for your communication channel. You can also have them
+    use various forms of methods to reach out, so that if one is discovered you have
+    access to others through different means.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali Linux VM is powered up and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Windows XP VM is powered up on the host-only network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To complete this recipe, we will do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validate the IP addresses of your machines before we get started.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We are going to start with an already exploited machine in Armitage.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will be continuing from [Chapter 7](66009beb-61cd-46c3-9233-ec9b8edbf79c.xhtml),
+    *Privilege Escalation* in recipe *Remotely bypassing Windows UAC*, if you need
+    assistance getting started.![](assets/c6445dd5-2981-4ab7-8c8f-6054d85a84f2.png)Armitage
+    - main screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the exploited windows XP machine and select Meterpreter | Pivoting
+    | Setup:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/efdea3d2-cf9b-448b-8a45-dbf05c076707.png)Armitage - main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select Add Pivot at the dialog box:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/00a0d275-004e-4b2d-a1f2-cc3156a46f19.png)Armitage - Add Pivot dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Upon success you will get a Route added dialog box. Click on OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a0158727-8dcd-4324-95f6-0091fc52d1b0.png)Armitage - Pivot success
+    dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now from the `msf >` prompt, enter `route` and press *Enter*and you will see
+    our newly added route to the hosts on that subnet:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4cd08aaa-f057-4f3b-943a-cc8abb5c2c0c.png)Armitage - main screenIf
+    this was a host compromised across a firewall or any other security boundary,
+    I would now have the ability to launch attacks on other hosts on that subnet from
+    Metasploit.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using persistence to maintain system access
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will use persistence to maintain access to the system across
+    reboots.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali Linux VM is powered up and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Windows XP VM is powered up on the host-only network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this recipe we will use persistence methods to maintain access to a system:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validate the IP addresses of your machines before we get started.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We are going to start with an already exploited machine in Armitage, ensure
+    it has elevated privileges.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will be continuing with the preceding recipe if you need assistance with
+    getting started. If you have not elevated your privileges please do so before
+    continuing. If you are on XP, try using `ms15_051_client_copy_image`.![](assets/31e20f88-6af6-4312-8a18-5cf8c325cfe9.png)Armitage
+    - main screen
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the exploited host and select Meterpreter | Access | Persist:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/963eb909-3b49-49ff-bd72-161920afd25d.png)Armitage - main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Scroll through the options on the persistence screen ensuring your LHOST and
+    other options are correct and taking note of the LPORT, click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/e04f84a3-950e-462b-a969-5c4db1747a03.png)Armitage - persistence
+    dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will now see the exploit launch against the host. Once complete, you will
+    see the following :'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a7bfc23f-6e48-4b96-af4c-425b9cda4f59.png)Armitage - main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Kill all your meterpreter jobs for the host by right-clicking on the host and
+    selecting Meterpreter | Kill. Do this for each session. Also, close out all windows
+    on the bottom except the console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/479f1ecf-bdeb-42c7-8fd6-a0fd3aa0546c.png)Armitage - main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s take a look at our jobs, from the console `msf >` prompt, type `jobs` and
+    press *Enter*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b907f3aa-3c04-47f9-a546-ffb9da0843f5.png)Armitage - main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Kill off any jobs that are not related to the LPORT that was noted during *step
+    4*. In my case I will be killing job 1 by typing `kill 1`and then pressing *Enter*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/056a9f4d-f3fe-4cb2-aedc-ea6d87c68d31.png)Armitage - Console window'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, shutdown the windows XP VM and wait a minute or two, then start it back
+    up and log in as the same user.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You will now see that the Windows VM has reached back out and connected and
+    we have a new meterpreter session available to work with:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ab876f3d-8d8a-4809-bc3b-9948ea82704f.png)Armitage - main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using cymothoa to create a Linux backdoor
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will use cymothoa to maintain Linux system access through
+    the use of a backdoor.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali Linux VM is powered up and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Metasploitable VM is powered up on the host-only network
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To create a backdoor in Linux, we will use the following recipe:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validate the IP addresses of your machines before we get started.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In this case, we will be starting from a machine that has already been exploited;
+    we will shortcut this exercise by accessing the Metasploitable machine through
+    SSH.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you want, you can continue this recipe from [Chapter 7](66009beb-61cd-46c3-9233-ec9b8edbf79c.xhtml),
+    *Privilege Escalation.*
+  prefs: []
+  type: TYPE_NORMAL
+- en: On your Kali machine start Armitage.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From Armitage, let's add the Metasploitable host if it is not already present.
+    For this recipe, my Metasploitable machine is `192.168.56.101`. If required, scan,
+    nmap, and run the attack vectors against the Metasploitable device.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: See [Chapter 4](9f678d15-2115-4e29-a75d-03dba65d3398.xhtml), *Finding Exploits
+    in the Target* for information on using Armitage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the Metasploitable machine and select Login | ssh:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/f93435b4-1d13-4fe3-9ab3-c1b673391e0b.png)Armitage main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter the credentials for the Metasploitable machine `msfadmin`/`msfadmin`
+    and select Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/63e13fb2-f911-42a3-8cd4-35d063767e69.png)Armitage credentials dialog
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The machine icon will change to show it's compromised due to the fact that we
+    have access. From here, right-click on the Metasploitable machine and select shell |
+    interact.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open Firefox and download the following file to the Kali machine: [https://sourceforge.net/projects/cymothoa/files/cymothoa-1-beta/cymothoa-1-beta.tar.gz/download](https://sourceforge.net/projects/cymothoa/files/cymothoa-1-beta/cymothoa-1-beta.tar.gz/download).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d3e6528f-b546-45d8-a778-3e7358fc974f.png)Firefox save dialog box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Armitage shell screen, right-click and select Upload:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/7063371a-034b-44ca-b90d-7daab3249c9d.png)Armitage shell screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Browse and select the `cymothoa-1-beta.tar.gz` and upload it to the Metasploitable
+    VM:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/08f45c78-2395-4b69-94d3-51bf49a563be.png)Armitage file upload dialog
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the shell screen in Armitage enter the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/e3673eae-2c99-4f42-b822-3ce42c476e5e.png)Armitage shell screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s find a process to attach to by entering the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/1dca6590-6115-45fe-9ee0-ce27e0248ffc.png)Armitage full screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now let''s attempt to attach to one of the processes we see here – make note
+    of a PID value – a shell process is a good trial. In this case, we will use the
+    PID `4720` and we will open a hole on port `4000` for a reverse connection:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/1307c16c-8531-4399-974a-a4947eedbbd8.png)Armitage full screenYou
+    may need to try several different Process IDs until you get a successful infection.
+    If the worst comes to the worst, login to the Metasploitable machine VM as the
+    `msfadmin` user and then attach to that bash process.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now from your Kali Linux machine open a terminal session and type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/b7a51566-0fdc-4d8a-a0ce-81fd8d1baf65.png)Kali terminal windowPlease
+    note that you will not be receiving any terminal prompts from the sessions but
+    you will be entering commands as the user that owned the **process ID** (**PID**).
+    So if possible, work on the PID with high-level privileges such as those used
+    by the root.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Protocol spoofing using pingtunnel
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe we will use pingtunnel to tunnel communications between two hosts. As
+    most of the time, ICMP communications are allowed through firewalls and rarely
+    inspected for malicious traffic by most companies, it makes it easy to set up
+    a connection that will largely go unnoticed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali Linux VM is powered up and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Ubuntu VM is powered up and you are logged in and on the NAT network and
+    have internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To tunnel communications through pingtunnel, we will follow this process:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validate the IP addresses of your Kali VM and your Ubuntu VM. For my purposes,
+    my Kali box in `10.0.2.5` and Ubuntu is `10.0.2.6`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'First, we will start in the Ubuntu VM where we are currently logged in and
+    we want to start by elevating ourselves to root by entering the following commands
+    in the console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We will now install `ptunnel` on the Ubuntu VM with the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/bf7a7c9a-fe17-4a51-8c89-6cd6148918d3.png)Ubuntu console'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s now start the tunnel on the Ubuntu machine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Switch to the Kali machine, open a terminal window and enter the following
+    command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: Open a second terminal window on the Kali VM and enter the following, changing
+    user `leonard` for a valid user on the Ubuntu machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the previous labs, we had setup a user of `Leonard` with a password of penny
+    on the Ubuntu box.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/0ec51000-9090-49a7-936a-d269001800d8.png)Kali terminal window -
+    SSH connection'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s look at the proxy window where we started `ptunnel` on the Kali VM and
+    you will see it registering the incoming connection:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/184479cb-2521-4b5f-a5fd-63696c151422.png)Kali terminal window -
+    ptunnel'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Lastly, let''s take a look at the Ubuntu machine VM where the `ptunnel` proxy
+    is:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/45ab9cc7-f49a-4468-a289-ee96f55c7aab.png)Ubuntu terminal - ptunnelBetween
+    the two machines all you will see if you are doing a tcpdump of the traffic will
+    be ICMP traffic. This is a great way to make it through firewalls and IPS/IDS
+    devices without being detected. You can also use this on a compromised host to
+    use that as a jump host to target other computers.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Protocol spoofing using httptunnel
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe we will use `httptunnel` to tunnel communications between two
+    hosts. As most of the time, HTTP communications are allowed through firewalls
+    with little inspection by most companies, it makes it easy to set up a connection
+    that will largely go unnoticed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali Linux VM is powered up and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Ubuntu VM is powered up and you are logged in and on the NAT network and
+    have internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To create a tunnel with `httptunnel`, we will run through the following process:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validate the IP addresses of your Kali VM and your Ubuntu VM. For my purposes,
+    my Kali box in `10.0.2.5` and Ubuntu is `10.0.2.6`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'First we will start in the Ubuntu VM where we are currently logged in and we
+    want to start by elevating ourselves to the root by entering the following commands
+    in the console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We will now install `httptunnel` on the Ubuntu VM with the following commands
+    and prepare it for operation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Switch over to the Kali VM and we will install, set up our client, and connect
+    by entering the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the previous labs, we had set up a user of `Leonard` with a password of penny
+    on the Ubuntu box.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/3c65546c-734a-423a-86d3-240928955afa.png)Kali terminal windowYou
+    will note that we are now logged into the remote Ubuntu box. If you were looking
+    at this traffic you will see all traffic look like normal HTTP traffic. This is
+    another useful way to get past firewalls and IPS/IDS devices to maintain your
+    access to the network.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hiding communications with cryptcat
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe we will use `cryptcat` to transfer files between two hosts. Although
+    we will use `cryptcat` for transferring files in this example, it can be used
+    for a wide variety of purposes such as secure chat, shell access, port scanning
+    as well as others.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your Kali Linux VM is powered up and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Ubuntu VM is powered up and you are logged in and on the NAT network and
+    have internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To use `cryptcat` to create tunnels to hide communications, we will follow
+    these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Validate the IP addresses of your Kali VM and your Ubuntu VM. For my purposes,
+    my Kali box is `10.0.2.5` and Ubuntu are `10.0.2.6`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'First we will start in the Ubuntu VM where we are currently logged in and we
+    want to start by elevating ourselves to root by entering the following commands
+    in the console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'We must next install `cryptcat` on the Ubuntu VM by entering the following
+    command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From the Ubuntu machine we will enter the following commands to make an interesting
+    file:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/134446f6-75e3-4ee5-af65-e1ade9284406.png)ubuntu terminal window'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Prepare to transfer the file through `cryptcat` by entering the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Switch to the Kali box and let''s retrieve and verify the file by opening a
+    terminal window and entering the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/c37851af-e62c-4af4-9a0a-79cfd5501259.png)Kali terminal window'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s take a look at the Ubuntu terminal to see what that shows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6621e0c9-a8d0-48d9-8983-124b701864cb.png)Ubuntu terminal'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `cryptcat` is effectively the same as netcat except for allowing encrypted
+    communications through plain text. To get more information on the commands available
+    to use, please refer to the **netcat** (**nc**) pages. With `cryptcat` they simply
+    add an extra command line option of `-k <password>` where password is what is
+    used to salt the password and create the secure communications.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Please review – [https://www.sans.org/security-resources/sec560/netcat_cheat_sheet_v1.pdf](https://www.sans.org/security-resources/sec560/netcat_cheat_sheet_v1.pdf).
+  prefs: []
+  type: TYPE_NORMAL

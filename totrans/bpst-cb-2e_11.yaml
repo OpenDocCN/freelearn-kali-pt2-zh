@@ -1,0 +1,1154 @@
+- en: '11'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Implementing Advanced Topic Attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This chapter covers intermediate to advanced topics such as working with **XML
+    External Entity** (**XXE**) injection, **JSON Web Token** (**JWT**) attacks, **Server-Side
+    Request Forgery** (**SSRF**), **Cross-Origin Resource Sharing** (**CORS**) findings,
+    and **Java deserialization attacks**, as well as testing GraphQL in Burp Suite.
+    We’ll learn how to use Burp Suite and Burp Suite extensions to assist in making
+    each of these types of test easier.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performing XXE attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Working with JWT
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Burp Suite Collaborator to determine SSRF
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing CORS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Performing Java deserialization attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Hacking GraphQL with Burp Suite
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To complete the recipes in this chapter, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: A PortSwigger account ([https://portswigger.net/](B21173_11.xhtml#_idTextAnchor639))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: PortSwigger Web Security Academy Labs (https://portswigger.net/web-security/all-labs)
+    access, which requires a PortSwigger account
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Burp Suite Proxy Community or Professional ([https://portswigger.net/burp/](B21173_11.xhtml#_idTextAnchor704))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Performing XXE attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: XXE is a vulnerability that targets applications parsing XML. Attackers can
+    manipulate the XML input with arbitrary commands and send those commands as external
+    entity references within the XML structure. The XML is then executed by a weakly
+    configured parser, giving the attacker the requested resource.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Log in to your PortSwigger account. We will be using a PortSwigger lab – *Lab:
+    Exploiting XXE using external entities to retrieve files* ([https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-retrieve-files](B21173_11.xhtml#_idTextAnchor703))
+    – to exploit an XML parser vulnerability in our target application.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Log in, go to *Lab: Exploiting XXE using external entities to retrieve files*,
+    and click the **Access the lab** button to start your instance.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.1 – Lab lesson](image/B21173_11_001.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.1 – Lab lesson
+  prefs: []
+  type: TYPE_NORMAL
+- en: After your instance of the lab loads, use the Burp Suite browser to capture
+    your traffic. Click around the site and view a product’s details by clicking the
+    **View** **details** button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.2 – The View details button](image/B21173_11_002.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.2 – The View details button
+  prefs: []
+  type: TYPE_NORMAL
+- en: On the subsequent details page, under the description, click the **Check** **stock**
+    button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.3 – The Check stock button](image/B21173_11_003.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.3 – The Check stock button
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Switch to the Burp Suite **Proxy** | **HTTP history** tab and look for the
+    **POST** request you just submitted to check the stock. Right-click and send the
+    request to **Repeater**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.4 – Send to Repeater](image/B21173_11_004.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.4 – Send to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In **Repeater**, add the **DOCTYPE** declaration between the XML declaration
+    and the root element called **stockCheck**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Also, replace the number within the **productId** elements with **&xxe;**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.5 – XXE injection point](image/B21173_11_005.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.5 – XXE injection point
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Send** button. Note that the response retrieves and displays the
+    local **/etc/passwd** file content:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.6 – Attack result](image/B21173_11_006.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.6 – Attack result
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In this recipe, the insecure XML parser receives the request within the XML
+    for the **/etc/passwd** file residing on the server. Since there is no validation
+    performed on the XML request due to a weakly configured parser, the resource is
+    freely provided to the attacker.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Working with JWTs
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As more sites provide client API access, JWTs are commonly used for authentication.
+    These tokens hold identity and claim information tied to the resources the user
+    is granted access to on the target site. Web-penetration testers need to read
+    these tokens and determine their strength. Fortunately, there are some handy plugins
+    that make working with JWTs inside Burp Suite much easier. We will learn about
+    these plugins in this recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Log in to your PortSwigger account. We will be using *Lab: JWT authentication
+    bypass via flawed signature verification* ([https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification))
+    and the **JWT Editor** extension to exploit a signature vulnerability in our target
+    application.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Switch to Burp Suite **Extensions** | **BApp Store** and install the **JWT**
+    **Editor** plugin:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.7 – The JWT Editor extension](image/B21173_11_007.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.7 – The JWT Editor extension
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After you install the extension, notice you now have a new tab entitled **JWT**
+    **Editor Keys**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.8 – New tab](image/B21173_11_008.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.8 – New tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to *Lab: JWT authentication bypass via unverified signature* and click the
+    **Access the lab** button to start your instance:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.9 – Lab lesson](image/B21173_11_009.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.9 – Lab lesson
+  prefs: []
+  type: TYPE_NORMAL
+- en: After your instance of the lab loads, go to **Proxy** | **Intercept** | **Open
+    browser** to use the Burp Suite browser to capture your traffic.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.10 – Open the Burp Suite browser](image/B21173_11_010.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.10 – Open the Burp Suite browser
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Log in to the application using the provided credentials: **wiener**/**peter**.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.11 – Log in with the provided credentials](image/B21173_11_011.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.11 – Log in with the provided credentials
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the Burp Suite **Proxy** | **HTTP history** tab. Find the **GET**
+    request with the URL **/my-account**. Right-click and click the **Send to** **Repeater**
+    option.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.12 – Send to Repeater](image/B21173_11_012.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.12 – Send to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Switch to the **Repeater** tab and notice that you have a new tab entitled
+    **JSON** **Web Token**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.13 – Extension functionality in Repeater](image/B21173_11_013.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.13 – Extension functionality in Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click the **JSON Web Token** tab to reveal a debugger very similar to the one
+    available at [https://jwt.io.](B21173_11.xhtml#_idTextAnchor701) This plugin allows
+    you to read the claims content and manipulate the encryption algorithm for various
+    brute-force tests. In this attack, we will remove the signature from the token
+    and send the JWT to see whether the application accepts or rejects the request.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To perform this attack, click the **Attack** button and select **“none”** **Signing
+    Algorithm**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.14 – None algo attack](image/B21173_11_014.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.14 – None algo attack
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice the **Signature** text area is now blank, the signature is missing after
+    the last dot, and **alg** in the header is set to **none**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.15 – Signature is removed](image/B21173_11_015.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.15 – Signature is removed
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Inside the **Payload** text area, change **wiener** to **administrator**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.16 – Escalate subject to administrator](image/B21173_11_016.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.16 – Escalate subject to administrator
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the **Raw** tab and click the **Send** button to send the request
+    to the application. Notice that the application accepts the request and you are
+    logged in to the administrator’s account.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.17 – Evidence of attack](image/B21173_11_017.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.17 – Evidence of attack
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Change the **GET** request from **/my-account** to **/admin/delete?username=carlos**
+    to solve the puzzle:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.18 – Final attack to solve](image/B21173_11_018.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.18 – Final attack to solve
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Send the request and see the congratulatory banner in the browser:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.19 – Congratulatory banner](image/B21173_11_019.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.19 – Congratulatory banner
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The **JWT Editor** extension helps testers to work with JWT tokens in an easier
+    way by providing debugger tools conveniently available with the Burp Suite UI.
+    Check out the other JWT labs available in the PortSwigger Web Security Academy
+    to gain more experience with the extension.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Burp Suite Collaborator to determine SSRF
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: SSRF is a vulnerability that allows an attacker to force applications to make
+    unauthorized requests on the attacker’s behalf. These requests can be as simple
+    as DNS queries or as maniacal as commands from an attacker-controlled server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will use Burp Suite Collaborator to check open ports available
+    for SSRF requests, and then we will use Burp Intruder to determine whether the
+    application will perform DNS queries to the public Burp Suite Collaborator server
+    through an SSRF vulnerability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Log in to your PortSwigger account. Using PortSwigger *Lab: Blind SSRF with
+    out-of-band detection* ([https://portswigger.net/web-security/ssrf/blind/lab-out-of-band-detection](B21173_11.xhtml#_idTextAnchor696)),
+    we will see how to use Burp Suite Collaborator to identify an SSRF vulnerability
+    in our target application.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Switch to the Burp Suite **Collaborator** tab. Click the **Get** **started**
+    button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.20 – Start Collaborator](image/B21173_11_020.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.20 – Start Collaborator
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice you may now copy **Collaborator** payloads to the clipboard and a table
+    appears that displays any captured calls.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.21 – The Collaborator table](image/B21173_11_021.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.21 – The Collaborator table
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Log in, go to *Lab: Blind SSRF with out-of-band detection*, and start the instance
+    by clicking **Access** **the lab**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.22 – Lab lesson](image/B21173_11_022.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.22 – Lab lesson
+  prefs: []
+  type: TYPE_NORMAL
+- en: After your instance of the lab loads, use the Burp Suite browser to capture
+    your traffic. Click around the site.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Switch to the **Proxy** | **HTTP history** tab and find any request you made
+    in the instance that contains a **Referer** header. Right-click and send the request
+    to **Repeater**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.23 – Send to Repeater](image/B21173_11_023.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.23 – Send to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: Inside **Repeater**, highlight the value of the **Referer** header, leaving
+    the protocol of **https://**. Right-click and select **Insert Collaborator payload**.
+    This action will replace the current value of **Referer** with a collaborator
+    instance.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.24 – Insert Collaborator payload](image/B21173_11_024.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.24 – Insert Collaborator payload
+  prefs: []
+  type: TYPE_NORMAL
+- en: The subdomain is randomized, so your collaborator value will differ from the
+    one shown in the following screenshot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.25 – Referer header](image/B21173_11_025.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.25 – Referer header
+  prefs: []
+  type: TYPE_NORMAL
+- en: Inside **Repeater**, click the **Send** button. The response will look normal.
+    Since this is a blind SSRF, we need to see whether any backend systems made calls
+    to our **Collaborator** server instance.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.26 – Response](image/B21173_11_026.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.26 – Response
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the Burp Suite **Collaborator** client and click the **Poll now**
+    button to see whether any SSRF attacks were successful. If any requests leaked
+    outside of the network, those requests will appear in this table along with the
+    specific protocol used. If any requests are shown in this table, you will need
+    to report the SSRF vulnerability as a finding. As you can see from the results
+    shown here, numerous DNS queries were made by the application on behalf of the
+    attacker-provided payloads. This means the source IP addresses shown would be
+    backend servers behind the target application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.27 – Poll shows interactions](image/B21173_11_027.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.27 – Poll shows interactions
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice the congratulatory banner in the browser.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 11.28 – Congratulatory ban\uFEFFn\uFEFFer](image/B21173_11_028.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.28 – Congratulatory banner
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Network leaks and overly generous application parameters can allow an attacker
+    to have an application make unauthorized calls via various protocols on the attacker’s
+    behalf. In the case of this recipe, the application allows DNS queries to leak
+    outside of the local machine and connect to the internet.
+  prefs: []
+  type: TYPE_NORMAL
+- en: See also
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For more information on SSRF attacks, see the PortSwigger blog entry at [https://portswigger.net/blog/cracking-the-lens-targeting-https-hidden-attack-surface](B21173_11.xhtml#_idTextAnchor693).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing CORS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: An application implementing HTML5 **Cross-Origin Resource Sharing** (**CORS**)
+    means the application will share browser information with another domain that
+    resides at a different origin. By design, browser protections prevent external
+    scripts from accessing information in the browser. This protection is known as
+    **Same-Origin Policy** (**SOP**). However, CORS is a means of bypassing SOP permissively.
+    If an application wants to share browser information with a completely different
+    domain, it may do so with properly configured CORS headers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Web-penetration testers must ensure applications that handle AJAX calls (for
+    example, HTML5) do not have misconfigured CORS headers. Let’s see how Burp Suite
+    can help us identify such misconfigurations.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Log in to your PortSwigger account. Using *Lab: CORS vulnerability with basic
+    origin reflection* ([https://portswigger.net/web-security/cors/lab-basic-origin-reflection-attack](B21173_11.xhtml#_idTextAnchor690)),
+    we will see how to identify a CORS vulnerability in our target application.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Go to *Lab: CORS vulnerability with basic origin reflection* and click the
+    **Access the lab** button to start your instance.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.29 – Lab lesson](image/B21173_11_029.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.29 – Lab lesson
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After your instance of the lab loads, use the Burp Suite browser to capture
+    your traffic. Log in to the application using the provided credentials: **wiener**/**peter**.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.30 – Click the My account link](image/B21173_11_030.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.30 – Click the My account link
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the supplied credentials to log in to the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.31 – Log in with the provided credentials](image/B21173_11_031.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.31 – Log in with the provided credentials
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the Burp Suite **Proxy** | **HTTP history** tab and look for the **GET**
+    **/accountDetails** request after login. Notice there is a CORS-related header
+    in the response, allowing the sharing of client secrets.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.32 – CORS header in response](image/B21173_11_032.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.32 – CORS header in response
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Send the request to **Repeater**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.33 – Send to Repeater](image/B21173_11_033.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.33 – Send to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s make a cross-origin call by adding the **Origin** header to the request
+    from the **https://example.com** location:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'It’s shown in the following screenshot:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.34 – Add the Origin header and site value](image/B21173_11_034.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.34 – Add the Origin header and site value
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'While in **Repeater**, click **Send** and notice a new CORS-related header
+    appears in **Response**. Now there are two CORS headers in **Response** and the
+    value of **Origin** is reflected in **Access-Control-Allow-Origin**, allowing
+    information to be shared:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.35 – See what gets reflected in response](image/B21173_11_035.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.35 – See what gets reflected in response
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Go to exploit** **server** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.36 – Go to exploit server](image/B21173_11_036.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.36 – Go to exploit server
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We need to create a **Proof of Concept** (**PoC**) to show how we can leverage
+    this CORS vulnerability to show impact. Remove the **Hello, world!** message from
+    the **Body** portion of the PoC:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.37 – Body of PoC in exploit server](image/B21173_11_037.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.37 – Body of PoC in exploit server
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Replace the **Body** text area with the following payload, and substitute **<YOUR-LAB-ID>**
+    with the value of your lab instance along with the **https://** in front:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.38 – Replace the value with your lab ID](image/B21173_11_038.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.38 – Replace the value with your lab ID
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click **Store** and **Deliver to Victim** in that order at the bottom:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.39 – The Store and Deliver exploit to victim buttons](image/B21173_11_039.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.39 – The Store and Deliver exploit to victim buttons
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on **Access log** to retrieve the API key of your victim:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.40 – Click the Access log button](image/B21173_11_040.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.40 – Click the Access log button
+  prefs: []
+  type: TYPE_NORMAL
+- en: Look through the log until you find a different IP address and the API key of
+    your victim.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.41 – View the access log for the victim’s API key](image/B21173_11_041.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.41 – View the access log for the victim’s API key
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Place the value of the stolen API key into the **Submit solution** box for
+    the solution:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.42 – Click the Submit solution button](image/B21173_11_042.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.42 – Click the Submit solution button
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that your value will differ from the one shown here.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.43 – Submit the API key as the solution](image/B21173_11_043.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.43 – Submit the API key as the solution
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice the congratulatory banner in the browser.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 11.44 – Congratulatory banner\uFEFF](image/B21173_11_044.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.44 – Congratulatory banner
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'In an AJAX request, most instances require a call out to an external URL not
+    residing in the same domain. To permit the external domain to receive DOM information
+    from the user’s browser session, CORS headers must be present, including **Access-Control-Allow-Origin:
+    <name of** **cross domain>**.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: See also
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: For more information on misconfigured CORS headers, see this PortSwigger blog
+    entry at [https://portswigger.net/blog/exploiting-cors-misconfigurations-for-bitcoins-and-bounties](B21173_11.xhtml#_idTextAnchor687).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Performing Java deserialization attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Serialization** is a mechanism provided in various languages that allows
+    the saving of an object’s state in binary format. It is used for speed and obfuscation.
+    The turning of an object back from binary into an object is deserialization. In
+    cases where user input is used within an object and that object is later serialized,
+    it creates an attack vector for arbitrary code injection and possible remote code
+    execution. We will look at a Burp Suite extension that will assist web-penetration
+    testers in assessing applications for Java deserialization vulnerabilities.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Login to your PortSwigger account. Using *Lab: Exploiting Java deserialization
+    with Apache Commons* ([https://portswigger.net/web-security/deserialization/exploiting/lab-deserialization-exploiting-java-deserialization-with-apache-commons](B21173_11.xhtml#_idTextAnchor682))
+    and a hand-crafted serialized code snippet, we will demonstrate how to use the
+    **Java Deserialization Scanner** to assist in performing Java deserialization
+    attacks.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will need to use an old Java version, such as JDK 7, along with the third-party
+    JAR file for **ysoserial** to complete this recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are the Java SE 7 archive downloads: [https://www.oracle.com/java/technologies/javase/javase7-archive-downloads.html](B21173_11.xhtml#_idTextAnchor679):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the download for your environment. For example, for Windows x64 you would
+    download the **jdk-7u80-windows-x64.exe** file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After download, double-click and follow the prompts to install.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Uninstall this from your system after you complete the recipe as it is a very
+    insecure version of Java.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remember the location of the JDK 7 on your local system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Here is the **ysoserial** JAR file download: https://github.com/frohoff/ysoserial/releases/tag/v0.0.6:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the **ysoserial-all.jar** file for download.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Remember the location of the **ysoserial-all.jar** file on your local system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Switch to Burp Suite **Extensions** | **BApp Store** and install the **Java
+    Deserialization** **Scanner** plugin:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.45 – Add Java Deserialization Scanner extension](image/B21173_11_045.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.45 – Add Java Deserialization Scanner extension
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to *Lab: Exploiting Java deserialization with Apache Commons* and click
+    the **Access the lab** button to start your instance:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.46 – Lab lesson](image/B21173_11_046.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.46 – Lab lesson
+  prefs: []
+  type: TYPE_NORMAL
+- en: After your instance of the lab loads, use the Burp Suite browser to capture
+    your traffic. Log in to the application using the credentials **wiener**/**peter**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.47 – Click on My account to log in](image/B21173_11_047.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.47 – Click on My account to log in
+  prefs: []
+  type: TYPE_NORMAL
+- en: Use the supplied credentials to log in to the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.48 – Log in with the provided credentials](image/B21173_11_048.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.48 – Log in with the provided credentials
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the Burp Suite **Proxy**| **HTTP history** tab and look for the request
+    after login. Note the session cookie is using Java serialization.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.49 – Notice the serialized cookie value](image/B21173_11_049.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.49 – Notice the serialized cookie value
+  prefs: []
+  type: TYPE_NORMAL
+- en: Right-click, select **Extensions** and send the request to the **Java Deserialization
+    Scanner** | **Send request to DS – Manual** **testing** tab.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.50 – Send request to extension](image/B21173_11_050.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.50 – Send request to extension
+  prefs: []
+  type: TYPE_NORMAL
+- en: Notice a new tab is available entitled **Deserialization Scanner** with our
+    request present in the **Manual testing** tab. Highlight the serialized value
+    and click the **Set Insertion Point** button. Notice the substitution markers,
+    which look like dollar signs, surrounding our serialized value.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.51 – Set the insertion point](image/B21173_11_051.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.51 – Set the insertion point
+  prefs: []
+  type: TYPE_NORMAL
+- en: After setting our insertion point, look at the bottom panel and move the **Encode
+    using Base64** option from the bottom-left panel to the right panel by clicking
+    the **Add** button. Additionally, add the **Encode using URL encoding** option
+    from the left panel to the right panel.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.52 – Add Base64 encoding and URL encoding](image/B21173_11_052.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.52 – Add Base64 encoding and URL encoding
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s send the request over to the **Exploiting** tab by right-clicking and
+    selecting **Send to** **Exploitation tab**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.53 – Send request to Exploitation tab](image/B21173_11_053.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.53 – Send request to Exploitation tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To make the extension work for us, we need to configure the settings for the
+    location of Java and the **ysoserial** JAR file within the **Configurations**
+    tab (note your path values will be different from what is shown in this screenshot
+    since you must use the paths for your local system):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.54 – Configure Java and ysoserial within the Deserialization Scanner
+    Extension](image/B21173_11_054.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.54 – Configure Java and ysoserial within the Deserialization Scanner
+    Extension
+  prefs: []
+  type: TYPE_NORMAL
+- en: Switch to the **Deserialization Scanner** | **Exploiting** tab and ensure you
+    still have the Base64 encoding button added at the bottom as well as the URL encoding
+    button. Both of these encodings should be in the bottom-right panel.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.55 – On the Exploiting tab, make sure that both encodings are on
+    the right panel](image/B21173_11_055.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.55 – On the Exploiting tab, make sure that both encodings are on the
+    right panel
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Add the **CommonsCollections4 ''rm /home/carlos/morale.txt''** command to the
+    **java -jar ysoserial** text area:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.56 – Set the gadget and command](image/B21173_11_056.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.56 – Set the gadget and command
+  prefs: []
+  type: TYPE_NORMAL
+- en: You are now ready to build the payload. Generate the payload by clicking the
+    **Attack** button at the bottom.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.57 – Attack mode and payload created](image/B21173_11_057.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.57 – Attack mode and payload created
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Send the modified request to **Repeater**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.58 – Send to Repeater](image/B21173_11_058.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.58 – Send to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Send** button to solve the lab:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.59 – Response is 500 with exception](image/B21173_11_059.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.59 – Response is 500 with exception
+  prefs: []
+  type: TYPE_NORMAL
+- en: Look more closely at the stacktrace returned in the 500 response. Notice there
+    is a Java instantiation error. This message is proof of our exploit.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.60 – Details within the 500 response of the instantiation error](image/B21173_11_060.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.60 – Details within the 500 response of the instantiation error
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice the congratulatory banner in the browser:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.61 – Congratulatory banner](image/B21173_11_061.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.61 – Congratulatory banner
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: In cases where application code receives user input directly into an object
+    without performing sanitization on such input, an attacker has the opportunity
+    to provide arbitrary commands. The input is then serialized and run on the operating
+    system where the application resides, creating a possible attack vector for remote
+    code execution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hacking GraphQL using Burp Suite
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: GraphQL is a very commonly used API query language. The main difference between
+    using REST APIs and GraphQL is the structure of the call. REST API calls require
+    multiple calls to accomplish a task, whereas GraphQL makes a single call containing
+    the entire schema structure. The GraphQL parser determines which components of
+    the schema require lookups or changes. In this recipe, we will learn how to leverage
+    a Burp Suite extension called **GraphQL Raider** to read, mutate, and attack GraphQL
+    schemas.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: The **GraphQL Raider** extension can be found in **BApp Store**. We will download
+    and install the extension within our Burp Suite instance. Then, we’ll see how
+    to use the extension against GraphQL endpoints.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Inside Burp Suite **Extensions** | **BApp Store**, select **GraphQL Raider**
+    and click the **Install** button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.62 – The GraphQL Raider extension](image/B21173_11_062.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.62 – The GraphQL Raider extension
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will use the free GraphQL endpoint with Spacex data available online. In
+    **Proxy** | **Intercept**, click the **Open browser** button to open the Burp
+    Suite browser.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Browse to the following URL: [https://spacex-production.up.railway.app/](B21173_11.xhtml#_idTextAnchor676).'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.63 – GraphQL application online](image/B21173_11_063.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.63 – GraphQL application online
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go ahead and perform the sample query by clicking the **ExampleQuery** button
+    within the Burp Suite browser:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.64 – Run ExampleQuery](image/B21173_11_064.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.64 – Run ExampleQuery
+  prefs: []
+  type: TYPE_NORMAL
+- en: Look for **Request** and **Response** in the Burp Suite **Proxy** | **HTTP**
+    **history** table.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 11.65 – See ExampleQuery in Burp Suite](image/B21173_11_065.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.65 – See ExampleQuery in Burp Suite
+  prefs: []
+  type: TYPE_NORMAL
+- en: Right-click on **Request** and send it to **Repeater**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.66 – Send to Repeater](image/B21173_11_066.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.66 – Send to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: Inside **Repeater**, look for the **GraphQL** label or a downward-pointing caret
+    just after the **Pretty**, **Raw**, and **Hex** labels. Notice the extension provides
+    a clearer query to read along with variables and the **Injection** **Points**
+    tab.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.67 – Use the GraphQL extension within Repeater](image/B21173_11_067.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.67 – Use the GraphQL extension within Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the **Repeater** | **GraphQL** tab, replace **ExampleQuery** with the following
+    **IntrospectionQuery** to see the entire schema:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: Before clicking **Send**, return to the **Raw** tab inside **Repeater** and
+    replace **ExampleQuery** with **IntrospectionQuery** for **operationName**. Note
+    that if you do not make this change, the query will not succeed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.68 – Change operationName to “IntrospectionQuery”](image/B21173_11_068.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.68 – Change operationName to “IntrospectionQuery”
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click **Send** and now you can see the entire schema:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 11.69 – See the introspection query and results](image/B21173_11_069.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 11.69 – See the introspection query and results
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the GraphQL extension allows you to craft queries and mutations inside
+    Burp Suite to test for vulnerabilities against target applications supporting
+    GraphQL. The extension provides a much clearer view of requests, in contrast to
+    the standard HTTP **Pretty** or **Raw** request view.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s more...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'GraphQL is a vast subject with many tutorials and supporting documentation.
+    We recommend starting your research here: [https://graphql.org/](B21173_11.xhtml#_idTextAnchor673).'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1137 @@
+- en: '9'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: File Recovery and Data Carving Tools
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we’ve learned how to create forensic images of evidence, let’s look
+    at the file recovery and data carving process, using specific tools in Kali Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: File carving retrieves data and files from unallocated space using specific
+    characteristics such as the file structure and file headers, instead of traditional
+    metadata created by, or associated with, filesystems. A simple way to think of
+    file carving is to think of an ice sculpture. It starts off with a huge block
+    of ice, which, when given to a skilled individual, can be chipped away into a
+    piece of art. In the same way, DFIR investigators and analysts can create a forensic
+    image using any of the tools mentioned in the previous chapter, and then use a
+    variety of tools to extract useful data and files from the acquired forensic image.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we’ll cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: File basics
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Downloading sample files for the labs in this chapter
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Performing file recovery and data carving using Foremost
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Performing image recovery with Magicrescue
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Data carving with Scalpel
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Data extraction with **bulk_extractor**
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: NTFS recovery using **scrounge_ntfs**
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: JPEG recovery using Recoverjpeg
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: File basics
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Before we get started on the practical aspects, let’s briefly go through some
+    common terminology.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When we last covered filesystems in [*Chapter 6*](B19441_06.xhtml#_idTextAnchor093)*,
+    Understanding File Systems and Storage*, we learned that various operating systems
+    use their own filesystems to be able to store, access, and modify data. Storage
+    media use file systems to do the very same.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Metadata**, or data about data, helps an operating system identify data.
+    Metadata includes technical information, such as the creation and modification
+    dates, and the file type of the data. This data makes it much easier to locate
+    and index files.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: As the name implies, **unallocated space** is an area of storage media that
+    has been marked by an operating system or file table as empty, or unallocated
+    to any file or data. Although the location of, and information about, the file
+    is not present and sometimes corrupted, there are still characteristics about
+    the file that reside in its header and footer that can identify the file, or even
+    fragments of the file.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Even if a file extension has been changed or is missing altogether, file headers
+    contain information that can identify the file type and we can attempt to carve
+    the file by analyzing the header and footer information. Data carving is quite
+    a lengthy process and should be done using automated tools to save time. It also
+    helps if the investigator has an idea of what file types they are looking for,
+    giving them a better focus and saving time. Nevertheless, this is forensics, and
+    we know that time and patience are key.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Some common file types, as displayed in hexadecimal format within the file
+    headers, include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Joint Photographic Experts Group (JPEG)**: FF D8 FF E0'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Portable Document Format (PDF)**: 25 50 44 46'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: While more on the analysis of files and headers will be looked at in [*Chapter
+    12*](B19441_12.xhtml#_idTextAnchor225), *Autopsy Forensic Browser,* and [*Chapter
+    13*](B19441_13.xhtml#_idTextAnchor234), *Performing a Full DFIR Analysis with
+    the Autopsy 4 GUI*, using Autopsy, let’s first download the sample files we will
+    be using for data carving in Kali Linux.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Downloading the sample files
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Before we begin our DFIR file recovery and data carving activities, I thought
+    it would be a good idea to first have all sample files downloaded, which will
+    allow us to jump straight into the specifics of using each tool without the process
+    being interrupted.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will be using the following sites, which generously offer free datasets
+    and acquisitions to the public. A special thank you to all that have compiled
+    and invested their time and resources to make these datasets available to us:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Digital Forensics Tool Testing Images: [https://dftt.sourceforge.net/](https://dftt.sourceforge.net/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Computer Forensic Reference DataSets** (**CFReDS**): [https://cfreds.nist.gov/](https://cfreds.nist.gov/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Digital Corpora: [https://digitalcorpora.org/](https://digitalcorpora.org/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Foremost sample file: [https://cfreds-archive.nist.gov/FileCarving/Images/L0_Documents.dd.bz2](https://cfreds-archive.nist.gov/FileCarving/Images/L0_Documents.dd.bz2)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Scalpel: [http://prdownloads.sourceforge.net/dftt/11-carve-fat.zip?download](http://prdownloads.sourceforge.net/dftt/11-carve-fat.zip?download)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Bulk Extractor: [https://digitalcorpora.s3.amazonaws.com/corpora/drives/nps-2010-emails/nps-2010-emails.E01](https://digitalcorpora.s3.amazonaws.com/corpora/drives/nps-2010-emails/nps-2010-emails.E01)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Although only the preceding sample files will be used for our lab purposes,
+    you are certainly free to download other sample files from the aforementioned
+    sites and try to carve those images, using the following tools where applicable.
+  prefs: []
+  type: TYPE_NORMAL
+- en: File recovery and data carving with Foremost
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Foremost is a simple and effective CLI tool that carves and recovers files
+    by reading the headers and footers of the files. We can start Foremost by clicking
+    on **Applications** | **11 - Forensics** | **Foremost**. However, I prefer starting
+    Foremost from the Terminal within the folder containing our sample acquired files,
+    which will simplify the entire process without errors. So, let’s get started:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you haven’t yet downloaded the sample forensic acquisition file, you can
+    do so now by clicking on this link:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[https://cfreds-archive.nist.gov/FileCarving/Images/L0_Documents.dd.bz2](https://cfreds-archive.nist.gov/FileCarving/Images/L0_Documents.dd.bz2)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once this file has been downloaded, I recommend creating a *new folder* in the
+    **Downloads** folder by right-clicking in the **Downloads** folder and clicking
+    on **Create Folder**. We will call this folder **Foremost**. We will also create
+    folders for each tool as we move along in this chapter to avoid having a cluttered
+    **Downloads** folder, and for the sake of having an organized DFIR workspace.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.1 – File downloads with the Downloads folder](image/Figure_9.01_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.1 – File downloads with the Downloads folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: Drag the **L0_Documents.dd.bz2** file into the **Foremost** folder that you
+    just created. By default, the **L0_Documents.dd.bz2** file will be downloaded
+    to your **Downloads** folder. The downloaded file is a compressed **BunZip (.bz2)**
+    format and contains a **datadump (.dd)** acquisition file that must be extracted.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To extract the **.dd** file, right-click on the **L0_Documents.dd.bz2** file
+    and click on the **Extract Here** option, as shown here.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.2 – Extracting the downloaded files](image/Figure_9.02_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.2 – Extracting the downloaded files
+  prefs: []
+  type: TYPE_NORMAL
+- en: You should now see the **L0_Documents.dd** evidence file in your **Foremost**
+    folder.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.3 – The extracted image file](image/Figure_9.03_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.3 – The extracted image file
+  prefs: []
+  type: TYPE_NORMAL
+- en: Here’s the fun part! Let’s click on the **New Terminal** icon at the top of
+    the screen to open a new Terminal and begin carving and recovering files from
+    our forensic acquisition sample.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once in the Terminal, we must change our working directory (using the **cd**
+    command) to the **Foremost** folder within our **Downloads** folder. To do this,
+    type the following commands in the Terminal and press *Enter*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Important note
+  prefs: []
+  type: TYPE_NORMAL
+- en: All commands are *case-sensitive* and should be typed exactly as I have typed
+    them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, type **ls** to list and show the files to ensure that we are in the correct
+    directory, where our files are located.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: In the following screenshot, I’ve entered the aforementioned commands and can
+    see the files we have downloaded and extracted.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.4 – Using the ls command](image/Figure_9.04_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.4 – Using the ls command
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To have a better understanding of Foremost and the switches used, try browsing
+    the **Foremost System Manager’s Manual**. This can be done by entering the following
+    command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: '![Figure 9.5 – The Foremost help manual](image/Figure_9.05_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.5 – The Foremost help manual
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The syntax for using Foremost is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Using the preceding format, let’s enter the following command and options to
+    carve files from the evidence file and recover them into a folder of our choice:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: In this example, we have specified the **L0_documents.dd** file as the input
+    file **(-i**) and specified an empty folder named **L0_Documents_Recovery** as
+    the output file (**-o**). Additionally, other switches can be specified as needed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.6 – Foremost command output](image/Figure_9.06_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.6 – Foremost command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: Although the characters in the preceding output may be unreadable, the carved
+    files will be clearly categorized and summarized in the specified output folder.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To view our carved files, click on the **Home** folder icon at the top of the
+    screen, click on the **Downloads** folder, and then click on **Open Folder**.
+    Double-click on your **Foremost** folder and then open the **LO_Documents_Recovery**
+    folder.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.7 – The Foremost recovery folder](image/Figure_9.07_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.7 – The Foremost recovery folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: Foremost has automatically created subfolders for the relevant file types. To
+    view a list of all files carved and recovered, open the **audit.txt** file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.8 – The contents of the audit.txt file](image/Figure_9.08_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.8 – The contents of the audit.txt file
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **audit.txt** file tells us that there were nine files carved/recovered,
+    including images, MS Office, and PDF documents. Feel free to browse the various
+    subfolders to view the carved files.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.9 – Recovered .xlsx documents](image/Figure_9.09_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.9 – Recovered .xlsx documents
+  prefs: []
+  type: TYPE_NORMAL
+- en: Congratulations on your first successful DFIR recovery! Let us now move on to
+    another recovery tool called Magic Rescue.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Image recovery with Magicrescue
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Magicrescue** is an older tool that is still very useful, as it quickly scans
+    and recovers certain file types that must be manually specified. For this lab,
+    I’ll be using a 32-GB SanDisk flash drive, which once contained several audio,
+    video, and image files that were all deleted by accident:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’ll first run the **fdisk** command to view the device information by typing
+    the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The **fdisk** command output seen in the following screenshot shows that the
+    flash drive is recognized as **sdc2**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.10 – fdisk command output showing disk information](image/Figure_9.10_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.10 – fdisk command output showing disk information
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Before we continue, it is useful to view the magicrescue help manual by typing
+    the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The following figure shows the usage options in magicrescue:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.11 – Magicrescue usage options](image/Figure_9.11_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.11 – Magicrescue usage options
+  prefs: []
+  type: TYPE_NORMAL
+- en: To run magicrescue and search and recover files, we must first know which file
+    types can be recovered. I’ve navigated to the **usr** | **share** | **magicrescue**
+    | **recipes** folder, which shows the recipes or file types available for recovery
+    by magicrescue. These *recipes*, as they are called, must be manually specified
+    when using the **magicrescue** command.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.12 – Magicrescue recipe types](image/Figure_9.12_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.12 – Magicrescue recipe types
+  prefs: []
+  type: TYPE_NORMAL
+- en: To use magicrescue to recover JPEG files from my flash drive, recognized as
+    **sdb2**, I’ll first create a folder on my desktop called **Rescue**, which will
+    be the destination to which to save my recovered files.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In a new Terminal, change to the **Desktop** directory by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Then, create a new folder by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Change to the **Rescue** directory by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output within the Terminal when changing
+    directories.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.13 – Changing working directories](image/Figure_9.13_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.13 – Changing working directories
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use Magic Rescue to recover files from my **sdb2** drive into the **Rescue**
+    folder on the desktop, I’ll type the following command with specific recipe options
+    for image files:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: Once run, Kali will output the details of the recovered files, as shown in the
+    following screenshot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.14 – Magicrescue file carving and recovery](image/Figure_9.14_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.14 – Magicrescue file carving and recovery
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can now open the **Rescue** folder on the desktop to view the recovered files.
+    As shown in the following screenshot, several deleted images were quickly recovered.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.15 – Carved and recovered files](image/Figure_9.15_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.15 – Carved and recovered files
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s now move on to another popular and powerful file carving tool called Scalpel.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data carving with Scalpel
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**Scalpel** was created as an improvement of a much earlier version of Foremost.
+    Scalpel aims to address the high CPU and RAM usage issues of Foremost when carving
+    data.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Unlike Foremost, file types of interest must be specified by an investigator
+    in the Scalpel configuration file. This file is called **scalpel.conf** and is
+    located at **etc/scapel/**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.16 – The Scalpel configuration file](image/Figure_9.16_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.16 – The Scalpel configuration file
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To specify the file types, the investigator must remove the comments at the
+    start of theline containing the file type, as all supported file types are commented
+    out with a hashtag at the beginning of the file type. The following screenshot
+    shows the default Scalpel configuration file (**scalpel.conf**) with all file
+    types commented out. Note that each line begins with a hashtag:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.17 – Scalpel file types within the conf file](image/Figure_9.17_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.17 – Scalpel file types within the conf file
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’ve removed the hashtags at the beginning of some of the lines to let Scalpel
+    know to search for these specific file types; this also reduces the time taken
+    to otherwise search for all supported file types. The following screenshot (*Figure
+    9**.17*) shows that Scalpel will be searching for GIF, PNG, and TIFF files, as
+    the comments have been removed. I have also removed hashtags from all video, MS
+    Office, email, and PDF file types to allow Scalpel to search for additional file
+    types. If you are having issues with saving the changes to the file, this may
+    have to be done as a user with root access:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For this lab, we will use the **11-carve-fat.dd** evidence file that we previously
+    downloaded. If you did not do so, you can do so now by clicking on the following
+    link:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[http://prdownloads.sourceforge.net/dftt/11-carve-fat.zip?download](http://prdownloads.sourceforge.net/dftt/11-carve-fat.zip?download)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The file downloads as a **.zip** file and must be extracted before being used.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the **Downloads** folder, right-click on the **11-carve-fat.zip** file and
+    click on the **Extract Here** option, which will then extract the **11-carve-fat.zip**
+    file to the **Downloads** folder.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Let’s use the Terminal to change directories to the **Downloads** folder like
+    we did when using Foremost by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'To view the available options and their usage in Scalpel, type the following
+    command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: As we can see in the following screenshot, we have many options available to
+    us for carving and recovery when using **scalpel**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.18 – Scalpel usage options](image/Figure_9.18_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.18 – Scalpel usage options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To run Scalpel against our sample evidence file, type the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the previously used command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.19 – Scalpel carving command](image/Figure_9.19_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.19 – Scalpel carving command
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following screenshot shows the continued output of the command that we just
+    used.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.20 – Scalpel command output](image/Figure_9.20_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.20 – Scalpel command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the previous screenshot (*Figure 9**.20*), we can see that Scalpel builds
+    a carve list, showing the file type with header and footer information, as well
+    as the number of files carved.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Taking a closer look at the last few lines produced by the Scalpel output,
+    we can see that the carving process was 100% complete, with 18 files being carved:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.21 – A snippet of the Scalpel command output](image/Figure_9.21_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.21 – A snippet of the Scalpel command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We can now open the **scalpelOutput** folder to view our carved files. The
+    results of the Scalpel output are similar to that of Foremost, with both output
+    folders containing various subfolders with carved files, along with an **audit.txt**
+    file with details of the findings:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.22 – Carved contents within the scalpelOutput folder](image/Figure_9.22_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.22 – Carved contents within the scalpelOutput folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: Foremost, magicrescue, and Scalpel, as we’ve seen so far, are quite impressive
+    at file carving and data recovery; however, they are limited to specific file
+    types only. For further extraction of data, we will now look at another tool called
+    **bulk_extractor**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Data extraction with bulk_extractor
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The **bulk_extractor** tool extracts several additional types of information
+    that can be very useful in investigations. Although **bulk_extractor** is quite
+    capable of recovering and carving image, video, and document files, other data
+    that can be carved and extracted by **bulk_extractor** includes the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Credit card numbers
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Email addresses
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: URLs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Online searches
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Social media profiles and information
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'For this example, we will work with a freely available evidence file named
+    **nps-2010-emails.E01**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **nps-2010-emails.E01** file can be downloaded directly from the digital
+    corpora website, which allows the use of forensic evidence images for forensic
+    research purposes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If not already downloaded, the file can be downloaded at [https://digitalcorpora.s3.amazonaws.com/corpora/drives/nps-2010-emails/nps-2010-emails.E01](https://digitalcorpora.s3.amazonaws.com/corpora/drives/nps-2010-emails/nps-2010-emails.E01).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once downloaded, open a new Terminal and change to the **Downloads** folder,
+    just as we previously did. You can view the available options and usage by typing
+    the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the previously used command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.23 – bulk_extractor usage options](image/Figure_9.23_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.23 – bulk_extractor usage options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Like Foremost and Scalpel, the syntax for using **bulk_extractor** is quite
+    simple and requires that an output folder (**-o**) and the forensic image be specified.
+    Let us now use **bulk_extractor** to carve the evidence file and save all discovered
+    files and information to a folder named **bulk_carved** in the **Downloads** folder,
+    by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: '![Figure 9.24 – bulk_extractor command output](image/Figure_9.24_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.24 – bulk_extractor command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once completed, **bulk_extractor** indicates that all threads have finished
+    and provides a summary of the process and even some findings. The last line in
+    the following screenshot lists 67 found email features:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.25 – A snippet of the bulk_extractor output](image/Figure_9.25_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.25 – A snippet of the bulk_extractor output
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To view the output and findings of **bulk_extractor**, we can change our directory
+    to the **bulk_carved** folder in **Downloads** and use the **ls -l** command.
+    In the following screenshot, we can see that several text files such as **domain_histogram.txt**,
+    **domain.txt**, **email_domain_histogram.txt**, and **email.txt** contain data,
+    as their file sizes are greater than zero:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.26 – A list of files carved by bulk_extractor](image/Figure_9.26_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.26 – A list of files carved by bulk_extractor
+  prefs: []
+  type: TYPE_NORMAL
+- en: We can also open our **bulk_carved** folder and double-click on text files containing
+    data. Note that not all files will contain information. Files with a file size
+    of *zero* will contain no information.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.27 – Carved files within the bulk_extractor output folder](image/Figure_9.27_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.27 – Carved files within the bulk_extractor output folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s have a look at the **email.txt** file, as shown in the following screenshot.
+    We can see several email addresses and attachment details were carved by **bulk_extractor**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.28 – Content within the carved email.txt file](image/Figure_9.28_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.28 – Content within the carved email.txt file
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve covered some of the most popular file carving tools, let’s have
+    a look ata file recovery tool called **scrounge-ntfs**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: NTFS recovery using scrounge-ntfs
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '**scrounge-ntfs** is a tiny tool that comes with the default version as well
+    as the **Everything** metapackages of Kali Linux. A tiny but powerful tool, **scrouge-ntfs**
+    is a command-line tool for recovering drives formatted as **NTFS** (short for
+    **New Technology** **File System**), generally used by Windows devices. Most storage
+    media, including flash drives and storage media, can also be formatted as NTFS
+    using default formatting tools within Windows systems.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: It’s quite common for hard drives to have a corrupt **MFT** (short for **Master
+    File Table**). This table stores information about all files, including size,
+    permissions, content, and time stamps within NTFS drives. If this table becomes
+    corrupt or is missing, the contents of the drive may be inaccessible, or the drive
+    may not boot if it contains a bootable operating system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Regardless of the reason for an NTFS drive becoming corrupted, **scrounge-ntfs**
+    was built for the specific purpose of recovering files within an NTFS partition.
+    For this lab, I’ll be using an external hard drive formatted as NTFS, which has
+    also had all its contents deleted:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s first see what our device is listed as in Kali by running the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the previously typed command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.29 – fdisk output](image/Figure_9.29_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.29 – fdisk output
+  prefs: []
+  type: TYPE_NORMAL
+- en: As seen here, my attached drive is listed as **sdb** too.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before we begin the recovery process, I’d like to create a folder called **Scrounge_recovery**
+    on the desktop where all **scrounge-ntfs-**recovered files will be saved.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To do so, I’ll switch to the **Desktop** directory by typing the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Then, I’ll create the new directory by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'I’ll now change my output directory to avoid having to specify the directory
+    name when typing the **scrounge-ntfs** command, by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the previously typed command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.30 – Changing working directories](image/Figure_9.30_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.30 – Changing working directories
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note in the preceding screenshot (*Figure 9**.30*) that we can see my current
+    directory is **/Desktop/Scrounge_recovery**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s now view the usage and options of **scrounge_ntfs** by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the previously typed command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.31 – scrounge-nfts usage options](image/Figure_9.31_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.31 – scrounge-nfts usage options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s list all drive partitions by typing the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the previously typed command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.32 – The drive details](image/Figure_9.32_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.32 – The drive details
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that we can see the specific sector, cluster, and offset values (which
+    I’ve also listed here for clarity), we can use the format specified in the preceding
+    **scrounge-ntfs -h** output (*Figure 9**.32*):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Start** **Sector**: **16128**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**End** **Sector**: **976768002**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Cluster** **Size**: **8**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**MFT** **Offset**: **24**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The default usage for **scrounge-ntfs** is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'Let’s break down the preceding options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**-o [outdir]** = the output directory to save all recovered files to'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**disk** = the drive to recover'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**start** = the start sector'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**end** = the end sector'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'For my drive, the command will be the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: I did not specify an outdir or output directory command, as I am already within
+    the output directory of **Scrounge_recovery**, which I previously created.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you have double-checked your values to ensure they are correct, hit the
+    *Enter* key.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.33 – The scrounge-ntfs command and output](image/Figure_9.33_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.33 – The scrounge-ntfs command and output
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding output, you can see the files being recovered.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I can now list all files in the **Scrounge_recovery** directory or double-click
+    on **Scrounge_directory** on the desktop to view my recovered files:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.34 – The recovered files](image/Figure_9.34_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.34 – The recovered files
+  prefs: []
+  type: TYPE_NORMAL
+- en: As seen in this section, **scrounge-ntfs** is a very useful tool for NTFS drive
+    and partition recovery. Let’s move on to our final tool for this chapter called
+    Recoverjpeg, which can be used to quickly recover image files.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Image recovery using Recoverjpeg
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The last tool that I’ll cover in this chapter is **recoverjpeg**, which, as
+    the name implies, recovers JPEG images. This tool quickly and easily recovers
+    deleted photos from any storage media type. For this lab, I’ll be using a formatted
+    32-GB flash drive that once contained family photos I’d like to recover:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: I’ll first create a folder called **Recoverjpeg** on my desktop where all recovered
+    files will be saved to. This helps keep things organized, as not specifying an
+    output folder for all recovered files to be saved results in the recovered files
+    being saved to the **Home** or current working directory, which can clutter your
+    workspace.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the following screenshot, I’ve typed the **cd** command followed by **mkdir
+    Recoverjpeg** to create this folder on my desktop:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.35 – Creating the output folder](image/Figure_9.35_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.35 – Creating the output folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next, I’ll install the **recoverjpeg** tool by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the previously typed command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.36 – Installing recoverjpeg](image/Figure_9.36_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.36 – Installing recoverjpeg
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that the last line in the preceding screenshot prompts us to press *Y*
+    to continue the installation. Press *Y* and then *Enter* to proceed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Next, I’ll make sure that my flash drive is recognized in Kali by typing **sudo**
+    **fdisk –l**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.37 – fdisk command output](image/Figure_9.37_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.37 – fdisk command output
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the preceding screenshot, we can see that my Cruzer Blade 32-GB flash drive
+    is listed as **/dev/sdb**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I’ll now change directories to the **Recoverjpeg** folder that I previously
+    created, where all recovered files will be stored, by typing **cd Recoverjpeg**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.38 – Changing to the output directory](image/Figure_9.38_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.38 – Changing to the output directory
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To view the usage options for Recoverjpeg, type **recoverjpeg**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 9.39 – recoverjpeg usage options](image/Figure_9.39_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.39 – recoverjpeg usage options
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that I know which drive I’d like to recover images from, I now use **recoverjpeg**
+    to scan and recover images by typing the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE25]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following screenshot shows the output of the previously typed command.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.40 – Using the recoverjpeg command](image/Figure_9.40_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.40 – Using the recoverjpeg command
+  prefs: []
+  type: TYPE_NORMAL
+- en: Important note
+  prefs: []
+  type: TYPE_NORMAL
+- en: Depending on the size of the drive or image, this can take quite a few minutes.
+    Once the recovery is complete, recoverjpeg will display the number of files recovered.
+    In *Figure 8**.44*, we can see that a total of 2,021 files were recovered.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.41 – recoverjpeg process completion](image/Figure_9.41_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.41 – recoverjpeg process completion
+  prefs: []
+  type: TYPE_NORMAL
+- en: The recovered files were saved in the **Recoverjpeg** folder on the desktop
+    but will not have their original names. Instead, all recovered images will be
+    named in numeric order, starting from **image00000.jpg**, as shown in the following
+    screenshot.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 9.42 – Recovered jpeg photos within the output folder](image/Figure_9.42_B19441.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 9.42 – Recovered jpeg photos within the output folder
+  prefs: []
+  type: TYPE_NORMAL
+- en: I hope you found this tool as useful and easy to use as I do. This brings us
+    to the end of our chapter. I encourage you to practice using these tools, as you
+    will find that data recovery is one of the most common aspects of DFIR.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we learned about file recovery and data carving using popular
+    open source tools in Kali Linux. We first performed file carving using the very
+    impressive Foremost, which carved the entire downloaded forensic image for supported
+    file types within the file header and footers. We then did the same using Magicrescue
+    and Scalpel, but we had to make slight modifications by selecting the file types
+    we wished to carve. Both Foremost and Scalpel presented us with an **audit.txt**
+    file, summarizing the carve list and its details along with subfolders containing
+    the actual evidence.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**bulk_extractor** is a wonderful tool that carves data and also finds useful
+    information, such as email addresses, visited URLs, Facebook URLs, credit card
+    numbers, and a variety of other information. **bulk_extractor** is also great
+    for investigations requiring file recovery and carving, together with either Foremost
+    or Scalpel, or even both.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lastly, we looked at file recovery using **scrounge_NTFS** and **recoverjpeg**
+    to recover data and images from drives rather than forensic images.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve covered file carving and recovery, let’s move on to something
+    more analytical. In the next chapter, we’ll take a look at exploring RAM and the
+    paging file as part of memory forensics, using the very powerful volatility. See
+    you there!
+  prefs: []
+  type: TYPE_NORMAL

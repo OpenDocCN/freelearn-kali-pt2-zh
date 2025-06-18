@@ -1,0 +1,28 @@
+- en: 'Part 2: Data Analysis, Triage, and Incident Response'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this part, you’ll learn what to do with the data that you’ve collected, enriched,
+    indexed, and stored through traffic and log analysis. This will be accomplished
+    through the Malcolm suite of data collection and analysis tools, with a particular
+    focus on Arkime along with StrangeBee’s Cortex and TheHive SOAR. You will examine
+    the differences between intrusion detection and intrusion prevention and get your
+    hands dirty playing with Suricata and Zeek IDSs/IPSs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This part has the following chapters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 6*](B21223_06.xhtml#_idTextAnchor098), *Traffic and Log Analysis*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 7*](B21223_07.xhtml#_idTextAnchor108), *Intrusion Detection and Prevention
+    Systems*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 8*](B21223_08.xhtml#_idTextAnchor134), *Security Incident and Response*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

@@ -1,0 +1,1116 @@
+- en: '4'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Assessing Authentication Schemes
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This chapter covers some basic authentication penetration test cases. For background,
+    **authentication** is the act of verifying whether a person’s or object’s claim
+    of identity is true. Web penetration testers must make key assessments to determine
+    the strength of a target application’s authentication mechanism. Such tests include
+    username enumeration, guessable accounts, weak lockout mechanisms, authentication
+    bypasses, browser-caching weaknesses, and account provisioning omissions, particularly
+    related to **Representational State Transfer** (**REST**) API calls. You will
+    learn how to use Burp Suite to perform such tests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for account enumeration and guessable accounts
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for weak lockout mechanisms
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for bypassing authentication schemes
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for browser cache weaknesses
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing the account provisioning process via the REST API
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To complete the recipes in this chapter, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OWASP **Broken Web Applications** (**BWA**) (VM)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: An OWASP Mutillidae link
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A GetBoo link
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Burp Suite Proxy Community or Professional ([https://portswigger.net/burp/](B21173_04.xhtml#_idTextAnchor214))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Firefox browser configured to allow Burp Suite to proxy traffic ([https://www.mozilla.org/en-US/firefox/new/](B21173_04.xhtml#_idTextAnchor268))
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Testing for account enumeration and guessable accounts
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: By interacting with an authentication mechanism and studying responses, a tester
+    may be able to collect a set of valid usernames. Once valid accounts have been
+    identified, testers can attempt to brute-force passwords. This recipe explains
+    how Burp Suite Repeater can be used to collect a list of valid usernames via the
+    username enumeration attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the **OWASP GetBoo** application and Burp, we will perform a username
+    enumeration attack against the target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Ensure Burp Suite and the OWASP BWA VM are running, and that Burp Suite is
+    configured in your Firefox browser so that you can view the OWASP BWA applications:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the OWASP BWA landing page, click the link to the **GetBoo** application:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.1 – OWASP BWA landing page](image/B21173_Figure_4.01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.1 – OWASP BWA landing page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Log In** button and, at the login screen, attempt to log in with
+    an account username of **demo** and a password of **aaaaaa**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.2 – GetBoo login page](image/B21173_Figure_4.02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.2 – GetBoo login page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note that a message stating **The password is invalid**. is returned. From
+    this information, we now know the **demo** username has a valid account. Let’s
+    use Burp Suite **Repeater** to find more accounts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.3 – Overly verbose error message after a failed login attempt with
+    a valid username and invalid password](image/B21173_Figure_4.03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.3 – Overly verbose error message after a failed login attempt with
+    a valid username and invalid password
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In Burp’s **Proxy** | **HTTP history** tab, find the failed login attempt message.
+    View the **Response** | **Raw** tab to find the same overly verbose error message,
+    **The password** **is invalid**.:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.4 – Failed login attempt, as seen in Burp](image/B21173_Figure_4.04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.4 – Failed login attempt, as seen in Burp
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Flip back to the **Request** | **Raw** tab and right-click to send this request
+    to **Repeater**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.5 – Contextual menu to send request to Repeater](image/B21173_Figure_4.05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.5 – Contextual menu to send request to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to Burp’s **Repeater** tab where you sent the request. Click the **Send**
+    button. Notice the message in the response – **The security token** **is invalid**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.6 – The Repeater tab with the failed login attempt](image/B21173_Figure_4.06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.6 – The Repeater tab with the failed login attempt
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The message about the invalid security token is due to the token that was sent
+    with each request not being refreshed when we are inside Repeater sending the
+    same request over and again. Because the target application expects the token
+    value to change upon each POST request, we can craft our request inside Repeater
+    to get past this message. Let’s learn how we can make Burp Suite change the token
+    value for us! We can build a session handling rule with a macro to fix this situation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.7 – The token value in each POST request must be unique](image/B21173_Figure_4.07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.7 – The token value in each POST request must be unique
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Our first step in building a session handling rule with a macro is to select
+    the **Settings** gear icon at the top right-hand corner of Burp:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.8 – The Settings gear icon](image/B21173_Figure_4.08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.8 – The Settings gear icon
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the pop-out window, make sure **All** configurations are selected and the
+    **Sessions** area is highlighted, as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.9 – All | Sessions](image/B21173_Figure_4.09.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.9 – All | Sessions
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After highlighting **Sessions**, go inside the **Session handling rules** area
+    and click the **Add** button to add a new rule:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.10 – Creating a new session handling rule with a macro to handle
+    refreshing the token](image/B21173_Figure_4.010.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.10 – Creating a new session handling rule with a macro to handle refreshing
+    the token
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When the **Session handling rule editor** area appears, type **RefreshToken**
+    as the name of the new rule. For **Rule actions**, select **Run** **a macro**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.11 – Naming our session handling rule and defining the action](image/B21173_Figure_4.011.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.11 – Naming our session handling rule and defining the action
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When the **Session handling editor** pop-out window opens, select the **Update
+    only the following parameters and headers** radio button and type **token**. Please
+    *do not* skip this step; otherwise, the rule will not work properly:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.12 – Update only the token parameter setting](image/B21173_Figure_4.012.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.12 – Update only the token parameter setting
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the same **Session handling editor** pop-out window, at the top, click the
+    **Add** button under **Select macro**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4.13 – Session handling action editor settings](image/B21173_Figure_4.013.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.13 – Session handling action editor settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After clicking **Add** under **Select macro**, two new pop-out windows will
+    appear. In the **Macro Recorder** table shown here, look for the POST **/getboo/login.php**
+    request inside the history containing the **demo** username and the **aaaaaa**
+    password. This is the same request you performed in the browser and the same one
+    we looked at originally in **Repeater**. You must now find it in the **Macro Recorder**
+    table to have the macro *replay* the request:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.14 – Macro Recorder](image/B21173_Figure_4.014.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.14 – Macro Recorder
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here is the request containing **demo** and **aaaaaa**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4.15 – Macro Recorder highlighting the POST request of the login](image/B21173_Figure_4.015.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.15 – Macro Recorder highlighting the POST request of the login
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After finding the POST **/getboo/login.php** request inside the history, select
+    the GET **/getboo/login.php** request that occurred *just before* the POST (two
+    requests down, as shown in the following screenshot):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.16 – Macro Recorder of the previous GET request](image/B21173_Figure_4.016.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.16 – Macro Recorder of the previous GET request
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The reason this GET **/getboo/login.php** request is important is that the
+    token value in the response is assigned to the token value of the POST two requests
+    later:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.17 – The response of the previous GET assigns a hidden value for
+    the token](image/B21173_Figure_4.017.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.17 – The response of the previous GET assigns a hidden value for the
+    token
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As evidence and for your understanding, look at the POST **/getboo/login.php**
+    request again. Note that the value of the token matches the hidden value from
+    the previous GET response (that is, **ed881be5badd9b284239be84948a103a**):'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4.18 – The token value is used in the subsequent POST request](image/B21173_Figure_4.018.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.18 – The token value is used in the subsequent POST request
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using this pattern, we will create a macro to grab the ever-changing token value
+    from the GET response and have the unique value populate our token inside the
+    POST request we have waiting for us in **Repeater**. Running this macro should
+    fix the problem we are currently experiencing and get rid of the message stating
+    **The security token** **is invalid**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now, let’s build the macro! Select *only* the GET **/getboo/login.php** request
+    from the **Macro Recorder** history table and click **OK**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4.19 – Macro Recorder search box](image/B21173_Figure_4.019.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.19 – Macro Recorder search box
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After clicking **OK**, you will return to the **Macro Editor** area. Feel free
+    to name your macro – for example, **TokenFromResponseMacro**. Ensure *only* the
+    GET **/getboo/login.php** request is shown in the table. Click **Configure item**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.20 – Macro Editor | Configure item](image/B21173_Figure_4.020.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.20 – Macro Editor | Configure item
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A new pop-out window will appear entitled **Configure Macro Item**. We will
+    select a custom parameter in the response. Click **Add**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.21 – The Configure Macro Item custom parameter from the response](image/B21173_Figure_4.021.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.21 – The Configure Macro Item custom parameter from the response
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Yet another pop-out window will appear, where you can define the custom parameter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: For the parameter name, type **token**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type **token** into the search box at the bottom to find where the token is
+    in the response.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once you find the token value, highlight the *value* from beginning to end.
+    If you highlighted it correctly, you should see **Start after expression** and
+    **End at delimiter** populated, as shown in the following screenshot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Click **OK** to close the **Define Custom** **Parameter** window:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4.22 – Define Custom Parameter](image/B21173_Figure_4.022.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.22 – Define Custom Parameter
+  prefs: []
+  type: TYPE_NORMAL
+- en: After clicking **OK** three times to close all the pop-out windows, you should
+    return to the original **Session handling rule editor** dialog box. The view will
+    default to **Details**, so you need to select the other tab, **Scope**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Under **Tools scope**, uncheck all tool boxes except the **Repeater** tool.
+    Under **URL scope**, select **Include all URLs**. Click **OK** to close the **Session
+    handling rule editor** dialog box:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4.23 – Only assigning scope to Repeater](image/B21173_Figure_4.023.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.23 – Only assigning scope to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Make sure your new session handling rule is enabled by ensuring the checkbox
+    is filled:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.24 – Enabling the new session handling rule](image/B21173_Figure_4.024.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.24 – Enabling the new session handling rule
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, you are ready to return to **Repeater** and test out the new session handling
+    rule with the macro. Re-send the POST **/getboo/login.php** request inside **Repeater**
+    with **demo** as the username and **aaaaaa** as the password. Now, you will see
+    that the message is **The password is invalid**. instead of **The security token
+    is invalid**. If you don’t see the new message, retrace your steps to create the
+    session handling rules and macro:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.25 – Retesting the POST request in Repeater](image/B21173_Figure_4.025.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.25 – Retesting the POST request in Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We no longer receive the message stating **The security token is invalid**
+    inside Repeater. Great! Now that our session is handled properly with our macro,
+    let’s tweak the username in the POST request to see whether we can enumerate more
+    user accounts. In the name field, place an invalid username, such as **joey**,
+    and click the **Send** button. Notice the returned message of **The user does**
+    **not exist**.:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.26 – Trying different usernames to get verbose responses](image/B21173_Figure_4.026.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.26 – Trying different usernames to get verbose responses
+  prefs: []
+  type: TYPE_NORMAL
+- en: Continue to try different users and observe the different verbose messages.
+    For example, try **admin**. What message do you get? Interesting! Now, we know
+    there is a valid admin account.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Testing for weak lockout mechanisms
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Account lockout mechanisms should be present within an application to mitigate
+    brute-force login attacks. Typically, applications set a threshold between three
+    to five attempts. Many applications lock accounts for a period before a re-attempt
+    is allowed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Penetration testers must test all aspects of login protections, including challenge
+    questions and responses, if present.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Determine whether an application has proper lockout mechanisms in place. If
+    they are not present, attempt to brute-force credentials against the login page
+    to achieve unauthorized access to the application. Using the OWASP Mutillidae
+    II application, attempt to log in five times with a valid username but an invalid
+    password.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Ensure Burp Suite and the OWASP BWA VM are running and that Burp Suite has
+    been configured in your Firefox browser so that you can view the OWASP BWA applications:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From the OWASP BWA landing page, click the link to the OWASP Mutillidae II application.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open your Firefox browser and go to the login screen of OWASP Mutillidae II.
+    From the top menu, click **Login**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'On the login screen, attempt to log in five times with the **admin** username
+    and the wrong password of **aaaaaa**. Notice that the application does not react
+    any differently during these five attempts. The application does not change the
+    error message shown, and the **admin** account is not locked out. This means the
+    login is probably susceptible to brute-force password-guessing attacks:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.27 – Brute-forcing login attempts](image/B21173_Figure_4.027.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.27 – Brute-forcing login attempts
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s continue our testing to brute-force the login page and gain unauthorized
+    access to the application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to the **Proxy** | **HTTP history** tab and look for the failed login attempts.
+    Once found, right-click and **Send** **to Intruder**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.28 – Failed login attempt in HTTP history and Send to Intruder](image/B21173_Figure_4.028.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.28 – Failed login attempt in HTTP history and Send to Intruder
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to Burp’s **Intruder** | **Positions** tab. If suggested payload markers
+    are present, click the **Clear §** button to remove them. If none are suggested,
+    you may ignore this step:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.29 – The Intruder | Positions tab](image/B21173_Figure_4.029.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.29 – The Intruder | Positions tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Then, highlight the password value of **aaaaaa** and click the **Add §** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.30 – Setting a substitution marker in the Intruder | Positions tab](image/B21173_Figure_4.030.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.30 – Setting a substitution marker in the Intruder | Positions tab
+  prefs: []
+  type: TYPE_NORMAL
+- en: Continue to the **Intruder** | **Payloads** tab. Many testers use word lists
+    to brute-force commonly used passwords within the payload marker placeholder.
+    For this recipe, we will type in some common passwords to create a unique list
+    of payloads.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the **Payload settings [Simple list]** section, type the **admin123** string
+    and click the **Add** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.31 – Custom payload values](image/B21173_Figure_4.031.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.31 – Custom payload values
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Add a few more strings, such as **adminpass**, **welcome1**, and, **admin**,
+    to the payload-listing box:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.32 – Final list of custom payload values](image/B21173_Figure_4.032.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.32 – Final list of custom payload values
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to the **Intruder** | **Settings** tab and scroll down to the **Grep -**
+    **Extract** section:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 4.33 – Grep \uFEFF- Extract for a particular string literal on responses](image/B21173_Figure_4.033.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.33 – Grep - Extract for a particular string literal on responses
+  prefs: []
+  type: TYPE_NORMAL
+- en: Click the **Extract the following items from responses** checkbox and then click
+    the **Add** button. A pop-up box will appear, displaying the response to the unsuccessful
+    login attempt you made with the **admin**/**aaaaaa** request.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the search box at the bottom, search for **Not Logged In**. After finding
+    the match, you must highlight **Not Logged In** to assign the grep match correctly:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.34 – Grep for string literal](image/B21173_Figure_4.034.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.34 – Grep for string literal
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you do not highlight the words properly, after you click **OK**, you will
+    see **[INVALID]** inside the **Grep - Extract** box. If this happens, remove the
+    entry by clicking the **Remove** button and try again by clicking the **Add**
+    button, performing the search, and highlighting the words.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If you do highlight the words properly, you should see the following in the
+    **Grep -** **Extract** box:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.35 – Selecting a string literal to auto-populate the expression
+    start and end boxes](image/B21173_Figure_4.035.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.35 – Selecting a string literal to auto-populate the expression start
+    and end boxes
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you highlight the words correctly, after you click **OK** to close the **Define
+    extract grep item** dialog box, you will see the following expression in the **Grep
+    - Extract** text area:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.36 – Final grep rule setting](image/B21173_Figure_4.036.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.36 – Final grep rule setting
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, click the **Start attack** button at the top right-hand side of the **Settings**
+    page. If your attack does not start and you see a **Resume** button, click it
+    to begin your attack. If you do not see the **Resume** button, you may disregard
+    this step.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A pop-up attack results table appears, displaying the request with the payloads
+    you defined placed in the payload marker positions. Notice that the attack table
+    that was produced shows an extra column entitled **ReflectedXSSExecution**. This
+    column is a result of the **Grep - Extract** rule that we set previously.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From this attack table, viewing the additional column we added from **Grep
+    - Extract**, a tester can easily identify which requests successfully brute-forced
+    the login screen. In this case, request **2** and request **4**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.37 – Attack table](image/B21173_Figure_4.037.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.37 – Attack table
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select request **4** within the attack table and view the **Response** | **Render**
+    tab. You should see a message stating **Logged In Admin: admin (g0t r00t?)** at
+    the top right-hand side:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.38 – Results of the attack logged in the session](image/B21173_Figure_4.038.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.38 – Results of the attack logged in the session
+  prefs: []
+  type: TYPE_NORMAL
+- en: Close the attack table by clicking the **X** button in the top right-hand corner.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: With that, you successfully brute-forced the password of a valid account on
+    the system. Your attack was successful because the application has a weak lockout
+    mechanism.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for bypassing authentication schemes
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Applications may contain flaws, allowing unauthorized access by bypassing the
+    authentication measures in place. Bypassing techniques include a **direct page
+    request** (that is, forced browsing), **parameter modification**, **session ID
+    prediction**, and **SQL** **i****njection**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: For this recipe, we will use parameter modification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Edit the parameters of an authenticated request for a lower-privilege user to
+    elevate up to an admin. We will use **Proxy** | **Intercept** during login and
+    manipulate some cookie values to become a higher role. Once our privileges have
+    been escalated, we can gain access to administrative functionality without knowing
+    the admin’s credentials.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Open your Firefox browser, or the Burp Suite browser, and go to the home page
+    of OWASP Mutillidae II by using the **Home** button from the top menu on the left-hand
+    side. Make sure you are *not logged in to* the application. If you are logged
+    in, select **Logout** from the menu:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.39 – Confirm you are not logged in](image/B21173_Figure_4.039.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.39 – Confirm you are not logged in
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Login/Register** link to navigate to the **Login** page:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.40 – No logged-in session](image/B21173_Figure_4.040.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.40 – No logged-in session
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go to Burp Suite’s **Proxy** tab and click **Intercept is on** (toggle on).
+    Type the username of **user** and the password of **user** into the login form:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.41 – Proxy | Intercept is on](image/B21173_Figure_4.041.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.41 – Proxy | Intercept is on
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After entering your credentials, you should see that the request is held up
+    in **Proxy** | **Intercept**. Click **Forward**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.42 – Clicking the Forward button to send the request to the web
+    server](image/B21173_Figure_4.042.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.42 – Clicking the Forward button to send the request to the web server
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Continue to click **Forward** until you come to the GET **/mutillidae/index.php**
+    request, as shown here. Note the two cookies that we will manipulate – **username**
+    and **uid**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.43 – Notice the two cookie values, username and uid](image/B21173_Figure_4.043.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.43 – Notice the two cookie values, username and uid
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Edit the two cookie values, changing **username** to **admin** and **uid**
+    to **1**. Once you’ve done this, forward the request:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.44 – Manipulating the cookie values to elevate privileges](image/B21173_Figure_4.044.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.44 – Manipulating the cookie values to elevate privileges
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After forwarding the request, choose **Proxy** | **Intercept is off** (toggle
+    off):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.45 – Proxy | Intercept is off](image/B21173_Figure_4.045.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.45 – Proxy | Intercept is off
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Return to your browser; notice that you are now logged in as **admin**. You’ve
+    elevated your standard user privileges to become an administrator:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 4.46 – Session now shows the adm\uFEFFi\uFEFFn session](image/B21173_Figure_4.046.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.46 – Session now shows the admin session
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: By manipulating cookie values that are easily guessable, we can elevate our
+    authenticated session from a regular user to an administrator.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing for browser cache weaknesses
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Browser caching is provided for improved performance and a better end user experience.
+    However, when sensitive data is typed into a browser by the user, such data can
+    also be cached in the browser history. We can view this cached data by examining
+    the browser’s cache or simply pressing the browser’s *back* button.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using the browser’s back button, determine whether login credentials are cached,
+    allowing for unauthorized access. Examine these steps in Burp to understand the
+    vulnerability.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Log in to the Mutillidae application as **admin** with a password of **admin**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.47 – Logging in as admin](image/B21173_Figure_4.047.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.47 – Logging in as admin
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, log out of the application by clicking the **Logout** button from the top
+    menu.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.48 – Logout](image/B21173_Figure_4.048.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.48 – Logout
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Verify you are logged out by noting the **Not Logged** **In** message:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.49 – Verifying that you’re not logged in](image/B21173_Figure_4.049.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.49 – Verifying that you’re not logged in
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'View these steps as messages in Burp’s **Proxy** | **HTTP history** area as
+    well. Note that the logout performs a **302** redirect to not cache cookies or
+    credentials in the browser:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.50 – Finding the logout request under Proxy | HTTP history](image/B21173_Figure_4.050.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.50 – Finding the logout request under Proxy | HTTP history
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From your Firefox browser, click the *back* button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.51 – Using the browser’s back button](image/B21173_Figure_4.051.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.51 – Using the browser’s back button
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice that you are now logged in as **admin** even though you did not log
+    in! This is possible because of cached credentials stored in the browser and the
+    lack of any cache-control protections set in the application:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4.52 – The browser caches the session so that we are still logged
+    in, even after clicking the Logout button](image/B21173_Figure_4.052.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.52 – The browser caches the session so that we are still logged in,
+    even after clicking the Logout button
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, refresh/reload the page in your browser; you will see you are now logged
+    out.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: No request is captured in Burp Suite when you press the browser’s back button.
+    This is because the back button action is isolated within the context of the browser.
+    No message was sent through Burp Suite to the web server to perform this action.
+    This is an important distinction to note. Due to a lack of caching protection,
+    we found a vulnerability where the logout does not destroy the session on the
+    client side.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Testing the account provisioning process via the REST API
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Account provisioning is the process of establishing and maintaining user accounts
+    within an application. Provisioning capabilities are usually restricted to administrator
+    accounts. Penetration testers must validate that account-provisioning functions
+    are only available to users with proper identification and authorization. A common
+    venue for account provisioning is through REST API calls. Many times, developers
+    may not put the same authorization checks in place for API calls that are used
+    in the UI portion of an application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Using REST API calls available in the OWASP Mutillidae II application, determine
+    whether any unauthenticated API calls exist and whether such calls can provision
+    or modify users.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Make sure you are not logged in to the application. If you are, click the **Logout**
+    button from the top menu. Now, follow these steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Within Mutillidae, browse to the **User Lookup (SQL)** page and select **OWASP
+    2013** | **A1 Injection (SQL)** | **SQLi – Extract Data** | **User** **Info (SQL)**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: "![Figure 4.53 – User loo\uFEFFkup page](image/B21173_Figure_4.053.jpg)"
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.53 – User lookup page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Type **user** for **Name** and **user** for **Password**, and then click **View
+    Account Details**. You should see the results shown in the following screenshot.
+    This is the account we will test provisioning functions against using API calls:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.54 – Database results for the user account](image/B21173_Figure_4.054.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.54 – Database results for the user account
+  prefs: []
+  type: TYPE_NORMAL
+- en: Through crawling, Burp Suite can find **/api** or **/rest** folders. Such folders
+    are clues that an application is REST-API-enabled. A tester needs to determine
+    which functions are available through these API calls and whether those calls
+    require authentication.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For Mutillidae, the **/webservices/rest/** folder structure offers account
+    provisioning capabilities through API calls. Look for these folders via **Target**
+    | **Site map**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.55 – API directory structure](image/B21173_Figure_4.055.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.55 – API directory structure
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To go directly to this functionality within Mutillidae, select **Web Services**
+    | **REST** | **SQL Injection** | **User** **Account Management**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.56 – Navigating to the User Account Management documentation page](image/B21173_Figure_4.056.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.56 – Navigating to the User Account Management documentation page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will be presented with a screen describing the supported API calls and
+    the parameters required for each call. We will refer to this page as the *User
+    Account Management* page. The URL of this page of the web root is **/webservices/rest/ws-user-account.php**:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 4.57 – User Account Management API documentation page](image/B21173_Figure_4.057.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.57 – User Account Management API documentation page
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Within this *User Account Management* API documentation page, note the GET
+    call section. This page is similar to Swagger or other self-explanatory API pages
+    and provides instructions on the required format to display account information
+    for a single user or all users:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.58 – API instructions to get account information](image/B21173_Figure_4.058.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.58 – API instructions to get account information
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the instructions from the *User Account Management* API documentation
+    page, let’s invoke the GET API to view user accounts. To begin, find the call
+    to the User Account Management page under **Proxy** | **HTTP history**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Go to the **Proxy** | **HTTP history** table and select the latest request
+    you made to navigate to the User Account Management page. Look for the **/mutillidae/webservices/rest/ws-user-account.php**
+    call in the history. Once found, right-click and send this request to **Repeater**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.59 – Sending the call to the User Account Management page to Repeater](image/B21173_Figure_4.059.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.59 – Sending the call to the User Account Management page to Repeater
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In Burp’s **Repeater**, add **?**, followed by a parameter name/value pair
+    of **username=user**, to the URL. The new URL should be **/mutillidae/webservices/rest/ws-user-account.php?username=user**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.60 – Adding a username parameter](image/B21173_Figure_4.060.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.60 – Adding a username parameter
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click the **Send** button – notice that we can retrieve our account data:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.61 – Viewing the results of the request](image/B21173_Figure_4.061.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.61 – Viewing the results of the request
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, to determine whether we can see this data as an unauthenticated user,
+    remove the value of the **PHPSESSIONID** cookie and resend the request. Amazing!
+    No authentication token is required to perform such actions! We just found an
+    unauthenticated API call! This is a huge finding:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.62 – Removing the authentication token; note that the results are
+    still returned](image/B21173_Figure_4.062.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.62 – Removing the authentication token; note that the results are still
+    returned
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s see what else we can do against this unauthenticated API endpoint. Using
+    the SQL injection string given on the User Account Management page, let’s attempt
+    to dump the entire user table.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Append the following value after **username=**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs:
+  - PREF_IND
+  type: TYPE_PRE
+- en: 'The new URL should be as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Click the **Send** button after making the change to the **username** parameter.
+    Your request should look as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.63 – Using a SQL injection attack in the username parameter](image/B21173_Figure_4.063.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.63 – Using a SQL injection attack in the username parameter
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice that we dumped all the accounts in the database that are displaying
+    all usernames, passwords, and signatures! We also dumped this data without any
+    authentication token:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 4.64 – Entire dump of the user table](image/B21173_Figure_4.064.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 4.64 – Entire dump of the user table
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Finding unauthenticated API endpoints is an important testing task that must
+    be performed. This is a common issue due to the ubiquity of API usage across applications
+    and mobile apps. In [*Chapter 10*](B21173_10.xhtml#_idTextAnchor588), we will
+    look at a Burp Suite extension that can help us find unauthenticated API endpoints
+    a bit easier.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,306 @@
+- en: Preface
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Burp Suite is a Java-based platform for testing the security of your web applications
+    and has been adopted widely by professional enterprise testers.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The **Open Web Application Security Project** (**OWASP**) offers many resources
+    to developers and testers for securing web and API applications. This book leverages
+    test cases from OWASP with slight modifications for use in Burp Suite to give
+    you hands-on practice. Toward the end of this book, more advanced concepts are
+    included, giving you recipes to be applied in bug bounty hunting, penetration
+    testing, and application security.
+  prefs: []
+  type: TYPE_NORMAL
+- en: By the end of the book, you will be up and running with using Burp Suite to
+    test the security posture of your web applications and APIs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Who this book is for
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: If you are a security professional, web pentester, or software developer who
+    wants to adopt Burp Suite for testing application and API security, this book
+    is for you.
+  prefs: []
+  type: TYPE_NORMAL
+- en: What this book covers
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: '[*Chapter 1*](B21173_01.xhtml#_idTextAnchor020), *Getting Started with Burp
+    Suite*, provides the setup instructions necessary to proceed through the material
+    of the book.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 2*](B21173_02.xhtml#_idTextAnchor073), *Getting to Know the Burp
+    Suite of Tools*, begins by establishing the target scope and provides overviews
+    of the most commonly used tools within Burp Suite.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 3*](B21173_03.xhtml#_idTextAnchor159)*,* *Configuring, Crawling,
+    Auditing, and Reporting with Burp*, helps testers to calibrate Burp Suite settings
+    to be less abusive toward the target application.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 4*](B21173_04.xhtml#_idTextAnchor214), *Assessing Authentication
+    Schemes*, covers the basics of authentication, including an explanation that it
+    is the act of verifying that a person or object’s claim is true.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 5*](B21173_05.xhtml#_idTextAnchor269), *Assessing Authorization Checks*,
+    helps you understand the basics of authorization, including an explanation that
+    it how an application uses roles to determine user functions.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 6*](B21173_06.xhtml#_idTextAnchor328), *Assessing Session Management
+    Mechanisms*, dives into the basics of session management, including an explanation
+    that it is how an application keeps track of user activity on a website.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 7*](B21173_07.xhtml#_idTextAnchor392), *Assessing Business Logic*,
+    covers the basics of business logic testing, including an explanation of some
+    of the more common tests performed in this area.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 8*](B21173_08.xhtml#_idTextAnchor441), *Evaluating Input Validation
+    Checks*, delves into the basics of data validation testing, including an explanation
+    of some of the more common tests performed in this area.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 9*](B21173_09.xhtml#_idTextAnchor522), *Attacking the Client*, helps
+    you understand how client-side testing is concerned with the execution of code
+    on the client, typically natively within a web browser or browser plugin. You’ll
+    learn how to use Burp Suite to test the execution of code on the client side to
+    determine the presence of **Cross-Site Scripting** (**XSS**). You’ll also learn
+    about using DOM Invader within the Burp Suite browser to uncover DOM-based vulnerabilities.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 10*](B21173_10.xhtml#_idTextAnchor588), *Working with Burp Suite
+    Macros and Extensions*, teaches you how Burp Suite macros enable penetration testers
+    to automate events such as logins or response parameter reads to overcome potential
+    error situations. You will also learn about extensions as additional functionality
+    to Burp Suite, especially a few choice ones for bug bounty hunting.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 11*](B21173_11.xhtml#_idTextAnchor639), *Implementing Advanced Topic
+    Attacks*, provides a brief explanation of XXE as a vulnerability class targeting
+    applications that parse XML and SSRF as a vulnerability class allowing an attacker
+    to force applications to make unauthorized requests on the attacker’s behalf.
+    You will also learn about hacking GraphQL and **JSON Web Tokens** (**JWTs**) using
+    Burp Suite.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To get the most out of this book
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: All the requirements are updated in the *Technical requirements* section for
+    each of the chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The following table is a list of software requirements. You will need the items
+    in the table throughout the book. The preliminary steps of each recipe will inform
+    you what software is required.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| **Software/hardware** **covered in** **the book** | **OS and** **other requirements**
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Oracle VirtualBox | Windows, macOS, and Linux (any) |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Mozilla Firefox browser | OWASP **Broken Web Applications** (**BWA**) VM
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| 7-Zip file archiver | Burp Suite Community or Professional |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Oracle Java | PortSwigger account to access labs |'
+  prefs: []
+  type: TYPE_TB
+- en: Each recipe contains a setup stage called *Getting ready*, which provides links
+    and instructions for the required software prior to performing the individual
+    steps.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Conventions used
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are a number of text conventions used throughout this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Code in text**: Indicates code words in text, database table names, folder
+    names, filenames, file extensions, pathnames, dummy URLs, user input, and Twitter
+    handles. Here is an example: "Allow the attack to continue until you reach payload
+    **50**.”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'A block of code is set as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Any command-line input or output is written as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '**Bold**: Indicates a new term, an important word, or words that you see onscreen.
+    For example, words in menus or dialog boxes appear in the text like this. Here
+    is an example: “Select a tool from the drop-down listing and click the **Lookup**
+    **Tool** button.”'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Tips or important notes
+  prefs: []
+  type: TYPE_NORMAL
+- en: Appear like this.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sections
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this book, you will find several headings that appear frequently (*Getting
+    ready*, *How to do it...*, *How it works...*, *There’s more...*, and *See also*).
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To give clear instructions on how to complete a recipe, use these sections
+    as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This section tells you what to expect in the recipe and describes how to set
+    up any software or any preliminary settings required for the recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This section contains the steps required to follow the recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This section usually consists of a detailed explanation of what happened in
+    the previous section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There’s more…
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This section consists of additional information about the recipe in order to
+    make you more knowledgeable about the recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: See also
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: This section provides helpful links to other useful information for the recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Get in touch
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Feedback from our readers is always welcome.
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**General feedback**: If you have questions about any aspect of this book,
+    mention the book title in the subject of your message and email us at [customercare@packtpub.com](mailto:customercare@packtpub.com).'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Errata**: Although we have taken every care to ensure the accuracy of our
+    content, mistakes do happen. If you have found a mistake in this book, we would
+    be grateful if you would report this to us. Please visit [www.packtpub.com/support/errata](http://www.packtpub.com/support/errata),
+    selecting your book, clicking on the Errata Submission Form link, and entering
+    the details.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Piracy**: If you come across any illegal copies of our works in any form
+    on the Internet, we would be grateful if you would provide us with the location
+    address or website name. Please contact us at [copyright@packt.com](mailto:copyright@packt.com)
+    with a link to the material.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**If you are interested in becoming an author**: If there is a topic that you
+    have expertise in and you are interested in either writing or contributing to
+    a book, please visit [authors.packtpub.com](http://authors.packtpub.com)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Share your thoughts
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Once you’ve read *Burp Suite Cookbook - Second Edition*, we’d love to hear your
+    thoughts! Please [click here to go straight to the Amazon review page](https://packt.link/r/183508107X)
+    for this book and share your feedback.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your review is important to us and the tech community and will help us make
+    sure we’re delivering excellent quality content.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Download a free PDF copy of this book
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Thanks for purchasing this book!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Do you like to read on the go but are unable to carry your print books everywhere?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Is your eBook purchase not compatible with the device of your choice?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Don’t worry, now with every Packt book you get a DRM-free PDF version of that
+    book at no cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Read anywhere, any place, on any device. Search, copy, and paste code from your
+    favorite technical books directly into your application.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The perks don’t stop there, you can get exclusive access to discounts, newsletters,
+    and great free content in your inbox daily
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Follow these simple steps to get the benefits:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scan the QR code or visit the link below
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](image/B21173_QR_Free_PDF.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: '[https://packt.link/free-ebook/9781835081075](https://packt.link/free-ebook/9781835081075)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Submit your proof of purchase
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: That’s it! We’ll send your free PDF and other benefits to your email directly
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL

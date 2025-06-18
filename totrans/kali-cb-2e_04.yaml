@@ -1,0 +1,1085 @@
+- en: Finding Exploits in the Target
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Searching the local exploit database
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Searching the online exploit database
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Metasploit setup and configuration
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Armitage setup
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Basic exploit attacks with Armitage
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Advanced attacks with Armitage
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using the backdoor factory and Armitage
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, we will take the host information that we have accumulated
+    to determine the potential exploits to use against target machines and services.
+    It is important to note that as you work through this section, you are going to
+    be launching attacks against hosts. These attacks are going to create noise on
+    the network that may be picked up by security devices. Under typical circumstances,
+    you will spend substantial time validating whether your target is truly vulnerable
+    to an exploit before launching it, so you don't create any unnecessary information
+    that could be used to determine an active attack against a device.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Searching the local exploit database
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The searchsploit database is a local exploit database that comes standard with
+    Kali. This is a great way to search for exploits offline or when you have no internet
+    connectivity. Because of it's offline search capabilities, it's great for when
+    you are operating in an air-gapped location.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now search the local exploit database:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open the terminal screen by clicking on the terminal icon on the top left. ![](assets/7dcddfa6-829b-4b59-8756-ba029ec171d5.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From the main terminal screen, you should be at a Command Prompt of `root@kali:~#`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Review searchsploit options by entering the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: Update searchsploit
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We must start by ensuring our searchsploit database is updated:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the main terminal prompt, enter the following command to update the searchsploit
+    database:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: Regularly updating Kali with the APT package manager will also automatically
+    update the database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Install additional modules required to run some functions of searchsploit:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: Run a simple query
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will run a simple query against our searchsploit database:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the main terminal prompt, let''s run a simple query looking for a known
+    SMB vulnerability, `MS17-010`. You may recognize this as the vulnerability associated
+    with WannaCry as well as other various malware worms:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will receive the following output:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/0b7eb2b9-0ab4-4ac8-b61a-575a9ec7d14e.png)Searchsploit console output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s take a look at some of the specifics related to one of the query results:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: The following output will show you that you are looking at a Metasploit module.
+    This module is specifically designed to search devices to see whether they are
+    vulnerable to this exploit.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will discuss Metasploit shortly, but it's important to note that if this
+    a vulnerability is not included in the default Metasploit database, we can import
+    it for use.![](assets/44cf2077-5729-42ed-a9eb-b8044d7ac986.png)Nano output of
+    a specific exploit
+  prefs: []
+  type: TYPE_NORMAL
+- en: To exit the nano editor, type `<control>-x`; if you are asked to save modified
+    buffer, type `n`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Explore some of the other results; you will note that `41987.py` is an exploit
+    for this vulnerability written in Python.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding search options in searchsploit
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are several parameters you can search for using searchsploit; try the
+    following examples.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following command will search just the titles of the exploit database for
+    `windows` and `remote`, allowing you to find the potential remote windows vulnerabilities:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'If you exported your nmap or zenmap results in an XML format, you can search
+    against that for exploits. Run a quick `nmap` and output its results to `/root/test.xml`.
+    The following command is used to search against that output file and will provide
+    you with a list of exploits for your nmap search:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: Searching the online exploit database
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will use Firefox to review an online exploit database at [www.exploit-db.com](https://www.exploit-db.com/).
+  prefs: []
+  type: TYPE_NORMAL
+- en: The `exploit-db.com` site will have all the information in the searchsploit
+    database, but some may find the web GUI interface easier to use and navigate.
+    There may also be some slightly newer information on the website as the searchsploit
+    database is only updated on a weekly basis. The `CAPTCHA` function of the website
+    is one significant drawback of using the website.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now perform searches through the online exploit database:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From the main interface, launch the Firefox application. ![](assets/cbf60cb0-12d3-497b-ae7e-b13a660fdf39.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Go to the site named [https://www.exploit-db.com/search](https://www.exploit-db.com/search).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Enter `windows remote` in the search term, click on reCAPTCHA, and select Search:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c2132489-e169-4e5e-acc2-770b0fd935a6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Firefox screen capture of the exploit-db.com website
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will be provided with an output as shown in the following screenshot. You
+    will notice that you have a lot of clickable options to navigate through the database.
+    You can use this to get more information and refine your searches:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/46b052eb-77a5-4632-94ad-aed2d805d3c0.png)Firefox screen capture
+    of the exploit-db.com website vulnerability listClick on the orange More Optionsbutton
+    to see additional search query options and try a few searches.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Metasploit setup and configuration
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Metasploit Framework now comes as part of the Kali installation, thus making
+    the setup and the initial configuration a relatively simple process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The Metasploit Framework is an open source development tool for creating and
+    executing exploit code against machines. In the later releases of Kali, it has
+    now become part of the core bundle of tools, and therefore very little setup is
+    required to get it operational. In this recipe, we will take you through those
+    few steps and get you up and run.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that both the Metasploit Framework and Armitage use the same backend database,
+    therefore if you have already initialized the database, skip to the heading –
+    starting the *Metasploit framework initialization and startup *section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Make sure you have run the updates recently
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are several steps in preparing to use the Metasploit console that we will
+    go through in this section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Metasploit Framework initialization and startup
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Begin by opening a terminal window by clicking on the terminal icon on the left. ![](assets/d29267da-7f1a-42a0-a025-e62917507ac8.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Metasploit uses a database to store information about targets, exploits, and
+    other information. We need to begin by starting the database daemon. From the
+    Command Prompt enter the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, we will initialize the database (this only needs to be done once when
+    first starting it):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you ever need to reinitialize the database to start over, you can use the
+    `msfdb reinit` command. Be warned that all the existing data will be lost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, we can start the Metasploit console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE9]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will now be dropped in the main MSF screen. Note that your Command Prompt
+    has now changed to `msf >`to indicate you are now in the console:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/732b0aeb-3b85-4df3-8ca0-ff8921333de4.png)msfconsole screenYour screen
+    may look different to the previous screenshot. When the Metasploit Framework starts,
+    it picks a different text based image (banner) to start with. You can run through
+    them by typing `banner` at the `msf >` prompt.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s validate our database is connected and operating properly. From the
+    `msf >` prompt type the following command, if all is working well, you should
+    see [*] postgresql connected to msf:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE10]'
+  prefs: []
+  type: TYPE_PRE
+- en: Starting the Metasploit console
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'From the Command Prompt, type the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE11]'
+  prefs: []
+  type: TYPE_PRE
+- en: Stopping the Metasploit console
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'From the `msf >` console, type the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE12]'
+  prefs: []
+  type: TYPE_PRE
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Although you can do all your work from the command line, we are going to use
+    Armitage moving forward, Armitage is a GUI frontend to the Metasploit Framework.
+    If you want to get more information on using the command line, two great resources
+    are here:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: MSFconsole commands tutorial: [https://www.offensive-security.com/metasploit-unleashed/msfconsole-commands/](https://www.offensive-security.com/metasploit-unleashed/msfconsole-commands/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Metasploit cheat sheet: [https://www.sans.org/security-resources/sec560/misc_tools_sheet_v1.pdf](https://www.sans.org/security-resources/sec560/misc_tools_sheet_v1.pdf)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Armitage setup
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Armitage is a graphical frontend to the Metasploit Framework.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will be setting up the Armitage graphical user interface
+    for the Metasploit Framework. Based on your preference, you may like the GUI versus
+    the command-line experience. However, you can use them both interchangeably at
+    anytime because of their common database.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Note that both the Metasploit Framework and Armitage use the same backend database,
+    therefore if you have already initialized the database, skip to the section on
+    starting Armitage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Make sure you have run the updates recently
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Validate internet connectivity
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Armitage initialization and startup
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We shall now initialize and start up Armitage:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Begin by opening a terminal window by clicking on the terminal icon on the left. ![](assets/404eda68-40fd-4546-b96a-3ff07a0396ff.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Metasploit uses a database to store information about targets, exploits, and
+    other information. We need to begin by starting the database daemon. From the
+    Command Prompt, type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE13]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, we will initialize the database (this only needs to be done once when
+    first starting it):'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE14]'
+  prefs: []
+  type: TYPE_PRE
+- en: If you ever need to reinitialize the database to start over, you can use the
+    `msfdb reinit` command. Be warned that all the existing data will be lost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Start Armitage by typing this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE15]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Click on Connect as shown in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/699033fc-d7d7-4a38-a059-85d5390c81de.png)Armitage database connection
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select Yes when asked to start the Metasploit RPC server:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b9e95aad-124c-45ac-acc0-ebdff6572bb6.png)Armitage start RPC server
+    screenYou may be asked for the IP address of your computer. Enter the IP address
+    that you assigned to your host-only network. In my case it''s `192.168.56.102`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Stopping Armitage
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To stop Armitage and exit:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To exit, click on Armitage at the top, and select Close:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9d210521-6f99-4958-a6f3-02030213e265.png)Armitage menu with close
+    option'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Command Prompt, type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE16]'
+  prefs: []
+  type: TYPE_PRE
+- en: Basic exploit attacks with Armitage
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will perform some very basic tasks of Armitage including
+    loading an nmap scan, performing an nmap scan, finding attacks to use against
+    the target, and exploiting the target machine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Make sure Armitage is running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Make sure, at a minimum, the Metasploitable VM and Windows XP VM are running;
+    feel free to turn on other target hosts as you wish
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: From the main Armitage screen, we must start by finding our targets on the network.
+    We have the ability to import hosts from prior nmap scans or run nmap from the
+    Armitage console itself.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Import an nmap scan
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will begin by importing an nmap scan into Armitage:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select Hosts | Import Hosts from the top:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d361e47c-c2cb-4f70-b948-d014ab16390a.png)Armitage import hosts menu'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Browse the file system, and select your nmap output XML file; click on Open:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/36dc10cd-5ec4-431b-8150-adbb7cc1e595.png)Armitage open file dialog
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will now see your nmap scan results populated, and you may begin working
+    on the devices:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/23a07b7d-2464-4b9f-939c-6a54f64c465f.png)Armitage nmap scan import
+    results populated on screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Perform an nmap scan from the Armitage interface
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To perform an nmap scan from within Armitage do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select Hosts | Nmap Scan | Intense Scanfrom the top:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/62f03cff-1531-4528-9009-d16bf7e099de.png)Armitage nmap scan menu'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter our scan range; in this case, we will scan our entire `192.168.56.0/24`
+    network, and click on OK. This scan can take a couple minutes to complete, so
+    just be patient:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ef561ca5-46af-4045-adf2-6dc40f4315fa.png)Armitage nmap input range
+    dialog box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once finished, you will see a scan complete notification; and your console
+    will now display your hosts. You can also close the nmap output window by clicking
+    on the nmap x near nmap toward the middle of the screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2026e7fb-2ba3-4d3e-8f6f-3cdf9ad1089a.png)Armitage nmap scan results
+    populated on screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Find attacks against a host
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will use armitage to find attacks against hosts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: At this point, let's work with our Metasploitable machine, which currently has
+    an IP address of `192.168.56.104`. Click on it once to select it (this will be
+    denoted with a green dotted outline).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'If you right-click on the device, you will see a variety of options - select
+    Services. This will bring up a list of all listening ports and services for that
+    host. Scroll down a bit and take a look at all the information provided:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6b0bf026-316b-4348-936d-29a9e5004e4e.png)Armitage host services
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let''s find some possible attacks against the hosts. Click on Attacks | Find
+    Attacks from the top. This could take a minute or two for it to correlate the
+    information. When completed, you will receive an Attack Analysis Complete... dialog
+    box. Select OK to close it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/01ffd43c-ede4-4b82-9347-6b8268d2ceb4.png)Armitage find attacks menu'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, if we right-click on our host, we will see a new menu item labeled attack.
+    Scroll through all the possible attack options you see there:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/0c1b2e18-2690-40ff-8b55-c1ab2862677a.png)Armitage attack menu'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Exploit the host
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now launch an exploit against a host:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we have attacks that will potentially compromise a host, let's go ahead
+    and select one to run. Let's right-click on our Metasploitable machine, and select
+    Attack | irc | unreal_ircd_3281_backdoor.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You will be presented with options that you may have to scroll through and
+    change. For instance, your LHOST should be the interface toward your target VMs.
+    Make any needed changes, and click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4e97f44a-a269-4600-877d-e290199986e6.png)Armitage exploit launch
+    dialogBe patient, it may look like things have stalled or failed, but it will
+    continue.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will now see that the Metasploitable device icon has changed to show it
+    has been owned:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3e477c47-f448-4873-b914-93fd82a729bc.png)Armitage main screen with
+    indicator of exploited device'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'So now that the device has been owned, let''s run a couple of simple commands.
+    By right-clicking on the device, we will now see a new action called Shell 1; from
+    there, we will select Interact:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ba35b338-999f-4f8e-be66-b1c3b642d358.png)Armitage shell interact
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will now be presented with a new Shell 1 tab on the bottom with a $ prompt.
+    Let''s see who we are on the box by entering the following command at the $ prompt:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE17]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'This should return the user you are currently authenticated as; in our case,
+    we are root:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/56bd3121-bcbd-49aa-a7d7-eba470ed1b72.png)Armitage shell whoami output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Just to validate how much damage we can do to this machine, let''s enter the
+    following at the $ prompt:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE18]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now, let''s login to our Metasploitable VM login with `msfadmin`/`msfadmin`,
+    and run the following command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE19]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will see from the output that the file is there, it exists in the `bin`
+    directory, and has read, write, and execute for user, group and everyone:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/8f42c49a-8a5f-4b6a-83eb-1abcd958e78a.png)Armitage command outputThe
+    Hail Mary Attack - There is an attack listed as the Hail Mary. In short - Don''t
+    do it. It''s noisy and will just throw everything after a target. It might be
+    useful in a lab situation if you have a sample VM you are looking for exploits
+    in, but for a live network or across the Internet, it will be seen very easily
+    and is typically just an indication of the lack of experience and skill of the
+    tester.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Advanced attacks with Armitage
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will now perform an advanced attack with Armitage against
+    a Windows XP machine. We will perform several different functions such as initial
+    exploitation, VNC access, downloading, and viewing files.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting started
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Make sure Armitage is running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Make sure at a minimum the Windows XP VM is running - feel free to turn on other
+    target hosts as you wish
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: From our Armitage screen, let's select the Windows XP VM for this section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Initial exploitation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will perform an initial exploitation of our windows VM:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the Windows XP VM, and select Attack | smb | ms08_067_netapi:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/96b1659e-fce1-4c39-b2c1-9d19983ab78d.png)Armitage attack options'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Make any modifications necessary including changing the LHOST if needed to
+    the IP address on the VM network. Once ready, click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/299fa1f8-6539-4150-99ab-a2abff27eb33.png)Armitage attack dialog
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will now see that the Windows XP VM machine device's icon has been changed
+    to again identify that this machine has been owned.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/663ffd3b-5b13-49d0-9b72-6c0416f39091.png)Armitage main screen with
+    indication of exploited device'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Dump hashes
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now perform a password hash dump of the windows VM:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let's now dump the user hashes, so we can crack them later and use them as part
+    of other exploits. Start by right-clicking on the Windows XP VM, and you will
+    see a new option. Select Meterpreter 3 | Access | Dump Hashes | registry method; at
+    the next screen, select Launch.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You will now see the hashes dumped to the screen, and they will also be saved
+    in our loot store. Also, take a look through the output file; and you will see
+    that password hints were also dumped. Jane Doe's password hint is `jane123` -
+    Could that be her password?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/786c8fa7-ca57-45e7-a092-781ceeaf7976.png)armitage hashdump output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you close the dump hashes window, you can go back in and click on View | Loot;
+    and double-click on the host to see the hashes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Interacting with the Windows machine
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now open a command shell to interact with the Windows VM directly:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Right-click on the Windows XP VM, and select Meterpreter 3 | Interact | Command
+    Shell.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Try running some Windows commands, and see what you get back:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE20]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now, let''s start VNC and see what we can do from the desktop. Right-click
+    on the Windows XP VM, and select Meterpreter 3 | Interact | Desktop (VNC). You
+    will be presented with a screen similar as follows. Note the port number for this
+    VNC session:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/998c59d7-bbbd-4270-8b9d-509ec7d9eb62.png)Armitage VNC bind information
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let's now click on our terminal icon from the left. ![](assets/02f2e238-5a98-477c-a161-00d1d2cfb6c2.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Enter the following command from the shell:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE21]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'You will now be brought to the Windows XP machine:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a568e575-8b48-4637-821c-7b1e991f548d.png)VNC view of Windows XP
+    VM'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Browsing the target's files
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now browse the file system of the Windows machine:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Right-click on the Windows XP VM, and select Meterpreter 3 | Explore| Browse
+    Files. You will be presented with a familiar file browsing interface:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5f31f37e-e22d-42e8-9bfb-745f0985555f.png)Armitage browse files screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will see that you can browse and change directories. You can create directories
+    and upload files; and if you right-click on a file, you will have other options
+    such as view and download. Download a couple of files, and then go to View | Downloads
+    to see them:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2b6bc200-37a1-4449-b663-432eb5611742.png)Armitage downloaded files
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will be covering topics such as cracking the user password in [Chapter 6](868da5dc-85d4-4ac2-9325-1274b75c8c7d.xhtml),
+    *Password Cracking* and persistence in [Chapter 10](02e6452a-b223-4edb-954a-fef51f21215e.xhtml),
+    *Maintaining Access*. You may want to go do those recipes now, as they are a continuation
+    of where we are now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using the backdoor factory and Armitage
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We will use the backdoor factory and Armitage in combination to compromise a
+    target system. The backdoor factory is a tool that can insert exploit code to
+    a Windows executable file. This is great when you are trying to exploit a user
+    through them downloading software, or even through physical attacks such as dropping
+    USB keys.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Armitage is running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your Windows XP VM is running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now use Backdoor Factory to insert exploit code into an executable:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: First, let's browse and find a popular software package that a user might want
+    to download or may seem benign or enticing. In our case, let's go out and grab
+    putty. Every network admin has probably used putty at some point in the past.
+    Open Firefox ![](assets/6f82804b-8a95-416b-b669-6e8ff80e87d5.png) and browse to
+    [www.putty.org](http://www.putty.org/). From this site, download `putty.exe` (32
+    bit version); and save the file in your `Downloads` directory.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You will have to scroll down a bit on the page to find the EXE file - do not
+    use the MSI file for this exercise.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open terminal ![](assets/676c69cd-bdae-4e05-b279-ba736000eec3.png) and enter
+    the following. We will first make an exploit directory, and then copy the `putty.exe`
+    file to that directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE22]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Next, let''s take an initial run of backdoor factory and see what we have available
+    to insert into `putty.exe`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE23]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/4837a190-8cee-4bf7-9129-af6b869d506f.png)Backdoor factory output
+    screen for available shell code'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note the options that are available to use with this executable file. We will
+    go ahead and select `reverse_shell_tcp_inline`, use the IP of our Kali machine,
+    and use a port number by entering the following command. During the execution
+    of the command, you will be asked a question about where you can inject the code;
+    let''s simply select `1`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE24]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/86baa271-16cd-42ec-bf4e-56bf2bd12265.png)Backdoor factory successfully
+    adding shell code to putty.exe fileNote that we used a `-X` for a command-line
+    option for backdoor factory. The `-X` option indicates that this file should be
+    allowed to run on Windows XP. Also don''t give up if the first time you try building
+    the exploit it fails. If you have problems try other options and vectors. As software
+    is updated often your results may not work exactly as mine did. This is expected.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we will see a new `backdoored` directory in our `Home` directory that has
+    `putty.exe` with the exploit in it. Move that file to your Windows XP machine,
+    but don't run it yet.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Start Armitage and go to the main screen. From the dropdown directory on the
+    left, select exploit | multi | handler, and click on it:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4a51b563-07a6-491d-9409-7318e7a4e753.png)Armitage handler menu'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will be brought to a dialog screen, so select the proper IP and port number
+    that corresponds to what we enter for the information before. In our case, it
+    is the Kali machine with an IP of `192.168.56.10`; and we used a port of `8123`.
+    Click on Launch:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/de1c3924-b8a2-4a2d-9bc0-6e03b0925c0e.png)Armitage launch dialog
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will see the handler launch; note at the top that your Windows XP machine
+    appears normal:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/faf7c8ee-61f5-41a1-a6ab-17cb17cc5ffb.png)Armitage output screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, launch `putty.exe` on your Windows VM:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3eceb676-0ed3-40bb-a86a-5a665f6dc56a.png)Windows XP running exploited
+    putty.exe file'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Note that your Windows XP Machine icon will now change to show that it has
+    been exploited; and you will also see that the session has opened from the console
+    output:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/52f01d24-1dcf-4c83-9133-84e0b95c5917.png)Armitage screen showing
+    successful connection and exploited device icon'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If you right-click on the Windows XP machine, you can select Shell 1 | Interact. You
+    will then be dropped into a shell screen to do as you wish:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/930e4524-6007-4a05-a746-d4d3ec723dda.png)Armitage showing command
+    shell screen'
+  prefs: []
+  type: TYPE_NORMAL

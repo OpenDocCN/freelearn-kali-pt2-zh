@@ -1,0 +1,33 @@
+- en: 'Part 3: Kali Linux Digital Forensics and Incident Response Tools'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Here’s the fun part. From this point on, we’ll have a hands-on approach with
+    practical labs. In this section, we will first learn how to use various tools
+    for the forensic acquisition of memory (RAM) and storage media. We will then move
+    on to file recovery and data carving tools, and finally, delve into the analysis
+    of memory dumps, and perform different types of artifact analysis.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This part has the following chapters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 8*](B19441_08.xhtml#_idTextAnchor147), *Evidence Acquisition Tools*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 9*](B19441_09.xhtml#_idTextAnchor179), *File Recovery and Data Carving
+    Tools*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 10*](B19441_10.xhtml#_idTextAnchor191), *Memory Forensics and Analysis
+    with Volatility 3*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 11*](B19441_11.xhtml#_idTextAnchor211), *Artifact, Malware, and Ransomware
+    Analysis*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

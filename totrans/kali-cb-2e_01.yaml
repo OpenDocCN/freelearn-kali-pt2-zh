@@ -1,0 +1,1923 @@
+- en: Installing Kali and the Lab Setup
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lab architecture and considerations
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing VirtualBox
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Kali on VirtualBox
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Using Kali Linux from bootable media
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Upgrading Kali Linux
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding the advanced customization and optimization of Kali
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Windows machines
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing Metasploitable
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Installing OWASP-BWA
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Understanding hack me and other online resources
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In order to set the stage for the rest of this book and to help you reproduce
+    the recipes and their output, I strongly recommend that you create a test environment
+    where you can run various tools that are included with Kali Linux. In this chapter,
+    we will be focusing on building our testing environment based on free or low-cost
+    applications to minimize cost.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Starting with installing the virtualization platform, VirtualBox, we will walk
+    through a few common installation techniques for Kali Linux; you will also learn
+    how to update and maintain your installation.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Lab architecture and considerations
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this section, we will discuss our lab design and provide some information
+    that you can use to expand it in the future.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As we begin to set up our lab, we want to take some time to discuss the lab
+    setup and some of the considerations that we will take when using the lab. Some
+    of these considerations are designed to make the lab more effective, while others
+    are used for the protection of the networks our lab is connected to. We also want
+    you to be in a position to easily expand or grow this network with other test
+    machines as you master the Kali recipes that follow.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this section, we will be discussing general topics as opposed to specific
+    recipes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The hypervisor selection
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Today, there are many different hypervisors that will allow you to run multiple
+    virtual machines on a single physical machine. For our specific purposes, we have
+    chosen to show you how to setup the initial lab in VirtualBox due to several compelling
+    factors. It's free to use, has multi-platform support, and it's able to run within
+    your main operating system. However, as we progress past the first chapter, we
+    will be switching to VMware ESXi. This will not affect recipes in any way between
+    using VirtualBox and VMware ESXi. Our main reason for switching is the amount
+    of compute resources that are available to us in our dedicated lab. We have the
+    ability to run many virtual machines at once, and we will have the ability to
+    insert firewalls and other security devices between our Kali instance and our
+    testing hosts, as needed. We also have the flexibility to create more complex
+    environments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: If, for any reason, you are looking to build a larger test network or have a
+    different hypervisor of choice that better suits your purposes, feel free to use
+    it, as we will assume you will be able to translate our instructions between the
+    different hypervisors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The hypervisor networking
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In our lab, we are going to be using two networks within VirtualBox: a NAT
+    network and a host-only network. Our Kali box will be connected to both the networks,
+    so it can communicate with devices on the internet, download updates, and get
+    software packages as needed. Our target machines will only be connected to the
+    host-only network. The host-only network can only talk within the host and among
+    other devices connected to the host-only network. It cannot communicate through
+    your Ethernet or wireless networks. This setup is extremely critical to our testing
+    environment, as we do not ever want to expose our testing hosts to the outside
+    world, as they are very vulnerable and will be hacked rather quickly.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To further protect the networks that your lab is connected to, we would actually
+    suggest disconnecting the virtual adapter of the Kali virtual machine that connects
+    to the NAT network, unless specifically required for the recipe operation. This
+    way, your network is protected from accidental exposures to any attacks you may
+    be sourcing from Kali.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerable workstations
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: One of the many questions frequently asked is why we soften machines or use
+    machines that have vulnerabilities. The fact is that a properly patched, properly
+    configured, and properly hardened machine is quite difficult to get into. Penetration
+    testing is not trying to get through to hardened devices but looking specifically
+    for those devices that have vulnerabilities. In a typical engagement, you may
+    find only one or two machines that have vulnerabilities. You can then use these
+    machines to gain a foothold into an environment to compromise other more hardened
+    machines. If you start doing regular engagements as a penetration tester, you
+    will be surprised by just how many machines you may be able to find that have
+    vulnerabilities. This is especially true with the proliferation of low cost **Internet
+    of Things** (**IoT**) devices such as internet connected cameras, thermostats,
+    automation systems, and monitoring. These devices often run Linux-type embedded
+    operating systems and are rarely patched and often overlooked. More importantly,
+    they are often riddled with bugs and vulnerabilities that we can use for our purposes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing VirtualBox
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To set the foundation for our lab, we will be using VirtualBox as a virtual
+    hardware platform to host our images. This recipe will outline the steps necessary
+    to do so. In the event that you wish to use an alternate virtualization platform,
+    the same general principles will apply.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When it comes to learning a new set of skills or sharpening the ones you already
+    have, the importance of a testing environment cannot be overstated. It is imperative
+    that you have the means to test against systems in a known state so that you can
+    validate the results of your tests.
+  prefs: []
+  type: TYPE_NORMAL
+- en: One method of saving resources, both physical hardware and computing resources,
+    is to utilize a virtual environment where your testing devices reside. One very
+    popular example of a virtualization platform is Oracle's VirtualBox—a purpose
+    build virtualization environment designed for use with x86 platforms that can
+    host many virtual machines on one physical computer. This allows for the sharing
+    of resources such as disk, RAM, CPU, and so on. Additionally, because VirtualBox
+    supports importing and exporting virtual appliances, resources can be easily moved,
+    shared, and so on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To prepare for the use of VirtualBox for the remainder of this book, we will
+    need to ensure that we have enough resources on our server to be able to run several
+    of the virtual guests at the same time. The following chart highlights the amount
+    of resources that each of our intended guest systems will require:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Name | Disk required | Memory required | CPU required | Chapters used |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Kali Linux | 80 GB | 8 GB | 2 | 1-10 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Metasploitable | 65 GB | 4 GB | 1 | 1,2,4-7,10 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Ubuntu 16.4 LTS | 15 GB | 2 Gb | 1 | 1,6,10 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Windows XP SP3 | 10 GB | 1 GB | 1 | 1,2,4-7,10 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Windows 7 - host 1 | 10 GB (thin) | 2 GB | 1 | 1-7 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Windows 7 - host 2 | 10 GB (thin) | 2 GB | 1 | 1-7 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Windows 2008 Server | 25 GB (thin) | 2 GB | 1 | 1-7 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| OWASP-BWA | 10 GB | 1 GB | 1 | 1,9 |'
+  prefs: []
+  type: TYPE_TB
+- en: '| VulnOS | 32 GB | 1 GB | 1 | 1,7 |'
+  prefs: []
+  type: TYPE_TB
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this section, we will build out an environment that will allow you to perform
+    security testing without the need for physical hardware:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Ensure that you have the following resources free on your host machine to support
+    the system combinations mentioned in preceding list. In totality, you will need
+    the following in addition to the resources needed by VirtualBox itself:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 5 CPU
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 1500+ GB free disk space
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 16 GB free memory
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Download the appropriate version of VirtualBox for your lab environment from
+    [www.virtualbox.org](https://www.virtualbox.org/).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It would also be good to familiarize yourself with the detailed options available
+    from the VirtualBox manual, which can be found at [https://www.virtualbox.org/manual/ch01.html.](https://www.virtualbox.org/manual/ch01.html)
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you have downloaded the installer, locate it, and start the installation.
+    As the application begins the installation, you will see the following dialog
+    boxes. As of the time of writing this book, the version available was 5.1.8\.
+    When you are greeted with the dialog box seen in the following figure, select
+    Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/9ac09c4b-67f9-4685-bd9a-f1236e725842.png) Initial installation screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'When given the option at the first Custom Setup screen, as seen in the following
+    figure, leave the default options in place, and select Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/2184951a-a381-4d13-82dd-51383f531f06.png) First custom setup screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'At the second Custom Setup screen, as seen in the following figure, review
+    the options and determine which are appropriate to your preferences, and select
+    Next:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/123d80a2-f45a-4b58-885f-2a79a04425d2.png) Second custom setup screenIf
+    you leave Register file associations, this will configure your system to use VirtualBox,
+    to open virtual disk images automatically.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: After the basic configuration options have been decided, the setup will now
+    begin to make changes to the host computer. One such step is the installation
+    of the dedicated virtual network adapters that allow VirtualBox to provide different
+    options in regard to how your systems use networking. During the installation
+    of these drivers, you may experience a brief loss of connectivity; so when prompted,
+    acknowledge this fact by selecting Yes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once ready to kick off the installation, select Install from the next dialog
+    box, and wait until the installation process is complete.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: During the installation process, you will be prompted to allow the installation
+    of device drivers. These drivers are predominantly used for the virtual network
+    devices. You may choose to trust device drivers signed by Oracle in the future,
+    or leave that option unchecked.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the installation is complete, you will be given the option to finish, or
+    finish and then start VirtualBox.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Depending on what other uses for this lab you may have in the future, this would
+    be a good time to install the VirtualBox expansion set that includes support for
+    the USB 2.0 and 3.0 USB controllers, host web camera, RDP services, and other
+    features. It is recommended that you install these at this time before starting
+    VirtualBox.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you start VirtualBox, you will need to confirm the settings for network
+    connectivity. You are going to want to find the Preferences item under the VirtualBoxmenu
+    heading; now, select it. Then, select the network option along the top, and you
+    will be presented with the following window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/084ea215-b58a-4c68-abf1-f7eb146be787.png)VirtualBox preferences
+    dialog - network'
+  prefs: []
+  type: TYPE_NORMAL
+- en: By default, NatNetwork should already be created for you. However, if one is
+    not displayed, click on the + button on the top right to add one.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the next section, we will be creating networks that exist only on your PC.
+    Although these networks will only be seen on your PC, we strongly recommend that
+    you use subnets that do not coincide with any of the existing networks that you
+    may have access to.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once added, review the setup of the network by clicking on the wrench icon,
+    on the lower-right part, and you will be presented with the following dialog box.
+    You can modify the IP subnet as needed. Ensure that Enable Network is selected,
+    and click on OK to continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/bff62510-03e0-4890-a2ce-7a958904034f.png)NatNetwork configuration
+    dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Create our test network. Select Host-only Networks. By default, no network
+    is created, so click on the + icon in the upper right-hand corner to create the
+    vboxnet0 network:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/52c1478a-9e6f-432b-a70f-0bbb76c149e6.png)Host-only networks dialog
+    box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Ensure that the vboxnet0 interface is highlighted, and click on the wrench
+    icon in the lower-right part of the screen. An IPv4 address will already be populated
+    for you. If you are putting this into an existing lab network, or if this range
+    is used in other places in your existing environment, feel free to designate a
+    different network if necessary, as this will be your dirty network for testing
+    purposes:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4d4bba63-ce58-4738-96b4-2c7037480812.png)Host-only network adapter
+    dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let's review and modify the DHCP Server section by selecting it. The defaults
+    should be fine, but you can adjust them as you feel appropriate.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Do not use the whole range for DHCP, as you may want to statically assign IP
+    Addresses to servers on your dirty network.![](assets/1c903e6f-d5dd-445b-89f4-2a34eb9f674e.png)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once these steps have been completed, your VirtualBox environment is ready for
+    the next section.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this section, we will download and install the virtual compute environment,
+    VirtualBox, to build the base of our test lab. We configured the basic network
+    configurations and set up DHCP to help with dynamic host networking.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing Kali on VirtualBox
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this section, we will install Kali Linux into a virtual host in the VirtualBox
+    environment, as we described in the previous section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux (Kali) is based on the Debian operating system; and it is a self-contained
+    environment that includes hundreds of tools that can be used for security auditing
+    and testing purposes. It provides a platform, which you can use to build your
+    penetration testing skills. It is one of the most widely used platforms for this
+    purpose.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali comes in a variety of different flavors – we will be using the full Kali
+    install using the Gnome windows manager, inside an Oracle VirtualBox environment.
+    However, Kali can be installed on any hypervisor; it can be non-destructively
+    run from a USB or CD drive, on Raspberry Pi's, or other similar single board computers.
+    It supports installation on both the Intel and Arm processors.
+  prefs: []
+  type: TYPE_NORMAL
+- en: When you first go to the Kali website and look at the downloads section ([www.kali.org/downloads](http://www.kali.org/downloads)),
+    it may be a bit overwhelming with all the options at first, so let's run through
+    some of them, so you understand the differences.
+  prefs: []
+  type: TYPE_NORMAL
+- en: With reference to the following image, you will note that the top two entries,
+    the Kali 64 bit and the Kali 32 bit, are the default full install of the operating
+    system using the Gnome windows manager.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The next two entries denoted by lightare a minimal install of Kali with the
+    Gnome Windows manager for some space constrained systems. You can use this along
+    with manually installing only the needed tools for your specific purposes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The next four entries denoted with e17, Mate, Xfce, and LXDE are full installs
+    of the Kali operating system, each using a different graphical windows manager
+    for its desktop interface. If you happen to have an older device, consider running
+    Kali with the XFCE interface, as it requires less resources than Gnome. I would
+    only suggest these if you are familiar with them, and opt not to use the default
+    Gnome windows manager or have a specific purpose to do so such as resource constraints.
+  prefs: []
+  type: TYPE_NORMAL
+- en: The last two entries, armhf and armel, are for those two flavors of the arm
+    architecture with armhf supporting the older ARMv4 instruction set, and the armel
+    supporting the new version 7 instruction set.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Please also note that the sha256 value is displayed. This allows you to validate
+    that you have downloaded an unaltered version of the image:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/3cc28e99-3d93-442e-bc8b-4c10bdd0f856.png)Kali.org download page,
+    image section, as of May 2017'
+  prefs: []
+  type: TYPE_NORMAL
+- en: If you scroll down the page a bit more, you will see the section that allows
+    you to download pre-prepared images that can automatically run without going through
+    the setup process; in addition, it supports various hypervisors, or, in the case
+    of ARM, has images and scripts for popular arm-based computers, such as Raspberry
+    Pi's or other popular arm-based devices.
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will not be using these images as we want to walk you through a full installation
+    and setup of Kali, so you have a better understanding of the process.![](assets/fbf8524e-de1d-49cd-9764-cc957303880f.png) Kali.org
+    download page, hypervisor and arm section, as of May 2017
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Before installing Kali Linux, we need to ensure the minimum requirements are
+    met:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your computer is connected to the internet
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have a minimum of 4 GB of RAM (8 GB is recommended)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have a minimum of 25 GB hard drive space available (80 GB is recommended
+    for [Chapter 3](efecc8fd-4746-4428-9662-854d418bcba2.xhtml), *Vulnerability Analysis*)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: VirtualBox installation is complete and currently running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Download the appropriate Kali disk image from [https://www.kali.org/downloads/](https://www.kali.org/downloads/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For our purposes, we will be using the Kali 64 bit version. Please refer to
+    the recipe introduction for more details about these options.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s begin the process of installing Kali:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on New in the upper left-hand corner of the screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b641861c-65f8-48bc-a46b-407a345cb229.png)Main VirtualBox screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Name your virtual machine `Kali Linux`, select type as Linux, and select the
+    version as Linux 2.6 / 3.x / 4.x (64-bit). Press the Continue button when complete:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c8cb7e7f-b089-4659-886c-e1c329a84ffb.png) Name and operating system
+    selection screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Memory size: You will be presented with a slider for memory size, with the
+    ability to manually enter a value: in the box type in `4096`. The 4 GB of memory
+    will provide a smooth and responsive Kali install. Click on Continue.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Hard disk: select Create a virtual hard disk now and press on Create.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You will note that on this screen, it will refer to a recommended hard disk
+    size of 8 GB. Please note that this is not sufficient for a full Kali install,
+    and we will be allowed to change it in a future step.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Hard disk file type: take the default file type of VDI (VirtualBox Disk Image).
+    Select Continue.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you are interested in having easy compatibility with other hypervisors, you
+    can select one of the other types available. **Virtual Hard Disk** (**VHD**) is
+    widely used for Windows HyperV. **Virtual Machine Disk** (**VMD**) is widely used
+    for VMware deployments.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Regarding the storage on physical hard disk, leave the default of Dynamically
+    allocated and click on Continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you are running an older spinning disk versus a solid state drive and have
+    the available space on the disk, the recommendation would be to use Fixed size.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'File location and size: leave the name and location with the default, and either
+    move the slider or enter `25.00` GB directly into the box. Click on Create.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 25 GB is a nice size for the install plus some extras. If you have limited space
+    requirements please see our discussions of the various Kali image and installation
+    options for more guidance in the introduction section of this recipe.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on Kali Linux to highlight it; then click on Settings:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/83aa10f1-e32d-49c9-b649-a060a7d7dec1.png)VirtualBox main screen
+    - with Kali Linux VM shown'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From here, we will select the Storage option. Originally under Controller:
+    IDE it will say Empty.Click to highlight Empty. Click on the circular disk icon
+    to the right of IDE Secondary Master. An option dialog will be brought up, and
+    select Choose Virtual Optical Disk File. This will bring up a file manager dialog,
+    which will allow you to find and select the Kali image you downloaded previously.
+    Once completed, your screen should look similar to the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/554f0dda-ef39-42d1-8224-cc7ec5a6df33.png) Kali Linux VirtualBox
+    settings storage option'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on Network and verify that Adapter 1 shows attached to NAT Network with
+    the name NatNetwork:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d21b5489-9b6a-4649-a266-62b7b8126405.png)Kali Linux - network adapter
+    1'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on Adapter 2 and for Attached to select Host-only Adapter with the Name
+    as vboxnet0, then click on OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/acd87e21-10e5-48b7-a0d3-3053961276e1.png)Kali Linux - network adapter
+    2'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We are brought back to the main manager screen. Let''s click on Kali Linux
+    to highlight it, and then click on Start:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/698e2b60-fe90-473f-9cc8-88991733b4d6.png)VirtualBox manager screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We will now be brought to the main Kali installation screen. Let''s click on
+    Graphical install:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5cbc102b-ea86-48f7-ab77-11b10b224d3c.png) Kali main installation
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select an appropriate language; for our use, we will select English and click
+    on Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d1ba2cd1-ad87-44a9-8f00-2e7ddbb7e246.png)Select a language screenYou
+    may click on X on the boxes at the top, if any, as they are only informational.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the proper keymap for your region. For our purposes, we will select American
+    English. Then, click on Continue. The VM will then start by loading installer
+    components. This should only take a moment or two based on the performance of
+    your device. It will also detect and connect to your network automatically.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You will be brought to a screen where you must enter the hostname. Let''s simply
+    call our install `Kali` and click on Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/7bbf35c1-6e68-4d5f-b420-94f3c95ce94a.png)Kali configure network
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The next screen will ask for your domain name. We will leave this blank, and
+    simply click on Continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Our next screen will ask us to enter a root password. Select a strong password.
+    Enter it for a second time to validate it, and click on Continue. The install
+    will continue through some further steps.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once completed, you will be brought to a configure clock screen. Select the
+    appropriate time zone; for our purposes, we will select Eastern, then click on
+    Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/8ad0872f-8e25-4076-80ff-b8c5db4064d6.png) Configure clock screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Partitioning disks: for simplicity, we will select Guided - use entire disk,and
+    click on Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c6d5cc88-1e47-4dd0-9afe-c97cf4b82fed.png) Partition disksIt''s important
+    to note that, for our example here, we want to just keep it straightforward. When
+    actually setting this up for production testing, I have a dedicated laptop and
+    use a fully encrypted LVM. This would be a recommendation when you move from working
+    in a sandbox and go to actual engagements; as a pen tester, you need to protect
+    your work as well as your client''s information. Encryption, in that case, is
+    paramount.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You may also want to keep in mind crossing borders with encrypted laptops and
+    what the border security rights are. In the US, even for US citizens, they can
+    ask for your passwords to get into the machines, remove them from your immediate
+    control, and confiscate them. You may want to take situations like this into consideration;
+    you can ship that encrypted laptop to and from the destination as needed, or complete
+    your reports prior to leaving, and wipe the hard drive. Remember that deleting
+    files is not securely wiping information - you can use a tool such as **Darik's
+    Boot and Nuke** (**DBAN**) [https://dban.org/](https://dban.org/) and use `5220.22-m`
+    wipe methods.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will be brought to a partition disks screen for confirmation. Click on
+    the disk to highlight it, and click on Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/11d54cd3-b8e3-4410-8d14-09050417c599.png)Partition disksPlease note
+    that as you are inside a virtual machine when it references, your disk will be
+    erased; it is only talking about the virtual partition and not your disk. If you
+    have decided to load this on your PC as the native operating system, it will erase
+    the entire drive.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select All files in one partition (recommended for new users) and click on
+    Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a8a2a720-9790-4d06-9614-db983dfce3c4.png)Partition disks - screen
+    2'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select Finish partitioning and write changes to disk. Click on Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ce241e09-13b2-4b01-bd38-8a3eb0a9b7be.png)Partition disks - screen
+    3'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Click on Yes to write changes to disk. Click on Continue:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/29479adc-659e-422c-b26d-2a76763f08d7.png) Partition disks - screen
+    4Your system will begin installing further. This process will take several minutes,
+    so please be patient.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Upon the completion of the install, you will be asked whether you want to use
+    a Network Mirror for your package manager. Select Yes and click on Continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You will be asked to enter a proxy server if needed. Please enter any required
+    information (for most installs, you will leave this blank). Click on Continue.
+    Kali will continue to install packages.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select **Yes** to install the GRUB boot loader and click on Continue.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select the single drive listed to highlight it, and then click on Continue.This
+    will finish the installation:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c5aa3b6e-6ed2-48ac-9ecf-c40a251db320.png)Install GRUB boot loader'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After a short time, you will be brought back to the Finish the Installation
+    screen. This will ask to boot your computer to ensure that you have removed the
+    installation media. Under most circumstances, VirtualBox or other hypervisors
+    will honor the disk eject command issued when Kali finishes installation, but
+    we need to be sure. At this point in time, do nothing:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d83d5620-51f9-4c98-b070-b19ad37b8a6e.png) Kali Linux: finish the
+    installation'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Move the installation windows to the side to expose the main VirtualBox manager
+    screen. Click on to highlight the Kali Linux VM. Click on Settings, and next click
+    on Storage.If under Controller: IDE, you do not see Empty, click on the install
+    media shown to highlight it. Click on the icon at the far right that looks like
+    a disk, and select Remove Disk from Virtual Drive.Click on OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/f0b7db91-1337-4320-8c55-50f603bfd936.png) VirtualBox manager'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Go back to the Kali Installation screen, and now click on Continue. It will
+    finish a couple items up, and reboot the virtual machine bringing you to the login
+    screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d8db07ca-1054-43ce-b785-53bacd770cd4.png)Kali Linux finish the installationRemember
+    that when logging into the system, your username is `root` and the password that
+    you created during installation.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Using Kali Linux from bootable media
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As you will see in the pages that follow, there are a tremendous number of uses
+    for Kali Linux, and for these uses, it is not always practical to dedicate a device
+    to one particular use case, as this would be a tremendous waste of resources.
+    To address this, you can use the Kali Linux installation ISO downloaded in the
+    previous section as a live CD as well; or you can maintain persistence with a
+    live USB drive with persistence (with or without Linux Unified Key Setup encryption).
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will show you how to create the Live USB (no persistence, no history maintained).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Additional options such as live USB with persistence, live USB with encrypted
+    persistence, and custom rolled Kali Linux ISO (which can be incorporated into
+    the bootable USB options) can be found on the Kali Linux documentation wiki at
+    [http://docs.kali.org](http://docs.kali.org) under the section called 02\. Kali
+    Linux Live.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In order to be able to complete this section successfully, you will need the
+    following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: USB Drive (8 GB or larger)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: USB disk imager (Win32DiskImager)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s begin the process of creating a bootable Kali Linux USB device:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Starting with the Kali Linux ISO file we downloaded in the earlier recipe, installing
+    VirtualBox, we will use Win32DiskImager ([https://sourceforge.net/projects/win32diskimager/](https://sourceforge.net/projects/win32diskimager/))
+    to create a bootable USB using the ISO. Download and install Win32DiskImager.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once installed, launch Win32DiskImager.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In order to format the USB drive and to write the raw image, Win32DiskImager
+    needs admin permissions to run. You will need to give permission for it to run
+    when the user access control dialog is presented.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Win32DiskImager will use IMG files, but we will tell it to use an ISO file as
+    the source. From the application screen, click on the File Open button, and when
+    presented with the File Open box, change the file filter to *.* in the lower right,
+    and navigate to the Kali Linux ISO file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select the drive letter of your USB device, and click on Write:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6d2cd64e-1e22-4fa2-898c-70f5c2644091.png)FW32 DiskImager example'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once the image has been written to the USB drive, you will be able to boot from
+    this device on machines that support the USB bootable media. In this configuration,
+    you now have a bootable USB drive that will from which the Kali Linux operating
+    system will boot, as if it were installed onto the local disk. Across reboots,
+    you will lose any documents you may have created. If you choose it, you can create
+    an additional partition on the USB drive that will be persistent, and keep files
+    and documents you may wish to keep. The step-by-step instructions on how to extend
+    this functionality can be found on the Kali Linux documentation wiki at [http://docs.kali.org](http://docs.kali.org)
+    under 02\. Kali Linux Live.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Upgrading Kali Linux
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we have a base install of Kali, let's run through any updates and upgrades
+    required. This is something you want to do periodically with the system, to make
+    sure you are using the most up-to-date information.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Before you start, ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your computer is connected to the internet
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your installation of Kali is running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To bring an existing Kali Linux installation up to date, you will do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the main Kali desktop, let''s click on the terminal icon in the upper-left
+    part of the screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6e9076dd-d3aa-44db-ab39-105b09766b48.png) Kali Linux desktopSince
+    we are already logged in as the root, we will not require any elevation of privileges
+    using the `su` or `sudo` commands.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Command Prompt, type this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/9c15d565-e4d4-4d31-8cba-58a0b468f4c2.png) Kali Linux Command PromptAfter
+    the initial installation, this process could take several minutes to complete.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once complete, we will actually upgrade the system by entering the following
+    at the Command Prompt:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/c8224362-5c6c-42e8-a852-da95884d0e49.png)Kali Linux Command Prompt'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'After a minute or two, you will get a screen explaining what will be upgraded
+    and what needs to be installed for the upgrades to occur. When ready to continue,
+    type `Y` and press *Enter*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/13c8d7a7-e90c-4a14-b11e-c7e9635c9943.png)Kali linux Command PromptThis
+    process will take quite some time to complete, so please be patient as your system
+    upgrades.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once complete, we will reboot the system to ensure we have a fresh running
+    environment. To continue, type this:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/3bd375c8-7454-43bd-a0a5-29e17b54065b.png)Kali Linux Command Prompt'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more..
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'During the upgrade, you may get prompted for a couple of items such as following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'apt-listchanges: news section'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'You may get paused at an apt-listchanges: news section, and you will be presented
+    with a : sign at the bottom; you can use your arrow keys to read the notice, and
+    then just press *q* to quit and continue.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The configuring macchanger
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'You can set up the system to change the mac automatically per boot. For our
+    testing purposes, it''s not required; however, if you are doing this in a live
+    environment, you may want to configure it. Select No:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/71c950ec-49e3-4876-856f-ab8283336383.png)Configuring macchanger
+    dialog box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The service restart
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'You maybe asked to restart services automatically to ease upgrades; select
+    Yes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![](assets/be933699-5a3a-4405-810f-02b3df8d05ad.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: Understanding the advanced customization and optimization of Kali
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Now that we have our Kali Linux virtual machine installed and updated, let's
+    do a bit of customization.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Before you start, ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Your computer is connected to the internet
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Your installation of Kali is running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There are several customization and advanced settings that we can perform.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Upgrading the Linux kernel
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To update the Linux kernel, you will do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open a terminal window by selecting its icon on the left tool bar, and enter
+    the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: Follow the prompts to complete the installation, and reboot the virtual machine
+    when complete.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Removing unneeded packages
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To remove unneeded packages, we will do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open a terminal window by selecting its icon on the left tool bar, and enter
+    the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: Adjusting or disabling the screen lock
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'During the use of this book, you may find yourself leaving your system to run
+    commands or in between sections. During this time, the screen may lock and force
+    you to login in more frequently than you would prefer. To change this behavior,
+    do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the upper right-hand corner of the screen, click on the down arrow, which
+    will provide various pieces of information about the current state of the computer.
+    In the lower left-hand corner of that box, click on the settings icon:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b8395902-219f-4ba0-83af-a0cd5a007a98.png)System status box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the All Settings screen, click on the purple privacy icon in the first
+    row to display the privacy dialog box, then select the Screen Lock entry:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/84984b0a-30c6-4422-9ad4-2a8cae9832c5.png) Privacy box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Adjust the settings as desired; in the following example I have set the timer
+    to 1 hour:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/0bca6781-f215-4e95-b041-39b8ae35cf77.png)Screen Lock'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Finish by clicking on the Xs at the top until you are back at the main screen.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Correcting the Ethernet interface configuration
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Since only one interface can be on at a time, we will set up networking as
+    follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the upper right-hand corner of the screen, click on the down arrow, which
+    will provide various pieces of information about the current state of the computer.
+    In the lower left-hand corner of that box, click on the settings icon:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/7bd164cd-a409-482c-a4fd-484b4f55af70.png)System status box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Next to one of the interfaces, select the arrow icon, which will expose another
+    level of menus. Click on Wired Settings:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6bca4193-b868-4bbf-9856-68632fffbf14.png)System status box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select Add Profile from the bottom:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/21693fc9-4cc0-4f69-845a-1813229f22b3.png)Network window'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the New Profile window, select Identity on the left; and for Name, enter
+    `Host-Only Network`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/342346cd-188b-49ce-8b18-41f27a0118cc.png)New Profile window'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the left column, click on IPv4 and scroll all the way to the bottom and
+    put a check in the box labeled Use this connection only for resources on its network,
+    and then click on Add:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6e86fb2c-6037-47ce-9ac4-1762571f5628.png)New Profile window'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Assign eth1 to the host-only network that we just created by clicking on eth1
+    to highlight it. Click on host-only network. Verify that eth0 is assigned to the
+    wired connection network by clicking on eth1.You should now be able to have both
+    interfaces enabled simultaneously:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d735027f-70cf-494d-a945-56b93df948dd.png)Network window'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Connecting and disconnecting Ethernet interfaces
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Kali Linux makes it easy to manage network connections using network manager.
+    This is how you will connect and disconnect network interfaces:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the upper right-hand corner of the screen, click on the down arrow, which
+    will provide various pieces of information about the current state of the computer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b465ae64-6ca2-47b4-83d1-aa831eda8f3c.png)System status box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will see entries for both your eth0 and eth1 interfaces. If you have followed
+    our guide, the eth0 network is connected to the NAT network and allows access
+    to the internet and networks outside of your virtual machine. The eth1 interface
+    is the host-only network, which connects to your test machine. You can toggle
+    these on and off as required.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Installing Windows machines
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Creating a lab environment where we can safely perform security testing is key
+    to being able to develop a repeatable set of skills. In this section, we will
+    cover the installation and configuration of Windows desktop machines, as well
+    as an active directory server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: As the Microsoft Windows operating system is the most commonly employed operating
+    system, we will be looking to test the windows platform with Kali Linux in our
+    lab.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To complete this section, you will need the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installation media for Windows 7 and Windows server 2008. Due to licensing restrictions,
+    we are unable to provide installation media for Microsoft software products.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: These versions are preferable as they are old enough to have well-documented
+    vulnerabilities and low resource requirements. Since Windows 7 for desktops and
+    Windows server 2008 are most commonly seen as of the time of the writing of this
+    book, we recommend these be used for your test lab, and will be used as examples
+    in this book.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A virtual machine platform such as VirtualBox which we configured in previous
+    steps.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Starting from your VirtualBox interface, select the New button from the upper-left
+    corner to create a new virtual host for Windows to be installed into. You will
+    need to use a system template that matches the version of Windows you are going
+    to be installing:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/98c55077-4947-46c7-8ecf-375ed2786f19.png)Create new virtual machine'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since this machine will be for testing only, assign it 1 or 2 gigabytes of memory,
+    and use the default values for all of the remaining options by clicking on Next
+    until you reach the end of the configuration section.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once the initial virtual host has been configured, you will need to go back
+    into the settings to tell the virtual host to boot from the installation media.
+    Right-click on the virtual system that you just created and go to settings. Once
+    in the settings dialog window, select Storage from the menu on the left, highlight
+    the topmost controller device, click on the Add Storage Attachment button, and
+    select Add Optical Drive.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From the next dialog box, select Use Existing when asked whether you would like
+    to leave the storage option empty. When prompted, navigate to your Windows installation
+    media, and click on Open; then complete the configuration session by clicking
+    on OK.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Start your new virtual machine by clicking on the parentheses start button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From this point, you will follow the default operating system installation process
+    specific to the version of Windows you have selected. When given the option of
+    installing additional services, use only the default options selected.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: During installation, we will name our systems something easy to remember. We
+    will name the desktop clients `Windows Desktop 1` and `Windows Desktop 2`, and
+    the server `AD Server`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'When prompted to configure the Windows update services, ensure that you do
+    not enable the automatic installation of Windows updates:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6a12a112-3238-4c09-a635-97bfec3fab34.png) De-selection of automatic
+    Windows updatesOn certain platforms, you may select the option to download but
+    not install updates if you so choose. This will allow you to evaluate the security
+    of the system, both prior to and after the installation of Windows updates. You
+    maybe asked to create a password for the administrative user. If this is the case,
+    then create a user and password that will be easy to remember and refer to in
+    future chapters.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you have completed the installation of Windows 7, reboot the machine, and
+    login when presented with the login screen.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once logged in, change the machine name to `Win7_Desktop_1`, and reboot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Go into the virtual host settings, and ensure that the network adapter is assigned
+    to the host-only network that we created earlier in this section.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Now that the machine has been properly configured, we will clone it to create
+    a second instance of Windows 7 desktop.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Cloning of machines makes it very easy to create a gold image and working copies
+    from this image. It is different than snapshots, which create point-in-time references
+    that can be rolled back to if need be.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To create a clone of the Windows desktop machine, you will need to power it
+    up using the Start option. Once started, do not log into the machine; but rather
+    from the desktop view, from the top menu bar, select Machine | Take Snapshot...
+    to start the snapshot creation process:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/403e1fad-d041-477d-bc37-2a6a2cc7954e.png)Create snapshot'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In the next screen, you will be given the opportunity to name and provide details
+    about the purpose of this snapshot. Since it is likely that we will be returning
+    to this state frequently, name it `Initial Installation`, and in the description,
+    indicate that this is a clean Windows build, and that the snapshot was taken before
+    AD domain membership:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/d4b8caac-ed55-4184-9edf-8cf262571410.png)Creating a VirtualBox snapshot'
+  prefs: []
+  type: TYPE_NORMAL
+- en: VirtualBox will now generate a snapshot. Depending on the system, this may take
+    several minutes. Once complete, power down the system using the power buttons
+    on the lower-right part of the login screen – do not login at this time.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that the initial host has been set up, we will need to create the clone
+    of this device. To do so, right-click on Windows 7 Desktop 1, and select Clone...
+    from the dropdown menu:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/770c1844-2828-4245-bfe7-f549a84f93b0.png)Start cloning process'
+  prefs: []
+  type: TYPE_NORMAL
+- en: When prompted, name this `Windows Desktop 2`, and select the option to reinitialize
+    the MAC address of all available cards. Click on Next.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When given the option to do so, select Full Clone as the clone type, and click
+    on Next.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Since we will be creating a new snapshot of this system in a subsequent step,
+    choose the option for Current Machine State as the options for snapshots, and
+    click on Next. This will start the cloning process, which may take several minutes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once completed, we will start this host as well as we did with the first Windows
+    7 Desktop 1, but this time, we will log in when prompted to do so.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once logged in, you will need to change the name of the machine to `Win7_Desktop_2`.
+    Allow the machine to reboot.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once back at the login screen, create a snapshot as we described earlier.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will now install the Windows 2008 server in the same manner we did the Windows
+    7 desktops, ensuring that the device is assigned to the host-only network that
+    we created in a previous section.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'With all the default options chosen, install Windows 2008, and log in for the
+    first time. The first time you log in, you will be presented with the Initial
+    Configuration Tasks tool. From this tool, configure only the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '| Set time zone | Set to your timezone |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Configure networking | Set the IP information as follows: IP Address: `192.168.56.10`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Subnet Mask: `255.255.255.0`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Gateway: `192.168.56.1`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'DNS Server: `192.268.56.1` |'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| Computer name and domain | Computer name: `AD-Server` Leave set to workgroup
+    for now |'
+  prefs: []
+  type: TYPE_TB
+- en: 'Initial Windows server configuration:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Reboot the server after these options are set, and log in. The Initial Configuration
+    Tasks wizard will open again. Scroll down to the section named Add Roles; here
+    we will add the DNS and DHCP roles to this server.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select all the default options, except the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '| **Page** | **Option** | **Setting** |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Specify IPv4 DNS Server Settings | Parent Domain | `kalicookbook.local` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Add of Edit DHCP Scopes (click on ADD) | Scope Name | Lab |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  | Starting IP Address | `192.168.56.100` |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  | Ending IP Address | `192.168.56.150` |'
+  prefs: []
+  type: TYPE_TB
+- en: '|  | Default Gateway | `192.168.56.1` |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Configure IPv8 Stateless Mode | Select the DHCPv6 Stateless Mode... | Disable
+    DHCPv6 stateless mode for this server |'
+  prefs: []
+  type: TYPE_TB
+- en: Initial role configuration
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once all the preceding has been completed, reboot the server, and log into each
+    of the desktops to make sure that they get an IP address from the AD server and
+    that you can ping each host by their IP addresses. We will configure DNS in a
+    later step.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: After you have confirmed that network connectivity between your hosts is working
+    properly, close all open windows, and create a snapshot as we have done in the
+    past.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: With the desktop machines created and functioning, you will need to enable basic
+    services on the AD server. After logging into the server, you will be presented
+    with the Initial Configuration Tasks wizard again. Once presented, scroll down
+    to Customize this Server section, and click on Add Role.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the section called Select Server Roles, select and install the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: File services
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Remote desktop services
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Web server (IIS)
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: If you are prompted to include dependencies, accept, and continue.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As you progress, you will need to select certain options for each of the roles
+    added previously:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Remote desktop services:'
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select only Remote Desktop Session Host and click on Next
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Select Do Note Require Network Level Authentication
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Select Configure Later to defer the licensing of the remote desktop until a
+    later date (120 days max)
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Permitted user groups: Leave administrators in place and continue'
+  prefs:
+  - PREF_IND
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Leave all the remaining options as the default and continue. Reboot when prompted
+    to do so, and log in once more; you will automatically return to the Add Roles
+    wizard. Confirm that the installation was successful.
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Return to the Add Role wizard, and select this time to install Active Directory
+    Domain Services. Click on Install AD DS Anyway (not recommended) when presented
+    with the dialog box confirming installation on a domain controller, and accept
+    any dependencies that maybe required. Continue through the installation process
+    with the remaining default options. When complete, select Close.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the left menu, select Active Directory Domain Services; and in the right
+    pane, select Run the Active Directory Domain Services Installation Wizard (dcpromo.exe).
+    As you go through the wizard, select the default options, except for the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Choose a deployment configuration: Create new domain in a new forest'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'FQDN of the forest root domain: `kalicookbook.local`'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Forest functional model: Windows server 2008 R2'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Once prompted, reboot. Confirm there are no errors
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You will now need to log into each of the Windows 7 desktops and join them to
+    the `kalicookbook.local` domain.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Log into each machine and ensure that Windows updates are disabled. Make sure
+    the Windows firewall is also disabled.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Create snapshots of each to give us a foundation to work from as we progress
+    through this book. Snapshots will allow us to go back to pre-determined points
+    in time.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Installing Metasploitable
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Metasploitable is a key component of our testing environment. It is based on
+    the Ubuntu Linux operating system and is made specifically exploitable for penetration
+    testing purposes. This VM should never be exposed directly to the internet, and,
+    for our purposes, we will use the host-only network to bind to.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Before you start, ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The VirtualBox hypervisor is running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The Kali Linux VM is shut down
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You download the Metasploitable image from [https://sourceforge.net/projects/metasploitable/files/Metasploitable2/](https://sourceforge.net/projects/metasploitable/files/Metasploitable2/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Take note that the default username, and the password is `msfadmin` for both
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The installation of Metasploitable is done in the following manner:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start by unzipping the Metasploitable ZIP (at the time of publication this was
+    `metasploitable-linux-2.0.0.zip`) file that you previously downloaded.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Change the directory name that was extracted to `metasploitable`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Find where your main VirtualBox storage is.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Windows default: `c:\users\<username>\virtualBox VMs`
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Mac default: `/users/<username>/VirtualBox VMs`
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You should see a directory under the main path for the Kali Linux VM you installed
+    earlier.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this directory, create a new folder called `Virtual Disks`. This will make
+    the following path:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '`...\VirtualBox VMs\Virtual Disks.`'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Move the `metasploitable` directory that was created when you unzipped the file
+    earlier under the `\Virtual Disks\` directory you created.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open the VirtualBox manager application, and select New from the top-left corner.
+    To quicken the installation if we are not in expert mode, let's select it by clicking
+    on Expert Mode at the bottom.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You will know you are in Expert Mode if you see an option for Guided Mode at
+    the bottom.![](assets/dd84d3cf-b01b-45fd-874c-5f2e93150854.png)
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let's name our VM `Metasploitable`. Select Type as Linux and Version as Linux
+    2.6 / 3.x / 4.x (64-bit), enter `2048` for the memory size.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select Use an existing virtual hard disk file, and click on the file icon on
+    the right; and browse for the `metasploitable.vmdk` file under the directory from
+    the prior step; then click on Create.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will now be brought back to the main VM VirtualBox manager screen. Click
+    on the `Metasploitable` VM to highlight it, and then click on Settings.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Click on Network and, for Adapter 1, select the Host-only Adapter and the Name
+    as vboxnet0; lastly, click on OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4db944a8-91b0-40e8-a498-d233dbcf30d7.png)Metasploitable - network
+    dialog'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You will now be brought back to the main VirtualBox manager screen. Click on
+    Metasplotable to highlight it and click on Start.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once the VM is started, you will be brought to the main login screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/69698116-c63f-41c1-a1c3-8d19b98b472f.png) Metasploitable main login
+    screenTo shut down this VM, you have to log in and issue the command, `sudo shutdown
+    -h now`. Although the VM itself shuts down, it will not end the VirtualBox session.
+    You must select the Red X at the top of the screen. This will provide a dialog
+    box; select the radio button Power off the machine and click on Ok.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Installing OWASP-BWA
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **Open Web Application Security Project** (**OWASP**), is a global community
+    that focuses on security awareness and the development of secure applications.
+    While this may be thought of as a single application or platform, OWASP is actually
+    a collection of projects that can focus on any number of aspects of applications
+    security. For this recipe, we will focus on the OWASP **Broken Web Application** (**BWA**)
+    project to provide us with a standardized platform for the testing of our tools
+    in later chapters.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To install the OWASP-BWA image, we will need to do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Download the latest version of OWASP-BWA in compressed form from [https://sourceforge.net/projects/owaspbwa/](https://sourceforge.net/projects/owaspbwa/)
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Have VirtualBox installed and configured
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To install OWASP-BWA into our VirtualBox environment, we will do the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Unzip the ZIP file containing the OWASP-BWA files into a location you will reference
+    in the next few steps.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From the console of VirtualBox, on the upper left, we will select the New icon
+    to begin the creation of a new virtual machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will name our new virtual machine `OWASP-BWA`, and define it as a 64 bit
+    Ubuntu Linux system:![](assets/a29a7d39-f16b-486d-92c6-9c5cd576d401.png)Creating
+    a virtual machine for OWASP-BWA
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Leave the default memory allocation as 1024 MB, and click Next.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You will now select Use existing virtual hard disk and navigate to the directory
+    where you unpacked OWASP-BWA. From that directory, select the following and click
+    Create:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/b8d7ae07-6ca8-4cb6-ae7e-787a27ea98e8.png)Selection of OWASP-BWA
+    virtual disk'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once you have created the virtual machine, we will need to make sure that the
+    correct network interface has been designated. Right-click on on our new host
+    on the left, and select Settings. Navigate to Network and ensure that the Adapter
+    1 is attached to the Host-only Adapter, and that the other adapters are not enabled:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/159a7e0d-1f60-46e1-995b-aa2b730bb2fd.png)Designating the network
+    adapter for OWASP-BWA in VirtualBox'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once complete, start the new virtual machine and ensure that it boots properly.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It is very likely that fsck will run when first started due to the length of
+    time since last run. You can allow this to complete to ensure there is no observed
+    disk corruption - it only takes a few minutes.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once fully booted, login as `root` with the password `owaspbwa`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Ensure that you are receiving an IP address from DHCP by issuing `ifconfig eth0`
+    from the command line.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Open a web browser, and navigate it to the IP address of the OWASP-BWA guest.
+    Ensure that you are able to see the different projects within OWASP-BWA. If you
+    are able to see the following web page, you have successfully configured OWASP-BWA:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/66d8421f-ede6-4cd5-8f31-341e4f40b749.png)Confirmation of services
+    running on OWASP-BWA'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Understanding hack me and other online resources
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'There are several other resources that can be accessed either online or installed
+    in VirtualBox that you can use to hone your penetration testing skills. The following
+    list contains few resources you may want to explore as a supplement to the exercises
+    in this book:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '| hack.me | Easy to advanced challenges | [https://hack.me/](https://hack.me/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Hack this site | Easy to advanced challenges | [https://www.hackthissite.org/](https://www.hackthissite.org/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Vulnerable by design | Easy to advanced challenges | [https://www.vulnhub.com/](https://www.vulnhub.com/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Bee-Box | Vulnerable web sites | [https://sourceforge.net/projects/bwapp/files/bee-box/](https://sourceforge.net/projects/bwapp/files/bee-box/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Moth | Vulnerable web applications | [http://www.bonsai-sec.com/en/research/moth.php](http://www.bonsai-sec.com/en/research/moth.php)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| RasPwn | Vulnerable Raspberry Pi image | [http://raspwn.org/](http://raspwn.org/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| OWASP-BWA | OWASP broken web application | [https://www.owasp.org/index.php/OWASP_Broken_Web_Applications_Project](https://www.owasp.org/index.php/OWASP_Broken_Web_Applications_Project)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Hackfest 2016 Sedna | Medium difficulty - root access | [https://www.vulnhub.com/entry/hackfest2016-sedna,181/](https://www.vulnhub.com/entry/hackfest2016-sedna,181/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Hackfest 2016 Quaoar | Easy machine to own | [https://www.vulnhub.com/entry/hackfest2016-quaoar,180/](https://www.vulnhub.com/entry/hackfest2016-quaoar,180/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Pentester Lab: XSS and MySQL File | Easy SQL injection example | [https://www.vulnhub.com/entry/pentester-lab-xss-and-mysql-file,66/](https://www.vulnhub.com/entry/pentester-lab-xss-and-mysql-file,66/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| SQLInjection to Shell | Intermediate - SQL injection to shell | [https://www.vulnhub.com/entry/pentester-lab-from-sql-injection-to-shell-ii,69/](https://www.vulnhub.com/entry/pentester-lab-from-sql-injection-to-shell-ii,69/)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Damn vulnerable web application | Vulnerable - PHP/MySQL application | [https://github.com/Hackademic/hackademic](https://github.com/Hackademic/hackademic)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| Hackxor | Webapp hacking game | [http://hackxor.sourceforge.net/cgi-bin/index.pl](http://hackxor.sourceforge.net/cgi-bin/index.pl)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: '| WebGoat | Medium level challenge | [https://www.owasp.org/index.php/Category:OWASP_WebGoat_Project](https://www.owasp.org/index.php/Category:OWASP_WebGoat_Project)
+    |'
+  prefs: []
+  type: TYPE_TB
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The preceding resources will be installed on a variety of different methods
+    that are beyond the scope of this book. But I will quickly mention some of the
+    deployment options:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Virtual machines that, can be installed in VirtualBox
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scripts that can be run on standard Linux machines to build applications and
+    make them specifically vulnerable to attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Resources that you may attack over the internet
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Complete self contained hacking environments
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Please ensure that as you are working with these sites, you read carefully the
+    terms of service and understand all requirements and limitations of the environment or
+    tools you are working with. Also be careful if you are remotely hacking sites
+    across the internet. Although there are some of these options available for testing
+    and it may be perfectly legal to do so, your **Internet Service Provider** (**ISP**)
+    may flag the activity as malicious and take action against you.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1674 @@
+- en: Denial of Service
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Any time you make resources publicly accessible over the Internet or even to
+    a small community over an internal network, it is important to consider the risk
+    of **denial-of-service** (**DoS**) attacks. DoS attacks can be frustrating and
+    can be very costly at times. Worst of all, these threats can often be some of
+    the most difficult ones to mitigate. To be able to properly assess the threat
+    to your network and information resources, you must understand the types of DoS
+    threats that exist and the trends associated with them. This chapter will include
+    the following recipes to evaluate DoS threats:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fuzz testing to identify buffer overflows
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Remote FTP service buffer overflow DoS
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Smurf DoS attack
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DNS amplification DoS attack
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SNMP amplification DoS attack
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SYN flood DoS attack
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Sock stress DoS attack
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DoS attacks with Nmap NSE
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DoS attacks with Metasploit
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DoS attacks with the exploit database
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Prior to addressing each of these listed recipes individually, we should address
+    some of the underlying principles and understand how they relate to the DoS attacks
+    that will be discussed in this chapter. The DoS attacks that we will discuss in
+    the recipes that follow could all be categorized as buffer overflows, traffic-amplification
+    attacks, or resource-consumption attacks. We will address the general principles
+    associated with how each of these types of attacks works in this order.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Buffer overflows are a type of coding vulnerability that can result in the denial
+    of service of an application, service, or the entire underlying operating system.
+    Generally speaking, buffer overflows are capable of causing a denial of service
+    because they can result in arbitrary data being loaded into unintended segments
+    of memory. This can disrupt the flow of execution and result in a crash of the
+    service or operating system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Traffic-amplification DoS attacks are able to generate a DoS condition by consuming
+    the network bandwidth that is available to a particular server, device, or network.
+    Two conditions are required for a traffic-amplification attack to be successful.
+    These conditions are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Redirection**: An attacker must be able to solicit a response that can be
+    redirected to a victim. This is generally accomplished by IP spoofing. As UDP
+    is not a connection-oriented protocol, most application-layer protocols that use
+    UDP as their associated transport layer protocol can be used to redirect service
+    responses to other hosts via spoofed requests.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Amplification**: The redirected response must be larger than the request
+    that solicited that response. The larger the response byte size to request byte
+    size ratio, the more successful the attack will be.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For example, if a UDP service that generates a response that is 10 times larger
+    than the associated request is discovered, an attacker could leverage this service
+    to potentially generate 10 times the amount of attack traffic than it could otherwise
+    generate by sending spoofed requests to the vulnerable service at the highest
+    rate of transmission possible.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Resource-consumption attacks are attacks that generate a condition in which
+    the local resources of the hosting server or device are consumed to such an extent
+    that these resources are no longer available to perform their intended operational
+    function. This type of attack can target various local resources, including memory,
+    processor power, disk space, or sustainability of concurrent network connections.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Fuzz testing to identify buffer overflows
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: One of the most effective techniques to identify buffer-overflow vulnerabilities
+    is fuzz testing. **Fuzzing** is the practice of testing the results associated
+    with various input by passing crafted or random data to a function. In the right
+    circumstances, it is possible that input data can escape its designated buffer
+    and flow into adjacent registers or segments of memory. This process will disrupt
+    the execution flow and result in application or system crashes. In certain circumstances,
+    buffer-overflow vulnerabilities can also be leveraged to execute unauthorized
+    code. In this particular recipe, we will discuss how to test for buffer-overflow
+    vulnerabilities by developing custom fuzzing tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To perform remote fuzz testing, you will need to have a system that is running
+    network services over TCP or UDP. In the example provided, a Windows XP system
+    with an FTP service is used for this task. For more information on setting up
+    a Windows system, refer to the *Installing Windows Server* recipe in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*. Additionally,
+    this section will require a script to be written to the filesystem, using a text
+    editor such as Vim or GNU nano. For more information on writing scripts, refer
+    to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Python is an excellent scripting language that can be used to effectively develop
+    custom fuzzing utilities. When assessing TCP services, the `socket` function can
+    be useful in simplifying the process of performing the full three-way handshake
+    sequence and connecting to a listening service port. The main objective of any
+    fuzzing script is to send data to any given function as input and evaluate the
+    result:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I have developed a script that can be used to fuzz the post-authentication
+    functions of an FTP service:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: The first part of the script defines the location of the Python interpreter
+    and imports the required libraries.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The second part evaluates the number of arguments supplied to ensure that it
+    is consistent with the appropriate usage of the script.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The third part of the script defines the variables that will be used throughout
+    the script execution. Several of these variables receive their values from system
+    arguments that are passed to the script upon execution.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The remaining variables are defined by accepting input from the user of the
+    script.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Finally, the remainder of the script defines the fuzzing process. We execute
+    the `ftp_fuzz.py` file, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00190.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'If the script is executed without the appropriate number of system arguments,
+    the script will return the expected usage. There are several values that must
+    be included as system arguments:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The first argument to be passed to the script is the `Target IP` address. This
+    IP address is the one associated with the system that is running the FTP service
+    that you wish to fuzz.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next argument is the `Port Number` on which the FTP service is running.
+    In most cases, FTP will run on the TCP port `21`. The `Payload` argument will
+    define the character or sequence of characters to be passed in bulk to the service.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `Interval` argument defines the number of instances of the defined payload
+    that will be passed to the FTP service on the first iteration. The argument will
+    also be the number by which the number of payload instances will be incremented
+    with on each successive iteration up to the `Maximum` value. This `Maximum` value
+    is defined by the value of the last argument.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: After the script is executed with these system arguments, it will request authentication
+    credentials for the FTP service and will ask which post-authentication function
+    should be fuzzed.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the example provided, the fuzzing was performed against the FTP service that
+    runs on the TCP port `21` of the Windows XP host at the IP address `172.16.69.129`.
+    Anonymous login credentials were passed to the FTP service with an arbitrary e-mail
+    address. Also, a series of `A` was passed to the `MKD` post-authentication function,
+    starting with `100` instances and incrementing by 100 until the maximum of `1000`
+    instances was reached.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The same script could also be used to pass a series of characters in the payload:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00666.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the payload was defined as `ABCD`, and instances of
+    this payload were defined as multiples of 100 up to the value of `500`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Generally speaking, buffer overflows are capable of causing a denial of service,
+    because they can result in arbitrary data being loaded into unintended segments
+    of memory. This can disrupt the flow of execution and result in a crash of the
+    service or operating system. The particular script discussed in this recipe works
+    because in the event that the service or operating system did crash, the socket
+    would no longer accept input, and the script would not be able to complete the
+    entire payload series injection sequence. If this occurred, the script would need
+    to be force-closed using *Ctrl* + *C*. In such a case, the script would return
+    an indication that subsequent payloads could not be sent and that the server may
+    have crashed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Remote FTP service buffer-overflow DoS
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In the right circumstances, it is possible that input data can escape its designated
+    buffer and flow into adjacent registers or segments of memory. This process will
+    disrupt the execution flow and result in application or system crashes. In certain
+    circumstances, buffer-overflow vulnerabilities can also be leveraged to execute
+    unauthorized code. In this particular recipe, we will demonstrate an example of
+    how to perform a DoS attack based on buffer overflow against a Cesar 0.99 FTP
+    service.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To perform remote fuzz testing, you will need to have a system that is running
+    network services over TCP or UDP. In the example provided, a Windows XP system
+    with an FTP service is used for this task. For more information on setting up
+    a Windows system, refer to the *Installing Windows Server* recipe in [Chapter
+    1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*. Additionally,
+    this section will require a script to be written to the filesystem, using a text
+    editor such as Vim or GNU nano. For more information on writing scripts, refer
+    to the *Using text editors (Vim and GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'There is a publicly disclosed vulnerability associated with the Cesar 0.99
+    FTP service. This vulnerability is defined by the **Common Vulnerabilities and
+    Exposures** (**CVE**) numbering system as `CVE-2006-2961`. By performing research
+    on this vulnerability, it becomes apparent that a stack-based buffer overflow
+    can be triggered by sending a post-authentication sequence of line-break characters
+    to the `MKD` function:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To avoid the difficulty associated in passing the `n` escape sequence to the
+    Python script and then having it properly interpreted in the supplied input, we
+    should modify the script that was discussed in the previous recipe. We can then
+    use the modified script to exploit this existing vulnerability, as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Modifications made to the script include modifying the usage description and
+    removing the payload as a supplied argument and then hardcoding a line-break payload
+    into the script to be sent in sequence:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00051.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: If the script is executed without the appropriate number of system arguments,
+    the script will return the expected usage. We can then execute the script and
+    send a series of payloads as multiples of `100` and up to the maximum of `1000`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After sending the payload of `700` line-break characters, the script stops
+    sending payloads and sits idle. After a period of inactivity, the script is forced
+    to close with *Ctrl* + *C*. The script indicates that it has been unable to send
+    characters and that the remote server might have crashed. Have a look at the following
+    screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00118.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By returning to the Windows XP machine that is running the Cesar 0.99 FTP service,
+    we can see that the `server.exe` application has crashed. To resume operations
+    after the denial of service, the Cesar FTP service has to be manually restarted.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Generally speaking, buffer overflows are capable of causing a denial of service
+    because they can result in arbitrary data being loaded into unintended segments
+    of memory. This can disrupt the flow of execution and result in a crash of the
+    service or operating system.The particular script discussed in this recipe works
+    because in the event that the service or operating system did crash, the socket
+    would no longer accept input, and the script would not be able to complete the
+    entire payload series injection sequence. If this occurred, the script would need
+    to be force-closed using *Ctrl + C*. In such a case, the script would return an
+    indication that subsequent payloads could not be sent and that the server might
+    have crashed.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Smurf DoS attack
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: A **smurf** attack is historically one of the oldest techniques to perform a
+    **distributed denial-of-service** (**DDoS**) amplification attack. This attack
+    consists of sending a series of ICMP echo requests with a spoofed source IP address
+    to the network broadcast address. When this echo request is broadcast, all hosts
+    on the LAN should simultaneously reply to the target for each spoofed request
+    received. This technique is less effective against modern systems, as most will
+    not reply to IP-directed broadcast traffic.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To perform a smurf attack, you will need to have the LAN with multiple systems
+    running on it. In the examples provided, an installation of Ubuntu is used as
+    a scan target. For more information on setting up Ubuntu, refer to the *Installing
+    Ubuntu Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To attempt to perform a traditional smurf attack, Scapy can be used to build
+    the necessary packets from scratch:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To use Scapy from the Kali Linux command line, use the `scapy` command from
+    a Terminal; this is shown in the following screenshots. To send an ICMP request
+    to the broadcast address, we must first build the layers of this request. The
+    first layer that we will need to construct is the IP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00191.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the IP layer of our request, we should assign the `IP` object to the
+    variable `i`. By calling the `display()` function, we can identify the attribute
+    configurations for the object. By default, both the sending and receiving addresses
+    are set to the loopback address of `127.0.0.1`. These values can be modified by
+    changing the destination address by setting `i.dst` equal to the string value
+    of the broadcast address. By calling the `display()` function again, we can see
+    that not only has the destination address been updated, but Scapy will also automatically
+    update the source IP address to the address associated with the default interface.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that we have constructed the IP layer of the request, we should proceed
+    to the ICMP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00264.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the ICMP layer of our request, we will use the same technique as we
+    did for the IP layer. By default, the ICMP layer is already configured to perform
+    an echo request.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that we have created both the IP and ICMP layers, we need to construct
+    the request by stacking these layers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00341.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The IP and ICMP layers can be stacked by separating the variables with a forward
+    slash. These layers can then be set equal to a new variable that will represent
+    the entire request. The `display()` function can then be called to view the configurations
+    for the request. Once the request has been built, it can then be passed to the
+    function. A packet-capture utility such as Wireshark or TCPdump can be used to
+    monitor the result. In the example provided, Wireshark reveals that two of the
+    IP addresses on the LAN responded to the broadcast echo request:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00433.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In reality, two responsive addresses are not sufficient to perform an effective
+    DoS attack. If this exercise is replicated in another lab with semimodern hosts,
+    it is likely that the results will be similar. In the case that there were enough
+    responsive addresses to trigger a denial of service, the source address would
+    need to be substituted for the IP address of the attack target:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00507.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, a one-line command in Scapy is used to perform the
+    same action as we had discussed earlier, except this time with the source IP address
+    spoofed to the address of another system on the LAN. Additionally, the count value
+    can be used to send multiple requests in sequence.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Amplification attacks work by overwhelming a target with network traffic by
+    leveraging one or more third-party devices. For most amplification attacks, two
+    conditions are true, which are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The protocol used to perform the attack does not verify the requesting source. The
+    response from the network function used should be significantly larger than the
+    request used to solicit it.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The effectiveness of a traditional smurf attack is contingent upon the hosts
+    on the LAN responding to IP-directed broadcast traffic. Such hosts will receive
+    the broadcast ICMP echo request from the spoofed IP address of the target system
+    and then return simultaneous ICMP echo replies for each request received.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DNS amplification DoS attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: A **domain-name dystem** (**DNS**) amplification attack exploits open DNS resolvers
+    by performing a spoofed query of all record types for a given domain. The effectiveness
+    of this attack can be increased by employing a DDoS component as well by sending
+    requests to multiple open resolvers simultaneously.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To simulate a DNS amplification attack, you will need to either have a local
+    nameserver or know the IP address of an open and publicly accessible nameserver.
+    In the examples provided, an installation of Ubuntu is used as a scan target.
+    For more information on setting up Ubuntu, refer to the *Installing Windows Server*
+    recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To perform a DNS amplification attack, follow the given steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In order to understand how DNS amplification works, one can use a basic DNS
+    query utility such as `host`, `dig`, or `nslookup`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'By performing a request for all record types associated with a well-established
+    domain, you will notice that some return a fairly sizable response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00573.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, a request for all record types associated with the
+    `yahoo.com` domain returns a response that includes seven `A` records, three `AAAA`
+    records, five `NS` records, and three `MX` records. A DNS amplification attack's
+    effectiveness is directly correlated to the size of the response. We will now
+    attempt to perform the same action using packets built in Scapy.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To send our DNS query request, we must first build the layers of this request.
+    The first layer that we will need to construct is the IP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00633.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the IP layer of our request, we should assign the `IP` object to the
+    variable `i`. By calling the `display()` function, we can identify the attribute
+    configurations for the object. By default, both the sending and receiving addresses
+    are set to the loopback address of `127.0.0.1`. These values can be modified by
+    changing the destination address by setting `i.dst` equal to the string value
+    of the address of the nameserver to be queried.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: By calling the `display()` function again, we can see that not only has the
+    destination address been updated, but Scapy will also automatically update the
+    source IP address to the address associated with the default interface.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that we have constructed the IP layer of the request, we should proceed
+    to the next layer. As DNS is handled over UDP, the next layer to construct is
+    the UDP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00001.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the UDP layer of our request, we will use the same technique as we
+    did for the IP layer. In the example provided, the `UDP` object was assigned to
+    the `u` variable. As discussed earlier, the default configurations can be identified
+    by calling the `display()` function.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Here, we can see that the default values for both the source and destination
+    ports are listed as `domain`. As you might likely suspect, this is to indicate
+    the DNS service associated with the port `53`. DNS is a common service that can
+    often be discovered on networked systems. To confirm this, one can call the value
+    directly by referencing the variable name and attribute.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that the IP and UDP layers have been constructed, we need to build the
+    DNS layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00068.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To build the DNS layer of our request, we will use the same technique as we
+    did for both the IP and UDP layers. In the example provided, the `DNS` object
+    was assigned to the `d` variable. As discussed earlier, the default configurations
+    can be identified by calling the `display()` function. Here, we can see that there
+    are several values that need to be modified:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00656.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The *recursion-desired* bit needs to be activated; this can be done by setting
+    the `rd` value equal to `1`. Also, a value of `0x0001` needs to be supplied for
+    `qdcount`; this can be done by supplying an integer value of `1`. By calling the
+    `display()` function again, we can verify that the configuration adjustments have
+    been made.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that the IP, UDP, and DNS layers have been constructed, we need to build
+    a DNS question record to assign to the `qd` value:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00211.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To build the DNS question record, we will use the same technique as we did
+    for the IP, UDP, and DNS layers. In the example provided, the DNS question record
+    was assigned to the `q` variable. As discussed earlier, the default configurations
+    can be identified by calling the `display()` function. Here, we can see that there
+    are several values that need to be modified:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00087.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The `qname` value needs to be set to the domain that is being queried. Also,
+    `qtype` needs to be set to `ALL` by passing an integer value of `255.` By calling
+    the `display()` function again, we can verify that the configuration adjustments
+    have been made.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that the question record has been configured, the question record object
+    should be assigned as the DNS `qd` value:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00346.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can verify that the question record has been assigned to the DNS `qd` value
+    by calling the `display()` function. Now that the IP, UDP, and DNS layers have
+    been constructed and the appropriate question record has been assigned to the
+    DNS layer, we can construct the request by stacking these layers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00007.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The IP, UDP, and DNS layers can be stacked by separating the variables with
+    a forward slash. These layers can then be set equal to a new variable that will
+    represent the entire request. The `display()` function can then be called to view
+    the configurations for the request.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Prior to sending this request, we should view it in the same display format
+    as we will view the response. By doing this, we can get a better visual understanding
+    of the amplification that occurs between the request and response. This can be
+    done by calling the variable directly:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00366.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the request has been built, it can be passed to the send (`send()`) and
+    receive (`recv()`) functions so that we can analyze the response. We will not
+    assign this to a variable, but instead, we will call the function directly so
+    that the response can be viewed in the same format:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00590.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The response confirms that we have successfully built the desired request, and
+    we have solicited a sizable payload that includes seven `A` records, three `AAAA`
+    record, five `NS` records, and three `MX` records for the `yahoo.com` domain.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'This exercise makes it clear that the response to this request is significantly
+    larger than the request itself. To make this an effective amplification attack,
+    it needs to be redirected to our target by spoofing the source IP address:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00644.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After redefining the source IP address value to the string equivalent of the
+    IP address of the target system, we can confirm that the value has been adjusted
+    using the `display()` function. We can then rebuild our request with the change.
+    To verify that we are then able to redirect the DNS query response to this spoofed
+    host, we can start a TCP dump on the host using the `tcpdump` command, as shown
+    in the following screenshot:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00019.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the `tcpdump` configurations will capture all traffic
+    that crosses the `eth0` interface from a source address of `192.168.68.2` (the
+    address of the queried DNS server). Then, we can send our requests using the `send()`
+    function:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00085.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After sending the requests, we should refer back to the `tcpdump` content to
+    verify that the response to the DNS queries was returned to the victim server:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00150.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'This entire process of performing DNS amplification can actually be performed
+    with a single one-liner command in Scapy. This command uses all of the same values
+    that we discussed in the previous exercise. The count value can then be modified
+    to define the number of payload responses that you want to be sent to the victim
+    server:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00230.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Amplification attacks work by overwhelming a target with network traffic by
+    leveraging one or more third-party devices. For most amplification attacks, two
+    conditions are true:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The protocol used to perform the attack does not verify the requesting source. The
+    response from the network function used should be significantly larger than the
+    request used to solicit it.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The effectiveness of a DNS amplification attack is directly correlated to the
+    size of the DNS query response. Additionally, the potency of the attack can be
+    increased by employing the use of multiple DNS servers.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SNMP amplification DoS attack
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: An SNMP amplification attack exploits SNMP devices with predictable community
+    strings by spoofing queries with large responses. The effectiveness of this attack
+    can be increased by employing a DDoS component as well as by sending requests
+    to multiple SNMP devices simultaneously.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To simulate an SNMP amplification attack, you will need to have a device with
+    SNMP enabled on it. In the examples provided, a Windows XP device is used for
+    this purpose. For more information on setting up a Windows system, refer to the
+    *Installing Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, an installation of Ubuntu is used as a scan target.
+    For more information on setting up Ubuntu, refer to the *Installing Ubuntu Server*
+    recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To perform an SNMP amplification attack, follow the given steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'To get started, we should craft an SNMP query to be returned to our system
+    to assess the size of the payload to be used. To send our SNMP query request,
+    we must first build the layers of this request. The first layer that we will need
+    to construct is the IP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00300.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the IP layer of our request, we should assign the `IP` object to the
+    variable `i`. By calling the `display()` function, we can identify the attribute
+    configurations for the object. By default, both the sending and receiving addresses
+    are set to the loopback address of `127.0.0.1`. These values can be modified by
+    changing the destination address by setting `i.dst` equal to the string value
+    of the address of the nameserver to be queried. By calling the `display()` function
+    again, we can see that not only has the destination address been updated, but
+    Scapy will also automatically update the source IP address to the address associated
+    with the default interface.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that we have constructed the IP layer of the request, we should proceed
+    to the next layer. As SNMP is handled over UDP, the next layer to construct is
+    the UDP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00385.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To build the UDP layer of our request, we will use the same technique as we
+    did for the IP layer. In the example provided, the `UDP` object was assigned to
+    the `u` variable. As discussed earlier, the default configurations can be identified
+    by calling the `display()` function. Here, we can see that the default value for
+    both the source and destination ports is listed as `domain`. As you might likely
+    suspect, this is to indicate the DNS service associated with the port `53`. This
+    needs to be changed to the port associated with SNMP:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00470.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To change the source port and destination port to SNMP, the integer value of
+    `161` should be passed to it; this value corresponds to the UDP port associated
+    with the service. These changes can be verified by once again calling the `display()`
+    function. Now that the IP and UDP layers have been constructed, we need to build
+    the SNMP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00539.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To build the SNMP layer of our request, we will use the same technique as we
+    did for both the IP and UDP layers. In the example provided, the `SNMP` object
+    was assigned to the `snmp` variable. As discussed earlier, the default configurations
+    can be identified by calling the `display()` function. Now that the IP, UDP, and
+    SNMP layers have been constructed, we need to build a bulk request to substitute
+    the SNMP `GET` request that is assigned by default to the PDU value:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00003.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To build the `SNMPbulk()` request, we will use the same technique as we did
+    for the IP, UDP, and SNMP layers. In the example provided, the `SNMPbulk()` request
+    was assigned to the `bulk` variable. As discussed earlier, the default configurations
+    can be identified by calling the `display()` function. Here, we can see that there
+    are several values that need to be modified:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00006.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The SNMP `varbindlist` needs to be modified to include the queried `oid` values.
+    Additionally, `max_repetitions` was assigned the integer value of `50`. Now that
+    the bulk request has been configured, the bulk request object should be assigned
+    as the SNMP PDU value:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00008.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can verify that the bulk request has been assigned to the SNMP PDU value
+    by calling the `display()` function. Now that the IP, UDP, and SNMP layers have
+    been constructed and the bulk request has been configured and assigned to the
+    SNMP layer, we can construct the request by stacking these layers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00009.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The IP, UDP, and SNMP layers can be stacked by separating the variables with
+    a forward slash. These layers can then be set equal to a new variable that will
+    represent the entire request. The `display()` function can then be called to view
+    the configurations for the request. Once the request has been built, this can
+    then be passed to the `send` and `receive` functions so that we can analyze the
+    response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00012.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The response confirms that we have successfully built the desired request and
+    have solicited a sizable payload in comparison to the relatively small request
+    that was initially made. This entire process can similarly be performed with a
+    simple one-liner command in Scapy. This command uses all of the same values that
+    we discussed in the previous exercise:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00015.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To actually use this command as an attack, the source IP address needs to be
+    changed to the IP address of the target system. By doing this, we should be able
+    to redirect the payload to that victim. This can be done by changing the IP `src`
+    value to the string equivalent of the target IP address:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00017.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The `send()` function should be used to send these spoofed requests, as no
+    response is expected to be returned on the local interface. To confirm that the
+    payload does arrive at the target system, a `tcpdump` command can be used to capture
+    the incoming traffic:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00018.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, `tcpdump` is configured to capture traffic going across
+    the `eth0` interface that originates from a source IP address of `172.16.69.129` (the
+    IP address of the SNMP host).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Amplification attacks work by overwhelming a target with network traffic by
+    leveraging one or more third-party devices. For most amplification attacks, two
+    conditions are true:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: The protocol used to perform the attack does not verify the requesting source.
+    The response from the network function used should be significantly larger than
+    the request used to solicit it.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The effectiveness of an SNMP amplification attack is directly correlated to
+    the size of the SNMP query response. Additionally, the potency of the attack can
+    be increased by employing the use of multiple SNMP devices.
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: SYN flood DoS attack
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: A **SYN flood DoS** attack is a resource-consumption attack. It works by sending
+    a large number of TCP SYN requests to the remote port associated with the service
+    that is the target of the attack. For each initial SYN packet that is received
+    by the target service, it will then send out a SYN+ACK packet and hold the connection
+    open to wait for the final ACK packet from the initiating client. By overloading
+    the target with these half-open requests, an attacker can render a service unresponsive.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Scapy to perform a full SYN flood against a target, you will need to
+    have a remote system that is running network services over TCP. In the examples
+    provided, an instance of Metasploitable2 is used to perform this task. For more
+    information on setting up Metasploitable2, refer to the *Installing Metasploitable2*
+    recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*. Additionally, this section will require a script to be written to the
+    filesystem, using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To perform a SYN flood using Scapy, follow the given steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We need to get started by sending TCP SYN requests to the port associated with
+    the target service. To send a TCP SYN request to any given port, we must first
+    build the layers of this request. The first layer that we will need to construct
+    is the IP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00122.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the IP layer of our request, we should assign the `IP` object to the
+    variable `i`. By calling the `display()` function, we can identify the attribute
+    configurations for the object. By default, both the sending and receiving addresses
+    are set to the loopback address of `127.0.0.1`. These values can be modified by
+    changing the destination address by setting `i.dst` equal to the string value
+    of the address we wish to scan. By calling the `display()` function again, we
+    can see that not only has the destination address been updated, but Scapy also
+    will automatically update the source IP address to the address associated with
+    the default interface.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that we have constructed the IP layer of the request, we should proceed
+    to the TCP layer:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00022.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: To build the TCP layer of our request, we will use the same technique as we
+    did for the IP layer. In the example provided, the `TCP` object was assigned to
+    the `t` variable. As discussed earlier, the default configurations can be identified
+    by calling the `display()` function. Here, we can see that the default value for
+    the destination port is the HTTP port `80`. For our initial scan, we will leave
+    the default TCP configurations as they are.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now that we have created both the IP and TCP layers, we need to construct the
+    request by stacking these layers:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00025.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The IP and TCP layers can be stacked by separating the variables with a forward
+    slash. These layers can then be set equal to a new variable that will represent
+    the entire request. The `display()` function can then be called to view the configurations
+    for the request.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once the request has been built, this can then be passed to the `send` and
+    `receive` functions so that we can analyze the response:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00028.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The same request can be performed without independently building and stacking
+    each layer. Instead, a single one-line command can be used by calling the functions
+    directly and passing the appropriate arguments to them:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00031.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'The effectiveness of the SYN flood depends on the number of SYN requests that
+    can be generated in a given period of time. To improve the effectiveness of this
+    attack sequence, I have written a multithreaded script that can perform as many
+    concurrent processes of SYN packet injection as can be handled by an attacking
+    system:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: The script accepts three arguments upon execution. These arguments include the
+    target IP address, the port number that the SYN flood will be sent to, and the
+    number of threads or concurrent processes that will be used to execute the SYN
+    flood.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Each thread starts by generating an integer value between 0 and 65,535\. This
+    range represents the total possible values that can be assigned to the source
+    port. The portions of the TCP header that define the source and destination port
+    addresses are both 16 bits in length. Each bit can retain a value of `1` or `0`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'As such, there are 2^(16), or 65,536, possible TCP port addresses. A single
+    source port can only hold a single half-open connection, so by generating unique
+    source port addresses for each SYN request, we can drastically improve the performance
+    of the attack:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00033.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When the script is executed without any arguments, the usage is returned to
+    the user. In the example provided, the script is then executed against the HTTP
+    web service hosted on the TCP port `80` of `172.16.69.128`, with `20` concurrent
+    threads.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The script itself provides little feedback; however, a traffic capture utility
+    such as Wireshark or TCPdump can be run to verify that the connections are being
+    sent. After a very brief moment, connection attempts to the server will become
+    very slow or altogether unresponsive.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: TCP services only allow a limited number of half-open connections to be established.
+    By rapidly sending a large number of TCP SYN requests, these available connections
+    are depleted, and the server will no longer be able to accept new incoming connections.
+    As such, the service will become completely inaccessible to new users. The effectiveness
+    of this attack can be intensified to an even greater extent by using it as a DDoS
+    and having multiple attacking systems execute the script simultaneously.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Sock stress DoS attack
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **sock stress DoS** attack consists of establishing a series of open connections
+    to the TCP port associated with the service to be attacked. The final ACK response
+    in the TCP handshake should have a value of `0`.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Scapy to perform a sock stress DoS attack against a target, you will
+    need to have a remote system that is running network services over TCP. In the
+    examples provided, an instance of Metasploitable2 is used to perform this task.
+    For more information on setting up Metasploitable2, refer to the *Installing Metasploitable2*
+    recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*. Additionally, this section will require a script to be written to the
+    filesystem, using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To perform a sock stress DoS attack, follow the given steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The following script was written in Scapy to perform a sock stress DoS attack
+    against a target system. The following script can be used to test for vulnerable
+    services:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Notice that this script has two major functions: the sockstress attack function
+    and a separate graceful shutdown function. A separate function is required for
+    shutdown because in order for the script to function properly, the script has
+    to modify the local IPtables rules. This change is necessary in order to complete
+    TCP connections with a remote host using Scapy. The justification for this was
+    more thoroughly addressed in the *Connect scanning with Scapy* recipe in [Chapter
+    4](part0146.html#4B7I41-cf89710d791c4a3bb78ec273d9322426), *Port Scanning*.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Prior to executing the script, we can use the `netstat` and `free` utilities
+    to get a baseline for the connections established and memory being used:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00034.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: By using `netstat` and then by piping the output over to a `grep` function and
+    extracting only the established connections, we can see that only two connections
+    exist. We can also use the `free` utility to see the current memory usage. The
+    `-m` option will return the values in megabytes.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After determining the baseline for established connections and available memory,
+    we can launch the attack on this target server:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00035.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When executing the script without any supplied arguments, the script will return
+    the expected syntax and usage. The script accepts three arguments upon execution.
+    These arguments include the target IP address, the port number that the sock stress
+    DoS will be sent to, and the number of threads or concurrent processes that will
+    be used to execute the sock stress DoS.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Each thread starts by generating an integer value between 0 and 65,535\. This
+    range represents the total possible values that can be assigned to the source
+    port. The portions of the TCP header that define the source and destination port
+    addresses are both 16 bits in length. Each bit can retain a value of `1` or `0`.
+    As such, there are 2^(16), or 65,536, possible TCP port addresses. A single source
+    port can only hold a single connection, so by generating unique source port addresses
+    for each connection, we can drastically improve the performance of the attack.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Once the attack has been started, we can verify that it is working by checking
+    the active connections that have been established on the target server:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00038.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'A few moments after executing the script, we can see that the number of established
+    connections has drastically increased. The output displayed here is truncated,
+    and the list of connections was actually significantly longer than this. By consistently
+    using the `free` utility, we can watch the available memory of the system progressively
+    deplete. Once the memory free value has dropped to nearly nothing, the free buffer/cache
+    space will begin to drop:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00040.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: After all resources on the local system have been depleted, the system will
+    finally crash. The amount of time required to complete this process will vary
+    depending on the amount of local resources available. In the case of the demonstration
+    provided here, which was performed on a Metasploitable VM with 512 MB of RAM,
+    the attack took approximately 2 minutes to deplete all available local resources
+    and crash the server.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After the server has crashed or whenever you wish to stop the DoS attack, you
+    can press *Ctrl* + *C*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00042.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The script is written to catch the termination signal transmitted as a result
+    of pressing *Ctrl* + *C*, and it will repair the local iptables by removing the
+    rule that was generated prior to killing the script's execution sequence.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In a sock stress DoS, the final ACK packet in the three-way handshake includes
+    a window value of `0`. Vulnerable services will not transmit any data in response
+    to the connection because of the indication of any empty window on the part of
+    the connecting client. Instead, the server will hold the data to be transmitted
+    in memory. Flooding a server with these connections will deplete the resources
+    of the server to include the memory, swap space, and processing power.
+  prefs: []
+  type: TYPE_NORMAL
+- en: DoS attacks with Nmap NSE
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **Nmap Scripting Engine** (**NSE**) has numerous scripts that can be used
+    to perform DoS attacks. This specific recipe will demonstrate how to locate DoS
+    NSE scripts, identify the usage of the scripts, and execute them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Nmap NSE to perform DoS attacks, you will need to have a system that
+    is running a vulnerable service addressed by one of the Nmap NSE DoS scripts.
+    In the examples provided, an instance of Windows XP is used for this purpose.
+    For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following are the steps demonstrate an Dos attacks using Nmap NSE:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Prior to using Nmap NSE scripts to perform DoS testing, we will need to identify
+    what DoS scripts are available. There is a greppable `script.db` file in the Nmap
+    NSE script directory that can be used to identify scripts in any given category:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00044.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By grepping DoS from the `script.db` file and then piping the output to a `cut`
+    function, we can extract the scripts that can be used. By reading the beginning
+    of any one of the scripts, we can usually find a lot of helpful information:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00045.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'To read the script from top to bottom, we should use the `cat` command on the
+    file and then pipe the output to the `more` utility. The top part of the script
+    describes the vulnerability that it exploits and the conditions that must exist
+    for a system to be vulnerable. It also explains that the exploit will cause a
+    **blue screen of death** (**BSOD**) DoS. By scrolling further down, we can find
+    more useful information:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00049.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Further down in the script, we can find a description of the script usage and
+    the arguments that can be supplied with the script. It also provides additional
+    details about the vulnerability it exploits. To execute the script, we will need
+    to use the `--script` option in Nmap:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00504.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, Nmap is directed to only scan TCP port `445`, which
+    is the port associated with the vulnerability. The `--script` option is used in
+    conjunction with the argument that specifies the script to be used. A single script
+    argument is passed to indicate that an unsafe scan is acceptable.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'This argument is described as a safety switch that can be used to authorize
+    the DoS attack. After executing the script in Nmap, the output indicates that
+    the system is vulnerable to the attack. Looking back at the Windows XP machine,
+    we can see that the DoS was successful, and this results in a BSOD:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00055.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Nmap NSE script demonstrated in this exercise is an example of a buffer-overflow
+    attack. Generally speaking, buffer overflows are capable of causing denial of
+    service because they can result in arbitrary data being loaded into unintended
+    segments of memory. This can disrupt the flow of execution and results in a crash
+    of the service or operating system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: DoS attacks with Metasploit
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Metasploit framework has numerous auxiliary module scripts that can be used
+    to perform DoS attacks. This specific recipe will demonstrate how to locate DoS
+    modules, identify the usage of the modules, and execute them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use Metasploit to perform DoS attacks, you will need to have a system that
+    is running a vulnerable service addressed by one of the Metasploit DoS auxiliary
+    modules. In the examples provided, an instance of Windows XP is used for this
+    purpose. For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The following steps demonstrate the use of Metasploit to perform Dos attacks:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Prior to using Metasploit auxiliary modules to perform DoS testing, we will
+    need to identify what DoS modules are available. The relevant modules can be identified
+    by browsing through the Metasploit directory tree:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00630.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By browsing to the `/modules/auxiliary/dos` directory, we can see the various
+    categories of DoS modules. In the example provided, we have browsed to the directory
+    that contains Windows HTTP denial-of-service exploits:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00059.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The vulnerability allows remote unauthenticated attackers to force the IIS server
+    to become unresponsive until the IIS service is restarted manually by the administrator.
+    It is required that active server pages are hosted by the IIS and that an ASP
+    script reads out a post form value.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To read the script from top to bottom, we should use the `cat` command on the
+    file and then pipe the output to the `more` utility. The top part of the script
+    describes the vulnerability that it exploits and the conditions that must exist
+    for a system to be vulnerable. We can also identify potential DoS exploits within
+    the Metasploit Framework Console. To access this, type `msfconsole` in a Terminal:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00060.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once it''s opened, the `search` command can be used in conjunction with a search
+    term to identify the potential exploits to use:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00062.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the search term `dos` was used to query the database.
+    A series of auxiliary DoS modules was returned, and the relative path for each
+    was included. This relative path can be used to narrow down the search results:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00064.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After querying the relative path of `/dos/windows/smb`, the only results that
+    are returned are the DoS modules in this directory. The directories are well organized
+    and can be used to effectively search for exploits that pertain to a particular
+    platform or service. Once we decide which exploit to use, we can select it with
+    the `use` command and the relative path of the module:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00067.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Once the module has been selected, the `show options` command can be used to
+    identify and/or modify scan configurations. This command will display four column
+    headers: `Name`, `Current Setting`, `Required`, and `Description`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The `Name` column identifies the name of each configurable variable.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `Current Setting` column lists the existing configuration for any given
+    variable.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The `Required` column identifies whether a value is required for any given variable.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The `Description` column describes the function of each variable. The value
+    for any given variable can be changed using the `set` command and by providing
+    the new value as an argument:'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00070.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the `RHOST` value was changed to the IP address of
+    the remote system that we wish to scan. After updating the necessary variables,
+    the configurations can be verified using the `show options` command again. Once
+    the desired configurations have been verified, the module can be launched with
+    the `run` command:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00071.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After executing the Metasploit DoS `auxiliary` module, a series of messages
+    is returned to indicate that a series of malicious SMB transactions have been
+    performed, and a final message indicating that the module execution completed
+    is returned. The success of the exploit can be verified by referring back to the
+    Windows XP system, which has crashed and now displays a BSOD:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00073.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Metasploit DoS `auxiliary` module demonstrated in this exercise is an example
+    of a buffer-overflow attack. Generally speaking, buffer overflows are capable
+    of causing a denial of service because they can result in arbitrary data being
+    loaded into unintended segments of memory. This can disrupt the flow of execution
+    and result in a crash of the service or operating system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: DoS attacks with the exploit database
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The **exploit database** is a collection of publicly released exploits for all
+    types of platforms and services. The exploit database has numerous exploits that
+    can be used to perform DoS attacks. This specific recipe will demonstrate how
+    to locate DoS exploits in the exploit database, identify the usage of the exploits,
+    make the necessary modifications, and execute them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the exploit database to perform DoS attacks, you will need to have a
+    system that is running a vulnerable service addressed by one of the Metasploit
+    DoS auxiliary modules. In the examples provided, an instance of Windows XP is
+    used for this purpose. For more information on setting up a Windows system, refer
+    to the *Installing Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To perform DoS attacks using the exploit database, follow the given steps:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Prior to using the exploit database to perform DoS testing, we will need to
+    identify which DoS exploits are available. The total exploit database can be found
+    online at [http://www.exploit-db.com](http://www.exploit-db.com). Alternatively,
+    a copy is locally stored in the Kali Linux filesystem. There is a `files.csv`
+    file within the `exploitdb` directory that contains a catalog of all the contents.
+    This file can be used to `grep` for keywords to help locate usable exploits:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00075.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the `grep` function was used to search the `files.csv`
+    file for any exploit database contents that could be identified by the word `SMB`.
+    It is also possible to narrow down the search even further by piping the output
+    to another `grep` function and searching for an additional term:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00077.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, two independent `grep` functions are used in sequence
+    to search for any DoS exploits that are related to the SMB service:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00080.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can continue to narrow down the search results to be as specific as possible.
+    In the example provided, we have looked for any Python DoS scripts for the SMB
+    service, but we looked for those that are not for the Windows 7 platform. The
+    `-v` option in `grep` can be used to exclude content from the results. It is usually
+    best to copy the desired exploit to another location to not modify the contents
+    of the exploit database directories:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00320.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, a new directory is created for the script. The script
+    is then copied from the absolute path that can be inferred by the directory location
+    of the exploit database and the relative path defined in the `files.csv` file.
+    Once relocated, the script can be read from top to bottom using the `cat` command
+    and then piping the content of the script over to the `more` utility:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00409.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Unlike the NSE scripts and Metasploit auxiliary modules, there is no standardized
+    format for scripts within the exploit database. As such, working with the exploits
+    can sometimes be tricky. Nonetheless, it is often helpful to review the contents
+    of the script briefly for comments or explanation of usage. In the example provided,
+    we can see that the usage is listed in the contents of the script and is also
+    printed to the user if the appropriate number of arguments is not supplied.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After evaluation, the script can be executed as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00488.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'However, after attempting to execute the script, we can see that problems arise.
+    As a result of the lack of standardization and because some of the scripts are
+    only proofs of concept, adjustments often need to be made to these scripts:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00559.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'After the script errors out, we will need to return to the text editor and
+    attempt to determine the source of the errors. The first error indicates a problem
+    with the location of the Python interpreter that is listed at the beginning of
+    the script. This must be changed to point to the interpreter in the Kali Linux
+    filesystem:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00620.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'It is often a good idea to attempt to run a script again after each problem
+    is resolved, as sometimes fixing a single problem will eliminate multiple execution
+    errors. In this case, after changing the location of the Python interpreter, we
+    are able to successfully run the script:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00667.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'When the script runs, several messages are returned to identify the progress
+    of the script execution. The final message indicates that the malicious payload
+    was delivered and that the server should have crashed. The success of the script
+    can be verified by referring back to the Windows server, which has now crashed
+    and is displaying a BSOD:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00052.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The exploit database DoS script demonstrated in this exercise is an example
+    of the buffer-overflow attack. Generally speaking, buffer overflows are capable
+    of causing a denial of service because they can result in arbitrary data being
+    loaded into unintended segments of memory. This can disrupt the flow of execution
+    and result in a crash of the service or operating system.
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1242 @@
+- en: Social Engineering
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'In this chapter, we will cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Phishing attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Spear-phishing attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Credential harvesting with SET
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Web jacking
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: PowerShell attack vector
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: QRCode attack vector
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Infectious media generator
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Obfuscating and manipulating URLs
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DNS spoofing and ARP spoofing
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: DHCP spoofing
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Social Engineering is a unique aspect of penetration testing. Social Engineering
+    can be employed through electronic means, as we will see in the upcoming recipes.
+    However, Social Engineering is also used in physical penetration testing and even
+    data gathering. It becomes an art about human nature and cultural norms. We bend
+    well-known natural tendencies to help us accomplish or obtain what we want.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Phishing attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Phishing attacks are attacks that are loosely targeted at any individual or
+    any entity. Their main value is one of mass distribution, hoping to get a small
+    percentage of hits across a large distribution. These are sometimes used in penetration
+    testing and targeting-specific domains owned by the client. These attacks are
+    targeted specifically at emails. And due to their large distribution, the attacks
+    are often caught quickly across many advanced email spam filtering companies.
+    But it takes only one to get through and be clicked on.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will create and launch a generic phishing attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have some email accounts to use and/or preferably a lab SMTP server
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will use the **Social Engineering Tool** (**SET**) to create a phishing
+    attack:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Applications menu, select Social Engineering Tools | SET Social Engineering
+    Toolkit. You will be presented with the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/ad02c14d-0333-4b82-84ba-8634c8499a43.png)Initial set toolkit screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the top option: `1) Social-Engineering Attacks`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `5) Mass Mailer Attack`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `2) E-Mail Attack Mass Mailer`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The system will now ask you to select a file that includes an email list in
+    the format of one email address per line. Enter the path and filename to use.
+    In my case, I have a list prepared at `/root/emaillist.txt`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/cae1f525-274d-4418-98bf-e91bfbb3df66.png)SET mass mailer dialog
+    screenBuilding a list of email addresses is important and this is where the work
+    done in [Chapter 2](48d70dd4-e446-4efa-9f68-eae64fddd3ac.xhtml), *Reconnaissance
+    and Scanning* plays an important role. If you did a good job there, you should
+    have a list of email addresses already or at the very least, you will have a good
+    idea of how they format their usernames for emails. Often you can use resources
+    like LinkedIn to add to the list of email addresses as well.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, we will be asked how we want to use our email attack, either through a
+    Gmail account or own server/relay. For our purposes, I am going to use a throw-away
+    Gmail account; however, in practice, I would typically use an open relay. Select
+    `1\. Use a gmail Account for your email attack`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Never use a server or account that can be personally identifiable. The best
+    way is to use an open-relay. There are plenty of them out there if you look for
+    them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter your throw-away Gmail account: `johndoe@example.com` and press *Enter*.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter a name to use as the sender that the user will see: `John Doe`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the account password and press *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Decide whether you want to send the message with high priority, and type `yes`
+    or `no` then press *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Decide whether you want to attach a file. In my case, I want to attach a file
+    with a malicious payload. So, I will type `y`and press *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I will attach my `/root/salary.pdf` malicious payload.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: You need to either attach a malicious payload or a malicious link for the phishing
+    attack to work. Figure out what makes most sense for your test and go forward
+    with it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Enter an email subject. In my case, I am going to call it `Salary Info`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I have the option to send as HTML or plain text. I am going to choose the plain
+    text for simplicity. Next, I will press *Enter*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you plan on embedding a malicious link, you must choose HTML. Most users
+    are accustomed to seeing HTML pages today that by sending as a plain text may
+    actually increase there suspicion that the email may be farudulent. But for example
+    purposes, it will work fine.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, enter the body of the message. I plan on keeping this very short and simple:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: It will then output the email addresses that the message was sent to.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It's very important to put time and energy into properly crafting the email
+    and the attachment or link, so you have more chances of it being successful. Therefore,
+    double check for spelling and grammar issues.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Spear-phishing attacks
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Spear-phishing attacks are specifically targeted at an individual or entity.
+    Their main value is that they are targeted at a small group of users. These are
+    quite often used in penetration testing, targeting specific email addresses of
+    the client. You must spend more time in researching the client by gathering information,
+    such as email signatures, logos, and understanding what the communications from
+    the customer may look like. Often, you may register a look-a-like domain that
+    may seem familiar when they see the `from` message.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will create and launch a targeted spear-phishing attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You have some email accounts and/or preferably a lab SMTP server
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now use set to create a spear-phishing attack:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Applications menu, select Social Engineering Tools | SET Social Engineering
+    Toolkit. You will be presented with the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/688c7523-a855-4cf4-81b0-18f3122f6f5d.png)Initial setookit screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the top option: `1) Social-Engineering Attacks`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `1) Spear-Phishing Attack Vectors`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `1) Perform a Mass Email Attack`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From here, we will have several optional attack vectors that we can use. Pick
+    a suitable one based on the email you will be sending, and what you believe the
+    customer has and uses for the software. For our testing purposes, we will use
+    `13) Adobe PDF Embedded EXE Social Engineering`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: So, this will embed the attack either in a provided PDF or a blank PDF. For
+    our test purposes, we will simply use `2) Use built-in BLANK PDF for attack`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: When penetration testing with spear-phishing, you may have some desired outcomes
+    in mind. However, it's important to remember that one of those outcomes is to
+    avoid raising suspicions. Because of this, the more the email seems appropriate
+    in its entirety, the better off you are. Say, if you were doing this in a healthcare
+    situation, you could download some HIPAA regulations in a PDF format, insert the
+    malware, and send it to the appropriate people in the organization. When they
+    open it, they will see what they expect, therefore helping you to mask the fact
+    that they were just and not alerting them to an issue.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, you have several options for the return callback to you. Reverse shell
+    or reverse meterpreter are always good options. Select `1) Windows Reverse TCP
+    shell`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will set the IP address of our Kali box. Use your appropriate IP address;
+    in my case, I will use `192.168.56.10`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Set the port to connect back on. For test purposes, I will use `8123`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `2\. Rename the file, I want to be cool.` And rename the file to something
+    appropriate for the context of use.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For this, we will just select `1\. E-Mail attack Single email address`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `1\. Pre-Defined Template`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In most cases, you will want to create your own template for this, but, as we
+    did that in the phishing attacks recipe, you can refer back for more information.
+    Also, most spam engines know the format of these built-in templates, so the attacks
+    will be thwarted with relative ease.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Pick an available template. `3: Have you seen this?` will be fine for our example.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the address to send the email to `johndoe@example.com`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In this case. let's see if we can find an open relay to bounce it off. Do some
+    searching on Google, or you can try to use your ISP email server for this. Select
+    `2\. Use your own server or open relay`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you cannot find one, you can revert to a Gmail account and use the steps
+    as outlined in recipe 5.1.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter appropriate sender address: `Janedoe@example.com`.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Enter appropriate sender name: `Jane Doe`.'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you require a username for your relay server, you can enter the user information
+    as appropriate. I will leave mine blank.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: If you require a password for your relay server, you can enter the password
+    information as appropriate. I will leave mine blank.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the mail server address or **Fully Qualified Domain Name** (**FQDN**).
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the port number for the SMTP service of the relay. I will leave mine at
+    `25`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I will select No to flag the message as high priority.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Lastly, does my server support TLS? For this, I will select No as well.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From here, you will automatically be given the option to set up a listener,
+    and it will autolaunch the `msfconsole` and set the appropriate listener for you.
+    Since I like Armitage, I will open my listener through it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Refer back to recipe in [Chapter 4](9f678d15-2115-4e29-a75d-03dba65d3398.xhtml),
+    *Finding Exploits in the Target* of* Basic exploit attacks with Armitage* and
+    *Advanced attacks with Armitage* on how to open listeners in Armitage.
+  prefs: []
+  type: TYPE_NORMAL
+- en: I open the PDF from the email, and I will see a blank PDF. But notice that in
+    my Armitage console, it will now show a connection to the Windows XP machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: I downloaded and used an older version of Acrobat Reader on my Windows XP machine.![](assets/3f896208-a522-40c8-a724-629d51d7ba7d.png)Windows
+    XP machine with hipaaregs.pdf opened![](assets/ed4b68c1-37a3-4fd3-8f31-d14d246acbc2.png)Kali
+    Linux Armitage handler screen indication XP machine connectedAgain, many AV and
+    SPAM engines are familiar with these attacks, and there will be a high rate of
+    detection, unless you really spend some time in crafting the messages well and
+    creating your own customized payload to get through the detection engines.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Credential harvesting with SET
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Credential harvesting can be used with many different types of attacks, but
+    the ultimate goal is to make the user believe he has reached the site that he
+    was trying to get to, such as Facebook or Google, and steal their credentials
+    when they attempt to log in.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will mimic a site and perform credential harvesting for accounts
+    for that site.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Move the interface from one of your Windows test machines to the NAT network
+    temporarily
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now impersonate a real web site to gather credentials:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Applications menu, select Social Engineering Tools | SET Social Engineering
+    Toolkit. You will be presented with the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/fc217886-b767-4bb8-ac9e-c877f990c6b7.png)Initial setoolkit screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the top option, `1) Social-Engineering Attacks`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `2) Website Attack Vectors`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `3) Credential Harvester Attack Method`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `1) Templates`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'You will then be asked for the IP address of the post. Enter the IP address
+    of Kali on the NAT network. You can open another terminal window and do `ifconfig`.
+    I will enter `10.0.2.4`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/5d606367-8e35-435f-a47f-2ef602d917c8.png)ifconfig output of Kali
+    machine'
+  prefs: []
+  type: TYPE_NORMAL
+- en: We will be given a list of predefined templates, so let's use `2\. Google`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The harvester will automatically launch and be displayed on your screen.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From the Windows machine, log in and browse to the IP address of your Kali
+    device as previously entered:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/30cb7e16-fdd0-4371-b8a4-7826eefb3a1a.png)Fake Google login page'
+  prefs: []
+  type: TYPE_NORMAL
+- en: You get a very familiar looking login screen; however; up at the top, it provides
+    an IP address versus Google.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: So, to make this more believable, you would want to hide the IP address. Do
+    you have any thoughts? There are two options. Firstly, if you have previously
+    compromised the device, you could modify the host file; alternatively, you could
+    use DNS/DHCP spoofing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter test credentials and click on Sign in:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/950f03af-4d8f-46c8-8cbf-f9e92199a397.png)Fake login screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Notice that, on the Windows machine, you will be redirected to Google. However,
+    look at `SET`, and notice we harvested the credentials:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/0cb5053c-805c-4600-a8d9-2956b636af6f.png)Set output of credentials'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Type `Control-C` and press *Enter*; this will return you to the `SET` console.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Web jacking
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Web jacking is a method where the user will be presented with a website saying
+    the site has moved, and when they are redirected, they have malware inserted in
+    the browser/computer.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will web jack a site.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Move the interface of one of your Windows test machines to the NAT network temporarily
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now perform web jacking by simulating a site redirect:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Applications menu, select Social Engineering Tools | SET Social Engineering
+    Toolkit. You will be presented with the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/19762bac-145f-4a80-8920-041516476c4c.png)Initial setookit screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the top option, `1) Social-Engineering Attacks`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `2) Website Attack Vectors`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `5) Web Jacking Attack Method`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: We will select `2) Site Cloner`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the IP address of the post again. In this case, my IP of `10.0.2.4`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the URL site you want to clone. A sample site you can use is [http://us-123hiking.simplesite.com/.](http://us-123hiking.simplesite.com/)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: This system will automatically clone the site and start the `msfconsole`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From here, open one of your Windows VM. I will use the Windows 7 machine and
+    browse to `http://10.0.2.4`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6fe6b093-68c0-49ae-b2df-2da2e7a94f60.png)Fake website screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'I see a link up at the top, so I click on it to open the dialog:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/67f22e33-6dc8-4e2a-95b5-cfd6a9b2da42.png)Run dialog box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Then, I click on Run from the machine.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From there, if I go back to Kali, I will see a new session has been opened:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/596b5c20-0785-4e76-978d-b8f3436df6fa.png)MSF exploit session connected
+    screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Type `sessions 1` and press *Enter* at the `msf >` prompt to attach you to the
+    computer.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Type `sysinfo` and press *Enter* to get access to the system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: From here, you can try some other commands in the `msfconsole` to play around,
+    but, at this point, you have access to the PC.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: PowerShell attack vector
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will use PowerShell to connect back to our Kali host. PowerShell
+    has been included with Windows Vista and beyond and has become a very popular
+    attack vector due to the capabilities of the shell. We will not focus on how to
+    get the script there, as we have covered options in other recipes; this will just
+    focus on creating the malicious payload.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Move the interface of one of your Windows test machines to the NAT network temporarily
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now use PowerShell to attack a host:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Applications menu, select Social Engineering Tools | SET Social Engineering
+    Toolkit. You will be presented with the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c27340f7-c216-4b06-adf9-d17f153701f1.png)Initial setoolkit screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the top option, `1) Social-Engineering Attacks`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `9) Powershell Attack Vectors`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `2) Powershell Reverse Shell`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the IP address of your Kali host `192.168.56.10`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the listener port `8123`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select No when asked to start a listener, as we will use Metasploit for that.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A file will be created in the following location `~/.set/reports/powershell/powershell.reverse.txt`.
+    Move this file to the Windows machine, and change its extension from TXT to PS1.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Since we will use the `msfconsole` for our listener, let''s get it prepared
+    by entering the following commands in a terminal window. We will use our Kali
+    Linux host-only, IP address of `192.168.56.10`, and our listener port of `8123`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/0e6eed83-a525-450a-8ce7-c4a5df6447ba.png)MSF initialization screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From your Windows 7 machine, open a Command Prompt, and type the following:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/8cb9f686-0223-47b2-bbf9-9b6104e4f658.png)PowerShell output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You will notice that we now have a connection on session 1, so let''s open
+    it by typing `sessions 1`. From here, we can enter a simple command like `dir`
+    to get a directory listing:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/61801c51-9e7e-4f5d-bdbe-80b924e6c85f.png)Dir output from msf'
+  prefs: []
+  type: TYPE_NORMAL
+- en: QRCode attack vector
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will generate a QRCode for a site that we own, to harvest
+    credentials. This can be sent through various means such as email, Facebook, twitter
+    post, or even by using it as part of a flyer that you leave on target vehicles.
+    We will send this QRCode to our target.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will create a QRCode which redirect to a website:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Applications menu, select Social Engineering Tools | SET Social Engineering
+    Toolkit. You will be presented with the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/a478fff6-30ec-43c3-894f-4c2634481881.png)Initial set toolkit screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the top option `1) Social-Engineering Attacks`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `8) QRCode Generator Attack Vector`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the malicious URL; for our test purposes, we will simply enter `www.packtpub.com`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: It will generate the image file and provide the location.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Open the image file on your Kali VM, like so:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6ff91a06-f21a-426c-862f-bd07e5ee3a3a.png)Generated QRCode'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Most phones will scan this image and take you to the website indicated.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Apple iOS requires a third-party app - however, it is supposed to be included
+    in iOS 11.
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Alone this attack may seem meagre, but it is a very effective attack. First,
+    you can pretty much design any website you want and use it to capture credentials.
+    Think about putting flyers in a company parking lot that says scan this QRCode
+    and sign up to get a free 5.00 gift card to Starbucks. How many of those people
+    do you think you can get significant information on?
+  prefs: []
+  type: TYPE_NORMAL
+- en: Infectious media generator
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will build an infectious file that can be put on USBs, CDs,
+    or DVDs. We will generate a malicious payload that will autorun when entered into
+    a victim PC. We will simulate the execution; however, if you have physical test
+    machines, it is much easier to test.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows VM is up and running
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will build our infections media:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From the Applications menu, select Social Engineering Tools | SET Social Engineering
+    Toolkit. You will be presented with the following screen:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/6142027b-d0b6-4076-b784-9b96b15c649b.png)Initial setookit screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the top option `1) Social-Engineering Attacks`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `3) Infectious media generator`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select `2) Standard Metasploit Executable`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Let's use `2) Windows Reverse_TCP Meterpreter`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: For the `LHOST`, use the IP address of your Kali machine `192.168.56.10`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the port for callback `8123`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'It will then generate the payload. Go ahead and start a listener right now:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/66e6f575-90c5-4572-a566-c3342899f359.png)Payload generation output'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From here, we have an autorun option that we can burn to a DVD or CD or put
+    on a USB. This is a bit difficult to simulate with our virtual machines, so we
+    will simply copy the `program.exe` file from `~/.set/autrun/program.exe` and put
+    it on our Windows 7 test machine to run it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'From your Windows machine, open the `program.exe` file simulating an autorun
+    execution. Notice that, upon running it, there are no visible signs of execution.
+    This would be the same if it was autorun from a USB stick:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/8a35bc27-e182-4536-b333-543824d51ccc.png)Payload execution on Windows
+    VM'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'From our Kali machine, you will notice that we have a new session connected.
+    Type `sessions` to see the connected devices:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/926abe38-b7b5-4294-95da-ff5ea034340e.png)MSF session connected'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Enter `sessions 1`, and from here, we are now connected to our target machine
+    in a meterpreter session; to validate our connection, we type `sysinfo`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/09d1345e-1cdf-4da7-ad7b-993398427992.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: MSF sysinfo output
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This is a great attack to use with USB sticks. If you are actively working with
+    a company on a penetration testing engagement you can spread them around the company
+    entrances and parking lots. There is a high likelihood that at least a few of
+    them will be plugged in giving you access to the target network.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Obfuscating and manipulating URLs
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Obfuscating and manipulating URLs has long been used to assist in tricking an
+    end user into clicking on a malicious site. These could be through various techniques
+    such as using URL shortening, hiding the URL, using the IP address, and other
+    functions. This can be used in emails or other types of interactive documents.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this recipe, we will examine a couple of methods to obfuscate or manipulate
+    URLs.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now review several methods of obfuscating URLS:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: URL shortener
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s work with a URL shortener first:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From you main Kali screen, open a Firefox browser. ![](assets/4c351d87-54b2-4e0f-bdbd-9d7fc866e44c.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Go to the [https://goo.gl](https://goo.gl) link. Enter a URL you want to shorten.
+    The following is an example I''m using:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[https://www.nytimes.com/2017/05/15/technology/personaltech/heres-how-to-protect-yourself-from-ransomware-attacks.html](https://www.nytimes.com/2017/05/15/technology/personaltech/heres-how-to-protect-yourself-from-ransomware-attacks.html)'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Select I''m not a Robot and click on SHORTEN URL:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/21ae5fbc-6e78-4031-a1a2-3e84f4e38d42.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: You will get an output with a shortened URL; in my case, it is `goo.gl/0Dhuon`.
+    When you enter that into your browser, you will be taken to the original link.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: URL manipulation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Know we will manipulate a URL:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From your main Kali screen, open a Firefox browser. ![](assets/e73a5f30-3efc-48a9-8930-de0e4bda5000.png)
+  prefs: []
+  type: TYPE_NORMAL
+- en: There is a method of using the @ sign in a URL to help fake the IP address.
+    In your browser, try entering `http://www.gooogle.com@www.packtpub.com`. Depending
+    on your browser, you may or may not get an error message. For instance, try this
+    in Firefox and then in Chrome. Anything before @ is assumed to be login credentials
+    for the website that follows the @ sign. If the site does not require authentication,
+    you will be taken directly in.
+  prefs: []
+  type: TYPE_NORMAL
+- en: At the time of the writing this book, you will get a confirmation in one, and
+    automatically be redirected in the other.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Simple URL link misdirections
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will use a URL link redirection attack:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From within Kali, open up a document editor. I will use Google Docs.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Type in a simple phrase such as `Please signup at facebook.com for the promotion`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c4c19a41-489b-4452-9dd2-f34f0aeeef17.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Highlight facebook.com and right-click on it and select Link... :'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/044b3d18-3eed-446a-9e69-55e7c79a2a3e.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Enter a different URL for the link address, and click on Apply:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c0d360b9-36a8-4a17-9bb5-eb8f53577bf6.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Now, if the link is clicked, it will forward you to the target website, as
+    opposed to the website displayed:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/3e59f31c-246f-4406-8d7e-3592200a9326.png)'
+  prefs: []
+  type: TYPE_IMG
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: These methods of obfuscation combined with websites, emails, documents, and
+    PDF documents can be extremely tricky for users. Often, they are so quick to click,
+    they don't realize they are being taken to the wrong site. If you combine this
+    with registering domain names that are close to the target domain, they are very
+    often overlooked by the end user.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Take an example of `google.com` being redirected to one of the following--`g00gle.com`,
+    `goog1e.com`, and `goog1e.com`. Often these will easily be overlooked by the casual
+    user, and you can have lookalike sites.
+  prefs: []
+  type: TYPE_NORMAL
+- en: DNS spoofing and ARP spoofing
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, we will discuss how to perform DNS and ARP spoofing. In several
+    of our past recipes, we have shown website attacks that utilize an IP address
+    for the attack—the IP of the Kali machine. However, in real attacks, this may
+    easily be spotted. The whole point of the attack is to make it appear as if they
+    are going to the proper site and making it appear as real as possible. The first
+    part of this process is to perform DNS spoofing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running, and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Move the interface from one of your Windows test machines to the NAT network
+    temporarily
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now use ARP spoofing to redirect a user to a fake website:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open up a new terminal window by clicking on the following icon. ![](assets/5b013ad1-5008-4955-a38b-c5ca4e566e34.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We need to ensure promiscuous mode is on for the interface we are using, and
+    we all need to ensure that IP forwarding is turned on. We need to create a host
+    file to spoof a particular site or set of sites. As we have used a hiking site
+    in several of our testing examples, we will spoof `us-123hiking.simplesite.com`,
+    and send it to `10.0.2.4`, which is the IP address of my Kali box on `eth0`. Enter
+    the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'Now, we have to basically become a man in the middle; we will do this by ARP
+    spoofing the router IP address (default gateway) of `10.0.2.1` and ARP spoofing
+    the victim IP of our Windows machine `10.0.2.5`. Then, start `dnsspoof` using
+    the host file we just created:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: It may take minutes for the ARP spoofing to take place, so be patient; it may
+    help to not start your Windows machine until everything has been set up accordingly.
+    Also, you may want to check that all of the interfaces from a VirtualBox perspective
+    are in a promiscuous mode.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Open your Windows test machine, and open a Command Prompt. Enter the following
+    commands. You will note that the hiking site will be pointed to our Kali box:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/f3bbca7c-bfe0-46e4-80a9-c0e97b09291d.png)Windows command ping outputTerminate
+    your Kali terminal session, flush the DNS of your Windows machine, and retry the
+    test. You should now be going to the real IP address of `us-123.hiking.simplesite.com`.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: DHCP spoofing
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this recipe, you will learn about DHCP spoofing.
+  prefs: []
+  type: TYPE_NORMAL
+- en: DHCP spoofing can be used to route all packets through your Kali box or can
+    be used to push your DNS servers to the hosts on the network. This attack actually
+    has a lot to do with timing. It's important to note that this attack will not
+    always work, as there is the true DHCP server on the network and our DHCP spoofing
+    server. The way DHCP works is that the first response received by the victim is
+    the one it will use irregardless of how many responses it receives. So, the hope
+    is that your response to their request will beat the official DHCP server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Let''s ensure the following prerequisites:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Kali Linux is running and you are logged in as root
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Windows system is shut down
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We will now perform DHCP spoofing on the network:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Open up a new terminal window by clicking on the following icon. ![](assets/bb72ead6-52fc-46c7-9b57-1811a54bd079.png)
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'We need to ensure promiscuous mode is on for the interface we are using, and
+    we all need to ensure that IP forwarding is turned on. Then we will start `ettercap`
+    in the GUI Mode:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'From the `ettercap` main GUI screen, we want to start sniffing traffic. Click
+    on Sniff | Unified sniffing. Then, select the interface we will use. For test
+    purposes, we will use our host-only interface of `eth1` and click OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/c896a365-e75f-4d01-875d-e9b47c765806.png)ettercap main screen'
+  prefs: []
+  type: TYPE_NORMAL
+- en: From here, we will have a new option to select MITM| DHCP spoofing... .
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Enter an IP pool. In this case, I will use a range on our host-only network
+    of `192.168.56.100-192.168.56.110`, a subnet mask of `255.255.255.0`, and the
+    DNS server address of `192.168.56.10`, which is the IP address of my Kali VM.
+    Click on OK:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](assets/4780af25-ab4d-4d5e-b4e7-4a671a1c9dec.png)ettercap mitm dhcp spoofing
+    dialog box'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now, start your Windows system, open a Command Prompt, and enter the following.
+    Notice the IP address provided is in the range we specified, and you can also
+    see in `ettercap` that the response was provided from there:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: '![](assets/214201c3-a268-4121-a22d-a2f1d14e93a5.png)Windows ipconfig outputSo
+    a couple of things to note. You will notice that the default gateway is not populated.
+    This is because we do not have a default gateway on the host-only network. Also,
+    since you have no default gateway, you will not forward the traffic off net.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: There's more...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This scenario is much easier to test out using physical machines versus virtual
+    machines based on our test environment. If you want to see a better example of
+    this, try connecting your Kali machine on a segment with a physical host that
+    can talk to the internet.
+  prefs: []
+  type: TYPE_NORMAL

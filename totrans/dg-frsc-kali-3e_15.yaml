@@ -1,0 +1,24 @@
+- en: 'Part 4: Automated Digital Forensics and Incident Response Suites'
+  prefs:
+  - PREF_H1
+  type: TYPE_NORMAL
+- en: In this part, we look at one of the most popular and powerful open source tools
+    used by DFIR investigators and analysts, called Autopsy. Autopsy is available
+    for both Linux and Windows, and although we previously covered only the Linux
+    version in past editions of this book, I am absolutely delighted to show you how
+    to get the more powerful Windows version up and running in Kali Linux using Wine
+    in this version.
+  prefs: []
+  type: TYPE_NORMAL
+- en: 'This part has the following chapters:'
+  prefs: []
+  type: TYPE_NORMAL
+- en: '[*Chapter 12*](B19441_12.xhtml#_idTextAnchor225), *Autopsy Forensic Browser*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
+- en: '[*Chapter 13*](B19441_13.xhtml#_idTextAnchor234), *Performing a Full DFIR Analysis
+    with the Autopsy 4 GUI*'
+  prefs:
+  - PREF_UL
+  type: TYPE_NORMAL
