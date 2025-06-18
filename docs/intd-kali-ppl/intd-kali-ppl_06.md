@@ -1,6 +1,4 @@
-# 4
-
-# 配置 ELK 堆栈
+# 第四章：配置 ELK 堆栈
 
 在上一章，你学习了如何在设备上安装 Kali Linux —— 这只是 Kali Purple 工具集的一半。本章将帮助你掌握另一半，即 **ELK 堆栈**。现在 Kali Linux 已经安装完毕，你将使用命令行来安装和配置 Elasticsearch、Logstash 和 Kibana，确保你可以开始开发一个功能完善、强大的 *Purple* 网络安全系统。
 

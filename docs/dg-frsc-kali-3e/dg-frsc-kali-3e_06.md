@@ -1,6 +1,4 @@
-# 5
-
-# 在 Kali Linux 中安装 Wine
+# 第五章：在 Kali Linux 中安装 Wine
 
 在本章中，我们将学习如何通过在 Kali 中使用 Wine 安装 Windows 工具来扩展 Kali Linux 环境的功能。
 

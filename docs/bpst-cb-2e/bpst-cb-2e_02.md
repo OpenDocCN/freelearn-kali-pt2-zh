@@ -1,6 +1,4 @@
-# 2
-
-# 了解 Burp Suite 工具集
+# 第二章：了解 Burp Suite 工具集
 
 本章概述了 Burp Suite 中最常用的工具。首先，我们将介绍如何在**目标** | **站点映射**中设置**目标**范围。然后，介绍消息编辑器。接下来，利用**OWASP Mutillidae II**进行一些实践操作，熟悉**代理**、**Repeater**、**Decoder**和**Intruder**工具。
 

@@ -1,6 +1,4 @@
-# 3
-
-# 安装 Kali Purple Linux 环境
+# 第三章：安装 Kali Purple Linux 环境
 
 到目前为止，我们已经了解了世界事件如何影响网络安全概念的演变，导致了 Kali Purple 及其他防御性安全软件包的诞生。我们已经初步接触了 ELK Stack，它作为 SIEM 的核心组件，而 SIEM 又是 SOC 的核心组件，SOC 本身又是 Kali Purple 的核心组成部分。怎么样，我们开始组建我们一直在大肆赞扬的“环境”吧？让我们动手吧！
 

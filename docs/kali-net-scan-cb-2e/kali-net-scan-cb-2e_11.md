@@ -1,4 +1,4 @@
-# 使用 Sparta
+# 第十一章：使用 Sparta
 
 Sparta 是一个集成了我们已涵盖的多个工具的侦察工具，提供一个统一的图形用户界面（GUI）。它包括 Nmap、Hydra、Nikto、Netcat 等工具。此外，Sparta 可以通过编辑 `sparta.conf` 文件来配置使用其他工具。以下是本章我们将讨论的内容：
 
