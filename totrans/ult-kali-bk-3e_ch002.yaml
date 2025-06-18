@@ -1,11 +1,15 @@
 - en: 1 Introduction to Ethical Hacking
+  id: totrans-0
   prefs:
   - PREF_H1
   type: TYPE_NORMAL
+  zh: 1 道德黑客入门
 - en: Join our book community on Discord
+  id: totrans-1
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
+  zh: 加入我们在 Discord 上的书籍社区
 - en: '[https://packt.link/SecNet](https://packt.link/SecNet)![Qr code Description
     automatically generated](../media/file0.png)Cybersecurity is one of the most exciting
     and rapidly growing fields in the world. Each day, security professionals and
@@ -45,36 +49,45 @@
     Kill Chain** framework is used to help cybersecurity professionals to better understand
     cyber-attacks, and how each phase can be aligned with penetration testing techniques.
     In this chapter, we will cover the following topics:'
+  id: totrans-2
   prefs: []
   type: TYPE_NORMAL
 - en: Understanding the need for cybersecurity
+  id: totrans-3
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Understanding what matters to threat actors
+  id: totrans-4
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Exploring the importance for penetration testing
+  id: totrans-5
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Discovering penetration testing approaches
+  id: totrans-6
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Exploring penetration testing methodologies
+  id: totrans-7
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Understanding the Cyber Kill Chain
+  id: totrans-8
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: I hope you’re excited as I am to begin this awesome journey. Let’s dive in!
+  id: totrans-9
   prefs: []
   type: TYPE_NORMAL
 - en: Understanding the need for cybersecurity
+  id: totrans-10
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -102,13 +115,16 @@
     they are very aware that organizations knows the value of data that are stored
     on their computers and servers, and will do almost anything to recover their data
     as soon as possible.
+  id: totrans-11
   prefs: []
   type: TYPE_NORMAL
 - en: Important Note
+  id: totrans-12
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-13
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -119,6 +135,7 @@
     encrypt all data on the local storage drives, including those that are synchronized
     to the cloud service provider platform. However, various cloud storage providers
     have built-in protection against these types of threats.
+  id: totrans-14
   prefs:
   - PREF_BQ
   - PREF_BQ
@@ -135,13 +152,16 @@
     vulnerable systems within the organization to expand its foothold. Therefore,
     the longer it takes to contain/isolate the threat on the network, the more damages
     can be done.
+  id: totrans-15
   prefs: []
   type: TYPE_NORMAL
 - en: Important Note
+  id: totrans-16
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-17
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -150,6 +170,7 @@
     victims, however, the threat actors 110% implant additional malware to return
     later for more cash gains. Essentially, the targeted organization becomes a "cash
     cow" for the threat actors (attacking group).
+  id: totrans-18
   prefs:
   - PREF_BQ
   - PREF_BQ
@@ -165,9 +186,11 @@
     accounts. Even leverages the customers’ data as new and potential targets for
     future cyber-attacks, hence organizations also need to provide their customers’
     data.
+  id: totrans-19
   prefs: []
   type: TYPE_NORMAL
 - en: Identifying threat actors and their intent
+  id: totrans-20
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -175,6 +198,7 @@
     moral compass and understand the differences between various types of threat actors
     and their motives behind their cyber-attacks. Let’s take a closer look at the
     following list of common types of threat actors in the cybersecurity industry:'
+  id: totrans-21
   prefs: []
   type: TYPE_NORMAL
 - en: '**Script kiddie** – A script kiddie is a common type of threat actor who is
@@ -183,6 +207,7 @@
     develop a threat on their own. However, a script kiddie usually follows the instructions
     or tutorials of real hackers to perform their own attacks against a targeted system
     or network.'
+  id: totrans-22
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -191,6 +216,7 @@
     damage as real hackers, simply by following the instructions and tutorials of
     malicious actors on the internet. This type of hacker make use of tools they have
     no knowledge of how they properly work, thus causing more harm and damage.
+  id: totrans-23
   prefs: []
   type: TYPE_NORMAL
 - en: '**Hacktivist** – Across the world, there are many social and political agendas
@@ -202,6 +228,7 @@
     person is commonly referred to as a *hacktivist*. While some hacktivists use their
     hacking skills for good reasons, keep in mind, hacking is still an illegal act
     and the threat actor can face legal actions against them by law enforcement.'
+  id: totrans-24
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -215,6 +242,7 @@
     Therefore, this type of threat actor can implement network implants on the network
     and create backdoors for remote access to critical systems. This type of threat
     actor is commonly known as an insider or insider threat.'
+  id: totrans-25
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -229,6 +257,7 @@
     cyber-attacks and threats. Some nations use this type of threat actor to gather
     intelligence on other countries and even compromise the systems that control the
     infrastructure of public utilities or other critical resources.'
+  id: totrans-26
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -243,6 +272,7 @@
     resources money can buy to ensure the attack is successful. The intention of this
     type of threat actor is usually big, such as stealing their target''s data and
     selling it for financial gain.'
+  id: totrans-27
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -251,6 +281,7 @@
     performing a hack against a targeted system or network can be random. Sometimes
     they may hack to destroy their target''s reputation, steal data, or even as a
     personal challenge to prove a point for fun.'
+  id: totrans-28
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -259,6 +290,7 @@
     their networks and safeguard their assets from malicious hackers. Ethical hackers
     and penetration testers are examples of white hat hackers as these people use
     their skills to help others in a positive and ethical manner.'
+  id: totrans-29
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -267,6 +299,7 @@
     skillset and uses their skills to help people and organizations during the day
     as a cybersecurity professionals but uses their skills at night for malicious
     reasons.'
+  id: totrans-30
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -277,9 +310,11 @@
     section, you have discovered the characteristics of various threat actors and
     their intentions for performing a cyber-attack. In the next section, we will take
     a deep dive into understanding what matters to a threat actor.
+  id: totrans-31
   prefs: []
   type: TYPE_NORMAL
 - en: Exploring cybersecurity terminologies
+  id: totrans-32
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -290,6 +325,7 @@
     common terminologies and how they are related to ethical hacking and penetration
     testing.The following are the most common terminologies within the cybersecurity
     industry:'
+  id: totrans-33
   prefs: []
   type: TYPE_NORMAL
 - en: '**Asset** – Within the field of cybersecurity, we usually define an asset to
@@ -302,10 +338,12 @@
     assets are not and should not be limited to technical systems. In addition, other
     forms of assets include people (humans), physical security controls, and even
     the data that resides within the network and systems we aim to protect.'
+  id: totrans-34
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Assets are commonly assorted into the following categories:'
+  id: totrans-35
   prefs: []
   type: TYPE_NORMAL
 - en: '**Tangible**: Tangible assets are simply described as any physical object with
@@ -314,6 +352,7 @@
     users and employees to access the resources on a network, and perform their daily
     duties within an organization. Servers are typically used to store and host applications
     and provide services that are needed within typical network infrastructures.'
+  id: totrans-36
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
@@ -323,22 +362,26 @@
     devices are compromised, cyber criminals will be able to redirect network traffic
     to malicious websites that are owned by the malicious actors and expand their
     operations.
+  id: totrans-37
   prefs: []
   type: TYPE_NORMAL
 - en: '**Intangible**: Intangible assets are things without a physical form that has
     value, such as applications, software license keys, intellectual property, business
     plans and models, and data.'
+  id: totrans-38
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: '**People**: This type of asset are the customers and employees of an organization.
     Protecting the customers’ data from being stolen and leaked on the *Dark Web*,
     and safeguarding the employees from various types of threats.'
+  id: totrans-39
   prefs:
   - PREF_OL
   type: TYPE_NORMAL
 - en: It important to identify all the assets of an organization and potential threats
     that can cause harm and damages to them.
+  id: totrans-40
   prefs: []
   type: TYPE_NORMAL
 - en: '**Threat** – In the context of cybersecurity, a threat is anything that has
@@ -347,6 +390,7 @@
     to identify various types of threats. Many organizations around the world encounter
     different types of threats each day, and their cybersecurity team works around
     the clock to ensure their company’s assets are safeguarded from cyber criminals.'
+  id: totrans-41
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -354,6 +398,7 @@
     industry professionals always need to stay one step ahead of threat actors to
     quickly find security weaknesses in systems, networks, and applications, and implement
     countermeasures to mitigate any potential threats against those assets.
+  id: totrans-42
   prefs: []
   type: TYPE_NORMAL
 - en: '**Vulnerability** – A vulnerability is a security weakness or flaw that exists
@@ -363,6 +408,7 @@
     on a global scale), misconfiguration of devices, using weak user credentials,
     poor programming practices, unpatched operating systems, outdated applications
     on host systems, using default configurations on systems, and so on.'
+  id: totrans-43
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -372,6 +418,7 @@
     use various techniques and tools to discover vulnerabilities and will attempt
     to exploit the easy ones before moving onto more complex security flaws on a targeted
     system.
+  id: totrans-44
   prefs: []
   type: TYPE_NORMAL
 - en: '**Exploit** – An exploit is anything such as tool or code that is used to take
@@ -382,6 +429,7 @@
     actor or penetration tester will either acquire an exploit from various online
     sources or develop one on their own that has the capabilities of taking advantage
     of the security weakness.'
+  id: totrans-45
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -391,6 +439,7 @@
     does not on another. Hence, it’s a common practice that seasoned penetration testers
     will test and ensure their exploits are working as expected and graded on their
     rate of success for a vulnerability.
+  id: totrans-46
   prefs: []
   type: TYPE_NORMAL
 - en: '**Attack** – The attack is simply the method or technique which is used by
@@ -402,21 +451,25 @@
     language settings configured to match a specific exclusion list. The attack is
     launching a ransomware on the internet, it will automatically seek and compromise
     vulnerable systems.'
+  id: totrans-47
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Important Note
+  id: totrans-48
   prefs:
   - PREF_IND
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-49
   prefs:
   - PREF_IND
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'To learn more about the LockBit 3.0 ransomware, please see the official Cybersecurity
     and Infrastructure Security Agency (CISA) advisory at: [https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-075a](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-075a).'
+  id: totrans-50
   prefs:
   - PREF_IND
   - PREF_BQ
@@ -427,6 +480,7 @@
     Common attack vectors include: direct access, wireless, email, supply chain, social
     media, removable media and the cloud; these are the infrastructure that an attacker
     can deliver a malicious payload to a target.'
+  id: totrans-51
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -437,6 +491,7 @@
     finances, reputation, or regulatory compliance. Reducing risk is critical for
     many organizations. There are many certifications, regulatory standards, and frameworks
     that are designed to help companies understand, identify, and reduce risks.'
+  id: totrans-52
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -446,6 +501,7 @@
     professional will present all the vulnerabilities and possible solutions to help
     the organization mitigate and reduce the risk of a potential cyber-attack while
     reducing the attack surface of the company.
+  id: totrans-53
   prefs: []
   type: TYPE_NORMAL
 - en: '**Attack surface** – This is all vulnerable points of entry into a system,
@@ -454,6 +510,7 @@
     testers focuses on identifying these vulnerability points of entry to determine
     the attack surface of an organization and how a cyber-criminal would potentially
     exploit those weaknesses to compromise their target.'
+  id: totrans-54
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -465,6 +522,7 @@
     can be very valuable to ethical hackers and penetration testers, and can earn
     them a bug bounty. These bounties are fees paid by vendors to security researchers
     that discover unknown vulnerabilities in their applications.'
+  id: totrans-55
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -480,9 +538,11 @@
     behind their cyber-attacks, and have gain the knowledge of common security-related
     terminologies in the industry. Next, you will gain a deeper understand on what
     matters to threat actors when planning a cyber-attack on a target.
+  id: totrans-56
   prefs: []
   type: TYPE_NORMAL
 - en: Understanding what matters to threat actors
+  id: totrans-57
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -497,9 +557,11 @@
     evaluate the time and resources that are needed to perform the cyber-attack. Furthermore,
     the complexity of the attack and hack value of the target helps the threat actor
     to determine whether it’s worth moving forward with the plan of attack or not.
+  id: totrans-58
   prefs: []
   type: TYPE_NORMAL
 - en: Time
+  id: totrans-59
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -513,9 +575,11 @@
     Similarly, this concept can be applied to both ethical hackers and penetration
     testers as they need to determine how long it will take to complete a penetration
     test for a customer and present the report with the findings and security recommendations.
+  id: totrans-60
   prefs: []
   type: TYPE_NORMAL
 - en: Resources
+  id: totrans-61
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -532,9 +596,11 @@
     security professionals such as penetration testers within the industry. Not everyone
     has the same skills and a team may be needed for a penetration test security assessment
     for a customer.
+  id: totrans-62
   prefs: []
   type: TYPE_NORMAL
 - en: Financial factors
+  id: totrans-63
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -545,9 +611,11 @@
     target. Having a budget allows the threat actors to purchase the additional resources
     needed. Similarly, penetration testers are well-funded by their employers to ensure
     they have access to the best tools within the industry to excel at their jobs.
+  id: totrans-64
   prefs: []
   type: TYPE_NORMAL
 - en: Hack value
+  id: totrans-65
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -560,9 +628,11 @@
     you have learned about some of the important factors that matter to threat actors
     prior to performing a cyber-attack on an organization. In the next section, you
     will discover
+  id: totrans-66
   prefs: []
   type: TYPE_NORMAL
 - en: Exploring the importance for penetration testing
+  id: totrans-67
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -584,13 +654,16 @@
     the same type of attacks as a real hacker; the difference is the penetration tester
     is hired by the organization and has been granted legal permission to conduct
     such intrusive security testing.
+  id: totrans-68
   prefs: []
   type: TYPE_NORMAL
 - en: Important Note
+  id: totrans-69
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-70
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -599,6 +672,7 @@
     Most importantly, you need creativity. Creative thinking enables a person to think
     *outside the box* and go beyond the intended uses of technologies, and find new
     and exciting ways to implement them.
+  id: totrans-71
   prefs:
   - PREF_BQ
   - PREF_BQ
@@ -614,9 +688,11 @@
     the recommendations outlined in the penetration test reports to determine whether
     all the vulnerabilities have been fixed, the security controls are working as
     expected to mitigate the threats and the whether the attack surface is reduced.
+  id: totrans-72
   prefs: []
   type: TYPE_NORMAL
 - en: Penetration testing Methodologies
+  id: totrans-73
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -629,37 +705,46 @@
     testers to take a specific course of actions during security assessments to ensure
     all in-scope systems, networks and applications are thoroughly tested for security
     vulnerabilities. The following are common penetration testing methodologies:'
+  id: totrans-74
   prefs: []
   type: TYPE_NORMAL
 - en: '**Penetration Testing Execution Standard** (**PTES**)'
+  id: totrans-75
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**Payment Card Industry Data Security Standard** (**PCI DSS**)'
+  id: totrans-76
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**Penetration Testing Framework** (**PTF**)'
+  id: totrans-77
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**Technical Guide to Information Security Testing and Assessment**'
+  id: totrans-78
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**Open Source Security Testing Methodology Manual**'
+  id: totrans-79
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**OWASP Web Security Testing Guide**'
+  id: totrans-80
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**OWASP Mobile Security Testing Guide**'
+  id: totrans-81
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: '**OWASP Firmware Security Testing Methodology**'
+  id: totrans-82
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -667,26 +752,32 @@
     which can be applied to organizations based on their operating industry, category
     of business, the goals of performing ethical hacking and penetration testing,
     and the scope of the security assessment.
+  id: totrans-83
   prefs: []
   type: TYPE_NORMAL
 - en: Tip
+  id: totrans-84
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-85
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'To learn more about each penetration testing methodology, please see: [https://owasp.org/www-project-web-security-testing-guide/latest/3-The_OWASP_Testing_Framework/1-Penetration_Testing_Methodologies](https://owasp.org/www-project-web-security-testing-guide/latest/3-The_OWASP_Testing_Framework/1-Penetration_Testing_Methodologies).'
+  id: totrans-86
   prefs:
   - PREF_BQ
   - PREF_BQ
   type: TYPE_NORMAL
 - en: To better understand the importance of each phase of penetration testing, let’s
     take a closer look at the PTES methodology as it’s applicable to many scenarios.
+  id: totrans-87
   prefs: []
   type: TYPE_NORMAL
 - en: Pre-engagement phase
+  id: totrans-88
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -697,9 +788,11 @@
     Agreement** (**NDA**) and a **Consulting Services Agreement** (**CSA**). The following
     is a typical process overview of what is required prior to the actual penetration
     testing:'
+  id: totrans-89
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file1.png)'
+  id: totrans-90
   prefs: []
   type: TYPE_IMG
 - en: 'An NDA is a legal agreement that specifies that a penetration tester and their
@@ -722,29 +815,35 @@
     are testing in order to always stay within the testing constraints.The following
     are some general pre-engagement questions to help you define the scope of a penetration
     test:'
+  id: totrans-91
   prefs: []
   type: TYPE_NORMAL
 - en: What is the size/class (IP addresses and/or network blocks) of the external
     network? (Network penetration testing)
+  id: totrans-92
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: What is the size/class (IP addresses and/or network blocks) of the internal
     network? (Network penetration testing)
+  id: totrans-93
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: What is the purpose and goal of the penetration test? (Applicable to any form
     of penetration testing)
+  id: totrans-94
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: How many site pages does the web application have? (Web application penetration
     testing)
+  id: totrans-95
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: How many user inputs or forms does the web application have?
+  id: totrans-96
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -753,9 +852,11 @@
     so you don't *under scope* or under-price the security assessment.Now that you’ve
     understood the legal limitation stages of penetration testing, let's move on to
     learn about the information gathering phase and its importance.
+  id: totrans-97
   prefs: []
   type: TYPE_NORMAL
 - en: Information gathering phase
+  id: totrans-98
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -780,9 +881,11 @@
     valuable in later phases of penetration testing as it will help ethical hackers
     and penetration testers gain access to vulnerable systems and networks. Next,
     we will discuss the essentials of threat modeling.
+  id: totrans-99
   prefs: []
   type: TYPE_NORMAL
 - en: Threat modeling
+  id: totrans-100
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -797,26 +900,32 @@
     cybersecurity professionals to determine the potential each threat has to successfully
     compromise an asset, together with the likelihood and the ability of the organization
     to respond to a security incident.The following are common threat models:'
+  id: totrans-101
   prefs: []
   type: TYPE_NORMAL
 - en: 'STRIDE: Spoofing identity, tampering with data, information disclosure, denial
     of service, and elevation of privilege.'
+  id: totrans-102
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'PASTA: Process for Attack Simulation and Threat Analysis.'
+  id: totrans-103
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Tip
+  id: totrans-104
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-105
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: 'To learn more about threat modeling and various frameworks, please see: [https://www.crowdstrike.com/cybersecurity-101/threat-modeling/](https://www.crowdstrike.com/cybersecurity-101/threat-modeling/).'
+  id: totrans-106
   prefs:
   - PREF_BQ
   - PREF_BQ
@@ -824,9 +933,11 @@
 - en: Having understood the importance and need for threat modeling, the next step
     is to perform a vulnerability assessment on the assets to further determine the
     risk rating and severity.
+  id: totrans-107
   prefs: []
   type: TYPE_NORMAL
 - en: Vulnerability analysis
+  id: totrans-108
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -849,9 +960,11 @@
     learn how to perform vulnerability assessments using various tools and techniques
     on targeted systems. After identifying the security weaknesses on a targeted system
     or network, the next phase is exploitation.
+  id: totrans-109
   prefs: []
   type: TYPE_NORMAL
 - en: Exploitation
+  id: totrans-110
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -878,9 +991,11 @@
     we may think the task is done—but it isn't just yet. There are tasks and objectives
     to complete after breaking into the system. Next, we’ll discuss the post-exploitation
     phase in penetration testing.
+  id: totrans-111
   prefs: []
   type: TYPE_NORMAL
 - en: Post-exploitation
+  id: totrans-112
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -896,9 +1011,11 @@
     This impact assists in helping executive leadership and decision-makers to better
     understand the risks, vulnerabilities and the damages it could cause to the organization
     if a threat were to target their company and assets.
+  id: totrans-113
   prefs: []
   type: TYPE_NORMAL
 - en: Report writing
+  id: totrans-114
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -916,9 +1033,11 @@
     test and have gained a better idea of the expectations of penetration testers
     in the industry. Next, we will dive into understanding various penetration testing
     approaches.
+  id: totrans-115
   prefs: []
   type: TYPE_NORMAL
 - en: Discovering penetration testing approaches
+  id: totrans-116
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -950,9 +1069,11 @@
     know about all of them. Imagine a potential client calling to request a black
     box test on their external network infrastructure; as a penetration tester, we
     must be familiar with the terminologies and what is expected by the customer.
+  id: totrans-117
   prefs: []
   type: TYPE_NORMAL
 - en: Types of penetration testing
+  id: totrans-118
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -970,9 +1091,11 @@
     test, in my opinion, this is highly unethical. During the course of this book,
     you will learn how to perform successful penetration testing using industry practices,
     tools and techniques.
+  id: totrans-119
   prefs: []
   type: TYPE_NORMAL
 - en: Web application penetration testing
+  id: totrans-120
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -985,9 +1108,11 @@
     and verifying issues within web applications.In the later section of this book,
     you will gain the skills and hands-on experience on getting started with web application
     security testing.
+  id: totrans-121
   prefs: []
   type: TYPE_NORMAL
 - en: Mobile application penetration testing
+  id: totrans-122
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -997,9 +1122,11 @@
     who are looking to break into penetration testing and have an understanding of
     mobile application development. As you may have noticed, the different types of
     penetration testing each have specific objectives.
+  id: totrans-123
   prefs: []
   type: TYPE_NORMAL
 - en: Social engineering penetration testing
+  id: totrans-124
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -1014,9 +1141,11 @@
     secure facilities and connect a USB drive onto the system to determine what a
     real adversary could achieve. There are many types of social engineering attacks,
     which will be covered later on in this book.
+  id: totrans-125
   prefs: []
   type: TYPE_NORMAL
 - en: Network penetration testing (external and internal)
+  id: totrans-126
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -1025,34 +1154,42 @@
     on the targeted organization''s systems, their networks (wired and wireless),
     and their networking devices such as switches and routers.The following are some
     tasks that are performed using network penetration testing:'
+  id: totrans-127
   prefs: []
   type: TYPE_NORMAL
 - en: Bypassing an **Intrusion Detection System** (**IDS**)/**Intrusion Prevention
     System** (**IPS**)
+  id: totrans-128
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Bypassing firewall appliances
+  id: totrans-129
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Password cracking
+  id: totrans-130
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Gaining access to end devices and servers
+  id: totrans-131
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Exploiting misconfigurations on switches and routers
+  id: totrans-132
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Now that you have a better idea of the objectives of network penetration testing,
     let's take a look at the purpose of cloud penetration testing.
+  id: totrans-133
   prefs: []
   type: TYPE_NORMAL
 - en: Cloud penetration testing
+  id: totrans-134
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -1064,9 +1201,11 @@
     Microsoft Azure platform, you'll need legal permission from both the cloud provider,
     Microsoft as your actions may affect other users and services who are sharing
     the data center, and the customer who are hiring you for the service.
+  id: totrans-135
   prefs: []
   type: TYPE_NORMAL
 - en: Physical penetration testing
+  id: totrans-136
   prefs:
   - PREF_H4
   type: TYPE_NORMAL
@@ -1074,25 +1213,30 @@
     control systems in place to protect an organization''s data. Security controls
     exist within offices and data centers to prevent unauthorized persons from entering
     secure areas of a company. Physical security controls include the following:'
+  id: totrans-137
   prefs: []
   type: TYPE_NORMAL
 - en: 'Security cameras and sensors: Security cameras are used to monitor physical
     actions within an area.'
+  id: totrans-138
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Biometric authentication systems: Biometrics are used to ensure that only authorized
     people are granted access to an area.'
+  id: totrans-139
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Doors and locks: Locking systems are used to prevent unauthorized persons from
     entering a secure room or area.'
+  id: totrans-140
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: 'Security guards: Security guards are people who are assigned to protect something,
     someone, or an area.'
+  id: totrans-141
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1100,9 +1244,11 @@
     penetration testing. Your journey ahead won't be complete without understanding
     the phases of hacking. The different phases of hacking will be covered in the
     next section.
+  id: totrans-142
   prefs: []
   type: TYPE_NORMAL
 - en: Exploring penetration testing methodologies
+  id: totrans-143
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -1111,9 +1257,11 @@
     the general phases of hacking and how each phase is typically aligned to penetration
     tester. During any penetration testing training, you’ll encounter the five phase
     of hacking.The following are the general five phases of hacking:'
+  id: totrans-144
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file2.png)'
+  id: totrans-145
   prefs: []
   type: TYPE_IMG
 - en: As shown in the preceding diagram, a threat actor perform reconnaissance on
@@ -1122,9 +1270,11 @@
     to launching an attack to compromise the target. In the following sub-sections,
     you will learn more about the purpose of each phase and how it aligns to ethical
     hacking and penetration testing.
+  id: totrans-146
   prefs: []
   type: TYPE_NORMAL
 - en: Reconnaissance
+  id: totrans-147
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1135,34 +1285,42 @@
     helps the threat actor to better understand the target’s attack surface and develop/acquire
     specific exploits that suitable for compromising targeted systems.The following
     are techniques used in the reconnaissance phase:'
+  id: totrans-148
   prefs: []
   type: TYPE_NORMAL
 - en: Using internet search engines to gather information
+  id: totrans-149
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Using social networking platforms
+  id: totrans-150
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Performing Google hacking techniques
+  id: totrans-151
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Performing **Domain Name System** (**DNS**) interrogation
+  id: totrans-152
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Using social engineering techniques
+  id: totrans-153
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: During this phase, the objective is to gather as much information as possible
     about the target. Next, we will discuss using a more direct approach, and engage
     the target to get specific and detailed information.
+  id: totrans-154
   prefs: []
   type: TYPE_NORMAL
 - en: Scanning and enumeration
+  id: totrans-155
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1171,34 +1329,42 @@
     information gathering techniques. This phase also involves profiling the targeted
     organization, its systems, and network infrastructure by sending specially crafted
     probes to the target.The following are techniques used in the scanning phase:'
+  id: totrans-156
   prefs: []
   type: TYPE_NORMAL
 - en: Perform host discovery
+  id: totrans-157
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Check for firewalls and test their rules
+  id: totrans-158
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Check for open network ports and running services
+  id: totrans-159
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Check for security vulnerabilities
+  id: totrans-160
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Create a network topology of the target network
+  id: totrans-161
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: This phase is very important as it helps us to improve the profile of the target.
     The information found in this phase will help us to move on to performing exploitation
     on the targeted system or network.
+  id: totrans-162
   prefs: []
   type: TYPE_NORMAL
 - en: Gaining access
+  id: totrans-163
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1209,17 +1375,21 @@
     actor needs to test the exploit to ensure it’s working as expected before delivering
     and executing it on the targeted system. The following can occur once access is
     gained on a targeted system or network:'
+  id: totrans-164
   prefs: []
   type: TYPE_NORMAL
 - en: Retrieve and crack stored passwords on systems
+  id: totrans-165
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Escalating privileges
+  id: totrans-166
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Transferring additional payloads and malware
+  id: totrans-167
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
@@ -1227,9 +1397,11 @@
     may work on one targeted system and not on another. Once an exploit is successful
     and system access is acquired, the next phase is to ensure the threat actor expands
     their foothold on the compromised system and network.
+  id: totrans-168
   prefs: []
   type: TYPE_NORMAL
 - en: Maintaining access
+  id: totrans-169
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1240,26 +1412,32 @@
     Therefore, if a compromised system is offline, the attacker can attempt to remotely
     connect to another to re-gain access to the targeted network.The objectives of
     maintaining access are as follows:'
+  id: totrans-170
   prefs: []
   type: TYPE_NORMAL
 - en: Lateral movement
+  id: totrans-171
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Exfiltration of data
+  id: totrans-172
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Creating backdoor and persistent connections
+  id: totrans-173
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Maintaining access is important to ensure that you, the penetration tester,
     always have access to the targeted systems or network. Once the technical aspect
     of the penetration test is completed, it's time to clean up the network.
+  id: totrans-174
   prefs: []
   type: TYPE_NORMAL
 - en: Covering tracks
+  id: totrans-175
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1276,9 +1454,11 @@
     used by threat actors. In the next section, you will discover the Cyber Kill Chain
     framework and we are going to leverage it into the training and exercises throughout
     this book.
+  id: totrans-176
   prefs: []
   type: TYPE_NORMAL
 - en: Understanding the cyber kill chain
+  id: totrans-177
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -1295,9 +1475,11 @@
     their goals and reduce the amount of damage if they are able to stop the attacker
     during the earlier phases of the Cyber Kill Chain.The following diagram shows
     the seven stages of the Cyber Kill Chain that are used by threat actors:'
+  id: totrans-178
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file3.png)'
+  id: totrans-179
   prefs: []
   type: TYPE_IMG
 - en: As shown in the preceding diagram, each stage of the Cyber Kill Chain flows
@@ -1316,9 +1498,11 @@
     about the fundamentals of each stage of the Cyber Kill Chain, how each is used
     by threat actors, and how penetration testers apply these strategies within their
     security assessments.
+  id: totrans-180
   prefs: []
   type: TYPE_NORMAL
 - en: Reconnaissance
+  id: totrans-181
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1329,13 +1513,16 @@
     targets, which contains IP addresses, systems' operating systems, and open service
     ports, running applications, security vulnerabilities, and any sensitive resources
     that may be unintentionally exposed that can increase the attack surface.
+  id: totrans-182
   prefs: []
   type: TYPE_NORMAL
 - en: Important Note
+  id: totrans-183
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
 - en: ''
+  id: totrans-184
   prefs:
   - PREF_BQ
   type: TYPE_NORMAL
@@ -1343,6 +1530,7 @@
     techniques, which will be covered in later sections of this book. You will also
     discover tools and techniques to improve your information collecting and analysis
     skills during a penetration test.
+  id: totrans-185
   prefs:
   - PREF_BQ
   - PREF_BQ
@@ -1358,9 +1546,11 @@
     time constraints like ethical hackers and penetration testers, that can spend
     a lot more time collecting information, looking for security vulnerabilities and
     better plan their cyber-attacks on the target.
+  id: totrans-186
   prefs: []
   type: TYPE_NORMAL
 - en: Weaponization
+  id: totrans-187
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1382,9 +1572,11 @@
     the system. As a simple example, a payload can be used to create a persistent
     backdoor on the targeted system to allow the threat actor or the penetration tester
     remote access to the system at any time when the compromised system is online.
+  id: totrans-188
   prefs: []
   type: TYPE_NORMAL
 - en: Delivery
+  id: totrans-189
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1397,9 +1589,11 @@
     with the hope an employee will find it and connect it to an internal system due
     to human curiosity.The following is a picture of a USB Rubber Ducky that’s commonly
     used during ethical hacking and penetration testing:'
+  id: totrans-190
   prefs: []
   type: TYPE_NORMAL
 - en: '![](../media/file4.png)'
+  id: totrans-191
   prefs: []
   type: TYPE_IMG
 - en: As shown in the preceding image, the USB Rubber Ducky enables a penetration
@@ -1410,9 +1604,11 @@
     tester, ensure you have multiple methods of delivering the weapon to the target,
     such that, in the event that one method does not work, you have another, and alternative
     solutions.
+  id: totrans-192
   prefs: []
   type: TYPE_NORMAL
 - en: Exploitation
+  id: totrans-193
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1423,9 +1619,11 @@
     cyber defenses and this can create a halt in the Cyber Kill Chain. The attacker
     needs to ensure the exploit is tested properly before executing it on the targeted
     system.
+  id: totrans-194
   prefs: []
   type: TYPE_NORMAL
 - en: Installation
+  id: totrans-195
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1435,9 +1633,11 @@
     of entry back into the system and network. During this stage, additional applications
     may be usually installed while the threat actor takes a lot of precautions to
     avoid detection by any threat detection systems.
+  id: totrans-196
   prefs: []
   type: TYPE_NORMAL
 - en: Command and Control (C2)
+  id: totrans-197
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1448,9 +1648,11 @@
     by the adversary. This allows the threat actor to create an army of zombies, all
     controlled and managed by a single threat actor.The following diagram shows an
     example of C2:'
+  id: totrans-198
   prefs: []
   type: TYPE_NORMAL
 - en: '![ا 2" server ا ا Attacker ](../media/file5.png)'
+  id: totrans-199
   prefs: []
   type: TYPE_IMG
 - en: The threat actor uses data encryption, encapsulation, and various tunneling
@@ -1460,9 +1662,11 @@
     compromise a target organization, with the objective of simulating the closest
     thing to a real advanced cyber-attack of a malicious cyber army. However, keep
     in mind that legal permission is still needed for any type of red teaming engagements.
+  id: totrans-200
   prefs: []
   type: TYPE_NORMAL
 - en: Actions on objectives
+  id: totrans-201
   prefs:
   - PREF_H3
   type: TYPE_NORMAL
@@ -1483,9 +1687,11 @@
     professionals understand the intentions of threat actors. Additionally, you have
     learned how penetration testers can implement these strategies within their penetration
     testing engagements.
+  id: totrans-202
   prefs: []
   type: TYPE_NORMAL
 - en: Summary
+  id: totrans-203
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
@@ -1508,49 +1714,61 @@
     testing lab*, you will learn how to design and build a virtualized penetration
     testing lab on your personal that will be used to hone your new skills in a safe
     environment.
+  id: totrans-204
   prefs: []
   type: TYPE_NORMAL
 - en: Further Reading
+  id: totrans-205
   prefs:
   - PREF_H2
   type: TYPE_NORMAL
 - en: The cyber kill chain - [https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html](https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html)
+  id: totrans-206
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: MITRE ATT&CK tactics - [https://attack.mitre.org/tactics/enterprise/](https://attack.mitre.org/tactics/enterprise/)
+  id: totrans-207
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Penetration Testing Execution Standard (PTES) - [http://www.pentest-standard.org/index.php/PTES_Technical_Guidelines](http://www.pentest-standard.org/index.php/PTES_Technical_Guidelines)
+  id: totrans-208
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Payment Card Industry Data Security Standard (PCI DSS) - [https://www.pcisecuritystandards.org/documents/Penetration-Testing-Guidance-v1_1.pdf](https://www.pcisecuritystandards.org/documents/Penetration-Testing-Guidance-v1_1.pdf)
+  id: totrans-209
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Penetration Testing Framework (PTF) - [http://www.vulnerabilityassessment.co.uk/Penetration%20Test.html](http://www.vulnerabilityassessment.co.uk/Penetration%20Test.html)
+  id: totrans-210
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Technical Guide to Information Security Testing and Assessment - [https://csrc.nist.gov/publications/detail/sp/800-115/final](https://csrc.nist.gov/publications/detail/sp/800-115/final)
+  id: totrans-211
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: Open Source Security Testing Methodology Manual - [https://www.isecom.org/OSSTMM.3.pdf](https://www.isecom.org/OSSTMM.3.pdf)
+  id: totrans-212
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: OWASP Web Security Testing Guide - [https://owasp.org/www-project-web-security-testing-guide/](https://owasp.org/www-project-web-security-testing-guide/)
+  id: totrans-213
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: OWASP Mobile Security Testing Guide - [https://owasp.org/www-project-mobile-app-security/](https://owasp.org/www-project-mobile-app-security/)
+  id: totrans-214
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
 - en: OWASP Firmware Security Testing Methodology - [https://github.com/scriptingxss/owasp-fstm](https://github.com/scriptingxss/owasp-fstm)
+  id: totrans-215
   prefs:
   - PREF_UL
   type: TYPE_NORMAL
