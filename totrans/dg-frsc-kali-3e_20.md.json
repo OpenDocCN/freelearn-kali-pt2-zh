@@ -1,1 +1,0 @@
-["```\n    sudo apt update && sudo install kali-linux-forensics\n    ```", "```\n    sudo apt update\n    ```", "```\n    sudo apt-get install xplico\n    ```", "```\n    sudo apache2 start\n    ```", "```\n    sudo xplico start\n    ```", "```\n    sudo /etc/init.d/xplico start\n    ```"]

@@ -1,1 +1,0 @@
-["```\n    cat /etc/os-release\n    ```", "```\nsudo apt update\n```", "```\n    apt list –upgradable\n    ```", "```\n    sudo apt upgrade –y\n    ```", "```\n    sudo reboot\n    ```", "```\nsudo apt install kali-tools-forensics\n```"]
